@@ -1,0 +1,354 @@
+{
+    "nodes": [
+        {
+            "type": "objectPath",
+            "id": "node_16043415229200",
+            "name": "Extract Bike/Station List",
+            "options": [
+                [
+                    "Path",
+                    "countries.0.cities.0.places"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_16043415229201",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_16043415229202",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_16043415229203",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 602,
+                "y": 106
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "cron",
+            "id": "node_16043415486084",
+            "name": "cron",
+            "options": [
+                [
+                    "CronExpression",
+                    "* * * * *"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_16043415486085",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 58,
+                "y": 106
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "httpGet",
+            "id": "node_16043415576836",
+            "name": "GET Nextbike",
+            "options": [
+                [
+                    "URL",
+                    "https://api.nextbike.net/maps/nextbike-live.json?city=21"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Event",
+                    {
+                        "id": "ni_16043415576847",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_16043415576848",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_16043415576849",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 331,
+                "y": 106
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "logging",
+            "id": "node_160434158792122",
+            "name": "DANGER LOG",
+            "options": [
+                [
+                    "Operation",
+                    "DANGER"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "event",
+                    {
+                        "id": "ni_160434158792123",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160434158792124",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 622.6962610528119,
+                "y": 475.42880792544196
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "objectFilter",
+            "id": "node_160434176136222",
+            "name": "FilterByBike",
+            "options": [
+                [
+                    "FilterExpression",
+                    "element.bike"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160434176136223",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160434176136224",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 902.2322709596144,
+                "y": 0.05304916464949194
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "fileSave",
+            "id": "node_160434252441492",
+            "name": "Saving Bikes",
+            "options": [
+                [
+                    "Path",
+                    "C:/Users/Lukas/Desktop/logs/"
+                ],
+                [
+                    "Filename",
+                    "bike_list"
+                ],
+                [
+                    "Filetype",
+                    "json"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Payload",
+                    {
+                        "id": "ni_160434252441493",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1192.574346852825,
+                "y": -45.19488333418911
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "fileSave",
+            "id": "node_160434314599256",
+            "name": "Saving Stations",
+            "options": [
+                [
+                    "Path",
+                    "C:/Users/Lukas/Desktop/logs/"
+                ],
+                [
+                    "Filename",
+                    "station_list"
+                ],
+                [
+                    "Filetype",
+                    "json"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Payload",
+                    {
+                        "id": "ni_160434314599257",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1193.372738143014,
+                "y": 161.93312115565092
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "objectFilter",
+            "id": "node_160434362745576",
+            "name": "FilterStations",
+            "options": [
+                [
+                    "FilterExpression",
+                    "!element.bike"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160434362745577",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160434362745578",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 903.8088240888059,
+                "y": 143.77231818361065
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "button",
+            "id": "node_160442334981037",
+            "name": "Button",
+            "options": [
+                [
+                    "BtnEvent",
+                    "exec1"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160442334981038",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 59.33148588891586,
+                "y": 474.70250567412955
+            },
+            "width": 200,
+            "twoColumn": false
+        }
+    ],
+    "connections": [
+        {
+            "id": "1604427469017104",
+            "from": "ni_16043415486085",
+            "to": "ni_16043415576847"
+        },
+        {
+            "id": "1604427469017106",
+            "from": "ni_16043415576848",
+            "to": "ni_16043415229201"
+        },
+        {
+            "id": "1604427469018108",
+            "from": "ni_16043415229202",
+            "to": "ni_160434176136223"
+        },
+        {
+            "id": "1604427469018110",
+            "from": "ni_16043415576849",
+            "to": "ni_160434158792123"
+        },
+        {
+            "id": "1604427469018112",
+            "from": "ni_160434176136224",
+            "to": "ni_160434252441493"
+        },
+        {
+            "id": "1604427469018114",
+            "from": "ni_160434362745578",
+            "to": "ni_160434314599257"
+        },
+        {
+            "id": "1604427469018116",
+            "from": "ni_16043415229202",
+            "to": "ni_160434362745577"
+        }
+    ],
+    "panning": {
+        "x": -34.10814842774852,
+        "y": 112.49679042185166
+    },
+    "scaling": 0.9911456023013847
+}
