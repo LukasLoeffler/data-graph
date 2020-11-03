@@ -7,8 +7,6 @@ let nodes: Array<BaseNode> = []
 export class NodeManager {
     static getNodeById(id: string): any {
         let node = nodes.find(node => node.id === id);
-
-
         return node;
     }
     

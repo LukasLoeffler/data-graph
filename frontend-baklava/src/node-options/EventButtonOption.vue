@@ -7,11 +7,10 @@ export default {
     props: ["title", "value"],
     methods: {
         onClick() {
-            let clickEvent = {
-                title: this.title,
-                id: this.value,
-            }
-            this.$emit('clickEvent', clickEvent);
+            let nodeId = this.$parent.node.id;
+            console.log(nodeId);
+            let url = `http://localhost:3000/recieve-event/${nodeId}`
+            this.axios.get(url).then((data) => console.log(data));
         }
     }
 }

@@ -3,6 +3,7 @@ import { Loader } from "./loader";
 
 import express from "express";
 import chalk from "chalk";
+import { NodeManager } from "./nodes/node-manager";
 const cors = require('cors')
 const fs = require('fs');
 
@@ -42,6 +43,13 @@ app.post("/save-node-config", ( req, res ) => {
         Loader.loadConfig();
     });
     res.send("Successfully saved");
+});
+
+app.get("/recieve-event/:nodeId", (req, res) => {
+    let node = NodeManager.getNodeById(req.params.nodeId);
+    node.execute();
+    if (!node) res.status(404).send("Node not found");
+    else res.send("Successfully executed");
 });
 
 // start the Express server

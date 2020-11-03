@@ -43,7 +43,7 @@ let advancedRegistry: Array<RegEntry> = [
     new RegEntry("objectPath", "object", ObjectPathNode, ["input"], ["success", "failure"]),
     new RegEntry("objectMapper", "object", ObjectMapperNode, ["input"], ["success"]),
     new RegEntry("objectFilter", "object", FilterNode, ["input"], ["success"]),
-    new RegEntry("button", "object", ButtonNode, [], ["success"]),
+    new RegEntry("button", "input", ButtonNode, [], ["success"]),
 ]
 
 export class NodeRegistry {

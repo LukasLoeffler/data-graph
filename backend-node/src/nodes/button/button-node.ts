@@ -14,5 +14,7 @@ export class ButtonNode extends BaseNode{
         NodeManager.addNode(this);
     }
 
-
+    execute() {
+        this.onSuccess(`Payload ${new Date()}`);
+    }
 }

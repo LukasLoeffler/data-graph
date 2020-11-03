@@ -63,7 +63,10 @@ function loadConfig() {
                     let filter = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, filter, successTargets, [])
                 }
-
+                if (node.type === "button") {
+                    let successTargets = getTargetNodesByNode(data, node, "onSuccess");
+                    let instance = new newCls.clss(node.name, node.id, successTargets, [])
+                }
                 if (node.type === "fileSave") {
                     let path = node.options[0][1];
                     let filename = node.options[1][1];
