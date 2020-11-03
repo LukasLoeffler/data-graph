@@ -13,9 +13,11 @@ import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 
+import ButtonNode from "./nodes/ButtonNode.js";
+
 import Cron from "./nodes/CronNode.ts";
 import Logging from "./nodes/LoggingNode.ts";
-import Button from "./nodes/ButtonNode.ts";
+
 import HttpGet from "./nodes/http/HttpGetNode.ts"
 import HttpPostPut from "./nodes/http/HttpPostPutNode.ts"
 
@@ -44,7 +46,7 @@ export default {
 
         this.editor.registerNodeType("cron", Cron, "Time")
         this.editor.registerNodeType("logging", Logging, "Logging")
-        this.editor.registerNodeType("button", Button, "Input")
+        this.editor.registerNodeType("button", ButtonNode, "Input")
         this.editor.registerNodeType("httpGet", HttpGet, "Http")
         this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
         this.editor.registerNodeType("objectFilter", Filter, "Object")
