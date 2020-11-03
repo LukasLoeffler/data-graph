@@ -1,5 +1,6 @@
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
+import chalk from "chalk";
 const axios = require('axios');
 
 
@@ -14,12 +15,13 @@ export class HttpNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    async execute() {
-        try {
-            const response = await axios.get(this.url);
-            this.onSuccess(response.data);
-        } catch (exception) {
-            this.onFailure(exception);
-        }
+    execute(): void {
+        axios.get(this.url)
+        .then((response: any) =>{
+            if(response.data) this.onSuccess(response.data);
+            else this.onFailure(response.status);
+        }).catch((err: any) => {
+            this.onFailure(err);
+        });
     }
 }
