@@ -1,4 +1,4 @@
-# GitHub Repo fpr Code of Master
+# GitHub Repo for Master-Code
 
 ## Backend
 Written in NodeJS because of its ability to execute code asynchronously.
