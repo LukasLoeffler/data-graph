@@ -4,7 +4,17 @@ import chalk from "chalk";
 import { NodeRegistry } from "./nodes/node-registry";
 
 
-function getTargetNodesByNode(data: any, node: any, type: string = "onSuccess") {
+function getSuccessTargets(data: any, node: any) {
+    let targetType = "onSuccess";
+    return getTargetNodesByNode(data, node, targetType)
+}
+
+function getFailureTargets(data: any, node: any) {
+    let targetType = "onFailure";
+    return getTargetNodesByNode(data, node, targetType)
+}
+
+function getTargetNodesByNode(data: any, node: any, type: string) {
     let outInterface = node.interfaces.find((itf: any) => itf[0] === type);
     let outConnections = data.connections.filter((conn: any) => conn.from === outInterface[1].id);
     
@@ -38,33 +48,33 @@ function loadConfig() {
                 let newCls = NodeRegistry.getClassByName(node.type);
 
                 if (node.type === "cron") {
-                    let successTargets = getTargetNodesByNode(data, node, "onSuccess");
+                    let successTargets = getSuccessTargets(data, node);
                     let cronExpression = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, cronExpression, successTargets, [])
                 }
                 if (node.type === "logging") {
-                    let successTargets = getTargetNodesByNode(data, node, "onSuccess");
+                    let successTargets = getSuccessTargets(data, node);
                     let level = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, level, successTargets)
                 }
                 if (node.type === "httpGet") {
-                    let successTargets = getTargetNodesByNode(data, node, "onSuccess");
-                    let failureTargets = getTargetNodesByNode(data, node, "onFailure");
+                    let successTargets = getSuccessTargets(data, node);
+                    let failureTargets = getFailureTargets(data, node)
                     let url = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, url, successTargets, failureTargets)
                 }
                 if (node.type === "objectPath") {
-                    let successTargets = getTargetNodesByNode(data, node, "onSuccess");
+                    let successTargets = getSuccessTargets(data, node);
                     let path = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, path, successTargets, [])
                 }
                 if (node.type === "objectFilter") {
-                    let successTargets = getTargetNodesByNode(data, node, "onSuccess");
+                    let successTargets = getSuccessTargets(data, node);
                     let filter = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, filter, successTargets, [])
                 }
                 if (node.type === "button") {
-                    let successTargets = getTargetNodesByNode(data, node, "onSuccess");
+                    let successTargets = getSuccessTargets(data, node);
                     let instance = new newCls.clss(node.name, node.id, successTargets, [])
                 }
                 if (node.type === "fileSave") {
