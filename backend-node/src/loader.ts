@@ -3,19 +3,33 @@ const fs = require('fs');
 import chalk from "chalk";
 import { NodeRegistry } from "./nodes/node-registry";
 
+interface StringMap { [key: string]: string; }
+
+
+let frontendNodes: any;
+
 
 function getSuccessTargets(data: any, node: any) {
     let targetType = "onSuccess";
-    return getTargetNodesByNode(data, node, targetType)
+    return getConnectedNodeByInterface(data, node, targetType)
 }
 
 function getFailureTargets(data: any, node: any) {
     let targetType = "onFailure";
-    return getTargetNodesByNode(data, node, targetType)
+    return getConnectedNodeByInterface(data, node, targetType)
 }
 
-function getTargetNodesByNode(data: any, node: any, type: string) {
-    let outInterface = node.interfaces.find((itf: any) => itf[0] === type);
+function getNodeById(nodeId: string) {
+    return frontendNodes.nodes.find((node: any) => node.id === nodeId);
+}
+
+function getNodesOfInterface(interfaceId: string) {
+    
+}
+
+function getConnectedNodeByInterface(data: any, node: any, type: string) {
+    // 
+    let outInterface = node.interfaces.find((intface: any) => intface[0] === type);
     let outConnections = data.connections.filter((conn: any) => conn.from === outInterface[1].id);
     
     let targetNodes: any = []
@@ -37,20 +51,41 @@ export class Loader {
     }
 }
 
+
+function extractOptionsFromNode(node: any): StringMap {
+    let options: Array<String> = node.options;
+    let optionsArray = options.map((option: any) => {
+        let optionName = option[0];
+        let optionValue = option[1];
+        return {
+            name: optionName,
+            value: optionValue
+        }
+    });
+    // Converting array of objects into object with optionName and optionKey
+    let output: StringMap = {}
+    optionsArray.forEach((option) => {
+        output[option.name] = option.value;
+    })
+    return output;
+}
+
 function loadConfig() {
     NodeManager.reset();
-    console.log(chalk.bgBlueBright("LOADING CONFIG"))
+    console.log(chalk.blueBright("LOADING CONFIG"))
     fs.readFile('./src/configuration/node-config.json', 'utf8' , (err: any, data:any) => {
 
         if (!err) {
             data = JSON.parse(data);
+            frontendNodes = data;
             data.nodes.forEach((node: any) => {
                 let newCls = NodeRegistry.getClassByName(node.type);
 
+
                 if (node.type === "cron") {
                     let successTargets = getSuccessTargets(data, node);
-                    let cronExpression = node.options[0][1]
-                    let instance = new newCls.clss(node.name, node.id, cronExpression, successTargets, [])
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, [])
                 }
                 if (node.type === "logging") {
                     let successTargets = getSuccessTargets(data, node);
@@ -84,7 +119,8 @@ function loadConfig() {
                     let instance = new newCls.clss(node.name, node.id, filename, filetype, path, [], [])
                 }
             });
-            console.log(`${NodeManager.getActiveNodes().length} nodes initalized.`)
+            let numberOfNodesInit = NodeManager.getActiveNodes().length;
+            console.log(`${chalk.greenBright(numberOfNodesInit)} nodes initalized.`)
         } else {
             console.log(err);
         }
