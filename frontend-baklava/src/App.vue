@@ -1,11 +1,21 @@
 <template>
-  <div id="container">
-    <div id="motion-demo"></div>
-    <button @click="save">Save</button>
-    <button @click="activate">Activate</button>
-    <baklava-editor id="editor" :plugin="viewPlugin">  </baklava-editor>
-  </div>
-    
+  <v-app>
+    <v-btn absolute dark fab left color="primary" class="m-2" @click="save">
+        <v-icon>mdi-content-save</v-icon>
+    </v-btn>
+    <div id="container">
+      <v-flex d-flex child-flex class="fill-height">
+        <v-row>
+          <v-col class="p-0">
+            <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
+          </v-col>
+          <v-col v-if="$store.getters.optionNode" cols=3 class="p-0">
+            <Sidebar/>
+          </v-col>
+        </v-row>
+      </v-flex>
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -13,79 +23,83 @@ import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 
+import Sidebar from "./components/Sidebar"
+
 import ButtonNode from "./nodes/ButtonNode.js";
-
-import Cron from "./nodes/CronNode.ts";
+import IntervalNode from "./nodes/time/IntervalNode"
+import Cron from "./nodes/time/CronNode.ts";
 import Logging from "./nodes/LoggingNode.ts";
-
 import HttpGet from "./nodes/http/HttpGetNode.ts"
 import HttpPostPut from "./nodes/http/HttpPostPutNode.ts"
-
 import Filter from "./nodes/object/FilterNode.ts"
 import Path from "./nodes/object/PathNode.ts"
-
 import FileSave from "./nodes/filesystem/FileSaveNode.ts"
 
-import EventButtonOption from "./node-options/EventButtonOption.vue"
+import EventButtonOption from "./nodes/options/EventButtonOption.vue"
+import SettingsOption from "./nodes/options/SettingsOption.vue"
 
 
 export default {
-    data() {
-        return {
-            editor: new Editor(),
-            viewPlugin: new ViewPlugin(),
-            optionPlugin: new OptionPlugin()
-        }
-    },
-    created() {
-        this.editor.use(this.optionPlugin);
-        this.editor.use(this.viewPlugin);
-        // register your nodes, node options, node interface types, ...
-
-        this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
-
-        this.editor.registerNodeType("cron", Cron, "Time")
-        this.editor.registerNodeType("logging", Logging, "Logging")
-        this.editor.registerNodeType("button", ButtonNode, "Input")
-        this.editor.registerNodeType("httpGet", HttpGet, "Http")
-        this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
-        this.editor.registerNodeType("objectFilter", Filter, "Object")
-        this.editor.registerNodeType("objectPath", Path, "Object")
-        this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
-
-        this.loadData();
-    },
-    methods: {
-      save() {
-        let state = this.editor.save();
-        console.log(state);
-
-        let saveStateUrl = "http://localhost:3000/save-node-config";
-        this.axios.post(saveStateUrl, state).then((response) => {
-          console.log(response);
-        })
-      },
-      loadData() {
-          let loadStateUrl = "http://localhost:3000/get-node-config";
-          this.axios.get(loadStateUrl).then((response) => {
-            this.editor.load(response.data);
-          })
-      },
-      activate() {
-        console.log(this.editor);
-      }
+  data() {
+    return {
+      sidebar: false,
+      changed: false,
+      editor: new Editor(),
+      viewPlugin: new ViewPlugin(),
+      optionPlugin: new OptionPlugin()
     }
+  },
+  components: {
+    Sidebar
+  },
+  created() {
+    this.editor.use(this.optionPlugin);
+    this.editor.use(this.viewPlugin);
+    // register your nodes, node options, node interface types, ...
+    this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
+    this.viewPlugin.registerOption("SettingsOption", SettingsOption);
+
+
+    this.editor.registerNodeType("cron", Cron, "Time")
+    this.editor.registerNodeType("logging", Logging, "Logging")
+    this.editor.registerNodeType("httpGet", HttpGet, "Http")
+    this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
+    this.editor.registerNodeType("objectFilter", Filter, "Object")
+    this.editor.registerNodeType("objectPath", Path, "Object")
+    this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
+
+    this.editor.registerNodeType("interval", IntervalNode, "Input")
+    this.editor.registerNodeType("button", ButtonNode, "Input")
+
+    this.loadData();
+    this.editor.events.beforeAddConnection.addListener("Test", () => this.changed = true);
+    this.editor.events.beforeAddNode.addListener("Test", () => this.changed = true);
+  },
+  methods: {
+    save() {
+      let state = this.editor.save();
+      console.log(state);
+      let saveStateUrl = "http://localhost:3000/save-node-config";
+      this.axios.post(saveStateUrl, state).then((response) => {
+        console.log(response);
+        this.changed = false;
+      })
+    },
+    loadData() {
+      let loadStateUrl = "http://localhost:3000/get-node-config";
+      this.axios.get(loadStateUrl).then((response) => {
+        this.editor.load(response.data);
+      })
+    },
+    activate() {
+      console.log(this.editor);
+    }
+  }
 }
 </script>
 
 <style scoped>
 #container {
-  width: 100%;
-  height: 100%;
-  background-color: aquamarine;
-}
-
-#editor {
   width: 100%;
   height: 100%;
 }

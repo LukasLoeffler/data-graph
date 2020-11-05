@@ -2,7 +2,7 @@ import { Node } from "@baklavajs/core";
 
 export default class ButtonNode extends Node {
     type = "button";
-    name = this.type;
+    name = "Button";
 
     constructor() {
         super();

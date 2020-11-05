@@ -79,7 +79,14 @@ function loadConfig() {
             data = JSON.parse(data);
             frontendNodes = data;
             data.nodes.forEach((node: any) => {
-                let newCls = NodeRegistry.getClassByName(node.type);
+
+                let newCls: any;
+                try {
+                    newCls = NodeRegistry.getClassByName(node.type);
+                } catch (error) {
+                    console.log(err);
+                }
+                
 
 
                 if (node.type === "cron") {
