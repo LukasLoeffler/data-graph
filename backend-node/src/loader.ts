@@ -88,7 +88,15 @@ function loadConfig() {
                 }
                 
 
-
+                if (node.type === "mqttSub") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, [])
+                }
+                if (node.type === "mqttPub") {
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, [], [])
+                }
                 if (node.type === "cron") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);

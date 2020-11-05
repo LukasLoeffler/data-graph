@@ -17,7 +17,7 @@ Vue.use(BaklavaVuePlugin);
 
 const store = new Vuex.Store({
   state: {
-    optionNode: {},
+    optionNode: null,
   },
   mutations: {
     setOptionNode (state, node) {

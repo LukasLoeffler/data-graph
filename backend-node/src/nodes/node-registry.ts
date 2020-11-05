@@ -8,6 +8,8 @@ import { ObjectPathNode } from "./data/json-path-node"
 import { ObjectMapperNode } from "./data/object-mapper-node"
 import { FilterNode } from "./data/filter-node"
 import { ButtonNode } from "./button/button-node";
+import { MqttPubNode } from "./mqtt/mqtt-pub-node";
+import { MqttSubNode } from "./mqtt/mqtt-sub-node";
 
 
 class RegEntry {
@@ -44,7 +46,11 @@ let advancedRegistry: Array<RegEntry> = [
     new RegEntry("objectMapper", "object", ObjectMapperNode, ["input"], ["success"]),
     new RegEntry("objectFilter", "object", FilterNode, ["input"], ["success"]),
     new RegEntry("button", "input", ButtonNode, [], ["success"]),
+
+    new RegEntry("mqttPub", "mqtt", MqttPubNode, ["input"], []),
+    new RegEntry("mqttSub", "mqtt", MqttSubNode, [], ["success"]),
 ]
+
 
 export class NodeRegistry {
     static getClassByName(name: any) {

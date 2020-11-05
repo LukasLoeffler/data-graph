@@ -1,6 +1,6 @@
 <template>
     <div id="sidebar" class="p-2">
-        <v-btn color="red" @click="$store.commit('setOptionNode', null)">
+        <v-btn color="red" @click="$store.commit('setOptionNode', null)" small>
             <v-icon>mdi-close-box</v-icon>
         </v-btn>
         <p class="white-t mt-2">Node: {{$store.getters.optionNode}}</p>

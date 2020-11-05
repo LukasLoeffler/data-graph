@@ -38,6 +38,9 @@ import FileSave from "./nodes/filesystem/FileSaveNode.ts"
 import EventButtonOption from "./nodes/options/EventButtonOption.vue"
 import SettingsOption from "./nodes/options/SettingsOption.vue"
 
+import MqttSubNode from "./nodes/mqtt/MqttSubNode";
+import MqttPubNode from "./nodes/mqtt/MqttPubNode";
+
 
 export default {
   data() {
@@ -70,6 +73,9 @@ export default {
 
     this.editor.registerNodeType("interval", IntervalNode, "Input")
     this.editor.registerNodeType("button", ButtonNode, "Input")
+
+    this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
+    this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
 
     this.loadData();
     this.editor.events.beforeAddConnection.addListener("Test", () => this.changed = true);
@@ -111,5 +117,4 @@ body {
   width: 100vw;
   margin: 0;
 }
-
 </style>
