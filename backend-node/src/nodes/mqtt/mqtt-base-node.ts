@@ -55,4 +55,12 @@ export class MqttBaseNode extends BaseNode {
     getOption(optionName: string) {
         return this.options[optionName];
     }
+
+    /**
+     * Will be executed on reset and end the client.
+     * Otherwise old subscriptions are still active.
+     */
+    stop() {
+        this.client.end();
+    }
 }

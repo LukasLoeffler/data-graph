@@ -17,7 +17,7 @@ export class MqttSubNode extends MqttBaseNode {
 
 
         this.client.subscribe(subTopic, (err: any) => {
-            console.log(err);
+            if(err) console.log(err);
         })
 
         this.client.on("message",  (topic: any, message: string) => {
