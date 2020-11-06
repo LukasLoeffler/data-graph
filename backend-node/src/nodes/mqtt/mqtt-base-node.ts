@@ -1,6 +1,6 @@
 import { connect } from 'mqtt';
 import { NodeManager } from "../node-manager";
-
+import { MqttServerConnection, MqttServerManager } from "../../manager/mqtt-manager";
 import { BaseNode } from "../base-node";
 import chalk from "chalk";
 
@@ -8,27 +8,28 @@ import chalk from "chalk";
 
 const NODE_TYPE = "MQTT_PUB"
 
-const requiredOptions = ["Server, Topic"];
+let requiredOptions = ["Server, Topic"];
 
 export class MqttBaseNode extends BaseNode {
     options: any;
-    server: string;
-    //topic: string;
+    server: MqttServerConnection;
+    topic: string;
     client: any;
 
     constructor(name: string, id: string, options: any, targetsSuccess: any) {
         super(name, NODE_TYPE, id, targetsSuccess, []);
+        console.log(options);
         //this.validateOptions(options);
         this.options = options;
-        this.server = 'mqtt://broker.hivemq.com';
-        //this.topic = this.getOption("Topic");
+        this.server = MqttServerManager.getServerById(this.getOption("Server")); 
+        this.topic = this.getOption("Topic");
         this.createClient();
         NodeManager.addNode(this);
     }
 
 
     createClient() {
-        this.client = connect(this.server);
+        this.client = connect(this.server.url);
         this.client.on('connect', () => {
             console.log(`MQTT ${this.server}: ${chalk.greenBright("connected")}`);
         })
@@ -42,6 +43,7 @@ export class MqttBaseNode extends BaseNode {
      */
     validateOptions(options: any) {
         requiredOptions.forEach(option => {
+            console.log(options);
             let checkedOption = options[option];
             if (!checkedOption) throw new Error(`${chalk.red(NODE_TYPE)}: Option '${option}' is not present`);
         });

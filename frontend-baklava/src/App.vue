@@ -58,6 +58,9 @@ export default {
   created() {
     this.editor.use(this.optionPlugin);
     this.editor.use(this.viewPlugin);
+
+    //this.viewPlugin.enableMinimap = true;
+
     // register your nodes, node options, node interface types, ...
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("SettingsOption", SettingsOption);

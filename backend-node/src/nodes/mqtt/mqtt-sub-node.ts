@@ -3,7 +3,6 @@ import { MqttBaseNode } from "./mqtt-base-node";
 
 
 const NODE_TYPE = "MQTT_SUB"
-const requiredOptions = ["Server, Topic"];
 
 export class MqttSubNode extends MqttBaseNode {
 
@@ -13,11 +12,8 @@ export class MqttSubNode extends MqttBaseNode {
     }
 
     subscribe() {
-        let subTopic = "lkspayload";
-
-
-        this.client.subscribe(subTopic, (err: any) => {
-            if(err) console.log(err);
+        this.client.subscribe(this.topic, (err: any) => {
+            if(err) console.log("SubNode:", err);
         })
 
         this.client.on("message",  (topic: any, message: string) => {

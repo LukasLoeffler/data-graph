@@ -1,5 +1,3 @@
-import { BaseNode } from "./base-node";
-
 import { CronNode } from "./timer/cron-node"
 import { LoggingNode } from "./logging/logging-node"
 import { HttpNode } from "./http/http-node"
@@ -16,23 +14,23 @@ class RegEntry {
     name: string;
     category: string;
     clss: any;
-    socketIn: Array<any>;
-    socketOut: Array<any>;
+    socketsIn: Array<any>;
+    socketsOut: Array<any>;
 
     constructor(name: string, category: string, clss: any, socketIn: Array<any>, socketOut: Array<any>) {
         this.name = name;
         this.category = category;
         this.clss = clss;
-        this.socketIn = socketIn;
-        this.socketOut = socketOut;
+        this.socketsIn = socketIn;
+        this.socketsOut = socketOut;
     }
 
     repr() {
         return {
             name: this.name,
             category: this.category,
-            socketIn: this.socketIn,
-            socketOut: this.socketOut
+            socketIn: this.socketsIn,
+            socketOut: this.socketsOut
         }
     }
 }
@@ -46,14 +44,13 @@ let advancedRegistry: Array<RegEntry> = [
     new RegEntry("objectMapper", "object", ObjectMapperNode, ["input"], ["success"]),
     new RegEntry("objectFilter", "object", FilterNode, ["input"], ["success"]),
     new RegEntry("button", "input", ButtonNode, [], ["success"]),
-
     new RegEntry("mqttPub", "mqtt", MqttPubNode, ["input"], []),
     new RegEntry("mqttSub", "mqtt", MqttSubNode, [], ["success"]),
 ]
 
 
 export class NodeRegistry {
-    static getClassByName(name: any) {
+    static getNodeClassByName(name: any) {
         let cls = advancedRegistry.find(regEntry => regEntry.name === name);
         if (!cls) {
             throw new Error(`Class '${name}' not registered.`)
@@ -61,6 +58,9 @@ export class NodeRegistry {
         return cls;
     }
 
+    /**
+     * Get all available nodes
+     */
     static getAvailableNodes() {
         return advancedRegistry.map(regEntry => {
             return regEntry.repr()

@@ -82,9 +82,9 @@ function loadConfig() {
 
                 let newCls: any;
                 try {
-                    newCls = NodeRegistry.getClassByName(node.type);
+                    newCls = NodeRegistry.getNodeClassByName(node.type);
                 } catch (error) {
-                    console.log(err);
+                    console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
                 
 

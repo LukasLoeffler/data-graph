@@ -3,7 +3,6 @@ import { MqttBaseNode } from "./mqtt-base-node";
 
 const NODE_TYPE = "MQTT_PUB"
 
-const requiredOptions = ["Server, Topic"];
 
 export class MqttPubNode extends MqttBaseNode {
 
@@ -12,6 +11,6 @@ export class MqttPubNode extends MqttBaseNode {
     }
 
     execute(payload: any) {
-        this.client.publish('lkspayload', payload)
+        this.client.publish(this.topic, payload)
     }
 }
