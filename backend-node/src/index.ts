@@ -4,6 +4,7 @@ import { Loader } from "./loader";
 import express from "express";
 import chalk from "chalk";
 import { NodeManager } from "./nodes/node-manager";
+import { MqttServerManager } from "./manager/mqtt-manager";
 const cors = require('cors')
 const fs = require('fs');
 
@@ -50,6 +51,11 @@ app.get("/recieve-event/:nodeId", (req, res) => {
     node.execute();
     if (!node) res.status(404).send("Node not found");
     else res.send("Successfully executed");
+});
+
+app.get("/mqtt-server", (req, res) => {
+    let list = MqttServerManager.getAvailableServer();
+    res.send(list);
 });
 
 // start the Express server
