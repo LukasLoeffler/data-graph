@@ -11,6 +11,6 @@ export class MqttPubNode extends MqttBaseNode {
     }
 
     execute(payload: any) {
-        this.client.publish(this.topic, payload)
+        this.client.publish(this.topic, null)
     }
 }

@@ -17,10 +17,6 @@ export default class MqttSubNode extends Node {
         this.addOption("Topic", "InputOption", "topic")
         this.addOutputInterface("onSuccess");
     }
-
-    onClick(ev) {
-        console.log(ev);
-    }
 }
 
 /**

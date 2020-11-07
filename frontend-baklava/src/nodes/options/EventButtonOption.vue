@@ -17,7 +17,7 @@ export default {
             this.clickCount ++;
             let nodeId = this.node.id;
             let url = `http://localhost:3000/recieve-event/${nodeId}`
-            this.axios.get(url).then((data) => console.log(data));
+            this.axios.get(url).then(() => {});
         }
     }
 }

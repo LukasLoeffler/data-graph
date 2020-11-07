@@ -8,7 +8,6 @@ export default class MqttPubNode extends Node {
     type = "mqttPub";
     name = "MQTT Publish";
 
-
     constructor() {
         super();
         this.addOption("Server", "SelectOption", undefined, undefined, {

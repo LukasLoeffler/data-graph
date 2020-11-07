@@ -18,6 +18,7 @@ export class MqttSubNode extends MqttBaseNode {
 
         this.client.on("message",  (topic: any, message: string) => {
             // message is Buffer
+            console.log(message.toString());
             this.onSuccess(message.toString());
         });
     }

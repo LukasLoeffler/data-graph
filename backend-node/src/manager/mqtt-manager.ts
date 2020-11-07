@@ -17,7 +17,8 @@ export class MqttServerConnection {
 
 let list: Array<MqttServerConnection> = [
     {name: "Hive", id: 1, url: "mqtt://broker.hivemq.com", username: "", password: ""},
-    {name: "Mosquitto", id: 2, url: "mqtt://test.mosquitto.org", username: "", password: ""}
+    {name: "Mosquitto", id: 2, url: "mqtt://test.mosquitto.org", username: "", password: ""},
+    {name: "Respond", id: 3, url: "mqtt://82.165.18.31", username: "", password: ""},
 ]
 
 export class MqttServerManager {
