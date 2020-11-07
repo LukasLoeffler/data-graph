@@ -38,6 +38,9 @@ import FileSave from "./nodes/filesystem/FileSaveNode.ts"
 import EventButtonOption from "./nodes/options/EventButtonOption.vue"
 import SettingsOption from "./nodes/options/SettingsOption.vue"
 
+import MqttSubNode from "./nodes/mqtt/MqttSubNode";
+import MqttPubNode from "./nodes/mqtt/MqttPubNode";
+
 
 export default {
   data() {
@@ -55,6 +58,9 @@ export default {
   created() {
     this.editor.use(this.optionPlugin);
     this.editor.use(this.viewPlugin);
+
+    //this.viewPlugin.enableMinimap = true;
+
     // register your nodes, node options, node interface types, ...
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("SettingsOption", SettingsOption);
@@ -71,17 +77,18 @@ export default {
     this.editor.registerNodeType("interval", IntervalNode, "Input")
     this.editor.registerNodeType("button", ButtonNode, "Input")
 
+    this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
+    this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
+
     this.loadData();
-    this.editor.events.beforeAddConnection.addListener("Test", () => this.changed = true);
-    this.editor.events.beforeAddNode.addListener("Test", () => this.changed = true);
+
   },
   methods: {
     save() {
       let state = this.editor.save();
-      console.log(state);
       let saveStateUrl = "http://localhost:3000/save-node-config";
-      this.axios.post(saveStateUrl, state).then((response) => {
-        console.log(response);
+      this.axios.post(saveStateUrl, state).then(() => {
+        console.log("%c Config successfully saved", "color: green; font-weight: bold")
         this.changed = false;
       })
     },
@@ -93,6 +100,13 @@ export default {
     },
     activate() {
       console.log(this.editor);
+    }
+  },
+  watch: {
+    'editor.nodes': {
+      handler: function() {
+        this.changed = true;
+      }
     }
   }
 }
@@ -111,5 +125,4 @@ body {
   width: 100vw;
   margin: 0;
 }
-
 </style>

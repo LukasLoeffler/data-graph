@@ -82,13 +82,21 @@ function loadConfig() {
 
                 let newCls: any;
                 try {
-                    newCls = NodeRegistry.getClassByName(node.type);
+                    newCls = NodeRegistry.getNodeClassByName(node.type);
                 } catch (error) {
-                    console.log(err);
+                    console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
                 
 
-
+                if (node.type === "mqttSub") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, [])
+                }
+                if (node.type === "mqttPub") {
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, [], [])
+                }
                 if (node.type === "cron") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);

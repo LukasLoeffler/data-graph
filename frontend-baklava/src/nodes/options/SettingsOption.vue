@@ -10,7 +10,7 @@ export default {
         onClick() {
             let nodeId = this.node.id;
             console.log("Opening Settings for:", nodeId)
-            this.$store.commit('setOptionNode', nodeId);
+            this.$store.commit('setOptionNode', this.node);
         },
         close() {
             this.$store.commit('setOptionNode', null);
