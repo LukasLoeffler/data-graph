@@ -41,7 +41,7 @@ import ExecutionCountOption from "./nodes/options/ExecutionCountOption"
 
 import MqttSubNode from "./nodes/mqtt/MqttSubNode";
 import MqttPubNode from "./nodes/mqtt/MqttPubNode";
-import Logging from "./nodes/LoggingNode";
+import Logging from "./nodes/LoggingNode.js";
 
 export default {
   data() {

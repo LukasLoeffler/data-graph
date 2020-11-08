@@ -1,3 +1,5 @@
+import { Node } from "@baklavajs/core";
+
 
 export default class LoggingNode extends Node {
     type = "logging";
@@ -10,9 +12,5 @@ export default class LoggingNode extends Node {
         this.addOption("Operation", "SelectOption", "INFO", undefined, {
             items: [ "INFO", "WARN", "DANGER" ]
         })
-    }
-
-    onClick(ev) {
-        console.log(ev);
     }
 }

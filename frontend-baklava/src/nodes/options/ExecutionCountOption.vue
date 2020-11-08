@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-chip small label color="primary" class="mr-1">{{executionCount}}</v-chip>
+        <v-chip small label color="primary" class="mr-1" @click="resetCounter">Executed: {{executionCount}}</v-chip>
     </div>
 </template>
 
@@ -20,9 +20,21 @@ export default {
                     this.executionCount = data.callCount;
                 }
             } catch(err) {
-                // If message is not JSON-parsable nothing should happen.
+                console.log(err);
             }
+        }
+    },
+    methods: {
+        resetCounter() {
+            console.log("ResettingCounter");
+            let url = `http://localhost:3000/reset-exec-count/${this.node.id}`;
+            this.axios.get(url).then(() => {
+                console.log("%cSuccessfully reset counter for", "color: green; font-weight: bold", this.node.name)
+            }); 
         }
     }
 }
 </script>
+
+<style>
+</style>
