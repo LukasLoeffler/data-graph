@@ -1,3 +1,4 @@
+import { WsManager } from "../../ws";
 import { NodeManager } from "../node-manager";
 import { MqttBaseNode } from "./mqtt-base-node";
 
@@ -5,7 +6,7 @@ import { MqttBaseNode } from "./mqtt-base-node";
 const NODE_TYPE = "MQTT_SUB"
 
 export class MqttSubNode extends MqttBaseNode {
-
+    callCount: number = 0;
     constructor(name: string, id: string, options: any, targetsSuccess: []) {
         super(name, id, options, targetsSuccess)
         this.subscribe();
@@ -17,7 +18,12 @@ export class MqttSubNode extends MqttBaseNode {
         })
 
         this.client.on("message",  (topic: any, message: string) => {
-            // message is Buffer
+            this.callCount++;
+            let payload = {
+                node: this.id,
+                callCount: this.callCount
+            }
+            WsManager.sendMessage(JSON.stringify(payload));
             console.log(message.toString());
             this.onSuccess(message.toString());
         });

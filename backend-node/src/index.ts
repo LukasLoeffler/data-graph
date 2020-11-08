@@ -5,8 +5,10 @@ import express from "express";
 import chalk from "chalk";
 import { NodeManager } from "./nodes/node-manager";
 import { MqttServerManager } from "./manager/mqtt-manager";
+import { WsManager } from "./ws";
 const cors = require('cors')
 const fs = require('fs');
+
 
 
 const app = express();
@@ -43,6 +45,7 @@ app.post("/save-node-config", ( req, res ) => {
         console.log("Successfully saved");
         Loader.loadConfig();
     });
+    WsManager.sendMessage("Refreshed");
     res.send("Successfully saved");
 });
 

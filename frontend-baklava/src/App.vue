@@ -28,23 +28,25 @@ import Sidebar from "./components/Sidebar"
 import ButtonNode from "./nodes/ButtonNode.js";
 import IntervalNode from "./nodes/time/IntervalNode"
 import Cron from "./nodes/time/CronNode.ts";
-import Logging from "./nodes/LoggingNode.ts";
+
 import HttpGet from "./nodes/http/HttpGetNode.ts"
 import HttpPostPut from "./nodes/http/HttpPostPutNode.ts"
 import Filter from "./nodes/object/FilterNode.ts"
 import Path from "./nodes/object/PathNode.ts"
 import FileSave from "./nodes/filesystem/FileSaveNode.ts"
 
-import EventButtonOption from "./nodes/options/EventButtonOption.vue"
-import SettingsOption from "./nodes/options/SettingsOption.vue"
+import EventButtonOption from "./nodes/options/EventButtonOption"
+import SettingsOption from "./nodes/options/SettingsOption"
+import ExecutionCountOption from "./nodes/options/ExecutionCountOption"
 
 import MqttSubNode from "./nodes/mqtt/MqttSubNode";
 import MqttPubNode from "./nodes/mqtt/MqttPubNode";
-
+import Logging from "./nodes/LoggingNode";
 
 export default {
   data() {
     return {
+      connection: null,
       sidebar: false,
       changed: false,
       editor: new Editor(),
@@ -64,6 +66,7 @@ export default {
     // register your nodes, node options, node interface types, ...
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("SettingsOption", SettingsOption);
+    this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
 
 
     this.editor.registerNodeType("cron", Cron, "Time")
@@ -81,9 +84,11 @@ export default {
     this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
 
     this.loadData();
-
   },
   methods: {
+    sendMessage() {
+      this.$socket.send('some data')
+    },
     save() {
       let state = this.editor.save();
       let saveStateUrl = "http://localhost:3000/save-node-config";

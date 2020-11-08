@@ -1,7 +1,7 @@
 <template>
-    <v-badge color="green" :content="executionCount" overlap>
-        <v-btn @click="onClick" color="grey darken-1" block small style="width: 180px">{{option.title}}</v-btn>
-    </v-badge>
+    <div>
+        <v-chip small label color="primary" class="mr-1">{{executionCount}}</v-chip>
+    </div>
 </template>
 
 <script>
@@ -19,16 +19,9 @@ export default {
                 if (data.node === this.node.id) {
                     this.executionCount = data.callCount;
                 }
-            } catch (error) {
-                console.log("Messae")
+            } catch(err) {
+                // If message is not JSON-parsable nothing should happen.
             }
-        }
-    },
-    methods: {
-        onClick() {
-            let nodeId = this.node.id;
-            let url = `http://localhost:3000/recieve-event/${nodeId}`
-            this.axios.get(url).then(() => {});
         }
     }
 }
