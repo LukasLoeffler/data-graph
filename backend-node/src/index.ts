@@ -6,6 +6,7 @@ import chalk from "chalk";
 import { NodeManager } from "./nodes/node-manager";
 import { MqttServerManager } from "./manager/mqtt-manager";
 import { WsManager } from "./ws";
+import ExecutionCounter from "./exec-counter";
 const cors = require('cors')
 const fs = require('fs');
 
@@ -60,6 +61,11 @@ app.get("/mqtt-server", (req, res) => {
     let list = MqttServerManager.getAvailableServer();
     res.send(list);
 });
+
+app.get("/reset-exec-count/:nodeId", (req, res) => {
+    ExecutionCounter.resetCount(req.params.nodeId);
+    res.send("Successfully resetted");
+})
 
 // start the Express server
 app.listen( port, () => {
