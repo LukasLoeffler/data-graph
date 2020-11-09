@@ -1,20 +1,24 @@
+import chalk from "chalk";
 const redis = require("redis");
 const { promisify } = require("util");
-
 
 let url = "redis://192.168.178.82:6379/0"
 const client = redis.createClient(url);
 
+
 const getAsync = promisify(client.get).bind(client);
 
-client.on("error", (error: any) => {
-    console.error(error);
+client.on("error", () => {
+    console.log(`Redis-Server: (${url}): ${chalk.redBright("connecting failed")}`)
+});
+
+client.on("connect", () => {
+    console.log(`Redis-Server: (${url}): ${chalk.greenBright("connected")}`)
 });
 
 export class RedisClient {
 
     static set(key: string, value: any) {
-        console.log("Set:", key, value);
         client.set(key, value);
     }
 
