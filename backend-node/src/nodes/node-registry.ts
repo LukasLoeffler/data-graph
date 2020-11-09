@@ -37,6 +37,7 @@ class RegEntry {
 
 let advancedRegistry: Array<RegEntry> = [
     new RegEntry("cron", "time", CronNode, [], ["event"]),
+    new RegEntry("interval", "time", CronNode, [], ["event"]),
     new RegEntry("logging", "logging", LoggingNode, ["input"], ["success"]),
     new RegEntry("httpGet", "http", HttpNode, ["input"], ["success", "failure"]),
     new RegEntry("fileSave", "fileSystem", FileSaveNode, ["input"], ["success"]),

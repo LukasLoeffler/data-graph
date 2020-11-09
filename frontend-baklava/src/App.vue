@@ -70,20 +70,44 @@ export default {
 
 
     this.editor.registerNodeType("cron", Cron, "Time")
+    this.editor.registerNodeType("interval", IntervalNode, "Time")
+
     this.editor.registerNodeType("logging", Logging, "Logging")
+
     this.editor.registerNodeType("httpGet", HttpGet, "Http")
     this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
+
     this.editor.registerNodeType("objectFilter", Filter, "Object")
     this.editor.registerNodeType("objectPath", Path, "Object")
+    
     this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
 
-    this.editor.registerNodeType("interval", IntervalNode, "Input")
+    
     this.editor.registerNodeType("button", ButtonNode, "Input")
 
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
     this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
 
+
+    // Test to style connections by active nodes
+
+
+
     this.loadData();
+
+
+    this.$options.sockets.onmessage = (message) => {
+      try {
+        let data = JSON.parse(message.data);
+        this.$store.commit("addRecentlyActiveNode", data.node);
+
+        //let connection = this.editor._connections.find(conn => conn.from.parent.id === data.node);
+        //connection.$el.style.stroke = "red";
+        
+      } catch (err) {
+        //
+      }
+    }
   },
   methods: {
     sendMessage() {

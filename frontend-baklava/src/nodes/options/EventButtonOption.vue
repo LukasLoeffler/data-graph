@@ -20,7 +20,7 @@ export default {
                     this.executionCount = data.callCount;
                 }
             } catch (error) {
-                console.log("Messae")
+                // console.log("Message")
             }
         }
     },

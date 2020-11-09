@@ -97,7 +97,8 @@ function loadConfig() {
                     let options = extractOptionsFromNode(node);
                     let instance = new newCls.clss(node.name, node.id, options, [], [])
                 }
-                if (node.type === "cron") {
+                // Interval and cron are basically the same node type with different front-ends
+                if (node.type === "cron" || node.type === "interval") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);
                     let instance = new newCls.clss(node.name, node.id, options, successTargets, [])
@@ -135,7 +136,13 @@ function loadConfig() {
                 }
             });
             let numberOfNodesInit = NodeManager.getActiveNodes().length;
-            console.log(`${chalk.greenBright(numberOfNodesInit)} nodes initalized.`)
+            let numberofTotalNodes = data.nodes.length;
+
+            if (numberOfNodesInit !== numberofTotalNodes) {
+                console.log(`${chalk.redBright(numberOfNodesInit)}/${chalk.redBright(numberofTotalNodes)} nodes initalized.`)
+            } else {
+                console.log(`${chalk.greenBright(numberOfNodesInit)}/${chalk.greenBright(numberofTotalNodes)} nodes initalized.`)
+            }
         } else {
             console.log(err);
         }

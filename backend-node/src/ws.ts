@@ -4,9 +4,10 @@ const wss = new WebSocket.Server({ port: 3001 });
 
 let conn: any = null;
 
-wss.on('connection', (ws: any) => {
+wss.on('connection', (ws: any, req: any) => {
     conn = ws;
-    console.log("Connected");
+    let clientId = req.headers['sec-websocket-key'];
+    console.log(`New websocket client (${clientId})  connected`);
     ws.on('message', (message: any) =>  {
         console.log('received: %s', message);
         

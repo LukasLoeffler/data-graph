@@ -5,6 +5,7 @@ import { WsManager } from "./ws";
 
 export default class ExecutionCounter {
 
+
     /**
      * Increments the execution counter for the given node by one and writes these changes to the redis-database.
      * If no data is existing for the given node 1 is set as start value.
@@ -20,6 +21,11 @@ export default class ExecutionCounter {
         })
     }
 
+
+    /**
+     * Resets the call count of the given node to 0
+     * @param nodeId Id of the node
+     */
     static resetCount(nodeId: string) {
         const zeroValue = 0;
         RedisClient.set(nodeId, zeroValue);
@@ -27,6 +33,11 @@ export default class ExecutionCounter {
     }
 
 
+    /**
+     * Emits the count of a node via websockets to the frontend.
+     * @param nodeId Id of the node
+     * @param count Count to emit
+     */
     static sendExecutionCount(nodeId: string, count: number) {
         let payload = {
             type: "ExecutionCount",

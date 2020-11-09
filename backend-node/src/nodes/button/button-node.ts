@@ -3,6 +3,7 @@ import { NodeManager } from "../node-manager";
 
 import { BaseNode } from "../base-node";
 import { WsManager } from "../../ws";
+import ExecutionCounter from "../../exec-counter";
 
 
 const NODE_TYPE = "BUTTON"
@@ -17,12 +18,7 @@ export class ButtonNode extends BaseNode{
 
 
     execute() {
-        this.callCount++;
-        let payload = {
-            node: this.id,
-            callCount: this.callCount
-        }
-        WsManager.sendMessage(JSON.stringify(payload));
+        ExecutionCounter.incrCount(this.id);
         this.onSuccess(`Payload ${new Date()}`);
     }
 }
