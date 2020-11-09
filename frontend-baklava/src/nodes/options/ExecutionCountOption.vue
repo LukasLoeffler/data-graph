@@ -17,22 +17,19 @@ export default {
         this.$options.sockets.onmessage = (message) => {
             try {
                 let data = JSON.parse(message.data);
+                // Filter only messages for own node
                 if (data.node === this.node.id) {
-                    this.triggerOutInterfaces();
                     this.executionCount = data.callCount;
                     this.isActive = true;
                     let timeout = 1500; // timeout reset in case of 2 close consecutive calls
                     setTimeout(() => this.isActive = false, timeout);
                 }
-            } catch(err) {
-                console.log(err);
+            } catch(error) {
+                // No error. Not all websocket message-payloads are in json format.
             }
         }
     },
     methods: {
-        triggerOutInterfaces() {
-            //TODO: Implement rolling marbles to active connection.
-        },
         resetCounter() {
             console.log("ResettingCounter");
             let url = `http://localhost:3000/reset-exec-count/${this.node.id}`;

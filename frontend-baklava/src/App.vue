@@ -83,7 +83,26 @@ export default {
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
     this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
 
+
+    // Test to style connections by active nodes
+
+
+
     this.loadData();
+
+
+    this.$options.sockets.onmessage = (message) => {
+      try {
+        let data = JSON.parse(message.data);
+        this.$store.commit("addRecentlyActiveNode", data.node);
+
+        //let connection = this.editor._connections.find(conn => conn.from.parent.id === data.node);
+        //connection.$el.style.stroke = "red";
+        
+      } catch (err) {
+        //
+      }
+    }
   },
   methods: {
     sendMessage() {
