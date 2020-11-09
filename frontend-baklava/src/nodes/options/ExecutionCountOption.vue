@@ -18,8 +18,8 @@ export default {
             try {
                 let data = JSON.parse(message.data);
                 // Filter only messages for own node
-                if (data.node === this.node.id) {
-                    this.executionCount = data.callCount;
+                if (data.nodeId === this.node.id) {
+                    this.executionCount = data.executionCount;
                     this.isActive = true;
                     let timeout = 1500; // timeout reset in case of 2 close consecutive calls
                     setTimeout(() => this.isActive = false, timeout);

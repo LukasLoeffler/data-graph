@@ -16,8 +16,8 @@ export default {
         this.$options.sockets.onmessage = (message) => {
             try {
                 let data = JSON.parse(message.data);
-                if (data.node === this.node.id) {
-                    this.executionCount = data.callCount;
+                if (data.nodeId === this.node.id) {
+                    this.executionCount = data.executionCount;
                 }
             } catch (error) {
                 // console.log("Message")
