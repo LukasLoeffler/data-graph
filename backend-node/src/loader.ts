@@ -1,7 +1,8 @@
 import { NodeManager } from "./nodes/node-manager";
-const fs = require('fs');
-import chalk from "chalk";
 import { NodeRegistry } from "./nodes/node-registry";
+import fs from 'fs';
+import chalk from "chalk";
+
 
 interface StringMap { [key: string]: string; }
 

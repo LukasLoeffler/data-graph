@@ -3,6 +3,8 @@ module.exports = {
     setValue: setValue
 };
 
+// Written in JS because type-safety of ts would not allow such dynamic concepts
+
 //https://stackoverflow.com/a/20240290/10797372
 function setValue(obj, path, value) {
     var a = path.split('.')

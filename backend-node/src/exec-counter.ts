@@ -3,8 +3,7 @@ import { WsManager } from "./ws";
 
 
 
-export default class ExecutionCounter {
-
+export class ExecutionCounter {
 
     /**
      * Increments the execution counter for the given node by one and writes these changes to the redis-database.

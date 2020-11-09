@@ -2,8 +2,7 @@ const cron = require('node-cron');
 import { NodeManager } from "../node-manager";
 
 import { BaseNode } from "../base-node";
-import { WsManager } from "../../ws";
-import ExecutionCounter from "../../exec-counter";
+import { ExecutionCounter } from "../../exec-counter";
 
 
 const NODE_TYPE = "BUTTON"

@@ -1,6 +1,6 @@
 import { BaseNode } from "../base-node";
-const chalk = require('chalk');
 import { NodeManager } from "../node-manager";
+const chalk = require('chalk');
 
 
 const NODE_TYPE = "LOGGING"

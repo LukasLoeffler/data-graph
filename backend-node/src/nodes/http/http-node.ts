@@ -1,6 +1,5 @@
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
-import chalk from "chalk";
 const axios = require('axios');
 
 
