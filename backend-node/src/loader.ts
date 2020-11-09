@@ -97,6 +97,7 @@ function loadConfig() {
                     let options = extractOptionsFromNode(node);
                     let instance = new newCls.clss(node.name, node.id, options, [], [])
                 }
+                // Interval and cron are basically the same node type with different front-ends
                 if (node.type === "cron" || node.type === "interval") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);
