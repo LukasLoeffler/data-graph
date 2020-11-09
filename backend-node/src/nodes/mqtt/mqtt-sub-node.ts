@@ -7,7 +7,7 @@ const NODE_TYPE = "MQTT_SUB"
 export class MqttSubNode extends MqttBaseNode {
 
     constructor(name: string, id: string, options: any, targetsSuccess: []) {
-        super(name, id, options, targetsSuccess)
+        super(NODE_TYPE, name, id, options, targetsSuccess)
         this.subscribe();
     }
 

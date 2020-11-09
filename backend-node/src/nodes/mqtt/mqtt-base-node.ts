@@ -9,14 +9,14 @@ import chalk from "chalk";
 const NODE_TYPE = "MQTT_PUB"
 let requiredOptions = ["Server", "Topic"];
 
-export class MqttBaseNode extends BaseNode {
+export abstract class MqttBaseNode extends BaseNode {
     options: any;
     server: MqttServerConnection;
     topic: string;
     client: any;
 
-    constructor(name: string, id: string, options: any, targetsSuccess: any) {
-        super(name, NODE_TYPE, id, targetsSuccess, []);
+    constructor(nodeType: string, name: string, id: string, options: any, targetsSuccess: any) {
+        super(name, nodeType, id, targetsSuccess, []);
         this.validateOptions(options, requiredOptions);
         this.options = options;
         let serverId = this.getOption("Server", options); //Only id of server is passed by options

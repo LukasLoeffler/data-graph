@@ -7,7 +7,7 @@ const NODE_TYPE = "MQTT_PUB"
 export class MqttPubNode extends MqttBaseNode {
 
     constructor(name: string, id: string, options: any) {
-        super(name, id, options, [])
+        super(NODE_TYPE, name, id, options, [])
     }
 
     execute(payload: any) {
