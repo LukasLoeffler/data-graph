@@ -135,7 +135,13 @@ function loadConfig() {
                 }
             });
             let numberOfNodesInit = NodeManager.getActiveNodes().length;
-            console.log(`${chalk.greenBright(numberOfNodesInit)} nodes initalized.`)
+            let numberofTotalNodes = data.nodes.length;
+
+            if (numberOfNodesInit !== numberofTotalNodes) {
+                console.log(`${chalk.redBright(numberOfNodesInit)}/${chalk.redBright(numberofTotalNodes)} nodes initalized.`)
+            } else {
+                console.log(`${chalk.greenBright(numberOfNodesInit)}/${chalk.greenBright(numberofTotalNodes)} nodes initalized.`)
+            }
         } else {
             console.log(err);
         }
