@@ -70,14 +70,19 @@ export default {
 
 
     this.editor.registerNodeType("cron", Cron, "Time")
+    this.editor.registerNodeType("interval", IntervalNode, "Time")
+
     this.editor.registerNodeType("logging", Logging, "Logging")
+
     this.editor.registerNodeType("httpGet", HttpGet, "Http")
     this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
+
     this.editor.registerNodeType("objectFilter", Filter, "Object")
     this.editor.registerNodeType("objectPath", Path, "Object")
+    
     this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
 
-    this.editor.registerNodeType("interval", IntervalNode, "Input")
+    
     this.editor.registerNodeType("button", ButtonNode, "Input")
 
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")

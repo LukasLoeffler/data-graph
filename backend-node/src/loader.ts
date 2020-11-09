@@ -97,7 +97,7 @@ function loadConfig() {
                     let options = extractOptionsFromNode(node);
                     let instance = new newCls.clss(node.name, node.id, options, [], [])
                 }
-                if (node.type === "cron") {
+                if (node.type === "cron" || node.type === "interval") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);
                     let instance = new newCls.clss(node.name, node.id, options, successTargets, [])
