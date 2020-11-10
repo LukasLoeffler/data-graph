@@ -44,7 +44,7 @@ export class ExecutionCounter {
             RedisClient.get(node.id).then((data: any) => {
                 let count = 0; // Initial initalization at 0 as fallback
                 if (data) count = parseInt(data); // Override initial value if value is present in database
-                this.sendExecutionCount(node.id, count); // Send data to frontend
+                this.sendInitialExecutionCount(node.id, count); // Send data to frontend
             })
         });
     }
@@ -69,6 +69,20 @@ export class ExecutionCounter {
     static sendExecutionCount(nodeId: string, count: number): void {
         let payload: NodeExecutionCount = {
             type: "ExecutionCount",
+            nodeId: nodeId,
+            executionCount: count
+        }
+        WsManager.sendMessage(JSON.stringify(payload));
+    }
+
+        /**
+     * Emits the count of a node via websockets to the frontend.
+     * @param nodeId Id of the node
+     * @param count Count to emit
+     */
+    static sendInitialExecutionCount(nodeId: string, count: number): void {
+        let payload: NodeExecutionCount = {
+            type: "InitialExecutionCount",
             nodeId: nodeId,
             executionCount: count
         }

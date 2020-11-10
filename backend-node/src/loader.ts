@@ -105,9 +105,8 @@ function loadConfig() {
                     let instance = new newCls.clss(node.name, node.id, options, successTargets, [])
                 }
                 if (node.type === "logging") {
-                    let successTargets = getSuccessTargets(data, node);
                     let level = node.options[0][1]
-                    let instance = new newCls.clss(node.name, node.id, level, successTargets)
+                    let instance = new newCls.clss(node.name, node.id, level)
                 }
                 if (node.type === "httpGet") {
                     let successTargets = getSuccessTargets(data, node);

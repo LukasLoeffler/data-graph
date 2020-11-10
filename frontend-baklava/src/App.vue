@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-btn absolute dark fab left color="primary" class="m-2" @click="save">
+    <v-btn absolute dark fab left color="primary" class="m-2" @click="save" :disabled="!changed">
         <v-icon>mdi-content-save</v-icon>
     </v-btn>
     <div id="container">
@@ -89,21 +89,28 @@ export default {
     this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
 
 
-    // Test to style connections by active nodes
+    this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");
 
 
+    /**
+     * Initial load of nodes is seen as node change as well as actual changes.
+     * The 500ms delay bridges the initial load and activate the hook after the initial load.
+     */
+    setTimeout(() => {
+      this.viewPlugin.hooks.renderNode.tap(this, () => {
+        this.changed = true;
+      });
+    }, 500)
 
     this.loadData();
 
-
+     // Test to style connections by active nodes
     this.$options.sockets.onmessage = (message) => {
       try {
         let data = JSON.parse(message.data);
-        this.$store.commit("addRecentlyActiveNode", data.node);
-
-        //let connection = this.editor._connections.find(conn => conn.from.parent.id === data.node);
-        //connection.$el.style.stroke = "red";
-        
+        if (data.type !== "InitialExecutionCount") {
+          console.log(data)
+        }
       } catch (err) {
         //
       }
@@ -131,13 +138,6 @@ export default {
       console.log(this.editor);
     }
   },
-  watch: {
-    'editor.nodes': {
-      handler: function() {
-        this.changed = true;
-      }
-    }
-  }
 }
 </script>
 
@@ -153,5 +153,13 @@ body {
   height: 100vh;
   width: 100vw;
   margin: 0;
+}
+
+.acCon {
+  stroke-dasharray: 20;
+  animation: dashdraw 1s linear infinite;
+}
+@keyframes dashdraw {
+  to {stroke-dashoffset: -200;}
 }
 </style>

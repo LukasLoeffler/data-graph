@@ -9,8 +9,8 @@ export class LoggingNode extends BaseNode {
 
     level: string;
     
-    constructor(name: string, id: string, level: string = "INFO", targetsSuccess: Array<String>) {
-        super(name, NODE_TYPE, id, targetsSuccess, [])
+    constructor(name: string, id: string, level: string = "INFO") {
+        super(name, NODE_TYPE, id, [], [])
         this.level = level;
         NodeManager.addNode(this);
     }
@@ -20,6 +20,6 @@ export class LoggingNode extends BaseNode {
         if (this.level === "WARN") this.level = chalk.yellow(this.level)
         if (this.level === "DANGER") this.level = chalk.red(this.level)
         console.log(`${new Date().toISOString()} ${this.level} - ${JSON.stringify(payload)}`)
-        this.onSuccess(payload);
+        //this.onSuccess(payload);
     }
 }

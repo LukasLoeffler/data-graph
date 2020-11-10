@@ -8,7 +8,7 @@ export default class LoggingNode extends Node {
     constructor() {
         super();
         this.addInputInterface("event")
-        this.addOutputInterface("onSuccess")
+        //this.addOutputInterface("onSuccess")
         this.addOption("Operation", "SelectOption", "INFO", undefined, {
             items: [ "INFO", "WARN", "DANGER" ]
         })
