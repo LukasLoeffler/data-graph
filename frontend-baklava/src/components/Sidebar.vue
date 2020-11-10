@@ -27,7 +27,7 @@ export default {
             
             let existingSocket = this.$store.getters.optionNode.outputInterfaces[this.newSocket]
 
-            if (!existingSocket) this.$store.getters.optionNode.addOutput(this.newSocket);
+            if (!existingSocket) this.$store.getters.optionNode.addInput(this.newSocket);
             else console.log("Socket already existing")
         }
     }

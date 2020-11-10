@@ -43,6 +43,8 @@ import MqttSubNode from "./nodes/mqtt/MqttSubNode";
 import MqttPubNode from "./nodes/mqtt/MqttPubNode";
 import Logging from "./nodes/LoggingNode.js";
 
+import AggregatorNode from "./nodes/aggregator/AggregatorNode";
+
 export default {
   data() {
     return {
@@ -87,6 +89,9 @@ export default {
 
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
     this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
+
+
+    this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
 
     this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");

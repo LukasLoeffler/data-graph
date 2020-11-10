@@ -24,8 +24,14 @@ function getNodeById(nodeId: string) {
     return frontendNodes.nodes.find((node: any) => node.id === nodeId);
 }
 
-function getNodesOfInterface(interfaceId: string) {
-    
+function getNodeByInterfaceId(interfaceId: string) {
+    return frontendNodes.nodes.find((node: any) => {
+        return node.interfaces.some((intf: any) => {
+            if (intf[1].id === interfaceId) {
+                return true;
+            }
+        })
+    })
 }
 
 function getConnectedNodeByInterface(data: any, node: any, type: string) {
@@ -71,6 +77,52 @@ function extractOptionsFromNode(node: any): StringMap {
     return output;
 }
 
+/**
+ * Searches connection array for connection with given interfaceId (origin and target)
+ * @param interfaceId Id of the interface
+ */
+function getConnectionByInterfaceId(interfaceId: string) {
+    return frontendNodes.connections.find((conn: any) => {
+        if (conn.from === interfaceId || conn.to === interfaceId) {
+            return true;
+        }
+    })
+}
+
+function getInterfaces(node: any) {
+    return node.interfaces.map((intf: any) => {
+        return {
+            name: intf[0],
+            id: intf[1].id
+        }
+    })
+}
+
+function getSourceNodes(node: any) {
+    // Getting list of all (input) interfaces, distinguishing between input/output not implemented yet
+    let inputInterfaces = getInterfaces(node);
+    
+    let combinedList: Array<any> = [];
+    inputInterfaces.forEach((intf: any) => {  
+        let connection = getConnectionByInterfaceId(intf.id);
+        let originNodeInterfaceId = connection.from;
+        let node = getNodeByInterfaceId(originNodeInterfaceId);
+
+        let combined = {
+            name: intf.name,
+            id: intf.id,
+            originNode: {
+                type: node.type,
+                id: node.id,
+                name: node.name
+            }
+        }
+        combinedList.push(combined);
+    });
+    console.log(combinedList);
+    return combinedList;
+}
+
 function loadConfig() {
     NodeManager.reset();
     console.log(chalk.blueBright("LOADING CONFIG"))
@@ -88,7 +140,12 @@ function loadConfig() {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
                 
-
+                if (node.type === "aggregator") {
+                    //let successTargets = getSuccessTargets(data, node);
+                    let options = extractOptionsFromNode(node);
+                    let inputs = getSourceNodes(node);
+                    let instance = new newCls.clss(node.name, node.id, options, inputs)
+                }
                 if (node.type === "mqttSub") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);

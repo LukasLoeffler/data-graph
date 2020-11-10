@@ -8,6 +8,7 @@ import { FilterNode } from "./data/filter-node"
 import { ButtonNode } from "./button/button-node";
 import { MqttPubNode } from "./mqtt/mqtt-pub-node";
 import { MqttSubNode } from "./mqtt/mqtt-sub-node";
+import { AggregatorNode } from "./aggregator/aggregator-node"
 
 
 class RegEntry {
@@ -47,6 +48,7 @@ let advancedRegistry: Array<RegEntry> = [
     new RegEntry("button", "input", ButtonNode, [], ["success"]),
     new RegEntry("mqttPub", "mqtt", MqttPubNode, ["input"], []),
     new RegEntry("mqttSub", "mqtt", MqttSubNode, [], ["success"]),
+    new RegEntry("aggregator", "aggregator", AggregatorNode, [], [])
 ]
 
 

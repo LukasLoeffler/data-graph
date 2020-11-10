@@ -3,6 +3,7 @@ import { NodeManager } from "../node-manager";
 
 import { BaseNode } from "../base-node";
 import { ExecutionCounter } from "../../exec-counter";
+import { Message } from "../../message";
 
 
 const NODE_TYPE = "BUTTON"
@@ -18,6 +19,7 @@ export class ButtonNode extends BaseNode{
 
     execute() {
         ExecutionCounter.incrCount(this.id);
-        this.onSuccess(`Payload ${new Date()}`);
+        let msg = new Message(this.id, NODE_TYPE, new Date());
+        this.onSuccess(msg);
     }
 }
