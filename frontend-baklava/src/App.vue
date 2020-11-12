@@ -45,6 +45,9 @@ import Logging from "./nodes/LoggingNode.js";
 
 import AggregatorNode from "./nodes/aggregator/AggregatorNode";
 
+import CustomConnection from "./components/Connection"
+
+
 export default {
   data() {
     return {
@@ -62,6 +65,8 @@ export default {
   created() {
     this.editor.use(this.optionPlugin);
     this.editor.use(this.viewPlugin);
+
+    this.viewPlugin.components.connection = CustomConnection;
 
     //this.viewPlugin.enableMinimap = true;
 
