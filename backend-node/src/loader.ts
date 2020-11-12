@@ -119,7 +119,6 @@ function getSourceNodes(node: any) {
         }
         combinedList.push(combined);
     });
-    console.log(combinedList);
     return combinedList;
 }
 
