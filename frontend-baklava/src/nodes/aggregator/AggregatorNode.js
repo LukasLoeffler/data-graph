@@ -27,7 +27,6 @@ export default class AggregatorNode extends Node {
             }
         });
 
-        console.log(data.interfaces);
         data.interfaces.forEach(([k, v]) => {
             this.addInputInterface(k);
             if (this.interfaces.has(k)) {
