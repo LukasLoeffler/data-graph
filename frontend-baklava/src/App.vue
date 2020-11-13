@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-btn absolute dark fab left color="primary" class="m-2" @click="save" :disabled="!changed">
-        <v-icon>mdi-content-save</v-icon>
+        <v-icon>mdi-arrow-right-bold-hexagon-outline</v-icon>
     </v-btn>
     <div id="container">
       <v-flex d-flex child-flex class="fill-height">
@@ -22,6 +22,7 @@
 import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
+
 
 import Sidebar from "./components/Sidebar"
 
@@ -45,7 +46,8 @@ import Logging from "./nodes/LoggingNode.js";
 
 import AggregatorNode from "./nodes/aggregator/AggregatorNode";
 
-import CustomConnection from "./components/Connection"
+//import CustomConnection from "./components/Connection"
+import CustomInterface from "./components/CustomInterface"
 
 
 export default {
@@ -66,7 +68,8 @@ export default {
     this.editor.use(this.optionPlugin);
     this.editor.use(this.viewPlugin);
 
-    this.viewPlugin.components.connection = CustomConnection;
+    //this.viewPlugin.components.connection = CustomConnection;
+    this.viewPlugin.components.nodeInterface = CustomInterface;
 
     //this.viewPlugin.enableMinimap = true;
 
@@ -119,7 +122,7 @@ export default {
       try {
         let data = JSON.parse(message.data);
         if (data.type !== "InitialExecutionCount") {
-          console.log(data)
+          //
         }
       } catch (err) {
         //
