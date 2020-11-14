@@ -115,7 +115,6 @@ export default {
             try {
                 let data = JSON.parse(message.data);
                 if (data.type === "ConnectionExecution") {
-                    console.log(data);
                     if (data.data.from === this.connection.from.parent.id && data.data.to === this.connection.to.parent.id) {
                         this.connectionActive = true;
                         

@@ -141,9 +141,10 @@ function loadConfig() {
                 
                 if (node.type === "aggregator") {
                     //let successTargets = getSuccessTargets(data, node);
+                    let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);
                     let inputs = getSourceNodes(node);
-                    let instance = new newCls.clss(node.name, node.id, options, inputs)
+                    let instance = new newCls.clss(node.name, node.id, options, inputs, successTargets)
                 }
                 if (node.type === "mqttSub") {
                     let successTargets = getSuccessTargets(data, node);

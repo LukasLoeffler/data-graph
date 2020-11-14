@@ -27,7 +27,8 @@ export class BaseNode {
 
     onSuccess(payload: any) {
         this.targetsSuccess.forEach(target => {
-            WsManager.sendMessage(this.buildMessage(this.id, target));
+            let message = this.buildMessage(this.id, target);
+            WsManager.sendMessage(message);
             NodeManager.getNodeById(target).execute(payload);
         });
     }

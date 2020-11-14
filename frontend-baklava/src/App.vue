@@ -104,7 +104,7 @@ export default {
 
     this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");
 
-
+    console.log(this.viewPlugin);
     /**
      * Initial load of nodes is seen as node change as well as actual changes.
      * The 500ms delay bridges the initial load and activate the hook after the initial load.
@@ -114,6 +114,9 @@ export default {
         this.changed = true;
       });
     }, 500)
+
+
+
 
     this.loadData();
 
@@ -147,10 +150,20 @@ export default {
         this.editor.load(response.data);
       })
     },
-    activate() {
-      console.log(this.editor);
-    }
   },
+  watch: {
+    "viewPlugin.scaling": {
+      handler() {
+        this.changed = true;
+      }
+    },
+    "viewPlugin.panning": {
+      handler() {
+        this.changed = true;
+      },
+      deep: true
+    }
+  }
 }
 </script>
 
