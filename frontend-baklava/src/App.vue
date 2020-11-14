@@ -46,7 +46,7 @@ import Logging from "./nodes/LoggingNode.js";
 
 import AggregatorNode from "./nodes/aggregator/AggregatorNode";
 
-//import CustomConnection from "./components/Connection"
+import CustomConnection from "./components/CustomConnection"
 import CustomInterface from "./components/CustomInterface"
 
 
@@ -68,7 +68,7 @@ export default {
     this.editor.use(this.optionPlugin);
     this.editor.use(this.viewPlugin);
 
-    //this.viewPlugin.components.connection = CustomConnection;
+    this.viewPlugin.components.connection = CustomConnection;
     this.viewPlugin.components.nodeInterface = CustomInterface;
 
     //this.viewPlugin.enableMinimap = true;
