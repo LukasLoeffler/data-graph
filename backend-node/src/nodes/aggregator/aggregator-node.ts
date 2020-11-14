@@ -8,32 +8,32 @@ const chalk = require('chalk');
 const NODE_TYPE = "AGGREGATOR"
 
 export class AggregatorNode extends BaseNode {
-    interfaces: Array<any>;
+    inputInterfaces: Array<any>;
     slots = new Set();
 
-    constructor(name: string, id: string, options: any, interfaces: Array<any>) {
-        super(name, NODE_TYPE, id, [], [])
-        this.interfaces = interfaces,
+    constructor(name: string, id: string, options: any, interfaces: Array<any>, targetsSuccess: Array<any>) {
+        super(name, NODE_TYPE, id, targetsSuccess, [])
+        this.inputInterfaces = interfaces.filter((intf: any) => intf.name.includes("IN"));
         NodeManager.addNode(this);
     }
 
     
     execute(message: Message) {
         
-        let currentIntf = this.interfaces.find((intf: any) => intf.originNode.id === message.sourceNodeId);
+        let currentIntf = this.inputInterfaces.find((intf: any) => intf.originNode.id === message.sourceNodeId);
         this.slots.add(currentIntf.id);
 
-        console.log(`${this.slots.size}/${this.interfaces.length}`)
-        if (this.slots.size === this.interfaces.length) {
-            console.log("Flushing");
+        //console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
+        if (this.slots.size === this.inputInterfaces.length) {
             this.slots.clear();
-            WsManager.sendMessage(this.buildMessage());
+            WsManager.sendMessage(this.buildAggregationCountMessage());
+            this.onSuccess("tst");
         } else {
-            WsManager.sendMessage(this.buildMessage());
+            WsManager.sendMessage(this.buildAggregationCountMessage());
         }
     }
 
-    buildMessage(): string {
+    buildAggregationCountMessage(): string {
         let message = {
             type: "AggregatorCount",
             data: Array.from( this.slots )
