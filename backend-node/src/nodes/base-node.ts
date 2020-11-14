@@ -1,6 +1,7 @@
 var crypto = require("crypto");
 import chalk from "chalk";
 import { NodeManager } from "../nodes/node-manager";
+import { WsManager } from "../ws";
 
 const NODE_TYPE = "BASE_NDOE"
 
@@ -26,12 +27,14 @@ export class BaseNode {
 
     onSuccess(payload: any) {
         this.targetsSuccess.forEach(target => {
+            WsManager.sendMessage(this.buildMessage(this.id, target));
             NodeManager.getNodeById(target).execute(payload);
         });
     }
 
     onFailure(errorMessage: string = "No error message provided.") {
         this.targetsFailure.forEach(target => {
+            WsManager.sendMessage(this.buildMessage(this.id, target));
             NodeManager.getNodeById(target).execute(errorMessage);
         });
     }
@@ -58,5 +61,16 @@ export class BaseNode {
      */
     getOption(optionName: string, options: any) {
         return options[optionName];
+    }
+
+    buildMessage(fromNodeId: string, toNodeId: string): string {
+        let message = {
+            type: "ConnectionExecution",
+            data: {
+                from: fromNodeId,
+                to: toNodeId
+            }
+        }
+        return JSON.stringify(message);
     }
 }
