@@ -1,5 +1,6 @@
 # GitHub Repo for Master-Code
-
+ 
+![example](docs/img/example.gif)
 ## Backend
 Written in NodeJS because of its ability to execute code asynchronously.
 
