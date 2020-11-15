@@ -100,9 +100,6 @@ export default {
                 "connection": true,
                 "active": this.connectionActive
             };
-        },
-        marblesProp() {
-            return this.marbles;
         }
     },
     created() {
@@ -115,16 +112,14 @@ export default {
             try {
                 let data = JSON.parse(message.data);
                 if (data.type === "ConnectionExecution") {
+                    // Check if connection is right one by gettomg from and to nodes and compare nodeIds
                     if (data.data.from === this.connection.from.parent.id && data.data.to === this.connection.to.parent.id) {
-                        this.connectionActive = true;
-                        
-                        if (timeOut) {
-                            clearTimeout( timeOut ); 
-                        }
+                        this.connectionActive = true; // Activate animation
 
+                        clearTimeout( timeOut ); // Reset timeout if called
                         timeOut = setTimeout(() => {
-                            this.connectionActive = false;
-                        }, 1000)
+                            this.connectionActive = false; // Deactivate animation if method is not called within interval.
+                        }, 750)
                     }
                 }
             } catch (error) {
