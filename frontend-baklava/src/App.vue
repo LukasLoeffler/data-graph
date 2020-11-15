@@ -87,24 +87,29 @@ export default {
     this.editor.registerNodeType("httpGet", HttpGet, "Http")
     this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
 
+    // Object
     this.editor.registerNodeType("objectFilter", Filter, "Object")
     this.editor.registerNodeType("objectPath", Path, "Object")
-    
+    this.viewPlugin.setNodeTypeAlias("objectFilter", "Filter array");
+    this.viewPlugin.setNodeTypeAlias("objectPath", "Extract object path");
+
+    // Filesystem
     this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
+    this.viewPlugin.setNodeTypeAlias("fileSave", "Save as file");
 
-    
+    // User input
     this.editor.registerNodeType("button", ButtonNode, "Input")
+    this.viewPlugin.setNodeTypeAlias("button", "Button");
 
+    // MQTT
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
     this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
-
+    this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");
+    this.viewPlugin.setNodeTypeAlias("mqttPub", "Publish");
 
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
 
-    this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");
-
-    console.log(this.viewPlugin);
     /**
      * Initial load of nodes is seen as node change as well as actual changes.
      * The 500ms delay bridges the initial load and activate the hook after the initial load.
@@ -115,22 +120,7 @@ export default {
       });
     }, 500)
 
-
-
-
     this.loadData();
-
-     // Test to style connections by active nodes
-    this.$options.sockets.onmessage = (message) => {
-      try {
-        let data = JSON.parse(message.data);
-        if (data.type !== "InitialExecutionCount") {
-          //
-        }
-      } catch (err) {
-        //
-      }
-    }
   },
   methods: {
     sendMessage() {
