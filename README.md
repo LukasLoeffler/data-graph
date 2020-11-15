@@ -1,4 +1,4 @@
-# GitHub Repo for Master-Code
+# Master-Code
  
 ![example](docs/img/example.gif)
 ## Backend
