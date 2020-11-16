@@ -30,21 +30,22 @@ import ButtonNode from "./nodes/ButtonNode.js";
 import IntervalNode from "./nodes/time/IntervalNode"
 import Cron from "./nodes/time/CronNode.ts";
 
-import HttpGet from "./nodes/http/HttpGetNode.ts"
+import HttpGet from "./nodes/http/HttpGetNode.js"
 import HttpPostPut from "./nodes/http/HttpPostPutNode.ts"
 import Filter from "./nodes/object/FilterNode.ts"
 import Path from "./nodes/object/PathNode.ts"
 import FileSave from "./nodes/filesystem/FileSaveNode.ts"
-
-import EventButtonOption from "./nodes/options/EventButtonOption"
-import SettingsOption from "./nodes/options/SettingsOption"
-import ExecutionCountOption from "./nodes/options/ExecutionCountOption"
 
 import MqttSubNode from "./nodes/mqtt/MqttSubNode";
 import MqttPubNode from "./nodes/mqtt/MqttPubNode";
 import Logging from "./nodes/LoggingNode.js";
 
 import AggregatorNode from "./nodes/aggregator/AggregatorNode";
+
+import EventButtonOption from "./nodes/options/EventButtonOption"
+import SettingsOption from "./nodes/options/SettingsOption"
+import ExecutionCountOption from "./nodes/options/ExecutionCountOption"
+import HttpNodeDialog from "./components/dialogs/HttpNodeDialog"
 
 import CustomConnection from "./components/CustomConnection"
 import CustomInterface from "./components/CustomInterface"
@@ -77,6 +78,7 @@ export default {
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("SettingsOption", SettingsOption);
     this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
+    this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
 
 
     this.editor.registerNodeType("cron", Cron, "Time")

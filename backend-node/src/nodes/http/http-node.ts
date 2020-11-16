@@ -5,12 +5,22 @@ const axios = require('axios');
 
 const NODE_TYPE = "HTTP"
 
+enum httpMethods {
+    GET = "get",
+    POST = "post",
+    PUT = "put",
+    DELETE = "delete"
+}
+
 export class HttpNode extends BaseNode {
     url: string;
+    httpMethod: httpMethods;
 
-    constructor(name: string, id: string, url: string, targetsSuccess: Array<String>, targetsFailure: Array<String>) {
+    constructor(name: string, id: string, options: any, targetsSuccess: Array<String>, targetsFailure: Array<String>) {
         super(name, NODE_TYPE, id, targetsSuccess, targetsFailure)
-        this.url = url;
+        this.url = options.settings.url;
+        this.httpMethod = options.settings.requestType;
+        console.log(this.httpMethod);
         NodeManager.addNode(this);
     }
 
