@@ -31,7 +31,6 @@ export default {
     },
     methods: {
         resetCounter() {
-            console.log("ResettingCounter");
             let url = `http://localhost:3000/reset-exec-count/${this.node.id}`;
             this.axios.get(url).then(() => {
                 console.log("%cSuccessfully reset counter for", "color: green; font-weight: bold", this.node.name)
@@ -53,7 +52,7 @@ export default {
 	}
 
 	70% {
-		box-shadow: 0 0 0 3px rgba(74, 123, 168);
+		box-shadow: 0 0 0 2px rgb(168, 74, 74);
 	}
 
 	100% {

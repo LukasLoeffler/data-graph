@@ -9,7 +9,6 @@ export default class AggregatorNode extends Node {
     constructor() {
         super();
         this.addOption("OpenSettings", "SettingsOption");
-        this.addOutputInterface("onSuccess");
     }
 
     addInput(name) {
@@ -21,20 +20,23 @@ export default class AggregatorNode extends Node {
         this.name = data.name;
         this.state = data.state;
 
-        data.options.forEach(([k, v]) => {
-            if (this.options.has(k)) {
-                this.options.get(k).value = v;
-            }
-        });
+
 
         data.interfaces.forEach(([k, v]) => {
 
             if(k.includes("IN") || k.includes("in")) {
                 this.addInputInterface(k);
+            } else {
+                this.addOutputInterface(k);
             }
             
             if (this.interfaces.has(k)) {
                 this.interfaces.get(k).load(v);
+            }
+        });
+        data.options.forEach(([k, v]) => {
+            if (this.options.has(k)) {
+                this.options.get(k).value = v;
             }
         });
         this.hooks.load.execute(data);
