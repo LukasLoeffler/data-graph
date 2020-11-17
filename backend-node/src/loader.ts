@@ -168,8 +168,8 @@ function loadConfig() {
                 if (node.type === "httpGet") {
                     let successTargets = getSuccessTargets(data, node);
                     let failureTargets = getFailureTargets(data, node)
-                    let url = node.options[0][1]
-                    let instance = new newCls.clss(node.name, node.id, url, successTargets, failureTargets)
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, failureTargets)
                 }
                 if (node.type === "objectPath") {
                     let successTargets = getSuccessTargets(data, node);

@@ -9,10 +9,12 @@ export default class AggregatorNode extends Node {
     constructor() {
         super();
         this.addOption("OpenSettings", "SettingsOption");
+        this.addOutputInterface("onSuccess");
     }
 
     addInput(name) {
         this.addInputInterface(name);
+        
     }
 
     load(data) {
@@ -20,14 +22,10 @@ export default class AggregatorNode extends Node {
         this.name = data.name;
         this.state = data.state;
 
-
-
         data.interfaces.forEach(([k, v]) => {
 
             if(k.includes("IN") || k.includes("in")) {
                 this.addInputInterface(k);
-            } else {
-                this.addOutputInterface(k);
             }
             
             if (this.interfaces.has(k)) {
