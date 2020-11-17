@@ -35,8 +35,8 @@
                 ]
             ],
             "position": {
-                "x": 624.4393114972531,
-                "y": 31.126903971026383
+                "x": 635.1401913841179,
+                "y": -37.664466730246815
             },
             "width": 200,
             "twoColumn": true
@@ -79,35 +79,8 @@
                 ]
             ],
             "position": {
-                "x": 255.6661839067617,
-                "y": 3.6098662899739296
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
-            "type": "logging",
-            "id": "node_160434158792122",
-            "name": "DANGER LOG",
-            "options": [
-                [
-                    "Operation",
-                    "DANGER"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "event",
-                    {
-                        "id": "ni_160434158792123",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 626.8855991949412,
-                "y": 222.73013416279312
+                "x": 290.82621782074585,
+                "y": -37.664956130789975
             },
             "width": 200,
             "twoColumn": true
@@ -140,112 +113,8 @@
                 ]
             ],
             "position": {
-                "x": 903.4707541761366,
-                "y": -30.909031248405018
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
-            "type": "fileSave",
-            "id": "node_160434252441492",
-            "name": "Saving Bikes to File",
-            "options": [
-                [
-                    "Path",
-                    "C:/Users/Lukas/Desktop/logs/"
-                ],
-                [
-                    "Filename",
-                    "bike_list"
-                ],
-                [
-                    "Filetype",
-                    "json"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "Payload",
-                    {
-                        "id": "ni_160434252441493",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 1193.442344067317,
-                "y": -82.28057241000612
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
-            "type": "fileSave",
-            "id": "node_160434314599256",
-            "name": "Saving Stations to File",
-            "options": [
-                [
-                    "Path",
-                    "C:/Users/Lukas/Desktop/logs/"
-                ],
-                [
-                    "Filename",
-                    "station_list"
-                ],
-                [
-                    "Filetype",
-                    "json"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "Payload",
-                    {
-                        "id": "ni_160434314599257",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 1180.3567516030964,
-                "y": 160.9742621271492
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
-            "type": "objectFilter",
-            "id": "node_160434362745576",
-            "name": "FilterStations",
-            "options": [
-                [
-                    "FilterExpression",
-                    "!element.bike"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "payload",
-                    {
-                        "id": "ni_160434362745577",
-                        "value": null
-                    }
-                ],
-                [
-                    "onSuccess",
-                    {
-                        "id": "ni_160434362745578",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 904.9519488297327,
-                "y": 119.28238690250112
+                "x": 932.5159995833409,
+                "y": -38.552516881879875
             },
             "width": 200,
             "twoColumn": true
@@ -271,216 +140,134 @@
                 ]
             ],
             "position": {
-                "x": -77.94361972919793,
-                "y": 24.656554412548648
+                "x": -53.846016807089235,
+                "y": -40.60179794526984
             },
             "width": 200,
             "twoColumn": false
         },
         {
-            "type": "mqttPub",
-            "id": "node_160460097782651",
-            "name": "MQTT Publish",
+            "type": "httpGet",
+            "id": "node_1605539432227148",
+            "name": "HTTP GET",
             "options": [
                 [
-                    "Server",
-                    1
-                ],
-                [
-                    "Topic",
-                    "tst"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "event",
+                    "settings",
                     {
-                        "id": "ni_160460097782652",
-                        "value": null
+                        "url": "https://api.nextbike.net/maps/nextbike-live.json?city=621",
+                        "requestType": "GET"
                     }
                 ]
             ],
-            "position": {
-                "x": 252.50814588493398,
-                "y": 218.70570179051575
-            },
-            "width": 200,
-            "twoColumn": false
-        },
-        {
-            "type": "button",
-            "id": "node_160460098633653",
-            "name": "Button",
-            "options": [
-                [
-                    "BtnEvent",
-                    "exec1"
-                ]
-            ],
             "state": {},
             "interfaces": [
+                [
+                    "Event",
+                    {
+                        "id": "ni_1605539432227149",
+                        "value": null
+                    }
+                ],
                 [
                     "onSuccess",
                     {
-                        "id": "ni_160460098633654",
+                        "id": "ni_1605539432227150",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_1605539432227151",
                         "value": null
                     }
                 ]
             ],
             "position": {
-                "x": -95.21503199053404,
-                "y": 288.19700802709383
+                "x": 300.28772313026116,
+                "y": 177.5375263691787
             },
             "width": 200,
             "twoColumn": false
         },
         {
-            "type": "mqttSub",
-            "id": "node_160460111253758",
-            "name": "MQTT Subscribe",
+            "type": "objectPath",
+            "id": "node_1605539500412152",
+            "name": "objectPath",
             "options": [
                 [
-                    "Server",
-                    1
-                ],
-                [
-                    "Topic",
-                    "tst"
-                ],
-                [
-                    "ExecutionCount",
-                    null
+                    "Path",
+                    "countries.0.cities.0.places"
                 ]
             ],
             "state": {},
             "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_1605539500412153",
+                        "value": null
+                    }
+                ],
                 [
                     "onSuccess",
                     {
-                        "id": "ni_160460111253759",
+                        "id": "ni_1605539500412154",
                         "value": null
                     }
-                ]
-            ],
-            "position": {
-                "x": 714.8529608794365,
-                "y": 388.6338683537156
-            },
-            "width": 200,
-            "twoColumn": false
-        },
-        {
-            "type": "logging",
-            "id": "node_160460386359066",
-            "name": "logging",
-            "options": [
+                ],
                 [
-                    "Operation",
-                    "INFO"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "event",
+                    "onFailure",
                     {
-                        "id": "ni_160460386359067",
+                        "id": "ni_1605539500412155",
                         "value": null
                     }
                 ]
             ],
             "position": {
-                "x": 1183.8473391405105,
-                "y": 435.4197678575232
+                "x": 636.5844153612893,
+                "y": 176.4361974122836
             },
             "width": 200,
             "twoColumn": true
         },
         {
-            "type": "button",
-            "id": "node_1605030535822100",
-            "name": "TestButton",
+            "type": "objectFilter",
+            "id": "node_1605539558404163",
+            "name": "objectFilter",
             "options": [
                 [
-                    "BtnEvent",
-                    "exec1"
+                    "FilterExpression",
+                    "element.bike"
                 ]
             ],
             "state": {},
             "interfaces": [
                 [
+                    "payload",
+                    {
+                        "id": "ni_1605539558404164",
+                        "value": null
+                    }
+                ],
+                [
                     "onSuccess",
                     {
-                        "id": "ni_1605030535822101",
+                        "id": "ni_1605539558404165",
                         "value": null
                     }
                 ]
             ],
             "position": {
-                "x": 371.3266207894433,
-                "y": 618.2834801318929
+                "x": 936.0940937057856,
+                "y": 174.7758661560101
             },
             "width": 200,
-            "twoColumn": false
-        },
-        {
-            "type": "button",
-            "id": "node_1605030549004106",
-            "name": "Button",
-            "options": [
-                [
-                    "BtnEvent",
-                    "exec1"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "onSuccess",
-                    {
-                        "id": "ni_1605030549004107",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 132.06113957126453,
-                "y": 700.5136637534137
-            },
-            "width": 200,
-            "twoColumn": false
-        },
-        {
-            "type": "button",
-            "id": "node_1605030569383111",
-            "name": "Button",
-            "options": [
-                [
-                    "BtnEvent",
-                    "exec1"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "onSuccess",
-                    {
-                        "id": "ni_1605030569384112",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 349.67792918934146,
-                "y": 829.2783842745729
-            },
-            "width": 200,
-            "twoColumn": false
+            "twoColumn": true
         },
         {
             "type": "aggregator",
-            "id": "node_1605363142014218",
+            "id": "node_1605539918532169",
             "name": "Aggregator",
             "options": [
                 [
@@ -493,69 +280,70 @@
                 [
                     "onSuccess",
                     {
-                        "id": "ni_1605363142014219",
+                        "id": "ni_1605539918532170",
                         "value": null
                     }
                 ],
                 [
                     "IN1",
                     {
-                        "id": "ni_1605363149756220",
+                        "id": "ni_1605539925359171",
                         "value": null
                     }
                 ],
                 [
                     "IN2",
                     {
-                        "id": "ni_1605363152178221",
-                        "value": null
-                    }
-                ],
-                [
-                    "IN3",
-                    {
-                        "id": "ni_1605363155102222",
+                        "id": "ni_1605539928611172",
                         "value": null
                     }
                 ]
             ],
             "position": {
-                "x": 767.6344000139218,
-                "y": 627.8375629835449
+                "x": 1254.1289131231354,
+                "y": -32.369604078095236
             },
             "width": 200,
             "twoColumn": false
         },
         {
-            "type": "logging",
-            "id": "node_160536520182879",
-            "name": "Logging",
+            "type": "fileSave",
+            "id": "node_1605539952461179",
+            "name": "fileSave",
             "options": [
                 [
-                    "Operation",
-                    "WARN"
+                    "Path",
+                    "C:/Users/Lukas/Desktop/logs/"
+                ],
+                [
+                    "Filename",
+                    "example"
+                ],
+                [
+                    "Filetype",
+                    "json"
                 ]
             ],
             "state": {},
             "interfaces": [
                 [
-                    "event",
+                    "Payload",
                     {
-                        "id": "ni_160536520182880",
+                        "id": "ni_1605539952461180",
                         "value": null
                     }
                 ]
             ],
             "position": {
-                "x": 1192.6308821771809,
-                "y": 681.0752847767383
+                "x": 1621.0162235299179,
+                "y": -35.426998331485116
             },
             "width": 200,
-            "twoColumn": false
+            "twoColumn": true
         },
         {
             "type": "button",
-            "id": "node_160536561018290",
+            "id": "node_160555062615953",
             "name": "Button",
             "options": [
                 [
@@ -568,45 +356,14 @@
                 [
                     "onSuccess",
                     {
-                        "id": "ni_160536561018291",
+                        "id": "ni_160555062615954",
                         "value": null
                     }
                 ]
             ],
             "position": {
-                "x": -98.05528792322997,
-                "y": 478.5312154786283
-            },
-            "width": 200,
-            "twoColumn": false
-        },
-        {
-            "type": "mqttPub",
-            "id": "node_160536561649692",
-            "name": "MQTT Publish",
-            "options": [
-                [
-                    "Server",
-                    1
-                ],
-                [
-                    "Topic",
-                    "tst"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "event",
-                    {
-                        "id": "ni_160536561649693",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 252.24037353060893,
-                "y": 409.62059355328336
+                "x": -59.81083798265439,
+                "y": 267.1391887637393
             },
             "width": 200,
             "twoColumn": false
@@ -614,79 +371,54 @@
     ],
     "connections": [
         {
-            "id": "1605530142863218",
-            "from": "ni_160434176136224",
-            "to": "ni_160434252441493"
-        },
-        {
-            "id": "1605530142864220",
-            "from": "ni_160434362745578",
-            "to": "ni_160434314599257"
-        },
-        {
-            "id": "1605530142864222",
-            "from": "ni_16043415229202",
-            "to": "ni_160434362745577"
-        },
-        {
-            "id": "1605530142864224",
+            "id": "160554800189531",
             "from": "ni_16043415229202",
             "to": "ni_160434176136223"
         },
         {
-            "id": "1605530142864226",
+            "id": "160554800189533",
             "from": "ni_160457113755144",
             "to": "ni_16043415576847"
         },
         {
-            "id": "1605530142864228",
-            "from": "ni_160460111253759",
-            "to": "ni_160460386359067"
-        },
-        {
-            "id": "1605530142864230",
-            "from": "ni_160460098633654",
-            "to": "ni_160460097782652"
-        },
-        {
-            "id": "1605530142864232",
-            "from": "ni_16043415576849",
-            "to": "ni_160434158792123"
-        },
-        {
-            "id": "1605530142864234",
+            "id": "160554800189535",
             "from": "ni_16043415576848",
             "to": "ni_16043415229201"
         },
         {
-            "id": "1605530142864236",
-            "from": "ni_1605030535822101",
-            "to": "ni_1605363149756220"
+            "id": "160554800189537",
+            "from": "ni_1605539432227150",
+            "to": "ni_1605539500412153"
         },
         {
-            "id": "1605530142864238",
-            "from": "ni_1605030549004107",
-            "to": "ni_1605363152178221"
+            "id": "160554800189539",
+            "from": "ni_1605539500412154",
+            "to": "ni_1605539558404164"
         },
         {
-            "id": "1605530142864240",
-            "from": "ni_1605030569384112",
-            "to": "ni_1605363155102222"
+            "id": "160554800189543",
+            "from": "ni_1605539918532170",
+            "to": "ni_1605539952461180"
         },
         {
-            "id": "1605530142864242",
-            "from": "ni_160536561018291",
-            "to": "ni_160536561649693"
+            "id": "160555062937857",
+            "from": "ni_160555062615954",
+            "to": "ni_1605539432227149"
         },
         {
-            "id": "1605530142864244",
-            "from": "ni_1605363142014219",
-            "to": "ni_160536520182880"
+            "id": "160555140650079",
+            "from": "ni_160434176136224",
+            "to": "ni_1605539925359171"
+        },
+        {
+            "id": "160555140886282",
+            "from": "ni_1605539558404165",
+            "to": "ni_1605539928611172"
         }
     ],
     "panning": {
-        "x": 153.41239854545373,
-        "y": 344.9749309897454
+        "x": 231.9000029376923,
+        "y": 241.9154035147252
     },
-    "scaling": 0.749154819856919
+    "scaling": 0.7664196972911158
 }

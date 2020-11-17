@@ -20,7 +20,6 @@ export class HttpNode extends BaseNode {
         super(name, NODE_TYPE, id, targetsSuccess, targetsFailure)
         this.url = options.settings.url;
         this.httpMethod = options.settings.requestType;
-        console.log(this.httpMethod);
         NodeManager.addNode(this);
     }
 

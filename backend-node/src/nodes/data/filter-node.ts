@@ -1,5 +1,6 @@
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
+import { Message } from "../../message";
 
 const NODE_TYPE = "FILTER"
 
@@ -17,7 +18,10 @@ export class FilterNode extends BaseNode {
     execute(payload: any) {
         try {
             let output = payload.filter((element: any) => eval(this.filter))
-            this.onSuccess(output);
+
+            let msg = new Message(this.id, NODE_TYPE, output);
+
+            this.onSuccess(msg);
         } catch (error) {
             this.onFailure(error);
         }
