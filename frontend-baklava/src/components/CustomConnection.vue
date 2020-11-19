@@ -1,6 +1,6 @@
 <template>
-    <svg id="container">
-        <path :d="d" :class="classes"/>
+    <svg>
+        <path :d="d" :class="classes"  />
     </svg>
 </template>
 
@@ -136,6 +136,7 @@ export default {
     stroke-dasharray: 20;
     animation: dash 5s linear infinite;
 }
+
 
 @keyframes dash {
     to {

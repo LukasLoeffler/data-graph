@@ -9,7 +9,7 @@ export default class AggregatorNode extends Node {
     constructor() {
         super();
         this.addOption("OpenSettings", "SettingsOption");
-        this.addOutputInterface("onSuccess");
+        this.addOutputInterface("onSuccess", "Message");
     }
 
     addInput(name) {

@@ -22,6 +22,7 @@
 import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
+import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 
 
 import Sidebar from "./components/Sidebar"
@@ -71,6 +72,15 @@ export default {
 
     this.viewPlugin.components.connection = CustomConnection;
     this.viewPlugin.components.nodeInterface = CustomInterface;
+
+    const intfTypePlugin = new InterfaceTypePlugin();
+
+    this.editor.use(intfTypePlugin);
+
+    intfTypePlugin.addType("Event", "orange");
+
+    intfTypePlugin.addType("Message", "#FF7F50");
+
 
     //this.viewPlugin.enableMinimap = true;
 
