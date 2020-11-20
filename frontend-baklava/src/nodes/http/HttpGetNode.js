@@ -5,12 +5,13 @@ export default class HttpGetNode extends Node {
     type = "httpGet";
     name = "HTTP GET";
 
+    defaultHeaders = [];
+
     constructor() {
         super();
         this.addInputInterface("Event")
         this.addOutputInterface("onSuccess")
         this.addOutputInterface("onFailure")
-        this.addOption("settings", "HttpNodeDialog", {url: "google.de", requestType: "GET"},);
+        this.addOption("settings", "HttpNodeDialog", {url: "google.de", requestType: "GET", headers: []});
     }
 }
-    

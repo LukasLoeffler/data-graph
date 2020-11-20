@@ -18,6 +18,26 @@
                                 <v-text-field label="Url" required v-model="value.url"></v-text-field>
                             </v-col>
                         </v-row>
+
+                        <v-row>
+                            <v-col cols="12">
+                                <v-btn color="blue" @click="addHeader">Add header</v-btn>
+                                <v-btn color="red" class="ml-1" @click="resetHeader">Reset header</v-btn>
+                            </v-col>
+                        </v-row>
+                        <v-row v-for="(header, index) in value.headers" :key="`header-${index}`">
+                            <v-col cols="5">
+                                <v-text-field label="Header" required v-model="header.key" hide-details=""></v-text-field>
+                            </v-col>
+                            <v-col cols="5" >
+                                <v-text-field label="Value" required v-model="header.value" hide-details=""></v-text-field>
+                            </v-col>
+                            <v-col cols="1" class="mp-0">
+                                <v-btn small color="red">
+                                    <v-icon>mdi-delete-outline</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -41,5 +61,18 @@ export default {
         dialog: false,
     }),
     props: ["option", "node", "value"],
+    methods: {
+        addHeader() {
+            console.log(this.value);
+            let newHeader = {
+                key: "",
+                value: ""
+            }
+            this.value.headers.push(newHeader);
+        },
+        resetHeader() {
+            this.value.headers = [];
+        }
+    }
 }
 </script>

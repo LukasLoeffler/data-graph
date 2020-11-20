@@ -79,7 +79,7 @@ export default {
 
     intfTypePlugin.addType("Event", "orange");
 
-    intfTypePlugin.addType("Message", "#FF7F50");
+    intfTypePlugin.addType("Message", "#038cfc");
 
 
     //this.viewPlugin.enableMinimap = true;
