@@ -1,6 +1,7 @@
 const cron = require('node-cron');
 import { NodeManager } from "../node-manager";
 import { BaseNode } from "../base-node";
+import { Message } from "../../message";
 
 
 
@@ -23,29 +24,18 @@ export class CronNode extends BaseNode{
 
     createTask() {
         return cron.schedule(this.cronExpression, () =>  {
-            this.onSuccess(`Payload ${new Date()}`);
+            let msgOut = new Message(this.id, NODE_TYPE, null)
+            this.onSuccess(msgOut);
         }, {
             scheduled: false
         });
-    }
-
-    changeTask(newCronExpression: string) {
-        console.log(`Changing CRON to: ${newCronExpression}`)
-        if (cron.validate(newCronExpression)) {
-            console.log("Valid")
-        } else {
-            console.log("Invalid")
-        }
-        this.task.destroy();
-        this.cronExpression = newCronExpression;
-        this.task = this.createTask();
-        this.startTask();
     }
 
     startTask() {
         this.task.start();
     }
 
+    // Routine to stop/kill the task after reload.
     stop() {
         console.log("Cron Task Stopped")
         this.task.stop();

@@ -15,23 +15,23 @@ class RegEntry {
     name: string;
     category: string;
     clss: any;
-    socketsIn: Array<any>;
-    socketsOut: Array<any>;
+    socketListIn: Array<any>;
+    socketListOut: Array<any>;
 
-    constructor(name: string, category: string, clss: any, socketIn: Array<any>, socketOut: Array<any>) {
+    constructor(name: string, category: string, clss: any, socketListIn: Array<any>, socketListOut: Array<any>) {
         this.name = name;
         this.category = category;
         this.clss = clss;
-        this.socketsIn = socketIn;
-        this.socketsOut = socketOut;
+        this.socketListIn = socketListIn;
+        this.socketListOut = socketListOut;
     }
 
     repr() {
         return {
             name: this.name,
             category: this.category,
-            socketIn: this.socketsIn,
-            socketOut: this.socketsOut
+            socketIn: this.socketListIn,
+            socketOut: this.socketListOut
         }
     }
 }
@@ -53,8 +53,8 @@ let advancedRegistry: Array<RegEntry> = [
 
 
 export class NodeRegistry {
-    static getNodeClassByName(name: any) {
-        let cls = advancedRegistry.find(regEntry => regEntry.name === name);
+    static getNodeClassByName(name: string) {
+        let cls = advancedRegistry.find(regEntry => regEntry.name === name);  // Getting class from registry
         if (!cls) {
             throw new Error(`Class '${name}' not registered.`)
         }

@@ -20,12 +20,12 @@ export class AggregatorNode extends BaseNode {
 
     
     execute(message: Message) {
-        let currentIntf = this.inputInterfaces.find((intf: any) => intf.originNode.id === message.sourceNodeId);
+        let currentIntf = this.inputInterfaces.find((intf: any) => intf.originNodes.some((elem: any) => elem.id === message.sourceNodeId));
         this.slots.add(currentIntf.id);
 
         this.data.set(currentIntf.id, message.payload); // Writing last message to map
 
-        //console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
+        console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
         if (this.slots.size === this.inputInterfaces.length) {
             this.slots.clear();
             WsManager.sendMessage(this.buildAggregationCountMessage());

@@ -25,12 +25,12 @@ export class FileSaveNode extends BaseNode {
         if (this.fileType === "json") {
             fs.appendFile(file, JSON.stringify(payload,  null, 4),  (err: any) => {
                 if (err) this.onFailure(err);
-                this.onSuccess(file)
+                //this.onSuccess(file)
             });
         } else {
             fs.appendFile(file, payload,  (err: any) => {
                 if (err) this.onFailure(err);
-                this.onSuccess(file)
+                //this.onSuccess(file)
             });
         }
     }

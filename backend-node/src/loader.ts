@@ -34,6 +34,18 @@ function getNodeByInterfaceId(interfaceId: string) {
     })
 }
 
+
+function getOriginNode(interfaceId: string) {
+
+    return frontendNodes.nodes.filter((node: any) => {
+        return node.interfaces.some((intf: any) => {
+            if (intf[1].id === interfaceId) {
+                return true;
+            }
+        })
+    })
+}
+
 function getConnectedNodeByInterface(data: any, node: any, type: string) {
     // 
     let outInterface = node.interfaces.find((intface: any) => intface[0] === type);
@@ -81,8 +93,8 @@ function extractOptionsFromNode(node: any): StringMap {
  * Searches connection array for connection with given interfaceId (origin and target)
  * @param interfaceId Id of the interface
  */
-function getConnectionByInterfaceId(interfaceId: string) {
-    return frontendNodes.connections.find((conn: any) => {
+function getConnectionsByInterfaceId(interfaceId: string) {
+    return frontendNodes.connections.filter((conn: any) => {
         if (conn.from === interfaceId || conn.to === interfaceId) {
             return true;
         }
@@ -104,20 +116,22 @@ function getSourceNodes(node: any) {
     
     let combinedList: Array<any> = [];
     inputInterfaces.forEach((intf: any) => {  
-        let connection = getConnectionByInterfaceId(intf.id);
-        let originNodeInterfaceId = connection.from;
-        let node = getNodeByInterfaceId(originNodeInterfaceId);
+        let connections = getConnectionsByInterfaceId(intf.id);
 
-        let combined = {
-            name: intf.name,
-            id: intf.id,
-            originNode: {
-                type: node.type,
-                id: node.id,
-                name: node.name
+            let combined = {
+                name: intf.name,
+                id: intf.id,
+                originNodes: connections.map((connection: any) => {
+                    let originNodeInterfaceId = connection.from;
+                    let originNode = getNodeByInterfaceId(originNodeInterfaceId);
+                    return {
+                        type: originNode.type,
+                        id: originNode.id,
+                        name: originNode.name
+                    }
+                })
             }
-        }
-        combinedList.push(combined);
+            combinedList.push(combined);
     });
     return combinedList;
 }
@@ -143,8 +157,8 @@ function loadConfig() {
                     //let successTargets = getSuccessTargets(data, node);
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);
-                    let inputs = getSourceNodes(node);
-                    let instance = new newCls.clss(node.name, node.id, options, inputs, successTargets)
+                    let interfaces = getSourceNodes(node);
+                    let instance = new newCls.clss(node.name, node.id, options, interfaces, successTargets)
                 }
                 if (node.type === "mqttSub") {
                     let successTargets = getSuccessTargets(data, node);

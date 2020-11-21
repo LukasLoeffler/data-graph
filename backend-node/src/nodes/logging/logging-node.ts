@@ -1,3 +1,4 @@
+import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 const chalk = require('chalk');
@@ -15,11 +16,11 @@ export class LoggingNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(payload: string) {
+    execute(msg: Message) {
         if (this.level === "INFO") this.level = chalk.blue(this.level)
         if (this.level === "WARN") this.level = chalk.yellow(this.level)
         if (this.level === "DANGER") this.level = chalk.red(this.level)
-        console.log(`${new Date().toISOString()} ${this.level} - ${JSON.stringify(payload)}`)
+        console.log(`${new Date().toISOString()} ${this.level} - ${JSON.stringify(msg.payload)}`)
         //this.onSuccess(payload);
     }
 }

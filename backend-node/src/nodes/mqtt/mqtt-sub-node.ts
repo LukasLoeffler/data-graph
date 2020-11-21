@@ -1,4 +1,5 @@
 import { ExecutionCounter } from "../../exec-counter";
+import { Message } from "../../message";
 import { MqttBaseNode } from "./mqtt-base-node";
 
 
@@ -18,8 +19,8 @@ export class MqttSubNode extends MqttBaseNode {
 
         this.client.on("message",  (topic: any, message: string) => {
             ExecutionCounter.incrCount(this.id);
-            console.log(message.toString());
-            this.onSuccess(message.toString());
+            let msgOut = new Message(this.id, NODE_TYPE, message.toString())
+            this.onSuccess(msgOut);
         });
     }
 }   

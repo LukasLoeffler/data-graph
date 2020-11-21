@@ -1,3 +1,4 @@
+import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 const jsonUtils = require('./object-utils')
@@ -15,10 +16,10 @@ export class ObjectMapperNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(payload: any) {
-        console.log("Type:", typeof payload)
-        let newObject = mapObjectArray(payload, this.mapper);
-        this.onSuccess(newObject);
+    execute(msgIn: Message) {
+        let newObject = mapObjectArray(msgIn.payload, this.mapper);
+        let msgOut = new Message(this.id, NODE_TYPE, newObject);
+        this.onSuccess(msgOut);
     }
 }
 

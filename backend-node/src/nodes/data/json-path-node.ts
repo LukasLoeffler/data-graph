@@ -1,8 +1,10 @@
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
+import { Message } from "../../message";
 const jsonUtils = require('../data/object-utils')
 
 const NODE_TYPE = "JSON_PATH"
+
 
 export class ObjectPathNode extends BaseNode {
     path: string;
@@ -13,9 +15,10 @@ export class ObjectPathNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(payload: any) {
-        let value = jsonUtils.getValue(payload, this.path)
-        this.onSuccess(value);
+    execute(msgIn: Message) {
+        let valueAtPath = jsonUtils.getValue(msgIn.payload, this.path);
+        let msg = new Message(this.id, NODE_TYPE, valueAtPath);
+        this.onSuccess(msg);
     }
 }
 

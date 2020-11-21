@@ -1,5 +1,6 @@
 var crypto = require("crypto");
 import chalk from "chalk";
+import { Message } from "../message";
 import { NodeManager } from "../nodes/node-manager";
 import { WsManager } from "../ws";
 
@@ -33,10 +34,10 @@ export class BaseNode {
         });
     }
 
-    onFailure(errorMessage: string = "No error message provided.") {
+    onFailure(msg: Message) {
         this.targetsFailure.forEach(target => {
             WsManager.sendMessage(this.buildMessage(this.id, target));
-            NodeManager.getNodeById(target).execute(errorMessage);
+            NodeManager.getNodeById(target).execute(msg);
         });
     }
 
