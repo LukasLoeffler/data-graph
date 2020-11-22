@@ -33,7 +33,8 @@ export class AggregatorNode extends BaseNode {
             this.data.forEach((value: any, key: string) => {
                 output.push(...value);
             });
-            this.onSuccess(output);
+            let msgOut = new Message(this.id, NODE_TYPE, output)
+            this.onSuccess(msgOut);
         } else {
             WsManager.sendMessage(this.buildAggregationCountMessage());
         }

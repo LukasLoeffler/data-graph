@@ -9,9 +9,6 @@
           <v-col class="p-0">
             <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
           </v-col>
-          <v-col v-if="$store.getters.optionNode" cols=3 class="p-0">
-            <Sidebar/>
-          </v-col>
         </v-row>
       </v-flex>
     </div>
@@ -25,13 +22,12 @@ import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 
 
-import Sidebar from "./components/Sidebar"
-
 import ButtonNode from "./nodes/ButtonNode.js";
 import IntervalNode from "./nodes/time/IntervalNode"
 import Cron from "./nodes/time/CronNode.ts";
 
 import HttpGet from "./nodes/http/HttpGetNode.js"
+import MappingNode from "./nodes/object/MappingNode"
 import HttpPostPut from "./nodes/http/HttpPostPutNode.ts"
 import Filter from "./nodes/object/FilterNode.ts"
 import Path from "./nodes/object/PathNode.ts"
@@ -46,7 +42,9 @@ import AggregatorNode from "./nodes/aggregator/AggregatorNode";
 import EventButtonOption from "./nodes/options/EventButtonOption"
 import SettingsOption from "./nodes/options/SettingsOption"
 import ExecutionCountOption from "./nodes/options/ExecutionCountOption"
+
 import HttpNodeDialog from "./components/dialogs/HttpNodeDialog"
+import MappingNodeDialog from "./components/dialogs/MappingNodeDialog"
 
 import CustomConnection from "./components/CustomConnection"
 import CustomInterface from "./components/CustomInterface"
@@ -63,9 +61,7 @@ export default {
       optionPlugin: new OptionPlugin()
     }
   },
-  components: {
-    Sidebar
-  },
+  components: { },
   created() {
     this.editor.use(this.optionPlugin);
     this.editor.use(this.viewPlugin);
@@ -88,7 +84,9 @@ export default {
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("SettingsOption", SettingsOption);
     this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
+
     this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
+    this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
 
 
     this.editor.registerNodeType("cron", Cron, "Time")
@@ -102,6 +100,7 @@ export default {
     // Object
     this.editor.registerNodeType("objectFilter", Filter, "Object")
     this.editor.registerNodeType("objectPath", Path, "Object")
+    this.editor.registerNodeType("arrayMapping", MappingNode, "Object")
     this.viewPlugin.setNodeTypeAlias("objectFilter", "Filter array");
     this.viewPlugin.setNodeTypeAlias("objectPath", "Extract object path");
 

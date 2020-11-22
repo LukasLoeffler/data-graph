@@ -10,9 +10,10 @@ export class ObjectMapperNode extends BaseNode {
     mapper: any;
 
 
-    constructor(name: string, id: string, mappingString: Array<string>, targetsSuccess: Array<string>, targetsFailure: Array<string>) {
-        super(name, NODE_TYPE, id, targetsSuccess, targetsFailure)
-        this.mapper = createMapper(mappingString);
+    constructor(name: string, id: string, options: any, targetsSuccess: Array<string>, targetsFailure: Array<string>) {
+        super(name, NODE_TYPE, id, targetsSuccess, targetsFailure);
+
+        this.mapper = options.mapping.mappings;
         NodeManager.addNode(this);
     }
 
@@ -21,21 +22,6 @@ export class ObjectMapperNode extends BaseNode {
         let msgOut = new Message(this.id, NODE_TYPE, newObject);
         this.onSuccess(msgOut);
     }
-}
-
-function createMapper(arr: Array<string>) {
-    return arr.map((elem, index) => {
-        elem = elem.replace(/ /g, "");
-        if (!elem.includes("-->")) {
-            throw {
-                message: `'-->' not present on element ${index+1}`
-            }
-        }
-        return {
-            source: elem.split("-->")[0],
-            target: elem.split( "-->")[1],
-        }  
-    })
 }
 
 function mapObjectArray(array: Array<any>, mapping: any) {

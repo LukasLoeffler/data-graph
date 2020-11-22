@@ -195,6 +195,11 @@ function loadConfig() {
                     let filter = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, filter, successTargets, [])
                 }
+                if (node.type === "arrayMapping") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, [])
+                }
                 if (node.type === "button") {
                     let successTargets = getSuccessTargets(data, node);
                     let instance = new newCls.clss(node.name, node.id, successTargets, [])

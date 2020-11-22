@@ -43,7 +43,7 @@ let advancedRegistry: Array<RegEntry> = [
     new RegEntry("httpGet", "http", HttpNode, ["input"], ["success", "failure"]),
     new RegEntry("fileSave", "fileSystem", FileSaveNode, ["input"], ["success"]),
     new RegEntry("objectPath", "object", ObjectPathNode, ["input"], ["success", "failure"]),
-    new RegEntry("objectMapper", "object", ObjectMapperNode, ["input"], ["success"]),
+    new RegEntry("arrayMapping", "object", ObjectMapperNode, ["input"], ["success"]),
     new RegEntry("objectFilter", "object", FilterNode, ["input"], ["success"]),
     new RegEntry("button", "input", ButtonNode, [], ["success"]),
     new RegEntry("mqttPub", "mqtt", MqttPubNode, ["input"], []),
