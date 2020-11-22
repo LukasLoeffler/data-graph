@@ -25,22 +25,23 @@ Vue.use(VueNativeSock, 'ws://localhost:3001', {
 const store = new Vuex.Store({
   state: {
     optionNode: null,
-    recentlyActiveNodes: []
+    dataChanged: false
+
   },
   mutations: {
     setOptionNode (state, node) {
       state.optionNode = node;
     },
-    addRecentlyActiveNode(state, node) {
-      state.recentlyActiveNodes.push(node);
+    setDataChanged(state, dataChanged) {
+      state.dataChanged = dataChanged;
     }
   },
   getters: {
     optionNode: state => {
       return state.optionNode;
     },
-    recentlyActiveNodes: state => {
-      return state.recentlyActiveNodes;
+    dataChanged: state => {
+      return state.dataChanged;
     }
   }
 })

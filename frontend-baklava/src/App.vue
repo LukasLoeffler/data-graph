@@ -129,7 +129,7 @@ export default {
       this.viewPlugin.hooks.renderNode.tap(this, () => {
         this.changed = true;
       });
-    }, 500)
+    }, 1000)
 
     this.loadData();
   },
@@ -163,6 +163,14 @@ export default {
         this.changed = true;
       },
       deep: true
+    },
+    "$store.getters.dataChanged": {
+      handler(newValue) {
+        if (newValue) {
+          this.changed = newValue;
+          this.$store.commit("setDataChanged", false);
+        }
+      }
     }
   }
 }
