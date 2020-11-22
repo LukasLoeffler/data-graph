@@ -7,7 +7,7 @@
             "options": [
                 [
                     "Path",
-                    "countries.0.cities.0.places"
+                    "countries[0].cities[0].places"
                 ]
             ],
             "state": {},
@@ -172,7 +172,7 @@
             "options": [
                 [
                     "Path",
-                    "countries.0.cities.0.places"
+                    "countries[0].cities[0].places"
                 ]
             ],
             "state": {},
@@ -701,8 +701,8 @@
                 ]
             ],
             "position": {
-                "x": -274.7299747717628,
-                "y": 765.1802549303013
+                "x": -302.329293939003,
+                "y": 685.448888447162
             },
             "width": 200,
             "twoColumn": false
@@ -796,8 +796,8 @@
         }
     ],
     "panning": {
-        "x": 400.6913006718128,
-        "y": 198.2162596459049
+        "x": 459.720240985998,
+        "y": 287.70603206988955
     },
-    "scaling": 0.7224439672237836
+    "scaling": 0.6521900011709549
 }
