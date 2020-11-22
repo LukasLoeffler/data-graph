@@ -10,15 +10,31 @@
                 </v-card-title>
                 <v-card-text>
                     <v-btn @click="addHeader">Add Mapping</v-btn>
-                    <v-container>
-                        <v-row v-for="(mapping, index) in value.mappings" :key="`header-${index}`">
-                            <v-col cols="6">
-                                <v-text-field label="Source" required v-model="mapping.source"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="Target" required v-model="mapping.target"></v-text-field>
-                            </v-col>
-                        </v-row>
+                    <v-container class="px-0 mx-0">
+                        <v-simple-table>
+                            <thead>
+                                <tr>
+                                    <td></td>
+                                    <td>Index</td>
+                                    <td>Source</td>
+                                    <td>Target</td>
+                                    <td>Actions</td>
+                                </tr>
+                            </thead>
+                                <draggable :list="value.mappings" tag="tbody">
+                                    <tr v-for="(mapper, index) in value.mappings" :key="index">
+                                        <td>
+                                            <v-icon small class="page__grab-icon">mdi-drag-horizontal</v-icon>
+                                        </td>
+                                        <td> {{ index + 1 }} </td>
+                                        <td> {{ mapper.source }} </td>
+                                        <td> {{ mapper.target }} </td>
+                                        <td>
+                                            <v-icon small @click="editMapping(mapper)">mdi-pencil</v-icon>
+                                        </td>
+                                    </tr>
+                                </draggable>
+                        </v-simple-table>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -37,10 +53,22 @@
 
 
 <script>
+import Draggable from 'vuedraggable';
+
 export default {
     data: () => ({
         dialog: false,
+        headers: [
+            { text: 'Move', value: 'move'},
+            { text: 'Index', value: 'index'},
+            { text: 'Source', value: 'source' },
+            { text: 'Target', value: 'target' },
+            { text: 'Actions', value: 'actions'},
+        ],
     }),
+    components: {
+        Draggable
+    },
     props: ["option", "node", "value"],
     methods: {
         addHeader() {
@@ -49,7 +77,36 @@ export default {
                 target: "Target"
             }
             this.value.mappings.push(newMapping);
+        },
+        editMapping(item) {
+            console.log(item);
+            console.log(this.value.mappings)
+        },
+        onUpdate() {
+            console.log(this.value.mappings)
+        }
+    },
+    watch: {
+        "value.mappings": {
+            handler(newValue) {
+                console.log(newValue);
+                
+            },
+            deep: true
         }
     }
 }
 </script>
+
+<style lang="scss">
+.page--table {
+  .page {
+    &__table {
+      margin-top: 20px;
+    }
+    &__grab-icon {
+      cursor: move;
+    }
+  }
+}
+</style>

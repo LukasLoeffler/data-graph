@@ -9,7 +9,6 @@ const NODE_TYPE = "JSON_MAPPER"
 export class ObjectMapperNode extends BaseNode {
     mapper: any;
 
-
     constructor(name: string, id: string, options: any, targetsSuccess: Array<string>, targetsFailure: Array<string>) {
         super(name, NODE_TYPE, id, targetsSuccess, targetsFailure);
 
@@ -30,14 +29,7 @@ function mapObjectArray(array: Array<any>, mapping: any) {
     });
 }
 
-/**
- * 
- * @param {Object} input_object The input object which should be mapped into another form
- * @param {*} mapping The mapping object which holds the maps
- * @param {String} mode Can be "explicit" and "implicit". 
- * Implicit mode takes input object and applies the changes onto it.
- * Explicit mode creates a new object containing only the explicitly defined fields
- */
+
 function mapObject(input_object: any, mapping: any, mode = "explicit") {
     let newObject = {};
     if (mode == "implicit") {
@@ -46,12 +38,13 @@ function mapObject(input_object: any, mapping: any, mode = "explicit") {
     mapping.forEach((mapper: any) => {
 
         if (mapper.source.includes("'")) {
+            // If source is string set string as value
             _.set(newObject, mapper.target, mapper.source.replace(/'/g, ''));
         } else {
+            // If source is path set origin as value
             _.set(newObject, mapper.target, _.get(input_object, mapper.source));
         }
 
-        //jsonUtils.setValue(newObject, mapper.target, jsonUtils.getValue(input_object, mapper.source));
         if (mode === "implicit") {
             _.set(input_object, mapper.source, undefined);
         }

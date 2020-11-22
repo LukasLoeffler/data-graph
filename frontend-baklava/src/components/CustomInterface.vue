@@ -1,6 +1,6 @@
 <template>
     <div :id="data.id" :class="classes">
-        <div class="__port" @mouseover="startHover" @mouseout="endHover" :class="classesPort"></div>
+        <div class="__port" @mouseover="startHover" @mouseout="endHover"></div>
         <span v-if="data.connectionCount > 0 || !data.option || !getOptionComponent(data.option)" class="align-middle">
             {{ displayName }}
         </span>
@@ -79,11 +79,6 @@ export default {
                 "labelActive": this.isActive
             };
         },
-        classesPort() {
-            return {
-                "portActive": this.isActive
-            }
-        },
         displayName() {
             return this.data.displayName || this.name;
         }
@@ -94,9 +89,5 @@ export default {
 <style scoped>
 .labelActive {
     color: limegreen
-}
-
-.portActive {
-    background: limegreen !important;
 }
 </style>
