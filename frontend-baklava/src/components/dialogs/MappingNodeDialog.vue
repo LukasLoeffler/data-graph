@@ -8,6 +8,7 @@
                 <v-card-title>
                     <span class="headline">Node settings: {{node.name}}</span>
                     <v-spacer></v-spacer>
+                    <v-btn color="blue" class="mr-1" outlined>i</v-btn>
                     <v-btn @click="addHeader" color="green" outlined>Add Mapping</v-btn>
                 </v-card-title>
                 <v-card-text>
@@ -16,10 +17,10 @@
                         <v-simple-table>
                             <thead>
                                 <tr>
-                                    <td></td>
+                                    <td>Move</td>
                                     <td>Source</td>
                                     <td>Target</td>
-                                    <td>Actions</td>
+                                    <td>Delete</td>
                                 </tr>
                             </thead>
                             <draggable :list="mappingCopy" tag="tbody">
@@ -34,7 +35,7 @@
                                         <v-text-field v-model="mapper.target" outlined dense hide-details></v-text-field>
                                     </td>
                                     <td>
-                                        <v-icon small @click="deleteMapping(index)">mdi-delete</v-icon>
+                                        <v-icon @click="deleteMapping(index)">mdi-delete</v-icon>
                                     </td>
                                 </tr>
                             </draggable>
