@@ -13,10 +13,10 @@
                     <v-container>
                         <v-row v-for="(mapping, index) in value.mappings" :key="`header-${index}`">
                             <v-col cols="6">
-                                <v-text-field label="Url" required v-model="mapping.source"></v-text-field>
+                                <v-text-field label="Source" required v-model="mapping.source"></v-text-field>
                             </v-col>
                             <v-col cols="6">
-                                <v-text-field label="Url" required v-model="mapping.target"></v-text-field>
+                                <v-text-field label="Target" required v-model="mapping.target"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>

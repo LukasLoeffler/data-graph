@@ -1,7 +1,7 @@
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
-const jsonUtils = require('./object-utils')
+var _ = require('lodash');
 
 
 const NODE_TYPE = "JSON_MAPPER"
@@ -44,9 +44,16 @@ function mapObject(input_object: any, mapping: any, mode = "explicit") {
         newObject = input_object;
     }
     mapping.forEach((mapper: any) => {
-        jsonUtils.setValue(newObject, mapper.target, jsonUtils.getValue(input_object, mapper.source));
+
+        if (mapper.source.includes("'")) {
+            _.set(newObject, mapper.target, mapper.source.replace(/'/g, ''));
+        } else {
+            _.set(newObject, mapper.target, _.get(input_object, mapper.source));
+        }
+
+        //jsonUtils.setValue(newObject, mapper.target, jsonUtils.getValue(input_object, mapper.source));
         if (mode === "implicit") {
-            jsonUtils.setValue(input_object, mapper.source, undefined);
+            _.set(input_object, mapper.source, undefined);
         }
     });
     return newObject;
