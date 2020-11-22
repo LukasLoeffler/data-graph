@@ -8,6 +8,6 @@ export default new NodeBuilder("fileSave", {
     .addOption("Path", "InputOption")
     .addOption("Filename", "InputOption", "example")
     .addOption("Filetype", "SelectOption", "json", undefined, {
-        items: [ "json"]
+        items: [ "json", "csv"]
     })
     .build();

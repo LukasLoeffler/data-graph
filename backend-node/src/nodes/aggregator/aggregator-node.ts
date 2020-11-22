@@ -25,7 +25,7 @@ export class AggregatorNode extends BaseNode {
 
         this.data.set(currentIntf.id, message.payload); // Writing last message to map
 
-        console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
+        //console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
         if (this.slots.size === this.inputInterfaces.length) {
             this.slots.clear();
             WsManager.sendMessage(this.buildAggregationCountMessage());
