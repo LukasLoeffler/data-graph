@@ -18,8 +18,8 @@
                             <thead>
                                 <tr>
                                     <td>Move</td>
-                                    <td>Source</td>
-                                    <td>Target</td>
+                                    <td>Source Property</td>
+                                    <td>Target Property</td>
                                     <td>Delete</td>
                                 </tr>
                             </thead>
@@ -43,7 +43,7 @@
                     </v-container>
                 </v-card-text>
                 <v-card-actions class="pl-6">
-                    <p class="caption">* The changes still have to be applied in the node editor.</p>
+                    <p class="caption">* The changes still have to be deployed in the node editor.</p>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="dialog = false">
                         Close

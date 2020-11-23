@@ -438,6 +438,10 @@
                             {
                                 "source": "'Nextbike'",
                                 "target": "operator"
+                            },
+                            {
+                                "source": "'Karlsruhe'",
+                                "target": "city"
                             }
                         ]
                     }
@@ -491,6 +495,10 @@
                             {
                                 "source": "'Nextbike'",
                                 "target": "operator"
+                            },
+                            {
+                                "source": "'Baden-Baden'",
+                                "target": "city"
                             }
                         ]
                     }
@@ -544,6 +552,10 @@
                             {
                                 "source": "'Tier'",
                                 "target": "operator"
+                            },
+                            {
+                                "source": "'Karlsruhe'",
+                                "target": "city"
                             }
                         ]
                     }
@@ -632,6 +644,10 @@
                             {
                                 "source": "operator",
                                 "target": "properties.operator"
+                            },
+                            {
+                                "source": "city",
+                                "target": "properties.city"
                             }
                         ]
                     }
@@ -722,6 +738,75 @@
             },
             "width": 200,
             "twoColumn": false
+        },
+        {
+            "type": "objectFilter",
+            "id": "node_160608689698896",
+            "name": "objectFilter",
+            "options": [
+                [
+                    "FilterExpression",
+                    "!element.bike"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160608689698897",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160608689698898",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 688.255701404602,
+                "y": -150.06489579802357
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "fileSave",
+            "id": "node_1606086915743102",
+            "name": "fileSave",
+            "options": [
+                [
+                    "Path",
+                    "C:/Users/Lukas/Desktop/logs/"
+                ],
+                [
+                    "Filename",
+                    "stations"
+                ],
+                [
+                    "Filetype",
+                    "json"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Payload",
+                    {
+                        "id": "ni_1606086915743103",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1056.211193106884,
+                "y": -224.49864030268355
+            },
+            "width": 200,
+            "twoColumn": true
         }
     ],
     "connections": [
@@ -809,11 +894,21 @@
             "id": "160607359957288",
             "from": "ni_160605192244588",
             "to": "ni_160582102224653"
+        },
+        {
+            "id": "1606086900277101",
+            "from": "ni_16043415229202",
+            "to": "ni_160608689698897"
+        },
+        {
+            "id": "1606086918757106",
+            "from": "ni_160608689698898",
+            "to": "ni_1606086915743103"
         }
     ],
     "panning": {
-        "x": 363.6475935763498,
-        "y": 54.56499718827081
+        "x": 478.27652867233553,
+        "y": 308.86011260399636
     },
-    "scaling": 0.7120426407767487
+    "scaling": 0.6883078860841905
 }
