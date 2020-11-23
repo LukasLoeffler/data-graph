@@ -8,6 +8,7 @@ const NODE_TYPE = "JSON_MAPPER"
 
 export class ObjectMapperNode extends BaseNode {
     mapper: any;
+    lastValue: any = [];
 
     constructor(name: string, id: string, options: any, targetsSuccess: Array<string>, targetsFailure: Array<string>) {
         super(name, NODE_TYPE, id, targetsSuccess, targetsFailure);
@@ -17,9 +18,18 @@ export class ObjectMapperNode extends BaseNode {
     }
 
     execute(msgIn: Message) {
+        this.lastValue = msgIn.payload;
         let newObject = mapObjectArray(msgIn.payload, this.mapper);
         let msgOut = new Message(this.id, NODE_TYPE, newObject);
         this.onSuccess(msgOut);
+    }
+
+    getLastValue() {
+        return this.lastValue.slice(0, 10);
+    }
+
+    test(mapping: any) {
+        return mapObjectArray(this.lastValue, mapping).slice(0, 10);
     }
 }
 

@@ -67,6 +67,18 @@ app.get("/reset-exec-count/:nodeId", (req, res) => {
     res.send("Successfully resetted");
 })
 
+app.get("/last-value/:nodeId", (req, res) => {
+    let node = NodeManager.getNodeById(req.params.nodeId);
+    let lastValue = node.getLastValue();
+    res.send(lastValue);
+})
+
+app.post("/test/:nodeId", (req, res) => {
+    let node = NodeManager.getNodeById(req.params.nodeId);
+    let result = node.test(req.body.mapping);
+    res.send(result);
+})
+
 // start the Express server
 app.listen( port, () => {
     console.log( `Server started at http://localhost:${ port }` );
