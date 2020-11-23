@@ -50,7 +50,11 @@ function mapObject(input_object: any, mapping: any, mode = "explicit") {
         if (mapper.source.includes("'")) {
             // If source is string set string as value
             _.set(newObject, mapper.target, mapper.source.replace(/'/g, ''));
-        } else {
+        } else if (mapper.source.includes("{{time}}")) {
+            //check for {{time}} only temporary until a better concept is implemented
+            _.set(newObject, mapper.target, new Date());
+        }
+        else {
             // If source is path set origin as value
             _.set(newObject, mapper.target, _.get(input_object, mapper.source));
         }

@@ -8,9 +8,14 @@
                 <v-card-title>
                     <span class="headline">Node settings: {{node.name}}</span>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue" class="mr-1" outlined>i</v-btn>
-                    <v-btn @click="addHeader" color="green" outlined>Add Mapping</v-btn>
+                    <v-btn color="blue" class="mr-1" outlined>
+                        <v-icon>mdi-information-outline</v-icon>
+                    </v-btn>
+                    <v-btn @click="addHeader" color="green" outlined>
+                        <v-icon>mdi-plus-circle-outline</v-icon>
+                    </v-btn>
                 </v-card-title>
+                <v-divider></v-divider>
                 <v-card-text>
                     
                     <v-container class="px-0 mx-0">
@@ -19,6 +24,7 @@
                                 <tr>
                                     <td style="width: 20px">Move</td>
                                     <td>Source Property</td>
+                                    <td style="width: 20px"></td>
                                     <td>Target Property</td>
                                     <td style="width: 20px">Delete</td>
                                 </tr>
@@ -26,10 +32,13 @@
                             <draggable :list="mappingCopy" tag="tbody">
                                 <tr v-for="(mapper, index) in mappingCopy" :key="index">
                                     <td>
-                                        <v-icon small class="page__grab-icon">mdi-drag-horizontal-variant</v-icon>
+                                        <v-icon class="page__grab-icon">mdi-drag-horizontal-variant</v-icon>
                                     </td>
                                     <td>
                                         <v-text-field v-model="mapper.source" outlined dense hide-details></v-text-field>
+                                    </td>
+                                    <td>
+                                        <v-icon>mdi-ray-start-arrow</v-icon>
                                     </td>
                                     <td>
                                         <v-text-field v-model="mapper.target" outlined dense hide-details></v-text-field>
@@ -44,11 +53,11 @@
                     <v-row justify="center">
                         <v-col cols="6">
                             <h3 class="ml-5">Latest input</h3>
-                            <json-viewer :value="codeRaw" :expand-depth=4></json-viewer>
+                            <json-viewer :value="codeRaw" :expand-depth=4 expanded></json-viewer>
                         </v-col>
                         <v-col cols="6">
                             <h3>Test output</h3>
-                            <json-viewer :value="codeFormatted" :expand-depth=4 style="padding-left: 0px;"></json-viewer>
+                            <json-viewer :value="codeFormatted" :expand-depth=4 expanded style="padding-left: 0px;"></json-viewer>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -59,7 +68,7 @@
                     <v-btn color="red" text @click="dialog = false">
                         Close
                     </v-btn>
-                    <v-btn color="green" text @click="test">
+                    <v-btn color="green" text @click="test" :disabled="codeRaw.length === 0">
                         Test
                     </v-btn>
                     <v-btn color="blue" text @click="save">
