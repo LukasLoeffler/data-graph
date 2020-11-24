@@ -1,6 +1,7 @@
 import { NodeManager } from "./nodes/node-manager";
 import { NodeRegistry } from "./nodes/node-registry";
 import fs from 'fs';
+import path from 'path';
 import chalk from "chalk";
 
 
@@ -139,7 +140,8 @@ function getSourceNodes(node: any) {
 function loadConfig() {
     NodeManager.reset();
     console.log(chalk.blueBright("LOADING CONFIG"))
-    fs.readFile('./src/configuration/node-config.json', 'utf8' , (err: any, data:any) => {
+    var jsonPath = path.join(__dirname, '.', 'config', 'node-config.json');
+    fs.readFile(jsonPath, 'utf8' , (err: any, data:any) => {
 
         if (!err) {
             data = JSON.parse(data);

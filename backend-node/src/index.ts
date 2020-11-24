@@ -7,11 +7,13 @@ import { MqttServerManager } from "./manager/mqtt-manager";
 import { WsManager } from "./ws";
 import { ExecutionCounter } from "./exec-counter";
 import fs from 'fs';
+import path from 'path';
 import express from "express";
 import chalk from "chalk";
 const  cors = require('cors')
 
 
+var jsonPath = path.join(__dirname, '.', 'config', 'node-config.json');
 const app = express();
 const port = 3000;
 
@@ -30,7 +32,7 @@ app.get("/available-nodes", ( req, res ) => {
 });
 
 app.get("/get-node-config", ( req, res ) => {
-    fs.readFile('./src/configuration/node-config.json', 'utf8' , (err: any, data:any) => {
+    fs.readFile(jsonPath, 'utf8' , (err: any, data:any) => {
         if (!data || err) {
             console.log(chalk.redBright("No configuration present. Creating empty config."))
             res.send({});
@@ -41,7 +43,7 @@ app.get("/get-node-config", ( req, res ) => {
 });
 
 app.post("/save-node-config", ( req, res ) => {
-    fs.writeFile("./src/configuration/node-config.json", JSON.stringify( req.body, null, 4), {encoding:'utf8', flag:'w'}, function (err: any) {
+    fs.writeFile(jsonPath, JSON.stringify( req.body, null, 4), {encoding:'utf8', flag:'w'}, function (err: any) {
         if (err) console.log(err)
         console.log("Successfully saved");
         Loader.loadConfig();
