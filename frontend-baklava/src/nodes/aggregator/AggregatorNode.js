@@ -17,27 +17,19 @@ export default class AggregatorNode extends Node {
         
     }
 
-    load(data) {
-        this.id = data.id;
-        this.name = data.name;
-        this.state = data.state;
-
-        data.interfaces.forEach(([k, v]) => {
-
-            if(k.includes("IN") || k.includes("in")) {
-                this.addInputInterface(k);
-            }
-            
-            if (this.interfaces.has(k)) {
-                this.interfaces.get(k).load(v);
-            }
+    save() {
+        const state = super.save();
+        state.interfaces.forEach(([name, intfState]) => {
+            intfState.isInput = this.getInterface(name).isInput;
         });
-        data.options.forEach(([k, v]) => {
-            if (this.options.has(k)) {
-                this.options.get(k).value = v;
-            }
-        });
-        this.hooks.load.execute(data);
+        return state;
     }
 
+    load(state) {
+        state.interfaces.forEach(([name, intfState]) => {
+            const intf = intfState.isInput ? this.addInputInterface(name) : this.addOutputInterface(name);
+            intf.id = intfState.id;
+        });
+        super.load(state);
+    }
 }
