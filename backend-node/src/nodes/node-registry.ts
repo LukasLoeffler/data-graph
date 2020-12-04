@@ -4,6 +4,7 @@ import { HttpNode } from "./http/http-node"
 import { FileSaveNode } from "./filesystem/save-file-node"
 import { ObjectPathNode } from "./data/json-path-node"
 import { ObjectMapperNode } from "./data/object-mapper-node"
+import { ArrayMapperNode } from "./data/array-mapper-node"
 import { FilterNode } from "./data/filter-node"
 import { ButtonNode } from "./button/button-node";
 import { MqttPubNode } from "./mqtt/mqtt-pub-node";
@@ -11,50 +12,46 @@ import { MqttSubNode } from "./mqtt/mqtt-sub-node";
 import { AggregatorNode } from "./aggregator/aggregator-node"
 
 
-class RegEntry {
+
+export class RegEntry {
     name: string;
     category: string;
     clss: any;
-    socketListIn: Array<any>;
-    socketListOut: Array<any>;
 
-    constructor(name: string, category: string, clss: any, socketListIn: Array<any>, socketListOut: Array<any>) {
+    constructor(name: string, category: string, clss: any) {
         this.name = name;
         this.category = category;
         this.clss = clss;
-        this.socketListIn = socketListIn;
-        this.socketListOut = socketListOut;
     }
 
     repr() {
         return {
             name: this.name,
             category: this.category,
-            socketIn: this.socketListIn,
-            socketOut: this.socketListOut
         }
     }
 }
 
-let advancedRegistry: Array<RegEntry> = [
-    new RegEntry("cron", "time", CronNode, [], ["event"]),
-    new RegEntry("interval", "time", CronNode, [], ["event"]),
-    new RegEntry("logging", "logging", LoggingNode, ["input"], ["success"]),
-    new RegEntry("httpGet", "http", HttpNode, ["input"], ["success", "failure"]),
-    new RegEntry("fileSave", "fileSystem", FileSaveNode, ["input"], ["success"]),
-    new RegEntry("objectPath", "object", ObjectPathNode, ["input"], ["success", "failure"]),
-    new RegEntry("arrayMapping", "object", ObjectMapperNode, ["input"], ["success"]),
-    new RegEntry("objectFilter", "object", FilterNode, ["input"], ["success"]),
-    new RegEntry("button", "input", ButtonNode, [], ["success"]),
-    new RegEntry("mqttPub", "mqtt", MqttPubNode, ["input"], []),
-    new RegEntry("mqttSub", "mqtt", MqttSubNode, [], ["success"]),
-    new RegEntry("aggregator", "aggregator", AggregatorNode, [], [])
+let nodeRegistry: Array<RegEntry> = [
+    new RegEntry("cron", "time", CronNode),
+    new RegEntry("interval", "time", CronNode),
+    new RegEntry("logging", "logging", LoggingNode),
+    new RegEntry("httpGet", "http", HttpNode),
+    new RegEntry("fileSave", "fileSystem", FileSaveNode),
+    new RegEntry("objectMapping", "object", ObjectMapperNode),
+    new RegEntry("objectPath", "object", ObjectPathNode),
+    new RegEntry("arrayMapping", "object", ArrayMapperNode),
+    new RegEntry("objectFilter", "object", FilterNode),
+    new RegEntry("button", "input", ButtonNode),
+    new RegEntry("mqttPub", "mqtt", MqttPubNode),
+    new RegEntry("mqttSub", "mqtt", MqttSubNode),
+    new RegEntry("aggregator", "aggregator", AggregatorNode)
 ]
 
 
 export class NodeRegistry {
     static getNodeClassByName(name: string) {
-        let cls = advancedRegistry.find(regEntry => regEntry.name === name);  // Getting class from registry
+        let cls = nodeRegistry.find(regEntry => regEntry.name === name);  // Getting class from registry
         if (!cls) {
             throw new Error(`Class '${name}' not registered.`)
         }
@@ -65,8 +62,12 @@ export class NodeRegistry {
      * Get all available nodes
      */
     static getAvailableNodes() {
-        return advancedRegistry.map(regEntry => {
+        return nodeRegistry.map(regEntry => {
             return regEntry.repr()
         });
+    }
+
+    static registerNode(entry: RegEntry) {
+        nodeRegistry.push(entry);
     }
 }

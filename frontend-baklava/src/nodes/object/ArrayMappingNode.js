@@ -1,0 +1,15 @@
+import { Node } from "@baklavajs/core";
+
+
+export default class ArrayMappingNode extends Node {
+    type = "arrayMapping";
+    name = "Array Mapping";
+
+    constructor() {
+        super();
+        this.addInputInterface("payload")
+        this.addOutputInterface("onSuccess")
+
+        this.addOption("mapping", "MapingNodeDialog", {mappings: [{source: "source", target: "target"}]});
+    }
+}

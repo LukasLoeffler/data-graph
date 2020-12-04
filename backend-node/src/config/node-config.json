@@ -293,41 +293,6 @@
             "twoColumn": false
         },
         {
-            "type": "fileSave",
-            "id": "node_1605539952461179",
-            "name": "fileSave",
-            "options": [
-                [
-                    "Path",
-                    "./output"
-                ],
-                [
-                    "Filename",
-                    "collection"
-                ],
-                [
-                    "Filetype",
-                    "json"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "Payload",
-                    {
-                        "id": "ni_1605539952461180",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 1959.2010644371069,
-                "y": 258.5725793318943
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
             "type": "httpGet",
             "id": "node_160582102224652",
             "name": "GET Tier Karlsruhe",
@@ -446,6 +411,10 @@
                             {
                                 "source": "'Karlsruhe'",
                                 "target": "city"
+                            },
+                            {
+                                "source": "'#004899'",
+                                "target": "marker-color"
                             }
                         ]
                     }
@@ -503,6 +472,10 @@
                             {
                                 "source": "'Baden-Baden'",
                                 "target": "city"
+                            },
+                            {
+                                "source": "'#004899'",
+                                "target": "marker-color"
                             }
                         ]
                     }
@@ -560,6 +533,10 @@
                             {
                                 "source": "'Karlsruhe'",
                                 "target": "city"
+                            },
+                            {
+                                "source": "'#69d2aa'",
+                                "target": "marker-color"
                             }
                         ]
                     }
@@ -626,7 +603,7 @@
                     {
                         "mappings": [
                             {
-                                "source": "'Features'",
+                                "source": "'Feature'",
                                 "target": "type"
                             },
                             {
@@ -656,6 +633,10 @@
                             {
                                 "source": "{{time}}",
                                 "target": "properties.time"
+                            },
+                            {
+                                "source": "marker-color",
+                                "target": "properties.marker-color"
                             }
                         ]
                     }
@@ -686,113 +667,9 @@
             "twoColumn": false
         },
         {
-            "type": "fileSave",
-            "id": "node_1606036877004171",
-            "name": "fileSave",
-            "options": [
-                [
-                    "Path",
-                    "./output"
-                ],
-                [
-                    "Filename",
-                    "gis_export"
-                ],
-                [
-                    "Filetype",
-                    "csv"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "Payload",
-                    {
-                        "id": "ni_1606036877004172",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 1951.694476241568,
-                "y": 10.969842610570213
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
-            "type": "objectFilter",
-            "id": "node_160608689698896",
-            "name": "objectFilter",
-            "options": [
-                [
-                    "FilterExpression",
-                    "!element.bike"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "payload",
-                    {
-                        "id": "ni_160608689698897",
-                        "value": null
-                    }
-                ],
-                [
-                    "onSuccess",
-                    {
-                        "id": "ni_160608689698898",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 688.255701404602,
-                "y": -150.06489579802357
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
-            "type": "fileSave",
-            "id": "node_1606086915743102",
-            "name": "fileSave",
-            "options": [
-                [
-                    "Path",
-                    "C:/Users/Lukas/Desktop/logs/"
-                ],
-                [
-                    "Filename",
-                    "stations"
-                ],
-                [
-                    "Filetype",
-                    "json"
-                ]
-            ],
-            "state": {},
-            "interfaces": [
-                [
-                    "Payload",
-                    {
-                        "id": "ni_1606086915743103",
-                        "value": null
-                    }
-                ]
-            ],
-            "position": {
-                "x": 1056.211193106884,
-                "y": -224.49864030268355
-            },
-            "width": 200,
-            "twoColumn": true
-        },
-        {
             "type": "arrayMapping",
             "id": "node_160615124803798",
-            "name": "Mapping",
+            "name": "Add timestamp",
             "options": [
                 [
                     "mapping",
@@ -821,6 +698,10 @@
                             {
                                 "source": "{{time}}",
                                 "target": "time"
+                            },
+                            {
+                                "source": "{{time-dd-MM-yyyy hh:mm:ss:SSS}}",
+                                "target": "time_f"
                             }
                         ]
                     }
@@ -876,113 +757,225 @@
             },
             "width": 200,
             "twoColumn": false
+        },
+        {
+            "type": "fileSave",
+            "id": "node_1606471230686103",
+            "name": "FileSave",
+            "options": [
+                [
+                    "Path",
+                    "./output"
+                ],
+                [
+                    "Filename",
+                    "example"
+                ],
+                [
+                    "Filetype",
+                    "csv"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Payload",
+                    {
+                        "id": "ni_1606471230687104",
+                        "value": null,
+                        "isInput": true
+                    }
+                ]
+            ],
+            "position": {
+                "x": 2034.5287164734507,
+                "y": -73.35031376071133
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "fileSave",
+            "id": "node_1606471280322109",
+            "name": "FileSave",
+            "options": [
+                [
+                    "Path",
+                    "./output"
+                ],
+                [
+                    "Filename",
+                    "geojson"
+                ],
+                [
+                    "Filetype",
+                    "json"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Payload",
+                    {
+                        "id": "ni_1606471280322110",
+                        "value": null,
+                        "isInput": true
+                    }
+                ]
+            ],
+            "position": {
+                "x": 2306.641507508719,
+                "y": 217.64642322932053
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "objectMapping",
+            "id": "node_1606484208249100",
+            "name": "Object Mapping",
+            "options": [
+                [
+                    "mapping",
+                    {
+                        "mappings": [
+                            {
+                                "source": "'FeatureCollection'",
+                                "target": "type"
+                            },
+                            {
+                                "source": "{{payload}}",
+                                "target": "features"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_1606484208249101",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1606484208249102",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1995.8385818949291,
+                "y": 285.15802635657724
+            },
+            "width": 200,
+            "twoColumn": false
         }
     ],
     "connections": [
         {
-            "id": "160634350066665",
+            "id": "160648486605065",
             "from": "ni_16043415229202",
             "to": "ni_160434176136223"
         },
         {
-            "id": "160634350066667",
+            "id": "160648486605067",
             "from": "ni_16043415576848",
             "to": "ni_16043415229201"
         },
         {
-            "id": "160634350066669",
+            "id": "160648486605069",
             "from": "ni_1605539432227150",
             "to": "ni_1605539500412153"
         },
         {
-            "id": "160634350066771",
+            "id": "160648486605071",
             "from": "ni_1605539500412154",
             "to": "ni_1605539558404164"
         },
         {
-            "id": "160634350066773",
+            "id": "160648486605073",
             "from": "ni_160582102224654",
             "to": "ni_160598052576297"
         },
         {
-            "id": "160634350066775",
+            "id": "160648486605075",
             "from": "ni_160434176136224",
             "to": "ni_160599549575885"
         },
         {
-            "id": "160634350066777",
+            "id": "160648486605077",
             "from": "ni_160599549575886",
             "to": "ni_1605539925359171"
         },
         {
-            "id": "160634350066779",
+            "id": "160648486605079",
             "from": "ni_1605539558404165",
             "to": "ni_160599597944687"
         },
         {
-            "id": "160634350066881",
+            "id": "160648486605081",
             "from": "ni_160599597944688",
             "to": "ni_1605539928611172"
         },
         {
-            "id": "160634350066883",
+            "id": "160648486605183",
             "from": "ni_160598052576298",
             "to": "ni_160599602175996"
         },
         {
-            "id": "160634350066885",
+            "id": "160648486605185",
             "from": "ni_160599602175997",
             "to": "ni_160598041428582"
         },
         {
-            "id": "160634350066887",
+            "id": "160648486605187",
             "from": "ni_1605996435819105",
             "to": "ni_16043415576847"
         },
         {
-            "id": "160634350067089",
+            "id": "160648486605189",
             "from": "ni_1605996435819105",
             "to": "ni_1605539432227149"
         },
         {
-            "id": "160634350067091",
+            "id": "160648486605191",
             "from": "ni_1605539918532170",
             "to": "ni_1605996845568123"
         },
         {
-            "id": "160634350067093",
-            "from": "ni_1605996845569124",
-            "to": "ni_1605539952461180"
-        },
-        {
-            "id": "160634350067195",
-            "from": "ni_16043415229202",
-            "to": "ni_160608689698897"
-        },
-        {
-            "id": "160634350067197",
-            "from": "ni_160608689698898",
-            "to": "ni_1606086915743103"
-        },
-        {
-            "id": "160634350067199",
+            "id": "160648486605293",
             "from": "ni_1605539918532170",
             "to": "ni_160615124803799"
         },
         {
-            "id": "1606343500671101",
-            "from": "ni_1606151248037100",
-            "to": "ni_1606036877004172"
-        },
-        {
-            "id": "1606343500671103",
+            "id": "160648486605295",
             "from": "ni_1606260716087102",
             "to": "ni_160582102224653"
+        },
+        {
+            "id": "160648486605297",
+            "from": "ni_1606151248037100",
+            "to": "ni_1606471230687104"
+        },
+        {
+            "id": "160648486605299",
+            "from": "ni_1605996845569124",
+            "to": "ni_1606484208249101"
+        },
+        {
+            "id": "1606484866052101",
+            "from": "ni_1606484208249102",
+            "to": "ni_1606471280322110"
         }
     ],
     "panning": {
-        "x": 377.33459684575456,
-        "y": 243.41160028325032
+        "x": 418.92643630698126,
+        "y": 258.12355933693465
     },
-    "scaling": 0.734598766256056
+    "scaling": 0.6166231450167121
 }

@@ -1,9 +1,9 @@
 import { Node } from "@baklavajs/core";
 
 
-export default class MappingNode extends Node {
-    type = "arrayMapping";
-    name = "Mapping";
+export default class ObjectMappingNode extends Node {
+    type = "objectMapping";
+    name = "Object Mapping";
 
     constructor() {
         super();

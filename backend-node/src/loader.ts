@@ -72,6 +72,20 @@ export class Loader {
 }
 
 
+function convertGraph(frontendGraph: any){
+    let frontendNodes = frontendGraph.nodes.map((node: any) => {
+        return {
+            type: node.type,
+            id: node.id,
+            options: extractOptionsFromNode(node),
+            interfaces: getInterfaces(node)
+        }
+    });
+    
+    console.dir(frontendNodes, { depth: null });
+}
+
+
 function extractOptionsFromNode(node: any): StringMap {
     let options: Array<String> = node.options;
     let optionsArray = options.map((option: any) => {
@@ -85,7 +99,7 @@ function extractOptionsFromNode(node: any): StringMap {
     // Converting array of objects into object with optionName and optionKey
     let output: StringMap = {}
     optionsArray.forEach((option) => {
-        output[option.name] = option.value;
+        output[option.name.toLowerCase()] = option.value;
     })
     return output;
 }
@@ -104,9 +118,21 @@ function getConnectionsByInterfaceId(interfaceId: string) {
 
 function getInterfaces(node: any) {
     return node.interfaces.map((intf: any) => {
+
+        let interfaceId = intf[1].id;
+        let isOutput = frontendNodes.connections.some((connection: any) => connection.from === interfaceId);
+        let isInput = frontendNodes.connections.some((connection: any) => connection.to === interfaceId);
+
+        let type = "--"
+        if (isOutput && !isInput) type = "output"
+        if (isInput && !isOutput) type = "input" 
+
+
+
         return {
             name: intf[0],
-            id: intf[1].id
+            id: interfaceId,
+            type: type
         }
     })
 }
@@ -146,6 +172,10 @@ function loadConfig() {
         if (!err) {
             data = JSON.parse(data);
             frontendNodes = data;
+
+
+            //convertGraph(frontendNodes);
+
             data.nodes.forEach((node: any) => {
 
                 let newCls: any;
@@ -197,7 +227,7 @@ function loadConfig() {
                     let filter = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, filter, successTargets, [])
                 }
-                if (node.type === "arrayMapping") {
+                if (node.type === "arrayMapping" || node.type === "objectMapping") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);
                     let instance = new newCls.clss(node.name, node.id, options, successTargets, [])

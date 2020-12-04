@@ -27,11 +27,12 @@ import IntervalNode from "./nodes/time/IntervalNode"
 import Cron from "./nodes/time/CronNode.ts";
 
 import HttpGet from "./nodes/http/HttpGetNode.js"
-import MappingNode from "./nodes/object/MappingNode"
+import ArrayMappingNode from "./nodes/object/ArrayMappingNode"
+import ObjectMappingNode from "./nodes/object/ObjectMappingNode"
 import HttpPostPut from "./nodes/http/HttpPostPutNode.ts"
 import Filter from "./nodes/object/FilterNode.ts"
 import Path from "./nodes/object/PathNode.ts"
-import FileSave from "./nodes/filesystem/FileSaveNode.ts"
+import FileSave from "./nodes/filesystem/FileSaveNode"
 
 import MqttSubNode from "./nodes/mqtt/MqttSubNode";
 import MqttPubNode from "./nodes/mqtt/MqttPubNode";
@@ -100,7 +101,8 @@ export default {
     // Object
     this.editor.registerNodeType("objectFilter", Filter, "Object")
     this.editor.registerNodeType("objectPath", Path, "Object")
-    this.editor.registerNodeType("arrayMapping", MappingNode, "Object")
+    this.editor.registerNodeType("arrayMapping", ArrayMappingNode, "Object")
+    this.editor.registerNodeType("objectMapping", ObjectMappingNode, "Object")
     this.viewPlugin.setNodeTypeAlias("objectFilter", "Filter array");
     this.viewPlugin.setNodeTypeAlias("objectPath", "Extract object path");
 
@@ -188,6 +190,7 @@ body {
   height: 100vh;
   width: 100vw;
   margin: 0;
+  overflow: hidden;
 }
 
 .acCon {
