@@ -2,7 +2,7 @@ import chalk from "chalk";
 const redis = require("redis");
 const { promisify } = require("util");
 
-let url = "redis://192.168.178.82:6379/0"
+let url = "redis://193.196.39.113:6379/0"
 const client = redis.createClient(url);
 
 
