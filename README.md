@@ -1,7 +1,7 @@
 # Master-Code
 
-Application to showcase concepts and ideas regariding event-based data processing.
-Focusing on user-interaction and user-feedback to improve the understanding the flow of data.
+Application to showcase concepts and ideas for event-based data processing.
+Focusing on user-interaction and user-feedback to improve the understanding of thedata flow.
  
 ![example](docs/img/example.gif)
 
