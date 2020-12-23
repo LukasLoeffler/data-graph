@@ -5,8 +5,6 @@ export default class HttpGetNode extends Node {
     type = "httpGet";
     name = "HTTP GET";
 
-    defaultHeaders = [];
-
     constructor() {
         super();
         this.addInputInterface("Event")
