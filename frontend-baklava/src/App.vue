@@ -1,9 +1,12 @@
 <template>
-  <v-app>
-    <v-btn absolute dark fab left color="primary" class="m-2" @click="save" :disabled="!changed">
-        <v-icon>mdi-arrow-right-bold-hexagon-outline</v-icon>
-    </v-btn>
+  <v-app id="app">
     <div id="container">
+      <v-card class="mx-5">
+        <v-toolbar id="tabber" dense floating color="primary" dark>
+          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+          <v-icon @click="save" :disabled="!changed">mdi-arrow-right-bold-hexagon-outline</v-icon>
+        </v-toolbar>
+      </v-card>
       <v-flex d-flex child-flex class="fill-height">
         <v-row>
           <v-col class="p-0">
@@ -38,17 +41,21 @@ import MqttSubNode from "./nodes/mqtt/MqttSubNode";
 import MqttPubNode from "./nodes/mqtt/MqttPubNode";
 import Logging from "./nodes/LoggingNode.js";
 
+import InfoNode from "./nodes/info/InfoNode.js";
+
 import AggregatorNode from "./nodes/aggregator/AggregatorNode";
 
 import EventButtonOption from "./nodes/options/EventButtonOption"
 import SettingsOption from "./nodes/options/SettingsOption"
 import ExecutionCountOption from "./nodes/options/ExecutionCountOption"
+import InfoOption from "./nodes/options/InfoOption"
 
 import HttpNodeDialog from "./components/dialogs/HttpNodeDialog"
 import MappingNodeDialog from "./components/dialogs/MappingNodeDialog"
 
 import CustomConnection from "./components/CustomConnection"
 import CustomInterface from "./components/CustomInterface"
+//import CustomNode from "./components/CustomNode"
 
 
 export default {
@@ -69,6 +76,7 @@ export default {
 
     this.viewPlugin.components.connection = CustomConnection;
     this.viewPlugin.components.nodeInterface = CustomInterface;
+    //this.viewPlugin.components.node = CustomNode;
 
     const intfTypePlugin = new InterfaceTypePlugin();
 
@@ -85,6 +93,7 @@ export default {
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("SettingsOption", SettingsOption);
     this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
+    this.viewPlugin.registerOption("InfoOption", InfoOption);
 
     this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
     this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
@@ -121,6 +130,9 @@ export default {
     this.viewPlugin.setNodeTypeAlias("mqttPub", "Publish");
 
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
+
+
+    this.editor.registerNodeType("info", InfoNode, "Info")
 
 
     /**
@@ -183,21 +195,16 @@ export default {
   width: 100%;
   height: 100%;
 }
-</style>
 
-<style>
-body {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  overflow: hidden;
-}
-
-.acCon {
-  stroke-dasharray: 20;
-  animation: dashdraw 1s linear infinite;
-}
-@keyframes dashdraw {
-  to {stroke-dashoffset: -200;}
+#tabber {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 9999;
+  top: 10px;
+  text-align: center;
 }
 </style>

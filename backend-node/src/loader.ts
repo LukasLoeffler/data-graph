@@ -192,6 +192,10 @@ function loadConfig() {
                     let interfaces = getSourceNodes(node);
                     let instance = new newCls.clss(node.name, node.id, options, interfaces, successTargets)
                 }
+                if (node.type === "info") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let instance = new newCls.clss(node.name, node.id, successTargets)
+                }
                 if (node.type === "mqttSub") {
                     let successTargets = getSuccessTargets(data, node);
                     let options = extractOptionsFromNode(node);

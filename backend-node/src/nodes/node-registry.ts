@@ -10,6 +10,7 @@ import { ButtonNode } from "./button/button-node";
 import { MqttPubNode } from "./mqtt/mqtt-pub-node";
 import { MqttSubNode } from "./mqtt/mqtt-sub-node";
 import { AggregatorNode } from "./aggregator/aggregator-node"
+import { InfoNode } from "./info/info-node"
 
 
 
@@ -45,7 +46,8 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("button", "input", ButtonNode),
     new RegEntry("mqttPub", "mqtt", MqttPubNode),
     new RegEntry("mqttSub", "mqtt", MqttSubNode),
-    new RegEntry("aggregator", "aggregator", AggregatorNode)
+    new RegEntry("aggregator", "aggregator", AggregatorNode),
+    new RegEntry("info", "info", InfoNode)
 ]
 
 
