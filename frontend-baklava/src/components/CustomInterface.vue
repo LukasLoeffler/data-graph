@@ -29,7 +29,6 @@ export default {
     props: {
         data: Object,
         name: String,
-
     },
     mounted() {
         this.plugin.hooks.renderInterface.execute(this);
