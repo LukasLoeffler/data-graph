@@ -1,6 +1,8 @@
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
 import { Message } from "../../message";
+import { AxiosResponse, AxiosError } from 'axios'
+
 const axios = require('axios');
 const headerUtils = require('./helper')
 
@@ -27,18 +29,21 @@ export class HttpNode extends BaseNode {
     }
 
     execute(): void {
-        axios.get(this.url, {headers: this.headers})
+        axios.get(this.url, {headers: this.headers, timeout: 2500})
         .then((response: any) => {
             if (response.data) {
                 let msg = new Message(this.id, NODE_TYPE, response.data);
                 this.onSuccess(msg);
             } else {
-                console.log("Failure");
-                this.onFailure(response.status);
+                let msg = new Message(this.id, NODE_TYPE, null);
+                this.onFailure(msg);
             }
-        }).catch((err: any) => {
-            console.log("Catch:", err);
-            let errMsg = new Message(this.id, NODE_TYPE, err);
+        }).catch((err: AxiosError) => {
+            let payload = {
+                code: err.code,
+                message: err.message
+            }
+            let errMsg = new Message(this.id, NODE_TYPE, payload);
             this.onFailure(errMsg);
         });
     }
