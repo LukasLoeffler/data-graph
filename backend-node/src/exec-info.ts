@@ -1,7 +1,7 @@
 import { NodeManager } from "./nodes/node-manager";
 import { RedisClient } from "./redis";
 import { WsManager } from "./ws";
-
+import { format } from 'date-fns'
 
 class NodeExecutionCount {
     type: string;
@@ -31,6 +31,23 @@ export class ExecutionCounter {
             RedisClient.set(nodeId, incrData); // Setting value to database 
             this.sendExecutionCount(nodeId, incrData); // Send data to frontend
         })
+    }
+
+    static async incrInfo(nodeId: string, bytes: number) {
+
+        let incrData = 1;
+        let dbIncrData = await RedisClient.get(nodeId);
+        if (dbIncrData) incrData = parseInt(dbIncrData)+1;
+
+        let defaultBytes = 0;
+        let dbBytes = await RedisClient.get("bytes"+nodeId);
+        if (dbBytes) defaultBytes = parseInt(dbBytes)+bytes;
+
+
+
+        RedisClient.set(nodeId, incrData);
+        RedisClient.set("bytes"+nodeId, defaultBytes);
+        this.sendInfoNode(nodeId, incrData, defaultBytes);
     }
 
 
@@ -73,6 +90,23 @@ export class ExecutionCounter {
             executionCount: count
         }
         WsManager.sendMessage(JSON.stringify(payload));
+    }
+
+
+    static sendInfoNode(nodeId: string, count: number, bytes: number) {
+        let payload = {
+            type: "InfoNode",
+            nodeId: nodeId,
+            executionCount: count,
+            executionByte: bytes,
+            lastTime: format(new Date, "HH:mm:ss:SS"),
+            lastDate: format(new Date, "dd.MM.yyyy")
+        }
+        WsManager.sendMessage(JSON.stringify(payload));
+    }
+
+    static getNodeExecutionInfo(nodeId: string) {
+        return RedisClient.get(nodeId);
     }
 
         /**
