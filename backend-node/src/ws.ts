@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { ExecutionCounter } from "./exec-counter";
+import { ExecutionCounter } from "./exec-info";
 import { Loader } from "./loader";
 
 const WebSocket = require('ws');
