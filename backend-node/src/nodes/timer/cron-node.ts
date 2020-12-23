@@ -6,7 +6,7 @@ import { Message } from "../../message";
 
 
 const NODE_TYPE = "CRON"
-const requiredOptions = ["CronExpression"];
+const requiredOptions = ["cronexpression"];
 
 export class CronNode extends BaseNode{
     cronExpression: string;
@@ -15,8 +15,10 @@ export class CronNode extends BaseNode{
 
     constructor(name: string, id: string, options: any, targetsSuccess: any) {
         super(name, NODE_TYPE, id, targetsSuccess, []);
+
         this.validateOptions(options, requiredOptions);
-        this.cronExpression = this.getOption("CronExpression", options);
+        this.cronExpression = this.getOption("cronexpression", options);
+
         this.task = this.createTask();
         this.startTask();
         NodeManager.addNode(this);
@@ -24,7 +26,7 @@ export class CronNode extends BaseNode{
 
     createTask() {
         return cron.schedule(this.cronExpression, () =>  {
-            let msgOut = new Message(this.id, NODE_TYPE, null)
+            let msgOut = new Message(this.id, NODE_TYPE, "")
             this.onSuccess(msgOut);
         }, {
             scheduled: false
