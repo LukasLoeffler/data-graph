@@ -1,15 +1,55 @@
 <template>
   <v-app id="app">
     <div id="container">
-      <v-card class="mx-5">
-        <v-toolbar id="tabber" dense floating color="primary" dark>
-          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-card class="mx-2">
+        <v-toolbar id="tabber" dense color="primary" dark>
+          <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+          <v-toolbar-title>Workspace 1</v-toolbar-title>
+          <div class="flex-grow-1"></div>
           <v-icon @click="save" :disabled="!changed">mdi-arrow-right-bold-hexagon-outline</v-icon>
         </v-toolbar>
       </v-card>
+      <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title class="title">
+              Application
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              subtext
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider></v-divider>
+        <v-list nav dense>
+          <v-list-item-group v-model="group" active-class="active">
+            <v-list-item>
+              <v-list-item-title>Work</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>Bar</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>Fizz</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>Buzz</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+        <v-spacer></v-spacer>
+        <v-divider></v-divider>
+        <v-list nav dense>
+          <v-list-item-group v-model="group" active-class="active">
+            <v-list-item>
+              <v-list-item-title>Settings</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
       <v-flex d-flex child-flex class="fill-height">
-        <v-row>
-          <v-col class="p-0">
+        <v-row class="p-0 m-0">
+          <v-col class="p-0 m-0">
             <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
           </v-col>
         </v-row>
@@ -66,7 +106,9 @@ export default {
       changed: false,
       editor: new Editor(),
       viewPlugin: new ViewPlugin(),
-      optionPlugin: new OptionPlugin()
+      optionPlugin: new OptionPlugin(),
+      drawer: false,
+      workspaces: []
     }
   },
   components: { },
@@ -202,9 +244,15 @@ export default {
   margin-right: auto;
   left: 0;
   right: 0;
-  text-align: center;
-  z-index: 9999;
+  z-index: 1000;
   top: 10px;
-  text-align: center;
+}
+
+#drawer {
+  z-index: 100;
+}
+
+.active {
+  color: cyan;
 }
 </style>
