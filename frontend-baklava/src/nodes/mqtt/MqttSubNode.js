@@ -24,12 +24,12 @@ export default class MqttSubNode extends Node {
  * Preloading the available mqtt servers so constructor cann access them
  */
 function loadData() {
-    let url = `http://localhost:3000/mqtt-server`;
+    let url = `http://localhost:3000/mqtt-server/all`;
     axios.get(url).then((response) => {
 
         items = response.data.map(server => {
             return {
-                value: server.id,
+                value: server._id,
                 text: server.name
             }
         })
