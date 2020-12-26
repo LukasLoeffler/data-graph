@@ -10,7 +10,10 @@ import fs from 'fs';
 import path from 'path';
 import express from "express";
 import chalk from "chalk";
+const MongoClient = require('mongodb').MongoClient;
 const  cors = require('cors')
+
+
 
 
 var jsonPath = path.join(__dirname, '.', 'config', 'node-config.json');
@@ -19,6 +22,19 @@ const port = 3000;
 
 app.use(express.json()); 
 app.use(cors())
+
+let uri = "mongodb+srv://lukloe:removed@cluster0.oorug.mongodb.net?retryWrites=true&w=majority";
+let dbo: any;
+
+MongoClient.connect(uri, function(err: any, db: any) {
+    if (err) throw err;
+    dbo = db.db("mydb");
+    dbo.createCollection("mqtt-servers", function(err: any, res: any) {
+        if (err) console.log("Collection already exists.");
+        else console.log("Collection created!");
+    });
+});
+
 
 
 // Loading nodes from config file.
@@ -59,11 +75,6 @@ app.get("/recieve-event/:nodeId", (req, res) => {
     else res.send("Successfully executed");
 });
 
-app.get("/mqtt-server", (req, res) => {
-    let list = MqttServerManager.getAvailableServer();
-    res.send(list);
-});
-
 app.get("/reset-exec-count/:nodeId", (req, res) => {
     ExecutionCounter.resetCount(req.params.nodeId);
     res.send("Successfully resetted");
@@ -80,6 +91,46 @@ app.post("/test/:nodeId", (req, res) => {
     let result = node.test(req.body.mapping);
     res.send(result);
 })
+
+
+app.get("/mqtt-server/all", (req, res) => {
+    dbo.collection("mqtt-servers").find({}).toArray(function(err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else res.send(result);
+    });
+});
+
+app.get("/mqtt-server/:id", (req, res) => {
+    var query = { 
+        id: parseInt(req.params.id)
+    };
+    console.log("Fetching mqttServers by id", query);
+    dbo.collection("mqtt-servers").find(query).toArray(function(err: any, result: any) {
+        if (err) res.status(404).send(err);
+        else res.send(result);
+    });
+});
+
+app.post("/mqtt-server", (req, res) => {
+    dbo.collection("mqtt-servers").insertOne(req.body, function(err: any, result: any) {
+        if (err) res.status(400).send(err);
+        else res.send(result);
+    });
+});
+
+app.delete("/mqtt-server/:id", (req, res) => {
+    let query = { 
+        id: parseInt(req.params.id)
+    };
+    console.log("Deleting by query:", query)
+    dbo.collection("mqtt-servers").deleteOne(query, function(err: any, obj: any) {
+        if (err) res.status(404).send(err);
+        else res.send({
+            "num_deleted": obj.result.n
+        });
+    });
+});
+
 
 // start the Express server
 app.listen( port, () => {
