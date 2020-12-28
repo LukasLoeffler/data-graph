@@ -50,6 +50,8 @@ import MappingNodeDialog from "./components/dialogs/MappingNodeDialog"
 import CustomConnection from "./components/CustomConnection"
 import CustomInterface from "./components/CustomInterface"
 
+import PostgresSaveNode from "./nodes/database/PostgresSaveNode"
+
 
 export default {
   data() {
@@ -113,6 +115,8 @@ export default {
     // User input
     this.editor.registerNodeType("button", ButtonNode, "Input")
     this.viewPlugin.setNodeTypeAlias("button", "Button");
+
+    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
 
     // MQTT
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
