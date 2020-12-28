@@ -184,7 +184,10 @@ function loadConfig() {
                 } catch (error) {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
-                
+                if (node.type === "postgresSave") {
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options)
+                }                
                 if (node.type === "aggregator") {
                     //let successTargets = getSuccessTargets(data, node);
                     let successTargets = getSuccessTargets(data, node);
