@@ -121,11 +121,10 @@ export default {
     this.editor.use(intfTypePlugin);
 
     intfTypePlugin.addType("Event", "orange");
-
     intfTypePlugin.addType("Message", "#038cfc");
 
 
-    //this.viewPlugin.enableMinimap = true;
+    // this.viewPlugin.enableMinimap = true;
 
     // register your nodes, node options, node interface types, ...
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);

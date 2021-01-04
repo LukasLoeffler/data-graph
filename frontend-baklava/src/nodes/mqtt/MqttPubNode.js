@@ -27,7 +27,7 @@ function loadData() {
     axios.get(url).then((response) => {
         items = response.data.map(server => {
             return {
-                value: server.id,
+                value: server,
                 text: server.name
             }
         })

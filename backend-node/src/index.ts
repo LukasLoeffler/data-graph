@@ -1,20 +1,16 @@
 import { NodeRegistry } from "./nodes/node-registry";
 import { Loader } from "./loader";
-
-
 import { NodeManager } from "./nodes/node-manager";
-import { MqttServerManager } from "./manager/mqtt-manager";
+import { connectToServer, getDb } from "./manager/mongo-manager";
 import { WsManager } from "./ws";
 import { ExecutionCounter } from "./exec-info";
 import fs from 'fs';
 import path from 'path';
 import express from "express";
 import chalk from "chalk";
-const MongoClient = require('mongodb').MongoClient;
+
+
 const  cors = require('cors')
-
-
-
 
 var jsonPath = path.join(__dirname, '.', 'config', 'node-config.json');
 const app = express();
@@ -23,22 +19,21 @@ const port = 3000;
 app.use(express.json()); 
 app.use(cors())
 
-let uri = "mongodb+srv://lukloe:removed@cluster0.oorug.mongodb.net?retryWrites=true&w=majority";
 let dbo: any;
 
-MongoClient.connect(uri, function(err: any, db: any) {
-    if (err) throw err;
-    dbo = db.db("mydb");
-    dbo.createCollection("mqtt-servers", function(err: any, res: any) {
-        if (err) console.log("Collection already exists.");
-        else console.log("Collection created!");
+
+connectToServer( function( err: any, client: any ) {
+    if (err) console.log("Connection to Mongo:", err);
+    
+    // Loading nodes from config file.
+    dbo = getDb();
+    Loader.loadConfig();
+
+    // start the Express server
+    app.listen( port, () => {
+        console.log( `Server started at http://localhost:${ port }` );
     });
 });
-
-
-
-// Loading nodes from config file.
-Loader.loadConfig();
 
 
 app.get("/available-nodes", ( req, res ) => {
@@ -122,7 +117,6 @@ app.delete("/mqtt-server/:id", (req, res) => {
     let query = { 
         id: parseInt(req.params.id)
     };
-    console.log("Deleting by query:", query)
     dbo.collection("mqtt-servers").deleteOne(query, function(err: any, obj: any) {
         if (err) res.status(404).send(err);
         else res.send({
@@ -132,7 +126,16 @@ app.delete("/mqtt-server/:id", (req, res) => {
 });
 
 
-// start the Express server
-app.listen( port, () => {
-    console.log( `Server started at http://localhost:${ port }` );
+app.get("/workspaces/all", (req, res) => {
+    dbo.collection("workspaces").find({}).toArray(function(err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else res.send(result);
+    });
+});
+
+app.post("/workspace", (req, res) => {
+    dbo.collection("workspaces").insertOne(req.body, function(err: any, result: any) {
+        if (err) res.status(400).send(err);
+        else res.send(result);
+    });
 });
