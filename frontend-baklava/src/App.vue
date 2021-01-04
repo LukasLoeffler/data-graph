@@ -4,7 +4,7 @@
       <v-card class="mx-2">
         <v-toolbar id="tabber" dense color="primary" dark>
           <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title>Workspace 1</v-toolbar-title>
+          <v-toolbar-title>{{selectedWorkspace}}</v-toolbar-title>
           <div class="flex-grow-1"></div>
           <v-icon @click="save" :disabled="!changed">mdi-arrow-right-bold-hexagon-outline</v-icon>
         </v-toolbar>
@@ -18,30 +18,16 @@
         </v-list-item>
         <v-divider></v-divider>
         <v-list nav dense>
-          <v-list-item-group v-model="group" active-class="active">
-            <v-list-item>
-              <v-list-item-title>Work</v-list-item-title>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-title>Bar</v-list-item-title>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-title>Fizz</v-list-item-title>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-title>Buzz</v-list-item-title>
+          <v-list-item-group v-model="activeWorkspace" active-class="active" mandatory>
+            <v-list-item v-for="workspace in workspaces" :key="workspace._id">
+              <v-list-item-title>{{workspace.name}}</v-list-item-title>
+              <v-list-item-action-text @click="deleteWorkspace(workspace._id)">Edit</v-list-item-action-text>
             </v-list-item>
           </v-list-item-group>
+          <v-btn block color="green" class="mt-2" @click="addWorkspace">Add Workspace</v-btn>
         </v-list>
         <v-spacer></v-spacer>
         <v-divider></v-divider>
-        <v-list nav dense>
-          <v-list-item-group v-model="group" active-class="active">
-            <v-list-item>
-              <v-list-item-title>Settings</v-list-item-title>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
       </v-navigation-drawer>
       <v-flex d-flex child-flex class="fill-height">
         <v-row class="p-0 m-0">
@@ -104,7 +90,9 @@ export default {
       viewPlugin: new ViewPlugin(),
       optionPlugin: new OptionPlugin(),
       drawer: false,
-      workspaces: []
+      workspaces: null,
+      activeWorkspace: null,
+      selectedWorkspace: null
     }
   },
   components: { },
@@ -183,6 +171,7 @@ export default {
     }, 1000)
 
     this.loadData();
+    this.loadWorkspaces();
   },
   methods: {
     sendMessage() {
@@ -202,8 +191,35 @@ export default {
         this.editor.load(response.data);
       })
     },
+    loadWorkspaces() {
+      let loadStateUrl = "http://localhost:3000/workspaces/all";
+      this.axios.get(loadStateUrl).then((response) => {
+        this.workspaces = response.data;
+        this.activeWorkspace = 0;
+      })
+    },
+    addWorkspace() {
+      let loadStateUrl = "http://localhost:3000/workspace";
+      let data = {name: "New Workspace"}
+      this.axios.post(loadStateUrl, data).then(() => {
+        this.loadWorkspaces();
+      })
+    },
+    deleteWorkspace(_id) {
+      console.log("deleteWorkspace:", _id)
+      let deleteWorkspaceUrl = `http://localhost:3000/workspace/${_id}`;
+      this.axios.delete(deleteWorkspaceUrl).then((response) => {
+        console.log(response.data);
+        this.loadWorkspaces();
+      })
+    }
   },
   watch: {
+    "activeWorkspace": {
+      handler(newValue) {
+        this.selectedWorkspace = this.workspaces[newValue].name;
+      }
+    },
     "viewPlugin.scaling": {
       handler() {
         this.changed = true;
