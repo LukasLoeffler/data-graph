@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import express from "express";
 import chalk from "chalk";
+var mongodb = require('mongodb');
 
 
 const  cors = require('cors')
@@ -115,7 +116,7 @@ app.post("/mqtt-server", (req, res) => {
 
 app.delete("/mqtt-server/:id", (req, res) => {
     let query = { 
-        id: parseInt(req.params.id)
+        id: req.params.id
     };
     dbo.collection("mqtt-servers").deleteOne(query, function(err: any, obj: any) {
         if (err) res.status(404).send(err);
@@ -137,5 +138,17 @@ app.post("/workspace", (req, res) => {
     dbo.collection("workspaces").insertOne(req.body, function(err: any, result: any) {
         if (err) res.status(400).send(err);
         else res.send(result);
+    });
+});
+
+app.delete("/workspace/:id", (req, res) => {
+    let query = { 
+        _id: new mongodb.ObjectID(req.params.id)
+    };
+    dbo.collection("workspaces").deleteOne(query, function(err: any, obj: any) {
+        if (err) res.status(404).send(err);
+        else res.send({
+            "num_deleted": obj.result.n
+        });
     });
 });
