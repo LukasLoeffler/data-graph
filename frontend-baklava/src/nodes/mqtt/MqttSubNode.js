@@ -29,7 +29,7 @@ function loadData() {
 
         items = response.data.map(server => {
             return {
-                value: server._id,
+                value: server,
                 text: server.name
             }
         })
