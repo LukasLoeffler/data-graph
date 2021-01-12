@@ -26,9 +26,8 @@ let dbo: any;
 connectToServer( function( err: any, client: any ) {
     if (err) console.log("Connection to Mongo:", err);
     
-    // Loading nodes from config file.
-    dbo = getDb();
-    Loader.loadConfig();
+    dbo = getDb();  // Fetching database object
+    Loader.loadConfig(dbo);  // Loading nodes from config file.
 
     // start the Express server
     app.listen( port, () => {
@@ -37,31 +36,50 @@ connectToServer( function( err: any, client: any ) {
 });
 
 
-app.get("/available-nodes", ( req, res ) => {
-    console.log("Fetching available nodes")
-    let availableNodes = NodeRegistry.getAvailableNodes();
-    res.send(availableNodes);
-});
-
-app.get("/get-node-config", ( req, res ) => {
-    fs.readFile(jsonPath, 'utf8' , (err: any, data:any) => {
-        if (!data || err) {
-            console.log(chalk.redBright("No configuration present. Creating empty config."))
-            res.send({});
-        } else {
-            res.send(JSON.parse(data));
+app.get("/get-node-config/:workspaceId", ( req, res ) => {
+    console.log("Fetching node config for workspace:", req.params.workspaceId)
+    var query = { 
+        ws_id: req.params.workspaceId
+    };
+    dbo.collection("node-configs").findOne(query, function(err: any, result: any) {
+        if (err) res.status(404).send(err);
+        else {
+            res.send(result);
         }
     });
 });
 
-app.post("/save-node-config", ( req, res ) => {
-    fs.writeFile(jsonPath, JSON.stringify( req.body, null, 4), {encoding:'utf8', flag:'w'}, function (err: any) {
-        if (err) console.log(err)
-        console.log("Successfully saved");
-        Loader.loadConfig();
+app.get("/node-configs/all", (req, res) => {
+    dbo.collection("node-configs").find({}).toArray(function(err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else res.send(result);
     });
-    WsManager.sendMessage("Refreshed");
-    res.send("Successfully saved");
+});
+
+app.delete("/node-configs/all", (req, res) => {
+    dbo.collection("node-configs").deleteMany({}, function(err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else res.send(result);
+    });
+});
+
+app.post("/save-node-config/:workspaceId", ( req, res ) => {
+
+    req.body.ws_id = req.params.workspaceId;
+
+    var myquery = { ws_id: req.params.workspaceId };
+
+    var newvalues = { $set: req.body };
+    const options = { upsert: true };
+
+    dbo.collection("node-configs").updateOne(myquery, newvalues, options, function(err: any, obj: any) {
+        if (err) res.status(500).send("Configuation not saved");
+        else {
+            WsManager.sendMessage("Refreshed");
+            Loader.loadConfig(dbo);
+            res.send(`Updated ${obj.result.n}`);
+        }
+    });
 });
 
 app.get("/recieve-event/:nodeId", (req, res) => {

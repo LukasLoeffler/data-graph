@@ -4,7 +4,7 @@
       <v-card class="mx-2">
         <v-toolbar id="tabber" dense color="primary" dark>
           <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title>{{selectedWorkspace}}</v-toolbar-title>
+          <v-toolbar-title v-if="selectedWorkspace">{{selectedWorkspace.name}}</v-toolbar-title>
           <div class="flex-grow-1"></div>
           <v-icon @click="save" :disabled="!changed">mdi-arrow-right-bold-hexagon-outline</v-icon>
         </v-toolbar>
@@ -169,8 +169,6 @@ export default {
         this.changed = true;
       });
     }, 1000)
-
-    this.loadData();
     this.loadWorkspaces();
   },
   methods: {
@@ -179,14 +177,15 @@ export default {
     },
     save() {
       let state = this.editor.save();
-      let saveStateUrl = "http://localhost:3000/save-node-config";
+      let saveStateUrl = "http://localhost:3000/save-node-config/"+this.selectedWorkspace._id;
       this.axios.post(saveStateUrl, state).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold")
         this.changed = false;
       })
     },
     loadData() {
-      let loadStateUrl = "http://localhost:3000/get-node-config";
+      console.log("Loading workspace:", this.selectedWorkspace);
+      let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedWorkspace._id;
       this.axios.get(loadStateUrl).then((response) => {
         this.editor.load(response.data);
       })
@@ -196,6 +195,8 @@ export default {
       this.axios.get(loadStateUrl).then((response) => {
         this.workspaces = response.data;
         this.activeWorkspace = 0;
+        this.selectedWorkspace = this.workspaces[0];
+        this.loadData();
       })
     },
     addWorkspace() {
@@ -212,12 +213,14 @@ export default {
         console.log(response.data);
         this.loadWorkspaces();
       })
-    }
+    },
   },
   watch: {
     "activeWorkspace": {
       handler(newValue) {
-        this.selectedWorkspace = this.workspaces[newValue].name;
+        this.selectedWorkspace = this.workspaces[newValue];
+        this.loadData();
+        this.drawer = false;  // Close drawer on select
       }
     },
     "viewPlugin.scaling": {
