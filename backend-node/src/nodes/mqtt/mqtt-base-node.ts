@@ -1,17 +1,16 @@
 import { connect } from 'mqtt';
 import { NodeManager } from "../node-manager";
-import { MqttServerConnection, MqttServerManager } from "../../manager/mqtt-manager";
 import { BaseNode } from "../base-node";
 import chalk from "chalk";
 
 
 
-const NODE_TYPE = "MQTT_PUB"
-let requiredOptions = ["Server", "Topic"];
+const NODE_TYPE = "MQTT_BASE"
+let requiredOptions = ["server", "topic"];
 
 export abstract class MqttBaseNode extends BaseNode {
     options: any;
-    server: MqttServerConnection;
+    server: any;
     topic: string;
     client: any;
 
@@ -19,13 +18,11 @@ export abstract class MqttBaseNode extends BaseNode {
         super(name, nodeType, id, targetsSuccess, []);
         this.validateOptions(options, requiredOptions);
         this.options = options;
-        let serverId = this.getOption("Server", options); //Only id of server is passed by options
-        this.server = MqttServerManager.getServerById(serverId); 
-        this.topic = this.getOption("Topic", options);
+        this.server = this.getOption("server", options);
+        this.topic = this.getOption("topic", options);
         this.createClient();
         NodeManager.addNode(this);
     }
-
 
     createClient() {
         this.client = connect(this.server.url);

@@ -4,7 +4,7 @@ import { Message } from "../message";
 import { NodeManager } from "../nodes/node-manager";
 import { WsManager } from "../ws";
 
-const NODE_TYPE = "BASE_NDOE"
+const NODE_TYPE = "BASE_NODE"
 
 export class BaseNode {
     name: string;
