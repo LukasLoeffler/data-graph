@@ -45,7 +45,7 @@
                     <v-btn color="blue darken-1" text @click="dialog = false">
                         Close
                     </v-btn>
-                    <v-btn color="blue darken-1" text @click="dialog = false">
+                    <v-btn color="blue darken-1" text @click="save">
                         Save
                     </v-btn>
                 </v-card-actions>
@@ -72,6 +72,10 @@ export default {
         },
         resetHeader() {
             this.value.headers = [];
+        },
+        save() {
+            this.$store.commit("setDataChanged", true);
+            this.dialog = false;
         }
     }
 }
