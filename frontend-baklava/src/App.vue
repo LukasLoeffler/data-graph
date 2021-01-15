@@ -6,20 +6,20 @@
           <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
           <v-toolbar-title v-if="selectedWorkspace">{{selectedWorkspace.name}}</v-toolbar-title>
           <div class="flex-grow-1"></div>
-          <v-icon @click="save" :disabled="!changed">mdi-arrow-right-bold-hexagon-outline</v-icon>
+          <v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-arrow-right-bold-hexagon-outline</v-icon>
         </v-toolbar>
       </v-card>
       <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="title">-</v-list-item-title>
-            <v-list-item-subtitle>-</v-list-item-subtitle>
+            <v-list-item-title class="title title-hidden" >-</v-list-item-title>
+            <v-list-item-subtitle class="title-hidden">-</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
         <v-list nav dense>
-          <v-list-item-group v-model="activeWorkspace" active-class="active" mandatory>
-            <v-list-item v-for="workspace in workspaces" :key="workspace._id">
+          <v-list-item-group v-model="activeWorkspace" active-class="active" mandatory style="max-height: 200px; overflow-y: scroll;">
+            <v-list-item v-for="workspace in workspaces" :key="workspace._id" class="workplace">
               <v-list-item-title>{{workspace.name}}</v-list-item-title>
               <v-list-item-action-text @click="deleteWorkspace(workspace._id)">Edit</v-list-item-action-text>
             </v-list-item>
@@ -85,7 +85,6 @@ export default {
     return {
       connection: null,
       sidebar: false,
-      changed: false,
       editor: new Editor(),
       viewPlugin: new ViewPlugin(),
       optionPlugin: new OptionPlugin(),
@@ -166,7 +165,7 @@ export default {
      */
     setTimeout(() => {
       this.viewPlugin.hooks.renderNode.tap(this, () => {
-        this.changed = true;
+        this.$store.commit("setDataChanged", true);
       });
     }, 1000)
     this.loadWorkspaces();
@@ -180,14 +179,27 @@ export default {
       let saveStateUrl = "http://localhost:3000/save-node-config/"+this.selectedWorkspace._id;
       this.axios.post(saveStateUrl, state).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold")
-        this.changed = false;
+        this.$store.commit("setDataChanged", false);
       })
     },
     loadData() {
-      console.log("Loading workspace:", this.selectedWorkspace);
       let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedWorkspace._id;
       this.axios.get(loadStateUrl).then((response) => {
-        this.editor.load(response.data);
+        // If loaded object from backend is empty the default graph is loaded
+        if (this.isEmpty(response.data)){
+          this.editor.load({
+            nodes: [],
+            connections: [],
+            panning: {
+              x: 0,
+              y: 0
+            },
+            scaling: 1}
+          );
+        } else {
+          this.editor.load(response.data);
+        }
+        this.$store.commit("setDataChanged", false);
       })
     },
     loadWorkspaces() {
@@ -214,6 +226,9 @@ export default {
         this.loadWorkspaces();
       })
     },
+    isEmpty(obj) {
+      return Object.keys(obj).length === 0;
+    }
   },
   watch: {
     "activeWorkspace": {
@@ -225,20 +240,19 @@ export default {
     },
     "viewPlugin.scaling": {
       handler() {
-        this.changed = true;
+        this.$store.commit("setDataChanged", true);
       }
     },
     "viewPlugin.panning": {
       handler() {
-        this.changed = true;
+        this.$store.commit("setDataChanged", true);
       },
       deep: true
     },
     "$store.getters.dataChanged": {
       handler(newValue) {
         if (newValue) {
-          this.changed = newValue;
-          this.$store.commit("setDataChanged", false);
+          this.$store.commit("setDataChanged", true);
         }
       }
     }
@@ -268,5 +282,13 @@ export default {
 
 .active {
   color: cyan;
+}
+
+.workplace {
+  background: #575451;
+}
+
+.title-hidden {
+  color: #363636;
 }
 </style>
