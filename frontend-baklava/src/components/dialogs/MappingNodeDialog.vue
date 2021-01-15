@@ -31,9 +31,9 @@
                                     <td style="width: 20px">Delete</td>
                                 </tr>
                             </thead>
-                            <draggable :list="mappingCopy" tag="tbody">
+                            <draggable :list="mappingCopy" tag="tbody" handle=".handle">
                                 <tr v-for="(mapper, index) in mappingCopy" :key="index">
-                                    <td>
+                                    <td class="handle">
                                         <v-icon class="page__grab-icon">mdi-drag-horizontal-variant</v-icon>
                                     </td>
                                     <td>
