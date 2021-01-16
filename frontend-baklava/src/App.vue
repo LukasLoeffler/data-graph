@@ -78,6 +78,7 @@ import MappingNodeDialog from "./components/dialogs/MappingNodeDialog"
 import CustomConnection from "./components/CustomConnection"
 import CustomInterface from "./components/CustomInterface"
 //import CustomNode from "./components/CustomNode"
+//import CustomContextMenu from "./components/CustomContextMenu"
 
 
 export default {
@@ -101,6 +102,7 @@ export default {
 
     this.viewPlugin.components.connection = CustomConnection;
     this.viewPlugin.components.nodeInterface = CustomInterface;
+    //this.viewPlugin.components.contextMenu = CustomContextMenu;
     //this.viewPlugin.components.node = CustomNode;
 
     const intfTypePlugin = new InterfaceTypePlugin();

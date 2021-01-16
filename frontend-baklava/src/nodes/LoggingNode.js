@@ -11,6 +11,6 @@ export default class LoggingNode extends Node {
         //this.addOutputInterface("onSuccess")
         this.addOption("Operation", "SelectOption", "INFO", undefined, {
             items: [ "INFO", "WARN", "DANGER" ]
-        })
+        });
     }
 }
