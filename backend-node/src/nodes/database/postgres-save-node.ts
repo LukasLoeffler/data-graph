@@ -15,8 +15,8 @@ export class PostgresSaveNode extends BaseNode {
 
     client: any;
     
-    constructor(name: string, id: string, options: any) {
-        super(name, NODE_TYPE, id, [], [])
+    constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
+        super(name, NODE_TYPE, id, successTargets, failureTargets)
         
         this.client = new Client(PostgresManager.getDefaultConnection())
         try {
@@ -24,30 +24,38 @@ export class PostgresSaveNode extends BaseNode {
         } catch (error) {
             console.log(chalk.red("Database does not exist"))
         }
+
         NodeManager.addNode(this);
     }
 
+    buildPlaceholder(numberValues: number) {
+        let placeholder = "";
+        for(let i = 1; i <= numberValues; i++) {
+            placeholder = placeholder + "$"+i;
+
+            if (i !== numberValues) {
+                placeholder = placeholder + ",";
+            }
+        }
+        return placeholder;
+    }
+
     execute(msg: Message) {
+        let values = Object.values(msg.payload).map((value: any) => { return value });
 
-        console.log(msg.payload[0]);
+        let placeholder = this.buildPlaceholder(values.length);
 
-        let keys = this.objectKeysToString(Object.keys(msg.payload[0]))
-
-        console.log(keys);
-
-        let values = Object.values(msg.payload[0]).map((key: any) => {return `'${key}'`})
-
-        values.forEach((value: any) => {
-            console.log(typeof value);
-        })
-
-        let sql = format(`INSERT INTO bikes (${Object.keys(msg.payload[0])}) VALUES (${values})`);
-        console.log(sql);
+        let sql = `INSERT INTO iss_time (${Object.keys(msg.payload)}) VALUES (${placeholder})`;
+        //console.log("SQL:", sql);
 
         this.client
-            .query(sql)
-            .then(() => console.log("Success"))
-            .catch((err: any) => console.log(err))
+            .query(sql, values)
+            .then((data: any) => {
+                this.onSuccess(new Message(this.id, NODE_TYPE, data));   
+            })
+            .catch((err: any) => {
+                this.onFailure(new Message(this.id, NODE_TYPE, err));
+            })
     }
 
     objectKeysToString(keys: any) {

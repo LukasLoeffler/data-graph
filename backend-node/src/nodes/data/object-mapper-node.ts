@@ -2,6 +2,7 @@ import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 import { format } from 'date-fns'
+import { da } from "date-fns/locale";
 var _ = require('lodash');
 
 
@@ -67,6 +68,9 @@ export function mapObject(input_object: any, mapping: any, mode = "explicit") {
             setCustomTime(mapper, newObject);
         } else if (mapper.source.includes("{{payload}}")) {
             _.set(newObject, mapper.target, input_object);
+        } else if (mapper.target.includes("unix")) {
+            let date = new Date(_.get(input_object, mapper.source)* 1000);
+            _.set(newObject, mapper.target, date);
         } else {
             // If source is path set origin as value
             _.set(newObject, mapper.target, _.get(input_object, mapper.source));

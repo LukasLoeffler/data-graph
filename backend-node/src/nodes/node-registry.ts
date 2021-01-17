@@ -11,6 +11,7 @@ import { MqttPubNode } from "./mqtt/mqtt-pub-node";
 import { MqttSubNode } from "./mqtt/mqtt-sub-node";
 import { AggregatorNode } from "./aggregator/aggregator-node"
 import { PostgresSaveNode } from "./database/postgres-save-node"
+import { InfoNode } from "./info/info-node"
 
 
 
@@ -47,7 +48,8 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("mqttPub", "mqtt", MqttPubNode),
     new RegEntry("mqttSub", "mqtt", MqttSubNode),
     new RegEntry("aggregator", "aggregator", AggregatorNode),
-    new RegEntry("postgresSave", "database", PostgresSaveNode)
+    new RegEntry("postgresSave", "database", PostgresSaveNode),
+    new RegEntry("info", "info", InfoNode)
 ]
 
 

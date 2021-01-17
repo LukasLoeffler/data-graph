@@ -7,7 +7,9 @@ export default class PostgresSaveNode extends Node {
 
     constructor() {
         super();
-        this.addInputInterface("Payload")
+        this.addInputInterface("Payload");
+        this.addOutputInterface("onSuccess");
+        this.addOutputInterface("onFailure");
     }
 
     save() {
