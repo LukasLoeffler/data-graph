@@ -4,7 +4,6 @@ import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 import { PostgresManager } from "./postgres-manager";
 
-var format = require('pg-format');
 const { Client } = require('pg')
 
 
@@ -56,14 +55,5 @@ export class PostgresSaveNode extends BaseNode {
             .catch((err: any) => {
                 this.onFailure(new Message(this.id, NODE_TYPE, err));
             })
-    }
-
-    objectKeysToString(keys: any) {
-        let output = "";
-
-        keys.forEach((key: string) => {
-            output = output + `${key}, `
-        });
-        return output;
     }
 }

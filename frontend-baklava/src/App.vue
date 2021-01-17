@@ -164,6 +164,10 @@ export default {
 
     this.editor.registerNodeType("info", InfoNode, "Info")
 
+    setTimeout(() => {
+      this.$store.commit("setDataChanged", false);
+    }, 1000)
+
 
     /**
      * Initial load of nodes is seen as node change as well as actual changes.
