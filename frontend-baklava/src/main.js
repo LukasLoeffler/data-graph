@@ -22,7 +22,7 @@ Vue.use(VueNativeSock, 'ws://localhost:3001', {
   reconnectionDelay: 1500,
 })
 
-const store = new Vuex.Store({
+export const store = new Vuex.Store({
   state: {
     optionNode: null,
     dataChanged: false

@@ -48,7 +48,7 @@ function getOriginNode(interfaceId: string) {
 }
 
 function getConnectedNodeByInterface(data: any, node: any, type: string) {
-    // 
+    
     let outInterface = node.interfaces.find((intface: any) => intface[0] === type);
     let outConnections = data.connections.filter((conn: any) => conn.from === outInterface[1].id);
     
@@ -180,7 +180,12 @@ function loadConfig(dbo: any) {
                 } catch (error) {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
-                
+                if (node.type === "postgresSave") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let failureTargets = getFailureTargets(data, node)
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, failureTargets);
+                }                
                 if (node.type === "aggregator") {
                     //let successTargets = getSuccessTargets(data, node);
                     let successTargets = getSuccessTargets(data, node);

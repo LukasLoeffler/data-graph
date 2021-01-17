@@ -1,4 +1,5 @@
 import { Node } from "@baklavajs/core";
+import { store } from '../main';
 
 
 export default class LoggingNode extends Node {
@@ -11,6 +12,10 @@ export default class LoggingNode extends Node {
         //this.addOutputInterface("onSuccess")
         this.addOption("Operation", "SelectOption", "INFO", undefined, {
             items: [ "INFO", "WARN", "DANGER" ]
+        });
+
+        this.events.update.addListener(this, () => {
+            store.commit("setDataChanged", true);
         });
     }
 }

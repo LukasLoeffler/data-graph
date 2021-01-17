@@ -80,6 +80,8 @@ import CustomInterface from "./components/CustomInterface"
 //import CustomNode from "./components/CustomNode"
 //import CustomContextMenu from "./components/CustomContextMenu"
 
+import PostgresSaveNode from "./nodes/database/PostgresSaveNode"
+
 
 export default {
   data() {
@@ -149,6 +151,8 @@ export default {
     this.editor.registerNodeType("button", ButtonNode, "Input")
     this.viewPlugin.setNodeTypeAlias("button", "Button");
 
+    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
+
     // MQTT
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
     this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
@@ -159,6 +163,10 @@ export default {
 
 
     this.editor.registerNodeType("info", InfoNode, "Info")
+
+    setTimeout(() => {
+      this.$store.commit("setDataChanged", false);
+    }, 1000)
 
 
     /**
