@@ -1,0 +1,1020 @@
+{
+    "nodes": [
+        {
+            "type": "objectPath",
+            "id": "node_16043415229200",
+            "name": "Extract Scooter List",
+            "options": [
+                [
+                    "Path",
+                    "countries[0].cities[0].places"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_16043415229201",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_16043415229202",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_16043415229203",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 288.235551587835,
+                "y": 78.70728909896594
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "httpGet",
+            "id": "node_16043415576836",
+            "name": "HTTP GET",
+            "options": [
+                [
+                    "settings",
+                    {
+                        "url": "https://api.nextbike.net/maps/nextbike-live.json?city=21",
+                        "requestType": "GET",
+                        "headers": []
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Event",
+                    {
+                        "id": "ni_16043415576847",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_16043415576848",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_16043415576849",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 2.9329093602350857,
+                "y": 81.17058054628988
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "objectFilter",
+            "id": "node_160434176136222",
+            "name": "FilterByBike",
+            "options": [
+                [
+                    "FilterExpression",
+                    "element.bike"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160434176136223",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160434176136224",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 566.8210373917566,
+                "y": 73.00104377340604
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "httpGet",
+            "id": "node_1605539432227148",
+            "name": "GET Nextbike BadenBaden",
+            "options": [
+                [
+                    "settings",
+                    {
+                        "url": "https://api.nextbike.net/maps/nextbike-live.json?city=621",
+                        "requestType": "GET",
+                        "headers": []
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Event",
+                    {
+                        "id": "ni_1605539432227149",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1605539432227150",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_1605539432227151",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 5.49063170404561,
+                "y": 293.88023545947516
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "objectPath",
+            "id": "node_1605539500412152",
+            "name": "Extract Scooter List",
+            "options": [
+                [
+                    "Path",
+                    "countries[0].cities[0].places"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_1605539500412153",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1605539500412154",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_1605539500412155",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 283.5934128345168,
+                "y": 291.8086946896334
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "objectFilter",
+            "id": "node_1605539558404163",
+            "name": "Filter Bikes",
+            "options": [
+                [
+                    "FilterExpression",
+                    "element.bike"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_1605539558404164",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1605539558404165",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 571.1869981511434,
+                "y": 298.54087238565364
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "aggregator",
+            "id": "node_1605539918532169",
+            "name": "Aggregator",
+            "options": [
+                [
+                    "OpenSettings",
+                    null
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1605539918532170",
+                        "value": null,
+                        "isInput": false
+                    }
+                ],
+                [
+                    "IN1",
+                    {
+                        "id": "ni_1605539925359171",
+                        "value": null,
+                        "isInput": true
+                    }
+                ],
+                [
+                    "IN2",
+                    {
+                        "id": "ni_1605539928611172",
+                        "value": null,
+                        "isInput": true
+                    }
+                ],
+                [
+                    "IN3",
+                    {
+                        "id": "ni_160598041428582",
+                        "value": null,
+                        "isInput": true
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1194.742638883254,
+                "y": 143.03230622989173
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "httpGet",
+            "id": "node_160582102224652",
+            "name": "GET Tier Karlsruhe",
+            "options": [
+                [
+                    "settings",
+                    {
+                        "url": "https://platform.tier-services.io/v1/vehicle?zoneId=KARLSRUHE",
+                        "requestType": "GET",
+                        "headers": [
+                            {
+                                "key": "X-Api-Key",
+                                "value": "bpEUTJEBTf74oGRWxaIcW7aeZMzDDODe1yBoSxi2"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Event",
+                    {
+                        "id": "ni_160582102224653",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160582102224654",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_160582102224655",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": -0.09959581627140768,
+                "y": 566.4878871169179
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "objectPath",
+            "id": "node_160598052576296",
+            "name": "Extract Scooter List",
+            "options": [
+                [
+                    "Path",
+                    "data"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160598052576297",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160598052576298",
+                        "value": null
+                    }
+                ],
+                [
+                    "onFailure",
+                    {
+                        "id": "ni_160598052576299",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 601.8563155690657,
+                "y": 529.3824300128864
+            },
+            "width": 200,
+            "twoColumn": true
+        },
+        {
+            "type": "arrayMapping",
+            "id": "node_160599549575884",
+            "name": "Mapping",
+            "options": [
+                [
+                    "mapping",
+                    {
+                        "mappings": [
+                            {
+                                "source": "name",
+                                "target": "name"
+                            },
+                            {
+                                "source": "lng",
+                                "target": "lon"
+                            },
+                            {
+                                "source": "lat",
+                                "target": "lat"
+                            },
+                            {
+                                "source": "'Nextbike'",
+                                "target": "operator"
+                            },
+                            {
+                                "source": "'Karlsruhe'",
+                                "target": "city"
+                            },
+                            {
+                                "source": "'#004899'",
+                                "target": "marker-color"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160599549575885",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160599549575886",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 856.5296595505091,
+                "y": 33.99232815741468
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "arrayMapping",
+            "id": "node_160599597944686",
+            "name": "Mapping",
+            "options": [
+                [
+                    "mapping",
+                    {
+                        "mappings": [
+                            {
+                                "source": "name",
+                                "target": "name"
+                            },
+                            {
+                                "source": "lat",
+                                "target": "lat"
+                            },
+                            {
+                                "source": "lng",
+                                "target": "lon"
+                            },
+                            {
+                                "source": "'Nextbike'",
+                                "target": "operator"
+                            },
+                            {
+                                "source": "'Baden-Baden'",
+                                "target": "city"
+                            },
+                            {
+                                "source": "'#004899'",
+                                "target": "marker-color"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160599597944687",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160599597944688",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 847.2062421026723,
+                "y": 256.5904734719566
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "arrayMapping",
+            "id": "node_160599602175995",
+            "name": "Mapping",
+            "options": [
+                [
+                    "mapping",
+                    {
+                        "mappings": [
+                            {
+                                "source": "attributes.licencePlate",
+                                "target": "name"
+                            },
+                            {
+                                "source": "attributes.lat",
+                                "target": "lat"
+                            },
+                            {
+                                "source": "attributes.lng",
+                                "target": "lon"
+                            },
+                            {
+                                "source": "'Tier'",
+                                "target": "operator"
+                            },
+                            {
+                                "source": "'Karlsruhe'",
+                                "target": "city"
+                            },
+                            {
+                                "source": "'#69d2aa'",
+                                "target": "marker-color"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160599602175996",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_160599602175997",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 856.5830820987082,
+                "y": 465.759032846748
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "button",
+            "id": "node_1605996435818104",
+            "name": "Button",
+            "options": [
+                [
+                    "BtnEvent",
+                    "exec1"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1605996435819105",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": -305.30930153075633,
+                "y": 339.4200445185795
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "arrayMapping",
+            "id": "node_1605996845568122",
+            "name": "Convert to GeoJSON",
+            "options": [
+                [
+                    "mapping",
+                    {
+                        "mappings": [
+                            {
+                                "source": "'Feature'",
+                                "target": "type"
+                            },
+                            {
+                                "source": "'Point'",
+                                "target": "geometry.type"
+                            },
+                            {
+                                "source": "lon",
+                                "target": "geometry.coordinates[0]"
+                            },
+                            {
+                                "source": "lat",
+                                "target": "geometry.coordinates[1]"
+                            },
+                            {
+                                "source": "name",
+                                "target": "properties.name"
+                            },
+                            {
+                                "source": "operator",
+                                "target": "properties.operator"
+                            },
+                            {
+                                "source": "city",
+                                "target": "properties.city"
+                            },
+                            {
+                                "source": "{{time}}",
+                                "target": "properties.time"
+                            },
+                            {
+                                "source": "marker-color",
+                                "target": "properties.marker-color"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_1605996845568123",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1605996845569124",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1482.885854996178,
+                "y": 272.58522243356856
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "arrayMapping",
+            "id": "node_160615124803798",
+            "name": "Add timestamp",
+            "options": [
+                [
+                    "mapping",
+                    {
+                        "mappings": [
+                            {
+                                "source": "name",
+                                "target": "name"
+                            },
+                            {
+                                "source": "lat",
+                                "target": "lat"
+                            },
+                            {
+                                "source": "lon",
+                                "target": "lon"
+                            },
+                            {
+                                "source": "operator",
+                                "target": "operator"
+                            },
+                            {
+                                "source": "city",
+                                "target": "city"
+                            },
+                            {
+                                "source": "{{time}}",
+                                "target": "time"
+                            },
+                            {
+                                "source": "{{time-dd-MM-yyyy hh:mm:ss:SSS}}",
+                                "target": "time_f"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_160615124803799",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1606151248037100",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1483.7194594450073,
+                "y": 27.747319840166625
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "button",
+            "id": "node_1606260716086101",
+            "name": "Button",
+            "options": [
+                [
+                    "BtnEvent",
+                    "exec1"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1606260716087102",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": -336.71696012714017,
+                "y": 640.9001845748865
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "fileSave",
+            "id": "node_1606471230686103",
+            "name": "FileSave",
+            "options": [
+                [
+                    "Path",
+                    "./output"
+                ],
+                [
+                    "Filename",
+                    "example"
+                ],
+                [
+                    "Filetype",
+                    "csv"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Payload",
+                    {
+                        "id": "ni_1606471230687104",
+                        "value": null,
+                        "isInput": true
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1775.4455925955426,
+                "y": -54.24462715651406
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "fileSave",
+            "id": "node_1606471280322109",
+            "name": "FileSave",
+            "options": [
+                [
+                    "Path",
+                    "./output"
+                ],
+                [
+                    "Filename",
+                    "geojson"
+                ],
+                [
+                    "Filetype",
+                    "json"
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Payload",
+                    {
+                        "id": "ni_1606471280322110",
+                        "value": null,
+                        "isInput": true
+                    }
+                ]
+            ],
+            "position": {
+                "x": 2052.757048709029,
+                "y": 183.0941004340959
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "objectMapping",
+            "id": "node_1606484208249100",
+            "name": "Object Mapping",
+            "options": [
+                [
+                    "mapping",
+                    {
+                        "mappings": [
+                            {
+                                "source": "'FeatureCollection'",
+                                "target": "type"
+                            },
+                            {
+                                "source": "{{payload}}",
+                                "target": "features"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "payload",
+                    {
+                        "id": "ni_1606484208249101",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1606484208249102",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 1755.4745972324952,
+                "y": 231.07612980752995
+            },
+            "width": 200,
+            "twoColumn": false
+        },
+        {
+            "type": "info",
+            "id": "node_1608647169701102",
+            "name": "Info",
+            "options": [
+                [
+                    "BtnEvent",
+                    null
+                ]
+            ],
+            "state": {},
+            "interfaces": [
+                [
+                    "Event",
+                    {
+                        "id": "ni_1608654324177414",
+                        "value": null
+                    }
+                ],
+                [
+                    "onSuccess",
+                    {
+                        "id": "ni_1608647169701104",
+                        "value": null
+                    }
+                ]
+            ],
+            "position": {
+                "x": 317.3980442418311,
+                "y": 530.4275338198241
+            },
+            "width": 200,
+            "twoColumn": false
+        }
+    ],
+    "connections": [
+        {
+            "id": "160976662749276",
+            "from": "ni_16043415229202",
+            "to": "ni_160434176136223"
+        },
+        {
+            "id": "160976662749278",
+            "from": "ni_16043415576848",
+            "to": "ni_16043415229201"
+        },
+        {
+            "id": "160976662749280",
+            "from": "ni_1605539432227150",
+            "to": "ni_1605539500412153"
+        },
+        {
+            "id": "160976662749382",
+            "from": "ni_1605539500412154",
+            "to": "ni_1605539558404164"
+        },
+        {
+            "id": "160976662749384",
+            "from": "ni_160434176136224",
+            "to": "ni_160599549575885"
+        },
+        {
+            "id": "160976662749386",
+            "from": "ni_160599549575886",
+            "to": "ni_1605539925359171"
+        },
+        {
+            "id": "160976662749388",
+            "from": "ni_1605539558404165",
+            "to": "ni_160599597944687"
+        },
+        {
+            "id": "160976662749390",
+            "from": "ni_160599597944688",
+            "to": "ni_1605539928611172"
+        },
+        {
+            "id": "160976662749392",
+            "from": "ni_160598052576298",
+            "to": "ni_160599602175996"
+        },
+        {
+            "id": "160976662749394",
+            "from": "ni_160599602175997",
+            "to": "ni_160598041428582"
+        },
+        {
+            "id": "160976662749396",
+            "from": "ni_1605996435819105",
+            "to": "ni_16043415576847"
+        },
+        {
+            "id": "160976662749498",
+            "from": "ni_1605996435819105",
+            "to": "ni_1605539432227149"
+        },
+        {
+            "id": "1609766627494100",
+            "from": "ni_1605539918532170",
+            "to": "ni_1605996845568123"
+        },
+        {
+            "id": "1609766627494102",
+            "from": "ni_1605539918532170",
+            "to": "ni_160615124803799"
+        },
+        {
+            "id": "1609766627494104",
+            "from": "ni_1606260716087102",
+            "to": "ni_160582102224653"
+        },
+        {
+            "id": "1609766627494106",
+            "from": "ni_1606151248037100",
+            "to": "ni_1606471230687104"
+        },
+        {
+            "id": "1609766627494108",
+            "from": "ni_1605996845569124",
+            "to": "ni_1606484208249101"
+        },
+        {
+            "id": "1609766627495110",
+            "from": "ni_1606484208249102",
+            "to": "ni_1606471280322110"
+        },
+        {
+            "id": "1609766627495112",
+            "from": "ni_1608647169701104",
+            "to": "ni_160598052576297"
+        },
+        {
+            "id": "1609766627495114",
+            "from": "ni_160582102224654",
+            "to": "ni_1608654324177414"
+        }
+    ],
+    "panning": {
+        "x": 723.0471183847657,
+        "y": -42.00433031228317
+    },
+    "scaling": 0.6113413565298204
+}

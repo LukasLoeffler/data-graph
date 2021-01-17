@@ -48,7 +48,7 @@ function getOriginNode(interfaceId: string) {
 }
 
 function getConnectedNodeByInterface(data: any, node: any, type: string) {
-    // 
+    
     let outInterface = node.interfaces.find((intface: any) => intface[0] === type);
     let outConnections = data.connections.filter((conn: any) => conn.from === outInterface[1].id);
     
@@ -66,8 +66,8 @@ function getConnectedNodeByInterface(data: any, node: any, type: string) {
 
 
 export class Loader {
-    static loadConfig() {
-        loadConfig();
+    static loadConfig(dbo: any) {
+        loadConfig(dbo);
     }
 }
 
@@ -163,19 +163,15 @@ function getSourceNodes(node: any) {
     return combinedList;
 }
 
-function loadConfig() {
+function loadConfig(dbo: any) {
     NodeManager.reset();
     console.log(chalk.blueBright("LOADING CONFIG"))
-    var jsonPath = path.join(__dirname, '.', 'config', 'node-config.json');
-    fs.readFile(jsonPath, 'utf8' , (err: any, data:any) => {
 
-        if (!err) {
-            data = JSON.parse(data);
+    let numberofTotalNodes = 0;
+
+    dbo.collection("node-configs").find({}).toArray(function(err: any, nodes: any) {
+        nodes.forEach((data: any)=> {
             frontendNodes = data;
-
-
-            //convertGraph(frontendNodes);
-
             data.nodes.forEach((node: any) => {
 
                 let newCls: any;
@@ -185,8 +181,10 @@ function loadConfig() {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
                 if (node.type === "postgresSave") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let failureTargets = getFailureTargets(data, node)
                     let options = extractOptionsFromNode(node);
-                    let instance = new newCls.clss(node.name, node.id, options)
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, failureTargets);
                 }                
                 if (node.type === "aggregator") {
                     //let successTargets = getSuccessTargets(data, node);
@@ -194,6 +192,10 @@ function loadConfig() {
                     let options = extractOptionsFromNode(node);
                     let interfaces = getSourceNodes(node);
                     let instance = new newCls.clss(node.name, node.id, options, interfaces, successTargets)
+                }
+                if (node.type === "info") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let instance = new newCls.clss(node.name, node.id, successTargets)
                 }
                 if (node.type === "mqttSub") {
                     let successTargets = getSuccessTargets(data, node);
@@ -246,16 +248,15 @@ function loadConfig() {
                     let instance = new newCls.clss(node.name, node.id, filename, filetype, path, [], [])
                 }
             });
-            let numberOfNodesInit = NodeManager.getActiveNodes().length;
-            let numberofTotalNodes = data.nodes.length;
+            numberofTotalNodes = numberofTotalNodes + data.nodes.length;
+        });
 
-            if (numberOfNodesInit !== numberofTotalNodes) {
-                console.log(`${chalk.redBright(numberOfNodesInit)}/${chalk.redBright(numberofTotalNodes)} nodes initalized.`)
-            } else {
-                console.log(`${chalk.greenBright(numberOfNodesInit)}/${chalk.greenBright(numberofTotalNodes)} nodes initalized.`)
-            }
+        let numberOfNodesInit = NodeManager.getActiveNodes().length;
+    
+        if (numberOfNodesInit !== numberofTotalNodes) {
+            console.log(`${chalk.redBright(numberOfNodesInit)}/${chalk.redBright(numberofTotalNodes)} nodes initalized.`)
         } else {
-            console.log(err);
+            console.log(`${chalk.greenBright(numberOfNodesInit)}/${chalk.greenBright(numberofTotalNodes)} nodes initalized.`)
         }
     });
 }

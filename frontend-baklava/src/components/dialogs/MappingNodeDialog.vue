@@ -8,6 +8,9 @@
                 <v-card-title>
                     <span class="headline">Node settings: {{node.name}}</span>
                     <v-spacer></v-spacer>
+                    <v-btn color="grey" class="mr-1" outlined>
+                        <v-icon>mdi-cog-outline</v-icon>
+                    </v-btn>
                     <v-btn color="blue" class="mr-1" outlined>
                         <v-icon>mdi-information-outline</v-icon>
                     </v-btn>
@@ -17,8 +20,7 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    
-                    <v-container class="px-0 mx-0">
+                    <v-container class="p-0 m-0" style="max-width: 100%;">
                         <v-simple-table>
                             <thead>
                                 <tr>
@@ -29,9 +31,9 @@
                                     <td style="width: 20px">Delete</td>
                                 </tr>
                             </thead>
-                            <draggable :list="mappingCopy" tag="tbody">
+                            <draggable :list="mappingCopy" tag="tbody" handle=".handle">
                                 <tr v-for="(mapper, index) in mappingCopy" :key="index">
-                                    <td>
+                                    <td class="handle">
                                         <v-icon class="page__grab-icon">mdi-drag-horizontal-variant</v-icon>
                                     </td>
                                     <td>
@@ -50,14 +52,14 @@
                             </draggable>
                         </v-simple-table>
                     </v-container>
-                    <v-row justify="center">
+                    <v-row justify="center" >
                         <v-col cols="6">
                             <h3 class="ml-5">Latest input</h3>
-                            <json-viewer :value="codeRaw" :expand-depth=4 expanded></json-viewer>
+                            <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode></json-viewer>
                         </v-col>
                         <v-col cols="6">
                             <h3>Test output</h3>
-                            <json-viewer :value="codeFormatted" :expand-depth=4 expanded style="padding-left: 0px;"></json-viewer>
+                            <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode style="padding-left: 0px;"></json-viewer>
                         </v-col>
                     </v-row>
                 </v-card-text>
