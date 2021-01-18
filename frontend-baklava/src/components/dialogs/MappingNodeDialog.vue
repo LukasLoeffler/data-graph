@@ -55,11 +55,11 @@
                     <v-row justify="center" >
                         <v-col cols="6">
                             <h3 class="ml-5">Latest input</h3>
-                            <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode></json-viewer>
+                            <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
                         </v-col>
                         <v-col cols="6">
                             <h3>Test output</h3>
-                            <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode style="padding-left: 0px;"></json-viewer>
+                            <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode style="padding-left: 0px; text-align:left"></json-viewer>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -106,6 +106,7 @@ export default {
     methods: {
         fetchData() {
             let lastValueUrl = `http://localhost:3000/last-value/${this.node.id}`;
+            console.log(lastValueUrl);
             this.axios.get(lastValueUrl).then((response) => {
                 this.codeRaw = response.data;
             })

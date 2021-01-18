@@ -10,6 +10,7 @@ import VueNativeSock from 'vue-native-websocket'
 
 import "@baklavajs/plugin-renderer-vue/dist/styles.css";
 import 'vuetify/dist/vuetify.min.css'
+import router from './router'
 
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
@@ -53,5 +54,6 @@ Vue.config.productionTip = false
 new Vue({
   vuetify,
   store,
+  router,
   render: h => h(App)
 }).$mount('#app')
