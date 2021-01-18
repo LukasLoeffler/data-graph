@@ -1,12 +1,15 @@
 <template>
-  <v-card>
-    <v-tabs v-model="tab" align-with-title >
-      <v-tabs-slider style="color: red;"></v-tabs-slider>
-      <v-tab v-for="item in items" :key="item">
-        {{ item }}
-      </v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="tab">
+  <v-card class="m-2">
+    <v-toolbar id="tabber" dense color="primary" dark>
+      <v-icon class="mr-2" @click="$router.push('/')">mdi-home</v-icon>
+      <v-tabs v-model="tab">
+        <v-tabs-slider color="red"></v-tabs-slider>
+        <v-tab v-for="item in items" :key="item">
+          {{ item }}
+        </v-tab>
+      </v-tabs>
+    </v-toolbar>
+    <v-tabs-items v-model="tab" style="position: absolute; top: 50px; width: 100%">
       <v-tab-item v-for="item in items" :key="item"></v-tab-item>
       <Workspaces v-if="tab === 0"/>
     </v-tabs-items>
@@ -29,3 +32,15 @@ export default {
   },
 }
 </script>
+
+
+<style scoped>
+#tabber {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+</style>
