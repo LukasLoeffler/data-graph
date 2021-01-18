@@ -27,6 +27,10 @@ export class PostgresSaveNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
+    /**
+     * Builds the $1, $2, .. ,$n expression for n elements for postgres insertions with different lengths
+     * @param numberValues number of placeholder required
+     */
     buildPlaceholder(numberValues: number) {
         let placeholder = "";
         for(let i = 1; i <= numberValues; i++) {

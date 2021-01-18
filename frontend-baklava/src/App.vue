@@ -164,20 +164,18 @@ export default {
 
     this.editor.registerNodeType("info", InfoNode, "Info")
 
-    setTimeout(() => {
-      this.$store.commit("setDataChanged", false);
-    }, 1000)
-
 
     /**
-     * Initial load of nodes is seen as node change as well as actual changes.
-     * The 500ms delay bridges the initial load and activate the hook after the initial load.
-     */
+    The resets the data change attribute initially. 
+    The event listener triggers on startup and sets dataChanged to true, even with no change.
+    */
     setTimeout(() => {
-      this.viewPlugin.hooks.renderNode.tap(this, () => {
-        this.$store.commit("setDataChanged", true);
-      });
-    }, 1000)
+      this.$store.commit("setDataChanged", false);
+    }, 500)
+
+    this.viewPlugin.hooks.renderNode.tap(this, () => {
+      this.$store.commit("setDataChanged", true);
+    });
     this.loadWorkspaces();
   },
   methods: {
