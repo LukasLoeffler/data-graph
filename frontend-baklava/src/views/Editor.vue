@@ -1,61 +1,58 @@
 <template>
-  <v-app id="app">
-    <div id="container">
-      <v-card class="mx-2">
-        <v-toolbar id="tabber" dense color="primary" dark>
-          <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title v-if="selectedWorkspace">{{selectedWorkspace.name}}</v-toolbar-title>
-          <div class="flex-grow-1"></div>
-          <v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-arrow-right-bold-hexagon-outline</v-icon>
-        </v-toolbar>
-      </v-card>
-      <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="title title-hidden" >-</v-list-item-title>
-            <v-list-item-subtitle class="title-hidden">-</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider></v-divider>
-        <v-list nav dense>
-          <v-list-item-group v-model="activeWorkspace" mandatory style="max-height: 200px; overflow-y: scroll;">
-            <v-list-item v-for="workspace in workspaces" :key="workspace._id" class="workplace">
-              <v-list-item-title>{{workspace.name}}</v-list-item-title>
-              <v-list-item-action-text @click="deleteWorkspace(workspace._id)">Edit</v-list-item-action-text>
-            </v-list-item>
-          </v-list-item-group>
-          <v-btn block color="green" class="mt-2" @click="addWorkspace">Add Workspace</v-btn>
-        </v-list>
-        <v-spacer></v-spacer>
-        <v-divider></v-divider>
-        <v-list-item-group v-model="selectedItem" color="primary">
-            <v-list-item dense @click="$router.push('/settings')">
-                <v-list-item-icon>
-                    <v-icon>mdi-cog-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title >Settings</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item dense @click="$router.push('/about')">
-                <v-list-item-icon>
-                    <v-icon>mdi-information-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>About</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+  <div id="container">
+    <v-card class="mx-2">
+      <v-toolbar id="tabber" dense color="primary" dark>
+        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
+        <div class="flex-grow-1"></div>
+        <v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-arrow-right-bold-hexagon-outline</v-icon>
+      </v-toolbar>
+    </v-card>
+    <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title title-hidden" >-</v-list-item-title>
+          <v-list-item-subtitle class="title-hidden">-</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list nav dense>
+        <v-list-item-group v-model="configIndex" mandatory style="max-height: 200px; overflow-y: scroll;">
+          <v-list-item v-for="node in nodeConfig" :key="node._id" class="workplace">
+            <v-list-item-title>{{node.workspace}}</v-list-item-title>
+          </v-list-item>
         </v-list-item-group>
-      </v-navigation-drawer>
-      <v-flex d-flex child-flex class="fill-height">
-        <v-row class="p-0 m-0">
-          <v-col class="p-0 m-0">
-            <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
-          </v-col>
-        </v-row>
-      </v-flex>
-    </div>
-  </v-app>
+        <v-btn block outlined text color="green" class="mt-2" @click="createWorkspace()">Add Workspace</v-btn>
+      </v-list>
+      <v-spacer></v-spacer>
+      <v-divider></v-divider>
+      <v-list-item-group color="primary">
+          <v-list-item dense @click="$router.push('/settings')">
+              <v-list-item-icon>
+                  <v-icon>mdi-cog-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                  <v-list-item-title >Settings</v-list-item-title>
+              </v-list-item-content>
+          </v-list-item>
+          <v-list-item dense @click="$router.push('/about')">
+              <v-list-item-icon>
+                  <v-icon>mdi-information-outline</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                  <v-list-item-title>About</v-list-item-title>
+              </v-list-item-content>
+          </v-list-item>
+      </v-list-item-group>
+    </v-navigation-drawer>
+    <v-flex d-flex child-flex class="fill-height">
+      <v-row class="p-0 m-0">
+        <v-col class="p-0 m-0">
+          <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
+        </v-col>
+      </v-row>
+    </v-flex>
+  </div>
 </template>
 
 <script>
@@ -110,10 +107,9 @@ export default {
       viewPlugin: new ViewPlugin(),
       optionPlugin: new OptionPlugin(),
       drawer: false,
-      workspaces: null,
-      activeWorkspace: null,
-      selectedItem: null,
-      selectedWorkspace: null
+      nodeConfig: null,
+      selectedConfig: null,
+      configIndex: null
     }
   },
   components: { },
@@ -195,7 +191,9 @@ export default {
     this.viewPlugin.hooks.renderNode.tap(this, () => {
       this.$store.commit("setDataChanged", true);
     });
-    this.loadWorkspaces();
+
+
+    this.initialLoad();
   },
   methods: {
     sendMessage() {
@@ -203,14 +201,40 @@ export default {
     },
     save() {
       let state = this.editor.save();
-      let saveStateUrl = "http://localhost:3000/save-node-config/"+this.selectedWorkspace._id;
-      this.axios.post(saveStateUrl, state).then(() => {
+      
+      let saveStateUrl = "http://localhost:3000/save-node-config/"+this.selectedConfig._id;
+      this.axios.put(saveStateUrl, state).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold")
         this.$store.commit("setDataChanged", false);
       })
     },
-    loadData() {
-      let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedWorkspace._id;
+    createWorkspace() {
+      let emptyConfig = {
+        nodes: [],
+        connections: [],
+        panning: {
+          x: 0,
+          y: 0
+        },
+        scaling: 1,
+        workspace: "NewWorkspace"
+      }
+      let saveStateUrl = "http://localhost:3000/save-node-config/";
+      this.axios.post(saveStateUrl, emptyConfig).then(() => {
+        console.log("%c Config successfully saved", "color: green; font-weight: bold");
+        this.$store.commit("setDataChanged", false);
+        this.initialLoad();
+      })
+    },
+    initialLoad() {
+      let loadStateUrl = "http://localhost:3000/node-configs/all";
+      this.axios.get(loadStateUrl).then((response) => {
+        this.nodeConfig = response.data;
+        this.configIndex = 0;
+      })
+    },
+    loadConfig() {
+      let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedConfig._id;
       this.axios.get(loadStateUrl).then((response) => {
         // If loaded object from backend is empty the default graph is loaded
         if (this.isEmpty(response.data)){
@@ -228,40 +252,16 @@ export default {
         }
       })
     },
-    loadWorkspaces() {
-      let loadStateUrl = "http://localhost:3000/workspaces/all";
-      this.axios.get(loadStateUrl).then((response) => {
-        this.workspaces = response.data;
-        this.activeWorkspace = 0;
-        this.selectedWorkspace = this.workspaces[0];
-        this.loadData();
-      })
-    },
-    addWorkspace() {
-      let loadStateUrl = "http://localhost:3000/workspace";
-      let data = {name: "New Workspace"}
-      this.axios.post(loadStateUrl, data).then(() => {
-        this.loadWorkspaces();
-      })
-    },
-    deleteWorkspace(_id) {
-      console.log("deleteWorkspace:", _id)
-      let deleteWorkspaceUrl = `http://localhost:3000/workspace/${_id}`;
-      this.axios.delete(deleteWorkspaceUrl).then((response) => {
-        console.log(response.data);
-        this.loadWorkspaces();
-      })
-    },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
     }
   },
   watch: {
-    "activeWorkspace": {
+    "configIndex": {
       handler(newValue) {
-        this.selectedWorkspace = this.workspaces[newValue];
-        this.loadData();
-        this.drawer = false;  // Close drawer on select
+        this.selectedConfig = this.nodeConfig[newValue];
+        this.drawer = false;
+        this.loadConfig();
       }
     },
     "viewPlugin.scaling": {
@@ -298,12 +298,12 @@ export default {
   margin-right: auto;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 100;
   top: 10px;
 }
 
 #drawer {
-  z-index: 100;
+  z-index: 10;
 }
 
 .workplace {
