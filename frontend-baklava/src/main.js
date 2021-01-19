@@ -26,8 +26,8 @@ Vue.use(VueNativeSock, 'ws://localhost:3001', {
 export const store = new Vuex.Store({
   state: {
     optionNode: null,
-    dataChanged: false
-
+    dataChanged: false,
+    selectedWorkspaceId: ""
   },
   mutations: {
     setOptionNode (state, node) {
@@ -35,6 +35,9 @@ export const store = new Vuex.Store({
     },
     setDataChanged(state, dataChanged) {
       state.dataChanged = dataChanged;
+    },
+    setSelectedWorkspace(state, workspaceId) {
+      state.selectedWorkspaceId = workspaceId;
     }
   },
   getters: {
@@ -43,6 +46,9 @@ export const store = new Vuex.Store({
     },
     dataChanged: state => {
       return state.dataChanged;
+    },
+    workspaceId: state => {
+      return state.selectedWorkspaceId;
     }
   }
 })

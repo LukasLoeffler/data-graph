@@ -223,15 +223,34 @@ export default {
       this.axios.post(saveStateUrl, emptyConfig).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold");
         this.$store.commit("setDataChanged", false);
-        this.initialLoad();
+        this.initialLoad(true);
       })
     },
-    initialLoad() {
+    initialLoad(last = false) {
       let loadStateUrl = "http://localhost:3000/node-configs/all";
       this.axios.get(loadStateUrl).then((response) => {
         this.nodeConfig = response.data;
-        this.configIndex = 0;
+
+        let selectedWorkspaceId = this.$store.getters.workspaceId;
+        console.log(selectedWorkspaceId);
+        if (last && !selectedWorkspaceId) {
+          this.configIndex = response.data.length-1;
+        } else if (selectedWorkspaceId) {
+          console.log("By Workspace Id");
+          this.configIndex = this.findWithAttr(this.nodeConfig, "_id", selectedWorkspaceId);
+        } else {
+          this.configIndex = 0;
+        }
+        
       })
+    },
+    findWithAttr(array, attr, value) {
+    for(var i = 0; i < array.length; i += 1) {
+        if(array[i][attr] === value) {
+            return i;
+        }
+    }
+        return -1;
     },
     loadConfig() {
       let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedConfig._id;
