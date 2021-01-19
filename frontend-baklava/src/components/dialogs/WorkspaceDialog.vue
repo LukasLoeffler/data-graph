@@ -23,10 +23,10 @@
                                 <v-text-field label="Name" v-model="localNodeConfig.workspace" :rules="[rules.required]"></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-text-field label="Id" v-model="localNodeConfig._id" disabled :rules="[rules.required]"></v-text-field>
+                                <v-text-field label="Id" v-model="localNodeConfig._id" disabled :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="4">
-                                <v-text-field label="Scaling" v-model.number="localNodeConfig.scaling" type="number" :rules="[rules.number]"></v-text-field>
+                                <v-text-field label="Scaling" v-model.number="localNodeConfig.scaling" type="number" :rules="[rules.positiveNumber]"></v-text-field>
                             </v-col>
                             <v-col cols="4">
                                 <v-text-field label="Panning X" v-model.number="localNodeConfig.panning.x" type="number" :rules="[rules.number]"></v-text-field>
@@ -58,11 +58,11 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="green" text @click="dialog = false">
-                        No, Abort
+                    <v-btn color="blue" text @click="deleteDialog = false">
+                        Abort
                     </v-btn>
                     <v-btn color="red" text @click="deleteSelectedWorkspace()">
-                        Yes, Delete
+                        Delete
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -82,7 +82,8 @@ export default {
             selectedWorkspace: null,
             rules: {
                 required: value => !!value || 'Required.',
-                number: value => this.isNumber(value) && value > 0  || 'Positive number required.'
+                number: value => this.isNumber(value)  || 'Number required.',
+                positiveNumber: value => this.isNumber(value) && value > 0  || 'Positive number required.'
             },
             localNodeConfig: {...this.nodeConfig}
         }

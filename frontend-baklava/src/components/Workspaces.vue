@@ -14,7 +14,9 @@
                 </thead>
                 <tbody>
                     <tr v-for="workspace in workspaces" :key="workspace._id">
-                        <td>{{workspace.workspace}}</td>
+                        <td>
+                            <a @click="routeToWorkspace(workspace._id)">{{workspace.workspace}}</a>
+                        </td>
                         <td>{{workspace._id }}</td>
                         <td>{{workspace.nodes.length}}</td>
                         <td>{{workspace.connections.length}}</td>
@@ -48,6 +50,10 @@ export default {
                 this.workspaces = response.data;
             })
         },
+        routeToWorkspace(workspaceId) {
+            this.$store.commit("setSelectedWorkspace", workspaceId);
+            this.$router.push({path: '/'});
+        }
     },
     created() {
         this.loadWorkspaces();
