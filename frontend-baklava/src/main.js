@@ -10,6 +10,7 @@ import VueNativeSock from 'vue-native-websocket'
 
 import "@baklavajs/plugin-renderer-vue/dist/styles.css";
 import 'vuetify/dist/vuetify.min.css'
+import router from './router'
 
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
@@ -25,8 +26,8 @@ Vue.use(VueNativeSock, 'ws://localhost:3001', {
 export const store = new Vuex.Store({
   state: {
     optionNode: null,
-    dataChanged: false
-
+    dataChanged: false,
+    selectedWorkspaceId: ""
   },
   mutations: {
     setOptionNode (state, node) {
@@ -34,6 +35,9 @@ export const store = new Vuex.Store({
     },
     setDataChanged(state, dataChanged) {
       state.dataChanged = dataChanged;
+    },
+    setSelectedWorkspace(state, workspaceId) {
+      state.selectedWorkspaceId = workspaceId;
     }
   },
   getters: {
@@ -42,6 +46,9 @@ export const store = new Vuex.Store({
     },
     dataChanged: state => {
       return state.dataChanged;
+    },
+    workspaceId: state => {
+      return state.selectedWorkspaceId;
     }
   }
 })
@@ -53,5 +60,6 @@ Vue.config.productionTip = false
 new Vue({
   vuetify,
   store,
+  router,
   render: h => h(App)
 }).$mount('#app')

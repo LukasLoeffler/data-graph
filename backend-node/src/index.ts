@@ -36,10 +36,9 @@ connectToServer( function( err: any, client: any ) {
 });
 
 
-app.get("/get-node-config/:workspaceId", ( req, res ) => {
-    console.log("Fetching node config for workspace:", req.params.workspaceId)
-    var query = { 
-        ws_id: req.params.workspaceId
+app.get("/get-node-config/:id", ( req, res ) => {
+    let query = { 
+        _id: new mongodb.ObjectID(req.params.id)
     };
     dbo.collection("node-configs").findOne(query, function(err: any, result: any) {
         if (err) res.status(404).send(err);
@@ -63,16 +62,39 @@ app.delete("/node-configs/all", (req, res) => {
     });
 });
 
-app.post("/save-node-config/:workspaceId", ( req, res ) => {
+app.delete("/node-configs/:id", (req, res) => {
+    let query = { 
+        _id: new mongodb.ObjectID(req.params.id)
+    };
+    dbo.collection("node-configs").deleteOne(query, function(err: any, obj: any) {
+        if (err) res.status(404).send(err);
+        else res.send({
+            "num_deleted": obj.result.n
+        });
+    });
+});
 
-    req.body.ws_id = req.params.workspaceId;
 
-    var myquery = { ws_id: req.params.workspaceId };
-
+app.put("/save-node-config/:id", ( req, res ) => {
+    let query = { 
+        _id: new mongodb.ObjectID(req.params.id)
+    };
     var newvalues = { $set: req.body };
     const options = { upsert: true };
+    dbo.collection("node-configs").updateOne(query, newvalues, options, function(err: any, obj: any) {
+        if (err) {
+            console.log(err);
+            res.status(500).send("Configuation not saved");
+        } else {
+            WsManager.sendMessage("Refreshed");
+            Loader.loadConfig(dbo);
+            res.send(`Updated ${obj.result.n}`);
+        }
+    });
+});
 
-    dbo.collection("node-configs").updateOne(myquery, newvalues, options, function(err: any, obj: any) {
+app.post("/save-node-config/", ( req, res ) => {
+    dbo.collection("node-configs").insertOne(req.body, function(err: any, obj: any) {
         if (err) res.status(500).send("Configuation not saved");
         else {
             WsManager.sendMessage("Refreshed");
@@ -148,6 +170,16 @@ app.delete("/mqtt-server/:id", (req, res) => {
 app.get("/workspaces/all", (req, res) => {
     dbo.collection("workspaces").find({}).toArray(function(err: any, result: any) {
         if (err) res.status(500).send(err);
+        else res.send(result);
+    });
+});
+
+app.get("/workspace/:id", (req, res) => {
+    let query = { 
+        _id: new mongodb.ObjectID(req.params.id)
+    };
+    dbo.collection("workspaces").findOne(query, function(err: any, result: any) {
+        if (err) res.status(404).send(err);
         else res.send(result);
     });
 });
