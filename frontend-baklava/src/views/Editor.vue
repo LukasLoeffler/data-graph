@@ -22,7 +22,7 @@
             <v-list-item-title>{{node.workspace}}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
-        <v-btn block outlined text color="green" class="mt-2" @click="createWorkspace()">Add Workspace</v-btn>
+        <v-btn block color="green" class="mt-2" @click="createWorkspace()">Add Workspace</v-btn>
       </v-list>
       <v-spacer></v-spacer>
       <v-divider></v-divider>
