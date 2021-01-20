@@ -52,18 +52,15 @@
             <v-card>
                 <v-card-title v-if="nodeConfig" class="headline grey lighten-2">Delete {{nodeConfig.workspace}}?</v-card-title>
                 <v-card-text class="mt-5">
-                    The Workspace will be deleted as a whole and can not be restored.
+                    The Workspace will be deleted as a whole and can not be restored.<br/>
+                    {{nodeConfig.nodes.length}} Nodes and {{nodeConfig.connections.length}} Connections will be deleted.<br/>
                     Are you sure you want to delete the workspace?
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue" text @click="deleteDialog = false">
-                        Abort
-                    </v-btn>
-                    <v-btn color="red" text @click="deleteSelectedWorkspace()">
-                        Delete
-                    </v-btn>
+                    <v-btn color="blue" text @click="deleteDialog = false">Abort</v-btn>
+                    <v-btn color="red" text @click="deleteSelectedWorkspace()">Delete</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>

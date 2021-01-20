@@ -133,7 +133,7 @@ export default {
 
 <style scoped>
 .active {
-    stroke-dasharray: 20;
+    stroke-dasharray: 15;
     animation: dash 5s linear infinite;
 }
 
