@@ -83,7 +83,6 @@ import InfoNode from "../nodes/info/InfoNode.js";
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
 
 import EventButtonOption from "../nodes/options/EventButtonOption"
-import SettingsOption from "../nodes/options/SettingsOption"
 import ExecutionCountOption from "../nodes/options/ExecutionCountOption"
 import InfoOption from "../nodes/options/InfoOption"
 
@@ -93,7 +92,6 @@ import MappingNodeDialog from "../components/dialogs/MappingNodeDialog"
 import CustomConnection from "../components/CustomConnection"
 import CustomInterface from "../components/CustomInterface"
 import CustomNode from "../components/CustomNode"
-//import CustomContextMenu from "./components/CustomContextMenu"
 
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode"
 
@@ -126,7 +124,7 @@ export default {
 
     this.editor.use(intfTypePlugin);
 
-    intfTypePlugin.addType("Event", "orange");
+    intfTypePlugin.addType("JSON", "orange");
     intfTypePlugin.addType("Message", "#038cfc");
 
 
@@ -134,7 +132,6 @@ export default {
 
     // register your nodes, node options, node interface types, ...
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
-    this.viewPlugin.registerOption("SettingsOption", SettingsOption);
     this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
     this.viewPlugin.registerOption("InfoOption", InfoOption);
 
@@ -232,7 +229,6 @@ export default {
         this.nodeConfig = response.data;
 
         let selectedWorkspaceId = this.$store.getters.workspaceId;
-        console.log(selectedWorkspaceId);
         if (last && !selectedWorkspaceId) {
           this.configIndex = response.data.length-1;
         } else if (selectedWorkspaceId) {
@@ -245,12 +241,12 @@ export default {
       })
     },
     findWithAttr(array, attr, value) {
-    for(var i = 0; i < array.length; i += 1) {
-        if(array[i][attr] === value) {
-            return i;
-        }
-    }
-        return -1;
+      for(var i = 0; i < array.length; i += 1) {
+          if(array[i][attr] === value) {
+              return i;
+          }
+      }
+      return -1;
     },
     loadConfig() {
       let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedConfig._id;
@@ -305,6 +301,18 @@ export default {
       handler(newValue) {
         if (newValue) {
           this.editor.removeNode(newValue);
+        }
+      }
+    },
+    "$store.getters.copyNode": {
+      handler(newNode) {
+        if (newNode) {
+          newNode.id = this.editor.generateId("node_");
+
+          let node = new ButtonNode();
+          
+          node.options = newNode.options;
+          this.editor.addNode(node);
         }
       }
     }

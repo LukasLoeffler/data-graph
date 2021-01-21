@@ -8,7 +8,6 @@ export default class AggregatorNode extends Node {
 
     constructor() {
         super();
-        this.addOption("OpenSettings", "SettingsOption");
         this.addOption("color", undefined, "#f23fe3");
         this.addOutputInterface("onSuccess", "Message");
     }

@@ -116,10 +116,20 @@
         console.error("Method not implemented yet.")
       },
       openSettings() {
-        console.error("Method not implemented yet.")
+        this.$store.commit("setOptionNode", this.nodeData.id);
+        this.menu = false;
+        setTimeout(()=>{this.$store.commit("setOptionNode", null)}, 10) //TODO: Billo hack, should be removed
       },
       createTemplate() {
-        console.error("Method not implemented yet.")
+        let template = {
+          type: this.nodeData.type,
+          name: "template_"+this.nodeData.name,
+          interfaces: [],
+          intfs: null,
+          options: this.nodeData.options,
+        }
+        console.l
+        this.$store.commit("copyNode", template);
       }
     },
     watch: {

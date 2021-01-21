@@ -38,12 +38,9 @@
                     :option="option"
                     :componentName="option.optionComponent"
                     :node="data"
-                    @openSidebar="openSidebar(name)"
                 ></node-option>
             </template>
-
         </div>
-
     </div>
 </template>
 

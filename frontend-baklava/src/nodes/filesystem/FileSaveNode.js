@@ -7,7 +7,7 @@ export default class FileSaveNode extends Node {
 
     constructor() {
         super();
-        this.addInputInterface("Payload")
+        this.addInputInterface("Payload", undefined, undefined, {type: "JSON"})
         this.addOption("Path", "InputOption")
         this.addOption("Filename", "InputOption", "example")
         this.addOption("Filetype", "SelectOption", "json", undefined, {
