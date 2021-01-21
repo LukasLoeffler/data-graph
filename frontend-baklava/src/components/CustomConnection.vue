@@ -1,6 +1,6 @@
 <template>
-    <svg>
-        <path :d="d" :class="classes"  />
+    <svg  @click="console.log('MouseOver')">
+        <path :d="d" :class="classes"/>
     </svg>
 </template>
 
@@ -103,6 +103,7 @@ export default {
         }
     },
     created() {
+        this.$store.commit("setDataChanged", true);
         window.addEventListener("resize", () => {
             this.updateCoords();
         });
@@ -123,7 +124,7 @@ export default {
                     }
                 }
             } catch (error) {
-                // console.log("Message")
+                // Do nothing
             }
         }
     }

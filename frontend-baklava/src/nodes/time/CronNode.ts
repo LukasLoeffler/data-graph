@@ -6,4 +6,5 @@ export default new NodeBuilder("cron", {
 })
     .addOutputInterface("onSuccess")
     .addOption("CronExpression", "InputOption", "* * * * *")
+    .addOption("color", undefined, "black")
     .build();
