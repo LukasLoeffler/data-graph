@@ -1,6 +1,6 @@
 <template>
     <v-simple-table dense dark style="overflow: hidden;">
-        <tbody>
+        <tbody @click="reset">
             <tr>
                 <td>Events</td>
                 <td>{{executionCount}}</td>
@@ -48,6 +48,9 @@ export default {
         }
     },
     methods: {
+        reset() {
+            console.log("reset");
+        },
     }
 }
 </script>
