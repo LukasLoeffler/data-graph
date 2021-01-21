@@ -3,11 +3,38 @@
 
         <div
             class="__title"
-            :style="myStyle"
             @mousedown.self.prevent.stop="startDrag"
             @contextmenu.self.prevent="openAltContextMenu"
         >
-        <ContextMenu :menu="showMenu" :nodeData="data" @colorChange="colorChange"/>  
+
+            <span v-if="!renaming">{{ data.name }}</span>
+            <input
+                v-else
+                type="text"
+                class="dark-input"
+                v-model="tempName"
+                placeholder="Node Name"
+                v-click-outside="doneRenaming"
+                @keydown.enter="doneRenaming"
+            >
+
+            <context-menu
+                v-model="contextMenu.show"
+                :x="contextMenu.x" :y="contextMenu.y"
+                :items="contextMenu.items"
+                @click="onContextMenu"
+            ></context-menu>
+            <v-menu offset-y v-model="showMenu" :position-x="x" :position-y="y">
+
+                <v-list>
+                    <v-list-item>
+                        <v-list-item-title>Mach A</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-title>Mach B</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
 
         </div>
 
@@ -40,6 +67,19 @@
                     :node="data"
                     @openSidebar="openSidebar(name)"
                 ></node-option>
+
+                <portal :key="'sb_' + name" to="sidebar"
+                    v-if="plugin.sidebar.nodeId === data.id && plugin.sidebar.optionName === name && option.sidebarComponent"
+                >
+                    <node-option
+                        :key="data.id + name"
+                        :name="name"
+                        :option="option"
+                        :componentName="option.sidebarComponent"
+                        :node="data"
+                    ></node-option>
+                </portal>
+
             </template>
 
         </div>
@@ -59,28 +99,27 @@
 
 <script>
     import { Components } from '@baklavajs/plugin-renderer-vue'
-    import ContextMenu from '../components/dialogs/ContextMenu'
 
     export default {
         extends: Components.Node,
         components: {
             NodeInterface: Components.NodeInterface,
             NodeOption: Components.NodeOption,
-            ContextMenu
+            ContextMenu: Components.ContextMenu
         },
         data: function() {
             return {
                 showMenu: false,
                 x: 0,
                 y: 0,
-                myStyle: {
-                    backgroundColor: this.data.getOptionValue("color")
-                }
             }
         },
-        created() {},
+        created() {
+            console.log(this);
+        },
         methods: {
             openAltContextMenu(e) {
+                console.log("Open Alt ContextMenu");
                 e.preventDefault()
                 this.showMenu = false
                 this.x = e.clientX
@@ -88,16 +127,6 @@
                 this.$nextTick(() => {
                     this.showMenu = true
                 })
-            },
-            startDrag() {
-                this.dragging = true;
-                document.addEventListener("mousemove", this.handleMove);
-                document.addEventListener("mouseup", this.stopDrag);
-                this.select();
-            },
-            colorChange(data) {
-                this.myStyle.backgroundColor = data;
-                this.data.setOptionValue("color", data);
             }
         },
         computed: {
@@ -116,6 +145,6 @@
                 
                 return rows;
             }
-        },
+        }
     }
 </script>

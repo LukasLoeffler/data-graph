@@ -5,12 +5,13 @@ import VueAxios from 'vue-axios'
 import Vuex from 'vuex'
 import Vuetify from 'vuetify'
 import vuetify from './plugins/vuetify';
+import router from './router';
 import { BaklavaVuePlugin } from "@baklavajs/plugin-renderer-vue";
 import VueNativeSock from 'vue-native-websocket'
 
 import "@baklavajs/plugin-renderer-vue/dist/styles.css";
 import 'vuetify/dist/vuetify.min.css'
-import router from './router'
+
 
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
@@ -27,7 +28,8 @@ export const store = new Vuex.Store({
   state: {
     optionNode: null,
     dataChanged: false,
-    selectedWorkspaceId: ""
+    selectedWorkspaceId: "",
+    deleteNode: null
   },
   mutations: {
     setOptionNode (state, node) {
@@ -38,6 +40,9 @@ export const store = new Vuex.Store({
     },
     setSelectedWorkspace(state, workspaceId) {
       state.selectedWorkspaceId = workspaceId;
+    },
+    deleteNode(state, node) {
+      state.deleteNode = node;
     }
   },
   getters: {
@@ -49,6 +54,9 @@ export const store = new Vuex.Store({
     },
     workspaceId: state => {
       return state.selectedWorkspaceId;
+    },
+    deletedNode: state => {
+      return state.deleteNode;
     }
   }
 })

@@ -27,5 +27,6 @@ export default class IntervalNode extends Node {
         this.addOption("CronExpression", "SelectOption", "INFO", undefined, {
             items:intervals
         })
+        this.addOption("color", undefined, "#607565");
     }
 }
