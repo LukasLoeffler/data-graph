@@ -1,5 +1,5 @@
 <template>
-    <svg>
+    <svg  @click="console.log('MouseOver')">
         <path :d="d" :class="classes"/>
     </svg>
 </template>
@@ -103,6 +103,7 @@ export default {
         }
     },
     created() {
+        this.$store.commit("setDataChanged", true);
         window.addEventListener("resize", () => {
             this.updateCoords();
         });
@@ -123,8 +124,7 @@ export default {
                     }
                 }
             } catch (error) {
-
-                console.log("Message could not be parsed:", message.data);
+                // Do nothing
             }
         }
     }

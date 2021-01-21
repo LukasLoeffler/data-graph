@@ -23,17 +23,17 @@ export class FileSaveNode extends BaseNode {
     execute(msgIn: Message) {
         
         let payload = msgIn.payload;
-        let datetime = new Date().toISOString().replace(/:/g, "-").slice(0, -5)
+        let datetime = new Date().toISOString().replace(/:/g, "-")
         let file = `${this.filePath}/${this.fileName}-${datetime}.${this.fileType}`
         if (this.fileType === "json") {
-            fs.appendFile(file, JSON.stringify(payload,  null, 4),  (err: any) => {
+            fs.writeFile(file, JSON.stringify(payload,  null, 4),  (err: any) => {
                 if (err) this.onFailure(err);
                 //this.onSuccess(file)
             });
         } else if (this.fileType === "csv") {
             this.writeToCsv(payload, file);
         } else {
-            fs.appendFile(file, payload,  (err: any) => {
+            fs.writeFile(file, payload,  (err: any) => {
                 if (err) this.onFailure(err);
                 //this.onSuccess(file)
             });

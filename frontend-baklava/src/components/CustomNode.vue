@@ -78,12 +78,9 @@
                 }
             }
         },
-        created() {
-            //console.log(this);
-        },
+        created() {},
         methods: {
             openAltContextMenu(e) {
-                console.log("Open Alt ContextMenu");
                 e.preventDefault()
                 this.showMenu = false
                 this.x = e.clientX
@@ -99,7 +96,6 @@
                 this.select();
             },
             colorChange(data) {
-                console.log(data);
                 this.myStyle.backgroundColor = data;
                 this.data.setOptionValue("color", data);
             }
