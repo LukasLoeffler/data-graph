@@ -14,7 +14,7 @@ export default class LoggingNode extends Node {
             items: [ "INFO", "WARN", "DANGER" ]
         });
 
-        this.addOption("color", undefined, "black");
+        this.addOption("color", undefined, "#3dd4f2");
 
         this.events.update.addListener(this, () => {
             store.commit("setDataChanged", true);

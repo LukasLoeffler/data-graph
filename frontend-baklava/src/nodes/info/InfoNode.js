@@ -8,9 +8,8 @@ export default class InfoNode extends Node {
     constructor() {
         super();
         this.addOption("BtnEvent", "InfoOption");
-        this.addOption("color", undefined, "black");
+        this.addOption("color", undefined, "#26828c");
         this.addInputInterface("Event");
         this.addOutputInterface("onSuccess");
-        this.addOption("color", undefined, "#AD3131FF");
     }
 }
