@@ -2,7 +2,7 @@
     <v-row justify="center" class="z-index: 10000;">
         <v-dialog v-model="dialog" scrollable>
             <template v-slot:activator="{ on, attrs }">
-                <v-btn dark v-bind="attrs" v-on="on" color="grey darken-1" block small style="width: 180px">Open Settings</v-btn>
+                <v-btn dark v-bind="attrs" v-on="on" color="grey darken-1" small style="width: 180px">Open Settings</v-btn>
             </template>
             <v-card>
                 <v-card-title>

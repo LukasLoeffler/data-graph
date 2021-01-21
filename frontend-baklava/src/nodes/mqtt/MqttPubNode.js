@@ -14,6 +14,7 @@ export default class MqttPubNode extends Node {
             items: items
         });
         this.addOption("Topic", "InputOption", "topic")
+        this.addOption("color", undefined, "black");
         this.addInputInterface("event");
     }
 }

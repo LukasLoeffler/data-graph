@@ -92,7 +92,7 @@ import MappingNodeDialog from "../components/dialogs/MappingNodeDialog"
 
 import CustomConnection from "../components/CustomConnection"
 import CustomInterface from "../components/CustomInterface"
-//import CustomNode from "./components/CustomNode"
+import CustomNode from "../components/CustomNode"
 //import CustomContextMenu from "./components/CustomContextMenu"
 
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode"
@@ -114,13 +114,13 @@ export default {
   },
   components: { },
   created() {
-    this.editor.use(this.optionPlugin);
     this.editor.use(this.viewPlugin);
+    this.editor.use(this.optionPlugin);
 
     this.viewPlugin.components.connection = CustomConnection;
     this.viewPlugin.components.nodeInterface = CustomInterface;
     //this.viewPlugin.components.contextMenu = CustomContextMenu;
-    //this.viewPlugin.components.node = CustomNode;
+    this.viewPlugin.components.node = CustomNode;
 
     const intfTypePlugin = new InterfaceTypePlugin();
 
@@ -180,6 +180,7 @@ export default {
     this.editor.registerNodeType("info", InfoNode, "Info")
 
 
+
     /**
     The resets the data change attribute initially. 
     The event listener triggers on startup and sets dataChanged to true, even with no change.
@@ -191,7 +192,6 @@ export default {
     this.viewPlugin.hooks.renderNode.tap(this, () => {
       this.$store.commit("setDataChanged", true);
     });
-
 
     this.initialLoad();
   },
@@ -300,6 +300,13 @@ export default {
           this.$store.commit("setDataChanged", true);
         }
       }
+    },
+    "$store.getters.deletedNode": {
+      handler(newValue) {
+        if (newValue) {
+          this.editor.removeNode(newValue);
+        }
+      }
     }
   }
 }
@@ -331,5 +338,13 @@ export default {
 
 .title-hidden {
   color: #363636;
+}
+
+</style>
+
+
+<style>
+.--type-cron .__title {
+  background-color: rebeccapurple;
 }
 </style>
