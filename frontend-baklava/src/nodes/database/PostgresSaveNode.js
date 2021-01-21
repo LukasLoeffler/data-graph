@@ -10,6 +10,7 @@ export default class PostgresSaveNode extends Node {
         this.addInputInterface("Payload");
         this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
+        this.addOption("color", undefined, "black");
     }
 
     save() {

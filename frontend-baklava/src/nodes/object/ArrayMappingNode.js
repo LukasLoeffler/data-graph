@@ -11,5 +11,6 @@ export default class ArrayMappingNode extends Node {
         this.addOutputInterface("onSuccess")
 
         this.addOption("mapping", "MapingNodeDialog", {mappings: [{source: "source", target: "target"}]});
+        this.addOption("color", undefined, "black");
     }
 }

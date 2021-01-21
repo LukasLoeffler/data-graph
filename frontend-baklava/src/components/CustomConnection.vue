@@ -1,6 +1,6 @@
 <template>
     <svg>
-        <path :d="d" :class="classes"  />
+        <path :d="d" :class="classes"/>
     </svg>
 </template>
 
@@ -123,7 +123,8 @@ export default {
                     }
                 }
             } catch (error) {
-                // console.log("Message")
+
+                console.log("Message could not be parsed:", message.data);
             }
         }
     }

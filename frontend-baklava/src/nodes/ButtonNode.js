@@ -7,6 +7,7 @@ export default class ButtonNode extends Node {
     constructor() {
         super();
         this.addOption("BtnEvent", "EventButtonOption", undefined, undefined, { value: "exec1", title: "Execute" });
+        this.addOption("color", undefined, "black");
         this.addOutputInterface("onSuccess", {type: "Event"});
     }
 
