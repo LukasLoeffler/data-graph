@@ -29,7 +29,8 @@ export const store = new Vuex.Store({
     optionNode: null,
     dataChanged: false,
     selectedWorkspaceId: "",
-    deleteNode: null
+    deleteNode: null,
+    copyNode: null
   },
   mutations: {
     setOptionNode (state, node) {
@@ -43,6 +44,9 @@ export const store = new Vuex.Store({
     },
     deleteNode(state, node) {
       state.deleteNode = node;
+    },
+    copyNode(state, node) {
+      state.copyNode = node;
     }
   },
   getters: {
@@ -57,6 +61,9 @@ export const store = new Vuex.Store({
     },
     deletedNode: state => {
       return state.deleteNode;
+    },
+    copyNode: state => {
+      return state.copyNode;
     }
   }
 })

@@ -1,9 +1,11 @@
 <template>
     <v-row justify="center">
         <v-dialog v-model="dialog" max-width="600px">
+            <!--
             <template v-slot:activator="{ on, attrs }">
                 <v-btn dark v-bind="attrs" v-on="on" color="grey darken-1" small style="width: 180px">Open Settings</v-btn>
             </template>
+            -->
             <v-card>
                 <v-card-title>
                     <span class="headline">{{node.name}}</span>
@@ -77,6 +79,24 @@ export default {
             this.$store.commit("setDataChanged", true);
             this.dialog = false;
         }
+    },
+
+    watch: {
+        "$store.getters.optionNode": {
+            handler(nodeId) {
+                if (nodeId === this.node.id) {
+                    this.dialog = true;
+                }
+            }
+        },
+        "$dialog": {
+            handler(newValue) {
+                console.log("resetting");
+                if (!newValue) {
+                    this.$store.commit("setOptionNode", null);
+                }
+            }
+        },
     }
 }
 </script>

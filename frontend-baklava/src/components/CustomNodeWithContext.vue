@@ -65,7 +65,6 @@
                     :option="option"
                     :componentName="option.optionComponent"
                     :node="data"
-                    @openSidebar="openSidebar(name)"
                 ></node-option>
 
                 <portal :key="'sb_' + name" to="sidebar"
