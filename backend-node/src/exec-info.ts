@@ -66,6 +66,20 @@ export class ExecutionCounter {
         });
     }
 
+    static async initialExecData() {
+        let activeNodes = await NodeManager.getActiveNodes();
+
+        for (const node of activeNodes) {
+            let dbIncrData = await RedisClient.get(node.id);
+            let dbBytes = await RedisClient.get("bytes"+node.id);
+
+            // Frontend is not fast enough to initialize in time.
+            setTimeout(() => {
+                this.sendInfoNode(node.id, dbIncrData, dbBytes);
+            }, 1000);
+        };
+    }
+
 
     /**
      * Resets the call count of the given node to 0

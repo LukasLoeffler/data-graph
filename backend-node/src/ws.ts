@@ -14,6 +14,7 @@ wss.on('connection', (ws: any, req: any) => {
     console.log(`New websocket client (${clientId}):  ${chalk.greenBright("connected")}`);
     // Initialize all counts of new client
     ExecutionCounter.initialEmitAllCounts();
+    ExecutionCounter.initialExecData();
     ws.on('message', (message: any) =>  {
         console.log('received: %s', message);
     });

@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { BaseNode } from "./base-node";
+import { ExecutionCounter } from "../exec-info";
 
 let nodes: Array<BaseNode> = []
 
