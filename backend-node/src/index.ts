@@ -128,6 +128,18 @@ app.post("/test/:nodeId", (req, res) => {
     res.send(result);
 })
 
+app.get("/start/:nodeId", (req, res) => {
+    let node = NodeManager.getNodeById(req.params.nodeId);
+    node.start();
+    res.send("Success");
+});
+
+app.get("/stop/:nodeId", (req, res) => {
+    let node = NodeManager.getNodeById(req.params.nodeId);
+    node.stop();
+    res.send("Success");
+});
+
 
 app.get("/mqtt-server/all", (req, res) => {
     dbo.collection("mqtt-servers").find({}).toArray(function(err: any, result: any) {
