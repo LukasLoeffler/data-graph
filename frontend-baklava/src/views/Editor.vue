@@ -265,6 +265,9 @@ export default {
         } else {
           this.editor.load(response.data);
         }
+        setTimeout(() => {
+          this.$store.commit("setDataChanged", false);
+        }, 100)
       })
     },
     isEmpty(obj) {
