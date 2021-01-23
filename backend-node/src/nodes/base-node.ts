@@ -10,8 +10,9 @@ export class BaseNode {
     name: string;
     id: string;
     type: string;
-    targetsSuccess: Array<any>
-    targetsFailure: Array<any>
+    targetsSuccess: Array<any>;
+    targetsFailure: Array<any>;
+    running: boolean;
 
     constructor(name: string, type: string, id: string = "", targetsSuccess: Array<any> = [], targetsFailure: Array<any> = []) {
         this.name = name;
@@ -20,6 +21,7 @@ export class BaseNode {
         else this.id = crypto.randomBytes(10).toString('hex');
         this.targetsSuccess = targetsSuccess;
         this.targetsFailure = targetsFailure;
+        this.running = true;
     }
 
     public toString = () : string => {
@@ -41,8 +43,12 @@ export class BaseNode {
         });
     }
 
+    start() {
+        console.log(chalk.red("Start method not implemented for node type:", this.type));
+    }
+
     stop() {
-        
+        console.log(chalk.red("Stop method not implemented for node type:", this.type));
     }
 
         /**
