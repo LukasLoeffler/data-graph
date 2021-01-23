@@ -1,6 +1,6 @@
 <template>
         <v-simple-table dense dark style="overflow: hidden;">
-            <tbody @click="viewDetails" @contextmenu.prevent="reset">
+            <tbody @click="viewDetails" @contextmenu.prevent="resetInfo">
                 <tr>
                     <td>Events</td>
                     <td>{{executionCount}}</td>
@@ -48,12 +48,15 @@ export default {
         }
     },
     methods: {
-        reset() {
-            console.log("reset");
-        },
         viewDetails() {
             console.log("viewDetails");
         },
+        resetInfo() {
+            let url = `http://localhost:3000/reset-exec-count/${this.node.id}`;
+            this.axios.get(url).then(() => {
+                console.log("%cSuccessfully reset counter for", "color: green; font-weight: bold", this.node.name)
+            });
+        }
     }
 }
 </script>
