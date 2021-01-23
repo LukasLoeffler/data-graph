@@ -13,7 +13,7 @@
             <v-list-item-avatar :color="color" size="56">
               <v-icon>{{typeIcon}}</v-icon>
             </v-list-item-avatar>
-            <v-list-item-content class="text-left align-self-start">
+            <v-list-item-content class="text-left align-self-start" style="max-width: 200px">
               <v-list-item-title >Name: {{nodeData.name}}</v-list-item-title>
               <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
             </v-list-item-content>
@@ -27,7 +27,7 @@
 
         <v-divider></v-divider>
         <v-list-item dense v-for="(action, i) in actions" :key="i"  v-on:click="execute(action.callable)">
-          <v-list-item-icon >
+          <v-list-item-icon>
             <v-icon :color="action.color">{{action.icon}}</v-icon>
           </v-list-item-icon>
           <v-list-item-action-text>
@@ -63,24 +63,24 @@
         hints: true,
         color: "white",
         icons: [
-          {type: "logging", icon: "mdi-math-log"},
-          {type: "info", icon: "mdi-information-outline"},
-          {type: "button", icon: "mdi-gesture-tap-button"},
-          {type: "interval", icon: "mdi-clock-time-five-outline"},
-          {type: "cron", icon: "mdi-clock-time-five-outline"},
-          {type: "httpGet", icon: "mdi-wan"},
-          {type: "httpPostPut", icon: "mdi-wan"},
+          {type: "logging", icon: "mdi-math-log", resettable: false},
+          {type: "info", icon: "mdi-information-outline", resettable: false},
+          {type: "button", icon: "mdi-gesture-tap-button", resettable: false},
+          {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false},
+          {type: "cron", icon: "mdi-clock-time-five-outline", resettable: false},
+          {type: "httpGet", icon: "mdi-wan", resettable: false},
+          {type: "httpPostPut", icon: "mdi-wan", resettable: false},
 
-          {type: "arrayMapping", icon: "mdi-code-array"},
-          {type: "objectMapping", icon: "mdi-code-braces"},
-          {type: "objectFilter", icon: "mdi-filter-outline"},
-          {type: "objectPath", icon: "mdi-map-marker-path"},
-          {type: "fileSave", icon: "mdi-content-save-outline"},
-          {type: "postgresSave", icon: "mdi-elephant"},
-          {type: "mqttSub", icon: "mdi-alpha-m"},
-          {type: "mqttPub", icon: "mdi-alpha-m"},
-          {type: "aggregator", icon: "mdi-arrow-decision-outline"},
-          {type: "info", icon: "mdi-information-outline"},
+          {type: "arrayMapping", icon: "mdi-code-array", resettable: false},
+          {type: "objectMapping", icon: "mdi-code-braces", resettable: false},
+          {type: "objectFilter", icon: "mdi-filter-outline", resettable: false},
+          {type: "objectPath", icon: "mdi-map-marker-path", resettable: false},
+          {type: "fileSave", icon: "mdi-content-save-outline", resettable: false},
+          {type: "postgresSave", icon: "mdi-elephant", resettable: false},
+          {type: "mqttSub", icon: "mdi-alpha-m", resettable: false},
+          {type: "mqttPub", icon: "mdi-alpha-m", resettable: false},
+          {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false},
+          {type: "info", icon: "mdi-information-outline", resettable: false},
         ],
         actions: [
           {text: "Activate Node", color: "green", callable: "activateNode", icon: "mdi-play-outline"},
@@ -104,6 +104,7 @@
         if(action === "openSettings") this.openSettings();
         if(action === "createTemplate") this.createTemplate();
         if(action === "activateNode") this.activateNode();
+        if(action === "resetNode") this.resetNode();
       },
       save() {
         this.$emit("colorChange", this.color);
@@ -130,6 +131,9 @@
         }
         console.l
         this.$store.commit("copyNode", template);
+      },
+      resetNode() {
+
       }
     },
     watch: {
@@ -142,6 +146,10 @@
           return "mdi-help-circle-outline"
         }
         return icon.icon;
+      },
+      resettable() {
+        let icon = this.icons.find((icon) => icon.type === this.nodeData.type);
+        return icon.resettable;
       }
     }
   }
