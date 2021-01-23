@@ -2,7 +2,7 @@ const cron = require('node-cron');
 import { NodeManager } from "../node-manager";
 import { BaseNode } from "../base-node";
 import { Message } from "../../message";
-
+import chalk from "chalk";
 
 
 const NODE_TYPE = "CRON"
@@ -11,6 +11,7 @@ const requiredOptions = ["cronexpression"];
 export class CronNode extends BaseNode{
     cronExpression: string;
     task: any;
+    running: boolean
 
 
     constructor(name: string, id: string, options: any, targetsSuccess: any) {
@@ -20,7 +21,8 @@ export class CronNode extends BaseNode{
         this.cronExpression = this.getOption("cronexpression", options);
 
         this.task = this.createTask();
-        this.startTask();
+        this.running = true;
+        this.start(true);
         NodeManager.addNode(this);
     }
 
@@ -33,13 +35,16 @@ export class CronNode extends BaseNode{
         });
     }
 
-    startTask() {
+    start(initial = false) {
+        if (!initial) console.log(`Cron Node ${chalk.cyan(this.id)} started.`)
         this.task.start();
+        this.running = true;
     }
 
     // Routine to stop/kill the task after reload.
     stop() {
-        console.log("Cron Task Stopped")
+        console.log(`Cron Node ${chalk.cyan(this.id)} stopped.`)
         this.task.stop();
+        this.running = false;
     }
 }

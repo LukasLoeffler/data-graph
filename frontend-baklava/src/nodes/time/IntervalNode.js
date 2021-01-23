@@ -19,8 +19,6 @@ export default class IntervalNode extends Node {
     name = "Interval";
 
 
-    intervals
-
     constructor() {
         super();
         this.addOutputInterface("onSuccess")

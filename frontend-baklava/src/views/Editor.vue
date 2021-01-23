@@ -64,7 +64,7 @@ import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 
 import ButtonNode from "../nodes/ButtonNode.js";
 import IntervalNode from "../nodes/time/IntervalNode"
-import Cron from "../nodes/time/CronNode.ts";
+import CronNode from "../nodes/time/CronNode";
 
 import HttpGet from "../nodes/http/HttpGetNode.js"
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode"
@@ -88,6 +88,7 @@ import InfoOption from "../nodes/options/InfoOption"
 
 import HttpNodeDialog from "../components/dialogs/HttpNodeDialog"
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog"
+import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog"
 
 import CustomConnection from "../components/CustomConnection"
 import CustomInterface from "../components/CustomInterface"
@@ -137,9 +138,10 @@ export default {
 
     this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
     this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
+    this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
 
 
-    this.editor.registerNodeType("cron", Cron, "Time")
+    this.editor.registerNodeType("cron", CronNode, "Time")
     this.editor.registerNodeType("interval", IntervalNode, "Time")
 
     this.editor.registerNodeType("logging", Logging, "Logging")
