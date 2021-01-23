@@ -107,7 +107,7 @@ export default {
       drawer: false,
       nodeConfig: null,
       selectedConfig: null,
-      configIndex: null
+      configIndex: null,
     }
   },
   components: { },
@@ -177,7 +177,6 @@ export default {
     this.editor.registerNodeType("info", InfoNode, "Info")
 
 
-
     /**
     The resets the data change attribute initially. 
     The event listener triggers on startup and sets dataChanged to true, even with no change.
@@ -197,6 +196,7 @@ export default {
       this.$socket.send('some data')
     },
     save() {
+      console.log("Saving state");
       let state = this.editor.save();
       
       let saveStateUrl = "http://localhost:3000/save-node-config/"+this.selectedConfig._id;
@@ -269,6 +269,16 @@ export default {
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
+    },
+    debounceEvent(callback, time) {
+      let interval;
+      return (...args) => {
+        clearTimeout(interval);
+        interval = setTimeout(() => {
+          interval = null;
+          callback(...args);
+        }, time);
+      }
     }
   },
   watch: {
@@ -340,19 +350,7 @@ export default {
   z-index: 10;
 }
 
-.workplace {
-  background: #575451;
-}
-
 .title-hidden {
   color: #363636;
-}
-
-</style>
-
-
-<style>
-.--type-cron .__title {
-  background-color: rebeccapurple;
 }
 </style>

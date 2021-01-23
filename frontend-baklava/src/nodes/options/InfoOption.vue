@@ -1,24 +1,24 @@
 <template>
-    <v-simple-table dense dark style="overflow: hidden;">
-        <tbody @click="reset">
-            <tr>
-                <td>Events</td>
-                <td>{{executionCount}}</td>
-            </tr>
-            <tr>
-                <td>Bytes</td>
-                <td>{{totalBytes}}</td>
-            </tr>
-            <tr>
-                <td>Time</td>
-                <td>{{lastTime}}</td>
-            </tr>
-            <tr>
-                <td>Date</td>
-                <td>{{lastDate}}</td>
-            </tr>
-        </tbody>
-    </v-simple-table>
+        <v-simple-table dense dark style="overflow: hidden;">
+            <tbody @click="viewDetails" @contextmenu.prevent="reset">
+                <tr>
+                    <td>Events</td>
+                    <td>{{executionCount}}</td>
+                </tr>
+                <tr>
+                    <td>Bytes</td>
+                    <td>{{totalBytes}}</td>
+                </tr>
+                <tr>
+                    <td>Time</td>
+                    <td>{{lastTime}}</td>
+                </tr>
+                <tr>
+                    <td>Date</td>
+                    <td>{{lastDate}}</td>
+                </tr>
+            </tbody>
+        </v-simple-table>
 </template>
 
 <script>
@@ -29,7 +29,7 @@ export default {
             executionCount: 0,
             totalBytes: 0,
             lastTime: null,
-            lastDate: null
+            lastDate: null,
         }
     },
     created() {
@@ -50,6 +50,9 @@ export default {
     methods: {
         reset() {
             console.log("reset");
+        },
+        viewDetails() {
+            console.log("viewDetails");
         },
     }
 }
