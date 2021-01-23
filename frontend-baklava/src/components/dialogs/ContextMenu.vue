@@ -7,7 +7,7 @@
         </v-btn>
       </template>
 
-      <v-card>
+      <v-card width="350px" height="400px" class="scroll-card">
         <v-list>
           <v-list-item>
             <v-list-item-avatar :color="color" size="56">
@@ -35,10 +35,28 @@
           </v-list-item-action-text>
         </v-list-item>
         <v-divider></v-divider>
-        <v-col class="d-flex justify-center">
-            <v-color-picker v-model="color" hide-mode-switch hide-inputs></v-color-picker>
-        </v-col>
+
         <v-divider></v-divider>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Edit Color
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-col class="d-flex justify-center">
+                <v-color-picker v-model="color" hide-mode-switch hide-inputs></v-color-picker>
+              </v-col>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Node Info
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
         <v-card-actions>
           <v-spacer></v-spacer>
 
@@ -94,6 +112,7 @@
     },
     inject: ['editor'],
     created() {
+      //console.log(this.nodeData);
       if (this.nodeData.options.has("color")) {
         this.color = this.nodeData.getOptionValue("color");
       }
@@ -154,3 +173,12 @@
     }
   }
 </script>
+
+
+<style scoped>
+.scroll-card {
+  overflow-y: scroll; 
+  display: flex !important; 
+  flex-direction: column;
+}
+</style>
