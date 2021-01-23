@@ -13,11 +13,13 @@ const NODE_TYPE = "POSTGRES_SAVE"
 export class PostgresSaveNode extends BaseNode {
 
     client: any;
+    options: any;
     
     constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
         super(name, NODE_TYPE, id, successTargets, failureTargets)
         
-        this.client = new Client(PostgresManager.getDefaultConnection())
+        this.options = options;
+        this.client = new Client(options.connection);
         try {
             this.client.connect();
         } catch (error) {
@@ -48,7 +50,7 @@ export class PostgresSaveNode extends BaseNode {
 
         let placeholder = this.buildPlaceholder(values.length);
 
-        let sql = `INSERT INTO iss_time (${Object.keys(msg.payload)}) VALUES (${placeholder})`;
+        let sql = `INSERT INTO ${this.options.connection.table} (${Object.keys(msg.payload)}) VALUES (${placeholder})`;
         //console.log("SQL:", sql);
 
         this.client

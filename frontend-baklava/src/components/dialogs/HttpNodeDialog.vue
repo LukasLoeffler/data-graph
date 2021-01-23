@@ -63,6 +63,7 @@ export default {
         dialog: false,
     }),
     props: ["option", "node", "value"],
+    created() {},
     methods: {
         addHeader() {
             console.log(this.value);

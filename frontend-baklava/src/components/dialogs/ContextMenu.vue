@@ -7,7 +7,7 @@
         </v-btn>
       </template>
 
-      <v-card>
+      <v-card width="350px" height="400px" class="scroll-card">
         <v-list>
           <v-list-item>
             <v-list-item-avatar :color="color" size="56">
@@ -19,13 +19,24 @@
             </v-list-item-content>
             <v-list-item-action>
               <v-btn icon>
-                <v-icon color="green">mdi-play-outline</v-icon>
+                <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
+                <v-icon color="red" v-else>mdi-pause</v-icon>
               </v-btn>
             </v-list-item-action>
           </v-list-item>
         </v-list>
 
         <v-divider></v-divider>
+        <v-list-item dense v-on:click="activateNode">
+          <v-list-item-icon>
+            <v-icon color="green" v-if="!running">mdi-play-outline</v-icon>
+            <v-icon color="red" v-else>mdi-pause</v-icon>
+          </v-list-item-icon>
+          <v-list-item-action-text>
+            <v-list-item-title v-if="!running">Start Node</v-list-item-title>
+            <v-list-item-title v-else>Stop Node</v-list-item-title>
+          </v-list-item-action-text>
+        </v-list-item>
         <v-list-item dense v-for="(action, i) in actions" :key="i"  v-on:click="execute(action.callable)">
           <v-list-item-icon>
             <v-icon :color="action.color">{{action.icon}}</v-icon>
@@ -35,10 +46,28 @@
           </v-list-item-action-text>
         </v-list-item>
         <v-divider></v-divider>
-        <v-col class="d-flex justify-center">
-            <v-color-picker v-model="color" hide-mode-switch hide-inputs></v-color-picker>
-        </v-col>
+
         <v-divider></v-divider>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Edit Color
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-col class="d-flex justify-center">
+                <v-color-picker v-model="color" hide-mode-switch hide-inputs></v-color-picker>
+              </v-col>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Node Info
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
         <v-card-actions>
           <v-spacer></v-spacer>
 
@@ -62,6 +91,7 @@
         message: false,
         hints: true,
         color: "white",
+        running: true,
         icons: [
           {type: "logging", icon: "mdi-math-log", resettable: false},
           {type: "info", icon: "mdi-information-outline", resettable: false},
@@ -83,7 +113,6 @@
           {type: "info", icon: "mdi-information-outline", resettable: false},
         ],
         actions: [
-          {text: "Activate Node", color: "green", callable: "activateNode", icon: "mdi-play-outline"},
           {text: "Open Settings", color: "orange", callable: "openSettings", icon: "mdi-cog-outline"},
           {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
           {text: "Delete Node", color: "red", callable: "deleteNode", icon: "mdi-trash-can-outline"},
@@ -94,6 +123,7 @@
     },
     inject: ['editor'],
     created() {
+      //console.log(this.nodeData);
       if (this.nodeData.options.has("color")) {
         this.color = this.nodeData.getOptionValue("color");
       }
@@ -114,7 +144,18 @@
         this.$store.commit("deleteNode", this.nodeData);
       },
       activateNode() {
-        console.error("Method not implemented yet.")
+
+        let action = this.running ? "stop" : "start";
+
+        let lastValueUrl = `http://localhost:3000/${action}/${this.nodeData.id}`;
+        this.axios.get(lastValueUrl)
+          .then(() => {
+            this.running = !this.running;
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          ;
       },
       openSettings() {
         this.$store.commit("setOptionNode", this.nodeData.id);
@@ -150,7 +191,20 @@
       resettable() {
         let icon = this.icons.find((icon) => icon.type === this.nodeData.type);
         return icon.resettable;
+      },
+      runningColor() {
+        if (this.running) return "green";
+        else return "red";
       }
     }
   }
 </script>
+
+
+<style scoped>
+.scroll-card {
+  overflow-y: scroll; 
+  display: flex !important; 
+  flex-direction: column;
+}
+</style>

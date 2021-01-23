@@ -10,6 +10,15 @@ export default class PostgresSaveNode extends Node {
         this.addInputInterface("Payload");
         this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
+        this.addOption("connection", "PostgresInsertDialog", {
+            name: "Processor", 
+            host: "localhost", 
+            port: 5432, 
+            database: "processor", 
+            user: "postgres", 
+            password: "", 
+            table: "processor"
+        });
         this.addOption("color", undefined, "#423dd9");
     }
 
