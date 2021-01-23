@@ -1,6 +1,18 @@
 <template>
     <v-badge color="green" :content="executionCount" overlap>
-        <v-btn @click="onClick" @contextmenu.prevent="resetCounter" color="grey darken-1" block small style="width: 180px">{{option.title}}</v-btn>
+        <v-tooltip :disabled="!$store.getters.dataChanged" bottom>
+            <template v-slot:activator="{ on }">
+                <div v-on="on">
+                    <v-btn
+                        :disabled="$store.getters.dataChanged"
+                        @click="onClick" @contextmenu.prevent="resetCounter"
+                        color="blue darken-3" block small style="width: 180px">
+                        {{option.title}}
+                    </v-btn>
+                </div>
+            </template>
+            <span>Save required</span>
+        </v-tooltip>
     </v-badge>
 </template>
 
