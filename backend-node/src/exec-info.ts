@@ -86,9 +86,10 @@ export class ExecutionCounter {
      * @param nodeId Id of the node
      */
     static resetCount(nodeId: string): void {
-        const zeroValue = 0;
-        RedisClient.set(nodeId, zeroValue);
-        this.sendExecutionCount(nodeId, zeroValue);
+        RedisClient.set(nodeId, 0);
+        RedisClient.set("bytes"+nodeId, 0);
+        this.sendExecutionCount(nodeId, 0);
+        this.sendInfoNode(nodeId, 0, 0, true);
     }
 
 
@@ -107,14 +108,15 @@ export class ExecutionCounter {
     }
 
 
-    static sendInfoNode(nodeId: string, count: number, bytes: number) {
+    static sendInfoNode(nodeId: string, count: number, bytes: number, reset=false) {
+
         let payload = {
             type: "InfoNode",
             nodeId: nodeId,
             executionCount: count,
             executionByte: bytes,
-            lastTime: format(new Date, "HH:mm:ss:SS"),
-            lastDate: format(new Date, "dd.MM.yyyy")
+            lastTime: reset ? "-": format(new Date, "HH:mm:ss:SS"),
+            lastDate: reset ? "-": format(new Date, "dd.MM.yyyy")
         }
         WsManager.sendMessage(JSON.stringify(payload));
     }
