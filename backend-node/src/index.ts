@@ -130,14 +130,14 @@ app.post("/test/:nodeId", (req, res) => {
 
 app.get("/start/:nodeId", (req, res) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
-    node.start();
-    res.send("Success");
+    let running = node.start();
+    res.send({"running": running});
 });
 
 app.get("/stop/:nodeId", (req, res) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
-    node.stop();
-    res.send("Success");
+    let running = node.stop();
+    res.send({"running": running});
 });
 
 
