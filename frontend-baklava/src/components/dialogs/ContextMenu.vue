@@ -3,13 +3,13 @@
     <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="150" offset-x>
       <template v-slot:activator="{ on, attrs }">
 
-      <v-btn-toggle dense style="width: 180px" dark>
+      <v-btn-toggle dense style="width: 180px; height: 30px; font-size: 25px" dark>
 
-        <v-btn v-bind="attrs" v-on="on" dense :style="titleName">
+        <v-btn v-bind="attrs" v-on="on" dense :style="titleName" style="height: 30px">
           {{nodeData.name}}
         </v-btn>
 
-        <v-btn v-if="isStoppable" icon dense style="width: 30px" @click="activateNode">
+        <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode">
           <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
           <v-icon color="red" v-else>mdi-pause</v-icon>
         </v-btn>
@@ -28,7 +28,7 @@
               <v-list-item-title >Name: {{nodeData.name}}</v-list-item-title>
               <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
             </v-list-item-content>
-            <v-list-item-action>
+            <v-list-item-action v-if="isStoppable">
               <v-tooltip bottom :color="running ? 'green' : 'red'">
                 <template v-slot:activator="{ on }">
                     <div v-on="on">
@@ -47,7 +47,7 @@
         </v-list>
 
         <v-divider></v-divider>
-        <v-list-item dense @click="activateNode">
+        <v-list-item dense @click="activateNode" v-if="isStoppable">
           <v-list-item-icon>
             <v-icon color="green" v-if="!running">mdi-play-outline</v-icon>
             <v-icon color="red" v-else>mdi-pause</v-icon>
