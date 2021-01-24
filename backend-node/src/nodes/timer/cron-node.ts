@@ -19,10 +19,11 @@ export class CronNode extends BaseNode{
 
         this.validateOptions(options, requiredOptions);
         this.cronExpression = this.getOption("cronexpression", options);
+        this.running = this.getOption("running", options);
 
         this.task = this.createTask();
-        this.running = true;
-        this.start(true);
+
+        if (this.running) this.start(true);
         NodeManager.addNode(this);
     }
 
