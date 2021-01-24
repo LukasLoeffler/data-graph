@@ -7,7 +7,7 @@
             @mousedown.self.prevent.stop="startDrag"
             @contextmenu.self.prevent="openAltContextMenu"
         >
-        <ContextMenu :menu="showMenu" :nodeData="data" @colorChange="colorChange"/>  
+        <ContextMenu :menu="showMenu" :nodeData="data" @colorChange="colorChange" @runningChange="runningChange"/>  
 
         </div>
 
@@ -72,7 +72,7 @@
                 y: 0,
                 myStyle: {
                     backgroundColor: this.data.getOptionValue("color")
-                }
+                },
             }
         },
         created() {},
@@ -95,6 +95,9 @@
             colorChange(data) {
                 this.myStyle.backgroundColor = data;
                 this.data.setOptionValue("color", data);
+            },
+            runningChange(data) {
+                this.data.setOptionValue("running", data);
             }
         },
         computed: {

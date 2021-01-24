@@ -14,6 +14,7 @@ export default class FileSaveNode extends Node {
             items: [ "json", "csv"]
         })
         this.addOption("color", undefined, "#7eb342");
+        this.addOption("running", undefined, true);
     }
 
     save() {

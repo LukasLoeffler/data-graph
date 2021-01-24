@@ -26,5 +26,6 @@ export default class IntervalNode extends Node {
             items:intervals
         })
         this.addOption("color", undefined, "#607565");
+        this.addOption("running", undefined, true);
     }
 }

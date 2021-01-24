@@ -6,7 +6,7 @@ import chalk from "chalk";
 
 
 const NODE_TYPE = "MQTT_BASE"
-let requiredOptions = ["server", "topic"];
+let requiredOptions = ["topic"];
 
 export abstract class MqttBaseNode extends BaseNode {
     options: any;

@@ -9,6 +9,7 @@ export default class CronNode extends Node {
         super();
         this.addOutputInterface("onSuccess")
         this.addOption("CronExpression", "InputOption", "* * * * *")
-        this.addOption("color", undefined, "black")
+        this.addOption("color", undefined, "black");
+        this.addOption("running", undefined, true);
     }
 }

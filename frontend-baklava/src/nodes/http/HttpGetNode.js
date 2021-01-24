@@ -12,5 +12,6 @@ export default class HttpGetNode extends Node {
         this.addOutputInterface("onFailure")
         this.addOption("settings", "HttpNodeDialog", {url: "google.de", requestType: "GET", headers: []});
         this.addOption("color", undefined, "#ad173a");
+        this.addOption("running", undefined, true);
     }
 }
