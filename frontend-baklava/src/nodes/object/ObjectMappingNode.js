@@ -12,5 +12,6 @@ export default class ObjectMappingNode extends Node {
 
         this.addOption("mapping", "MapingNodeDialog", {mappings: [{source: "source", target: "target"}]});
         this.addOption("color", undefined, "#a32bb3");
+        this.addOption("running", undefined, true);
     }
 }

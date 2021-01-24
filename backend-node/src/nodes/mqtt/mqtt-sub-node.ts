@@ -18,9 +18,24 @@ export class MqttSubNode extends MqttBaseNode {
         })
 
         this.client.on("message",  (topic: any, message: string) => {
+            console.log(topic, message.toString());
             ExecutionCounter.incrCount(this.id);
             let msgOut = new Message(this.id, NODE_TYPE, message.toString())
             this.onSuccess(msgOut);
         });
+    }
+
+    start() {
+        this.subscribe();
+        this.running = true;
+        return this.running;
+    }
+
+    stop() {
+        this.client.unsubscribe(this.topic, (err: any) => {
+            if(err) console.log("SubNode:", err);
+        })
+        this.running = false;
+        return this.running;
     }
 }   

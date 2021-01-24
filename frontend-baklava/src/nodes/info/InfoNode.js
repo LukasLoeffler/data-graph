@@ -11,5 +11,6 @@ export default class InfoNode extends Node {
         this.addOption("color", undefined, "#26828c");
         this.addInputInterface("Event");
         this.addOutputInterface("onSuccess");
+        this.addOption("running", undefined, true);
     }
 }
