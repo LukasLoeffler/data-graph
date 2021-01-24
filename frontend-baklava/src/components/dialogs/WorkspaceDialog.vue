@@ -9,6 +9,11 @@
                     <v-btn text x-small class="mr-1">
                         <v-icon color="red darken-2" @click="openDeleteDialog()">mdi-delete-outline</v-icon>
                     </v-btn>
+                    <v-btn text x-small class="mr-1">
+                        <v-icon color="green darken-2" @click="backupWorkspace()">mdi-file-download-outline</v-icon>
+                    </v-btn>
+                    <v-file-input @change="restored" color="orange" hide-input prepend-icon="mdi-file-upload-outline" style="width: 25px; margin: 0px !important">
+                    </v-file-input>
                 </div>
             </template>
             <v-card>
@@ -115,10 +120,25 @@ export default {
         },
         isNumber(num) {
             return (typeof num == 'string' || typeof num == 'number') && !isNaN(num - 0) && num !== '';
+        },
+        backupWorkspace() {
+            const data = JSON.stringify(this.localNodeConfig, null, 4)
+            const blob = new Blob([data], {type: 'application/json'})
+            const e = document.createEvent('MouseEvents'),
+            a = document.createElement('a');
+            a.download = `${this.localNodeConfig._id}.json`;
+            a.href = window.URL.createObjectURL(blob);
+            a.dataset.downloadurl = ['application/json', a.download, a.href].join(':');
+            e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            a.dispatchEvent(e);
+        },
+        restored(newVal) {
+            console.log(newVal);
         }
     },
     created() {
     },
+
 }
 </script>
 
