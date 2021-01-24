@@ -29,16 +29,18 @@
               <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
-              <v-tooltip left :color="running ? 'green' : 'red'">
-                <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on">
-                  <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
-                  <v-icon color="red" v-else>mdi-pause</v-icon>
-                </v-btn>
+              <v-tooltip bottom :color="running ? 'green' : 'red'">
+                <template v-slot:activator="{ on }">
+                    <div v-on="on">
+                      <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
+                        <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
+                        <v-icon color="red" v-else>mdi-pause</v-icon>
+                      </v-btn>
+                    </div>
                 </template>
                 <span v-if="running">Running</span>
                 <span v-else>Stopped</span>
-              </v-tooltip>
+            </v-tooltip>
     
             </v-list-item-action>
           </v-list-item>
