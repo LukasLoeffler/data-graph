@@ -127,7 +127,7 @@
           {type: "objectPath", icon: "mdi-map-marker-path", resettable: false, stoppable: false},
           {type: "fileSave", icon: "mdi-content-save-outline", resettable: false, stoppable: false},
           {type: "postgresSave", icon: "mdi-elephant", resettable: false, stoppable: false},
-          {type: "mqttSub", icon: "mdi-alpha-m", resettable: false, stoppable: false},
+          {type: "mqttSub", icon: "mdi-alpha-m", resettable: false, stoppable: true},
           {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false},
           {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false},
           {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false},
@@ -143,10 +143,8 @@
     },
     inject: ['editor'],
     created() {
-      //console.log(this.nodeData);
-      if (this.nodeData.options.has("color")) {
-        this.color = this.nodeData.getOptionValue("color");
-      }
+      this.color = this.nodeData.getOptionValue("color");
+      this.running = this.nodeData.getOptionValue("running");
     },
     methods: {
       execute(action) {
@@ -171,11 +169,11 @@
         this.axios.get(lastValueUrl)
           .then((response) => {
             this.running = response.data.running;
+            this.$emit("runningChange", this.running);
           })
           .catch((err) => {
             console.log(err);
-          })
-          ;
+          });
       },
       openSettings() {
         this.$store.commit("setOptionNode", this.nodeData.id);

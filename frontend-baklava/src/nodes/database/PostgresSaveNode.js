@@ -20,6 +20,7 @@ export default class PostgresSaveNode extends Node {
             table: "processor"
         });
         this.addOption("color", undefined, "#423dd9");
+        this.addOption("running", undefined, true);
     }
 
     save() {
