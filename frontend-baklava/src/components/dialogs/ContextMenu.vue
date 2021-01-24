@@ -2,9 +2,20 @@
   <div class="text-center">
     <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="150" offset-x>
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" small block dark>
+
+      <v-btn-toggle dense style="width: 180px" dark>
+
+        <v-btn v-bind="attrs" v-on="on" dense :style="titleName">
           {{nodeData.name}}
         </v-btn>
+
+        <v-btn v-if="isStoppable" icon dense style="width: 30px" @click="activateNode">
+          <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
+          <v-icon color="red" v-else>mdi-pause</v-icon>
+        </v-btn>
+      </v-btn-toggle>
+
+
       </template>
 
       <v-card width="350px" height="400px" class="scroll-card">
@@ -18,16 +29,23 @@
               <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
-              <v-btn icon>
-                <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
-                <v-icon color="red" v-else>mdi-pause</v-icon>
-              </v-btn>
+              <v-tooltip left :color="running ? 'green' : 'red'">
+                <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" v-on="on">
+                  <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
+                  <v-icon color="red" v-else>mdi-pause</v-icon>
+                </v-btn>
+                </template>
+                <span v-if="running">Running</span>
+                <span v-else>Stopped</span>
+              </v-tooltip>
+    
             </v-list-item-action>
           </v-list-item>
         </v-list>
 
         <v-divider></v-divider>
-        <v-list-item dense v-on:click="activateNode">
+        <v-list-item dense @click="activateNode">
           <v-list-item-icon>
             <v-icon color="green" v-if="!running">mdi-play-outline</v-icon>
             <v-icon color="red" v-else>mdi-pause</v-icon>
@@ -92,25 +110,25 @@
         hints: true,
         color: "white",
         running: true,
-        icons: [
-          {type: "logging", icon: "mdi-math-log", resettable: false},
-          {type: "info", icon: "mdi-information-outline", resettable: false},
-          {type: "button", icon: "mdi-gesture-tap-button", resettable: false},
-          {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false},
-          {type: "cron", icon: "mdi-clock-time-five-outline", resettable: false},
-          {type: "httpGet", icon: "mdi-wan", resettable: false},
-          {type: "httpPostPut", icon: "mdi-wan", resettable: false},
+        nodeTypes: [
+          {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false},
+          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false},
+          {type: "button", icon: "mdi-gesture-tap-button", resettable: false, stoppable: false},
+          {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true},
+          {type: "cron", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true},
+          {type: "httpGet", icon: "mdi-wan", resettable: false, stoppable: false},
+          {type: "httpPostPut", icon: "mdi-wan", resettable: false, stoppable: false},
 
-          {type: "arrayMapping", icon: "mdi-code-array", resettable: false},
-          {type: "objectMapping", icon: "mdi-code-braces", resettable: false},
-          {type: "objectFilter", icon: "mdi-filter-outline", resettable: false},
-          {type: "objectPath", icon: "mdi-map-marker-path", resettable: false},
-          {type: "fileSave", icon: "mdi-content-save-outline", resettable: false},
-          {type: "postgresSave", icon: "mdi-elephant", resettable: false},
-          {type: "mqttSub", icon: "mdi-alpha-m", resettable: false},
-          {type: "mqttPub", icon: "mdi-alpha-m", resettable: false},
-          {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false},
-          {type: "info", icon: "mdi-information-outline", resettable: false},
+          {type: "arrayMapping", icon: "mdi-code-array", resettable: false, stoppable: false},
+          {type: "objectMapping", icon: "mdi-code-braces", resettable: false, stoppable: false},
+          {type: "objectFilter", icon: "mdi-filter-outline", resettable: false, stoppable: false},
+          {type: "objectPath", icon: "mdi-map-marker-path", resettable: false, stoppable: false},
+          {type: "fileSave", icon: "mdi-content-save-outline", resettable: false, stoppable: false},
+          {type: "postgresSave", icon: "mdi-elephant", resettable: false, stoppable: false},
+          {type: "mqttSub", icon: "mdi-alpha-m", resettable: false, stoppable: false},
+          {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false},
+          {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false},
+          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false},
         ],
         actions: [
           {text: "Open Settings", color: "orange", callable: "openSettings", icon: "mdi-cog-outline"},
@@ -149,8 +167,8 @@
 
         let lastValueUrl = `http://localhost:3000/${action}/${this.nodeData.id}`;
         this.axios.get(lastValueUrl)
-          .then(() => {
-            this.running = !this.running;
+          .then((response) => {
+            this.running = response.data.running;
           })
           .catch((err) => {
             console.log(err);
@@ -182,19 +200,28 @@
     },
     computed: {
       typeIcon() {
-        let icon = this.icons.find((icon) => icon.type === this.nodeData.type);
+        let icon = this.nodeTypes.find((icon) => icon.type === this.nodeData.type);
         if (!icon) {
           return "mdi-help-circle-outline"
         }
         return icon.icon;
       },
       resettable() {
-        let icon = this.icons.find((icon) => icon.type === this.nodeData.type);
+        let icon = this.nodeTypes.find((icon) => icon.type === this.nodeData.type);
         return icon.resettable;
       },
       runningColor() {
         if (this.running) return "green";
         else return "red";
+      },
+      isStoppable() {
+        return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
+      },
+      titleName() {
+        let stoppable = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
+        return {
+          "width": stoppable ? "150px" : "180px",
+        };
       }
     }
   }

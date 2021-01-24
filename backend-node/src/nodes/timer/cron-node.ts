@@ -39,6 +39,7 @@ export class CronNode extends BaseNode{
         if (!initial) console.log(`Cron Node ${chalk.cyan(this.id)} started.`)
         this.task.start();
         this.running = true;
+        return this.running;
     }
 
     // Routine to stop/kill the task after reload.
@@ -46,5 +47,6 @@ export class CronNode extends BaseNode{
         console.log(`Cron Node ${chalk.cyan(this.id)} stopped.`)
         this.task.stop();
         this.running = false;
+        return this.running;
     }
 }
