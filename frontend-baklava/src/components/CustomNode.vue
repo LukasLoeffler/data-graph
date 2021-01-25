@@ -7,7 +7,7 @@
             @mousedown.self.prevent.stop="startDrag"
             @contextmenu.self.prevent="openAltContextMenu"
         >
-        <ContextMenu :menu="showMenu" :nodeData="data" @colorChange="colorChange" @runningChange="runningChange"/>  
+        <ContextMenu :menu="showMenu" :nodeData="data" @optionChange="optionChange"/>  
 
         </div>
 
@@ -92,12 +92,10 @@
                 document.addEventListener("mouseup", this.stopDrag);
                 this.select();
             },
-            colorChange(data) {
-                this.myStyle.backgroundColor = data;
-                this.data.setOptionValue("color", data);
-            },
-            runningChange(data) {
-                this.data.setOptionValue("running", data);
+            optionChange(option, data) {
+                //console.log(`Option ${option} changed to ${data}`);
+                if (option === "color") this.myStyle.backgroundColor = data;
+                this.data.setOptionValue(option, data);
             }
         },
         computed: {

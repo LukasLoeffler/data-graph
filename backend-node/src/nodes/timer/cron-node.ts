@@ -21,9 +21,17 @@ export class CronNode extends BaseNode{
         this.cronExpression = this.getOption("cronexpression", options);
         this.running = this.getOption("running", options);
 
-        this.task = this.createTask();
-
-        if (this.running) this.start(true);
+        
+        try {
+            this.task = this.createTask();
+            if (this.running) this.start(true);
+        } catch (error) {
+            console.log(`Cron expression ${chalk.red(this.cronExpression)} is invalid. Using default now (1 minute interval)`);
+            this.cronExpression = "* * * * *";
+            this.task = this.createTask();
+            if (this.running) this.start(true);
+        }
+        
         NodeManager.addNode(this);
     }
 

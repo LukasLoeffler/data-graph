@@ -1,4 +1,5 @@
 import { Node } from "@baklavajs/core";
+import { store } from '../../main';
 
 
 const intervals = [
@@ -22,10 +23,14 @@ export default class IntervalNode extends Node {
     constructor() {
         super();
         this.addOutputInterface("onSuccess")
-        this.addOption("CronExpression", "SelectOption", "INFO", undefined, {
+        this.addOption("CronExpression", "SelectOption", "INFO", "*/10 * * * * *", {
             items:intervals
         })
         this.addOption("color", undefined, "#607565");
         this.addOption("running", undefined, true);
+
+        this.events.update.addListener(this, () => {
+            store.commit("setDataChanged", true);
+        });
     }
 }
