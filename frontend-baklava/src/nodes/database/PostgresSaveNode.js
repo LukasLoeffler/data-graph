@@ -16,7 +16,7 @@ export default class PostgresSaveNode extends Node {
             port: 5432, 
             database: "processor", 
             user: "postgres", 
-            password: "", 
+            password: "admin", 
             table: "processor"
         });
         this.addOption("color", undefined, "#423dd9");
