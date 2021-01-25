@@ -222,12 +222,18 @@ function loadConfig(dbo: any) {
                     let options = extractOptionsFromNode(node);
                     let instance = new newCls.clss(node.name, node.id, options, successTargets, failureTargets)
                 }
+                if (node.type === "httpPostPut") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let failureTargets = getFailureTargets(data, node)
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, failureTargets)
+                }
                 if (node.type === "objectPath") {
                     let successTargets = getSuccessTargets(data, node);
                     let path = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, path, successTargets, [])
                 }
-                if (node.type === "objectFilter") {
+                if (node.type === "filter") {
                     let successTargets = getSuccessTargets(data, node);
                     let filter = node.options[0][1]
                     let instance = new newCls.clss(node.name, node.id, filter, successTargets, [])
