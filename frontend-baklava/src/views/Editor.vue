@@ -62,23 +62,23 @@ import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 
 
-import ButtonNode from "../nodes/ButtonNode.js";
+import ButtonNode from "../nodes/ButtonNode";
 import IntervalNode from "../nodes/time/IntervalNode"
 import CronNode from "../nodes/time/CronNode";
 
-import HttpGet from "../nodes/http/HttpGetNode.js"
+import HttpGet from "../nodes/http/HttpGetNode"
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode"
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode"
-import HttpPostPut from "../nodes/http/HttpPostPutNode.ts"
-import Filter from "../nodes/object/FilterNode.ts"
+import HttpPostPut from "../nodes/http/HttpPostPutNode"
+import Filter from "../nodes/object/FilterNode"
 import Path from "../nodes/object/PathNode.ts"
 import FileSave from "../nodes/filesystem/FileSaveNode"
 
 import MqttSubNode from "../nodes/mqtt/MqttSubNode";
 import MqttPubNode from "../nodes/mqtt/MqttPubNode";
-import Logging from "../nodes/LoggingNode.js";
+import Logging from "../nodes/LoggingNode";
 
-import InfoNode from "../nodes/info/InfoNode.js";
+import InfoNode from "../nodes/info/InfoNode";
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
 
@@ -87,6 +87,7 @@ import ExecutionCountOption from "../nodes/options/ExecutionCountOption"
 import InfoOption from "../nodes/options/InfoOption"
 
 import HttpNodeDialog from "../components/dialogs/HttpNodeDialog"
+import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog"
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog"
 import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog"
 
@@ -109,6 +110,7 @@ export default {
       nodeConfig: null,
       selectedConfig: null,
       configIndex: null,
+      stateCopy: null
     }
   },
   components: { },
@@ -137,6 +139,7 @@ export default {
     this.viewPlugin.registerOption("InfoOption", InfoOption);
 
     this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
+    this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
     this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
     this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
 
@@ -145,12 +148,13 @@ export default {
     this.editor.registerNodeType("interval", IntervalNode, "Time")
 
     this.editor.registerNodeType("logging", Logging, "Logging")
+    this.editor.registerNodeType("info", InfoNode, "Logging")
 
     this.editor.registerNodeType("httpGet", HttpGet, "Http")
     this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
 
     // Object
-    this.editor.registerNodeType("objectFilter", Filter, "Object")
+    this.editor.registerNodeType("filter", Filter, "Object")
     this.editor.registerNodeType("objectPath", Path, "Object")
     this.editor.registerNodeType("arrayMapping", ArrayMappingNode, "Object")
     this.editor.registerNodeType("objectMapping", ObjectMappingNode, "Object")
@@ -176,7 +180,7 @@ export default {
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
 
-    this.editor.registerNodeType("info", InfoNode, "Info")
+    
 
 
     /**
@@ -255,17 +259,20 @@ export default {
       this.axios.get(loadStateUrl).then((response) => {
         // If loaded object from backend is empty the default graph is loaded
         if (this.isEmpty(response.data)){
-          this.editor.load({
+          let emptyConfig = {
             nodes: [],
             connections: [],
             panning: {
               x: 0,
               y: 0
             },
-            scaling: 1}
-          );
+            scaling: 1
+          }
+          this.editor.load(emptyConfig);
+          this.stateCopy = this.editor.save();
         } else {
           this.editor.load(response.data);
+          this.stateCopy = this.editor.save();
         }
         setTimeout(() => {
           this.$store.commit("setDataChanged", false);
@@ -306,9 +313,13 @@ export default {
       deep: true
     },
     "$store.getters.dataChanged": {
-      handler(newValue) {
-        if (newValue) {
-          this.$store.commit("setDataChanged", true);
+      handler(dataChanged) {
+        if(dataChanged) {
+          if (this.stateCopy.nodes === this.editor.save().nodes) {
+            this.$store.commit("setDataChanged", false);
+          } else {
+            console.log("Config changed");
+          }
         }
       }
     },

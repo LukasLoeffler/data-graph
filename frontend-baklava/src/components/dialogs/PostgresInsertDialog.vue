@@ -33,7 +33,7 @@ export default {
     props: ["option", "node", "value"],
     created() {
         this.nodeCopy = {...this.node};
-        this.valueCopy = {...this.valueCopy};
+        this.valueCopy = {...this.value};
     },
     methods: {
         save() {
@@ -54,15 +54,7 @@ export default {
                     this.dialog = true;
                 }
             }
-        },
-        "$dialog": {
-            handler(newValue) {
-                console.log("resetting");
-                if (!newValue) {
-                    this.$store.commit("setOptionNode", null);
-                }
-            }
-        },
+        }
     }
 }
 </script>

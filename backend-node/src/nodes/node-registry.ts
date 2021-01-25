@@ -1,6 +1,7 @@
 import { CronNode } from "./timer/cron-node"
 import { LoggingNode } from "./logging/logging-node"
 import { HttpNode } from "./http/http-node"
+import { HttpPostPutNode } from "./http/http-post-put-node"
 import { FileSaveNode } from "./filesystem/save-file-node"
 import { ObjectPathNode } from "./data/json-path-node"
 import { ObjectMapperNode } from "./data/object-mapper-node"
@@ -39,11 +40,12 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("interval", "time", CronNode),
     new RegEntry("logging", "logging", LoggingNode),
     new RegEntry("httpGet", "http", HttpNode),
+    new RegEntry("httpPostPut", "http", HttpPostPutNode),
     new RegEntry("fileSave", "fileSystem", FileSaveNode),
     new RegEntry("objectMapping", "object", ObjectMapperNode),
     new RegEntry("objectPath", "object", ObjectPathNode),
     new RegEntry("arrayMapping", "object", ArrayMapperNode),
-    new RegEntry("objectFilter", "object", FilterNode),
+    new RegEntry("filter", "object", FilterNode),
     new RegEntry("button", "input", ButtonNode),
     new RegEntry("mqttPub", "mqtt", MqttPubNode),
     new RegEntry("mqttSub", "mqtt", MqttSubNode),

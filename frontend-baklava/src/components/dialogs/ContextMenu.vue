@@ -5,7 +5,7 @@
 
       <v-btn-toggle dense style="width: 180px; height: 30px; font-size: 25px" dark>
 
-        <v-btn v-bind="attrs" v-on="on" dense :style="titleName" style="height: 30px">
+        <v-btn v-on="on" v-bind="attrs" dense :style="titleStyle" style="height: 30px">
           {{nodeData.name}}
         </v-btn>
 
@@ -18,7 +18,7 @@
 
       </template>
 
-      <v-card width="350px" height="400px" class="scroll-card">
+      <v-card width="350px" style="max-height: 400px;" class="scroll-card">
         <v-list>
           <v-list-item>
             <v-list-item-avatar :color="color" size="56">
@@ -30,7 +30,7 @@
             </v-list-item-content>
             <v-list-item-action v-if="isStoppable">
               <v-tooltip bottom :color="running ? 'green' : 'red'">
-                <template v-slot:activator="{ on }">
+                <template v-slot:activator="{ on, attrs }">
                     <div v-on="on">
                       <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
                         <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
@@ -57,6 +57,16 @@
             <v-list-item-title v-else>Stop Node</v-list-item-title>
           </v-list-item-action-text>
         </v-list-item>
+
+        <v-list-item dense @click="resetNode" v-if="isResettable">
+          <v-list-item-icon>
+            <v-icon color="orange">mdi-backup-restore</v-icon>
+          </v-list-item-icon>
+          <v-list-item-action-text>
+            <v-list-item-title >Reset Node</v-list-item-title>
+          </v-list-item-action-text>
+        </v-list-item>
+
         <v-list-item dense v-for="(action, i) in actions" :key="i"  v-on:click="execute(action.callable)">
           <v-list-item-icon>
             <v-icon :color="action.color">{{action.icon}}</v-icon>
@@ -117,13 +127,12 @@
           {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false},
           {type: "button", icon: "mdi-gesture-tap-button", resettable: false, stoppable: false},
           {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true},
-          {type: "cron", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true},
+          {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true},
           {type: "httpGet", icon: "mdi-wan", resettable: false, stoppable: false},
           {type: "httpPostPut", icon: "mdi-wan", resettable: false, stoppable: false},
-
           {type: "arrayMapping", icon: "mdi-code-array", resettable: false, stoppable: false},
           {type: "objectMapping", icon: "mdi-code-braces", resettable: false, stoppable: false},
-          {type: "objectFilter", icon: "mdi-filter-outline", resettable: false, stoppable: false},
+          {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false},
           {type: "objectPath", icon: "mdi-map-marker-path", resettable: false, stoppable: false},
           {type: "fileSave", icon: "mdi-content-save-outline", resettable: false, stoppable: false},
           {type: "postgresSave", icon: "mdi-elephant", resettable: false, stoppable: false},
@@ -133,7 +142,7 @@
           {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false},
         ],
         actions: [
-          {text: "Open Settings", color: "orange", callable: "openSettings", icon: "mdi-cog-outline"},
+          {text: "Open Settings", color: "teal", callable: "openSettings", icon: "mdi-cog-outline"},
           {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
           {text: "Delete Node", color: "red", callable: "deleteNode", icon: "mdi-trash-can-outline"},
         ]
@@ -155,7 +164,7 @@
         if(action === "resetNode") this.resetNode();
       },
       save() {
-        this.$emit("colorChange", this.color);
+        this.$emit("optionChange", "color", this.color);
         this.menu = false;
       },
       deleteNode() {
@@ -169,7 +178,7 @@
         this.axios.get(lastValueUrl)
           .then((response) => {
             this.running = response.data.running;
-            this.$emit("runningChange", this.running);
+            this.$emit("optionChange", "running", this.running);
           })
           .catch((err) => {
             console.log(err);
@@ -178,7 +187,6 @@
       openSettings() {
         this.$store.commit("setOptionNode", this.nodeData.id);
         this.menu = false;
-        setTimeout(()=>{this.$store.commit("setOptionNode", null)}, 10) //TODO: Billo hack, should be removed
       },
       createTemplate() {
         let template = {
@@ -200,15 +208,15 @@
     },
     computed: {
       typeIcon() {
-        let icon = this.nodeTypes.find((icon) => icon.type === this.nodeData.type);
-        if (!icon) {
+        let nodeType = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type);
+        if (!nodeType) {
           return "mdi-help-circle-outline"
         }
-        return icon.icon;
+        return nodeType.icon;
       },
-      resettable() {
-        let icon = this.nodeTypes.find((icon) => icon.type === this.nodeData.type);
-        return icon.resettable;
+      isResettable() {
+        let nodeType = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type);
+        return nodeType.resettable;
       },
       runningColor() {
         if (this.running) return "green";
@@ -217,7 +225,12 @@
       isStoppable() {
         return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
       },
-      titleName() {
+      /**
+       * Returns different width for title, depending if the node is stoppable or not.
+       * - 150px if its stoppable to have space for the stopping button
+       * - 180px if its not stoppable to make use of the full title width
+       */
+      titleStyle() {
         let stoppable = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
         return {
           "width": stoppable ? "150px" : "180px",
