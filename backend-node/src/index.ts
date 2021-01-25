@@ -15,7 +15,8 @@ const  cors = require('cors')
 
 var jsonPath = path.join(__dirname, '.', 'config', 'node-config.json');
 const app = express();
-const port = 3000;
+
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); 
 app.use(cors())
@@ -25,13 +26,11 @@ let dbo: any;
 
 connectToServer( function( err: any, client: any ) {
     if (err) console.log("Connection to Mongo:", err);
-    
+
     dbo = getDb();  // Fetching database object
     Loader.loadConfig(dbo);  // Loading nodes from config file.
-
-    // start the Express server
-    app.listen( port, () => {
-        console.log( `Server started at http://localhost:${ port }` );
+    app.listen( PORT, () => {
+        console.log( `Server started at http://localhost:${ PORT }` );
     });
 });
 
