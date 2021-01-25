@@ -21,6 +21,12 @@
                             <v-col cols="12">
                                 <v-text-field label="Url" required v-model="valueCopy.url" :rules="[rules.required]"></v-text-field>
                             </v-col>
+                            <v-col cols="6">
+                                <v-text-field 
+                                    label="Timeout" required v-model.number="valueCopy.timeout" type="number" 
+                                    :rules="[rules.required, rules.timeout]">
+                                </v-text-field>
+                            </v-col>
                         </v-row>
                     </v-form>
                 </v-card-text>
@@ -69,7 +75,8 @@ export default {
         dialog: false,
         rules: {
             required: value => !!value || 'Required.',
-            positive: value => value > 0 || 'Positive number required.'
+            positive: value => value > 0 || 'Positive number required.',
+            timeout: value => value > 0 && value < 300000|| 'Number between 0 and 300.000 required.'
         },
         nodeCopy: null,
         valueCopy: null,
@@ -103,7 +110,11 @@ export default {
         },
         abort() {
             this.dialog = false;
-        }
+        },
+        increment () {
+            console.log("Increment");
+            this.valueCopy.timeout = parseInt(this.valueCopy.timeout) + 100;
+        },
     },
 
     watch: {
