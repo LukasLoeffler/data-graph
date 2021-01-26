@@ -14,7 +14,8 @@ export default class HttpPostPutNode extends Node {
             url: "google.de", 
             requestType: "POST", 
             headers: [],
-            timeout: 2500
+            timeout: 2500,
+            notes: "Enter description of functionallity here"
         });
         this.addOption("color", undefined, "#ad173a");
         this.addOption("running", undefined, true);

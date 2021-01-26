@@ -8,16 +8,19 @@
             -->
             <v-card>
                 <v-card-title>
-                    <span class="headline">{{node.name}}</span>
+                    <span class="headline">{{nodeCopy.name}}</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
                         <v-row>
-                            <v-col cols="12">
-                                <v-select :items="['GET', 'POST', 'PUT', 'DELETE']" label="HTTP Method" required v-model="value.requestType"></v-select>
+                            <v-col cols="6">
+                                <v-text-field label="Url" required v-model="nodeCopy.name"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select :items="['GET', 'POST', 'PUT', 'DELETE']" label="HTTP Method" required v-model="valueCopy.requestType"></v-select>
                             </v-col>
                             <v-col cols="12">
-                                <v-text-field label="Url" required v-model="value.url"></v-text-field>
+                                <v-text-field label="Url" required v-model="valueCopy.url"></v-text-field>
                             </v-col>
                         </v-row>
 
@@ -27,7 +30,7 @@
                                 <v-btn color="red" class="ml-1" @click="resetHeader">Reset header</v-btn>
                             </v-col>
                         </v-row>
-                        <v-row v-for="(header, index) in value.headers" :key="`header-${index}`">
+                        <v-row v-for="(header, index) in valueCopy.headers" :key="`header-${index}`">
                             <v-col cols="5">
                                 <v-text-field label="Header" required v-model="header.key" hide-details=""></v-text-field>
                             </v-col>
@@ -61,12 +64,16 @@
 export default {
     data: () => ({
         dialog: false,
+        nodeCopy: null,
+        valueCopy: null,
     }),
     props: ["option", "node", "value"],
-    created() {},
+    created() {
+        this.nodeCopy = {...this.node};
+        this.valueCopy = {...this.value};
+    },
     methods: {
         addHeader() {
-            console.log(this.value);
             let newHeader = {
                 key: "",
                 value: ""
@@ -77,7 +84,9 @@ export default {
             this.value.headers = [];
         },
         save() {
-            this.$store.commit("setDataChanged", true);
+            this.node.setOptionValue("settings", this.valueCopy);
+            this.node.name = this.nodeCopy.name;
+            this.$store.commit("saveNodeConfig", this.node.id);
             this.dialog = false;
         }
     },
