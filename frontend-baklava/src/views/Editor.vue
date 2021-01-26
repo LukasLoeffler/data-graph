@@ -98,6 +98,9 @@ import CustomNode from "../components/CustomNode"
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode"
 
 
+import { debounce } from "../helper/debounce"
+
+
 export default {
   data() {
     return {
@@ -179,10 +182,6 @@ export default {
 
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
-
-    
-
-
     /**
     The resets the data change attribute initially. 
     The event listener triggers on startup and sets dataChanged to true, even with no change.
@@ -191,13 +190,28 @@ export default {
       this.$store.commit("setDataChanged", false);
     }, 500)
 
-    this.viewPlugin.hooks.renderNode.tap(this, () => {
-      this.$store.commit("setDataChanged", true);
+    this.editor.events.beforeAddNode.addListener(this, ()=> {
+        this.$store.commit("setDataChanged", true);
+    });
+
+    this.editor.events.beforeAddConnection.addListener(this, ()=> {
+        this.$store.commit("setDataChanged", true);
+    });
+
+    this.editor.events.beforeRemoveNode.addListener(this, ()=> {
+        this.$store.commit("setDataChanged", true);
+    });
+
+    this.editor.events.beforeRemoveConnection.addListener(this, ()=> {
+        this.$store.commit("setDataChanged", true);
     });
 
     this.initialLoad();
   },
   methods: {
+    logEvent() {
+      console.log("Changed");
+    },
     sendMessage() {
       this.$socket.send('some data')
     },
@@ -282,16 +296,6 @@ export default {
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
     },
-    debounceEvent(callback, time) {
-      let interval;
-      return (...args) => {
-        clearTimeout(interval);
-        interval = setTimeout(() => {
-          interval = null;
-          callback(...args);
-        }, time);
-      }
-    }
   },
   watch: {
     "configIndex": {
@@ -312,17 +316,6 @@ export default {
       },
       deep: true
     },
-    "$store.getters.dataChanged": {
-      handler(dataChanged) {
-        if(dataChanged) {
-          if (this.stateCopy.nodes === this.editor.save().nodes) {
-            this.$store.commit("setDataChanged", false);
-          } else {
-            console.log("Config changed");
-          }
-        }
-      }
-    },
     "$store.getters.deletedNode": {
       handler(newValue) {
         if (newValue) {
@@ -330,13 +323,19 @@ export default {
         }
       }
     },
+    "$store.getters.saveNode": {
+      handler(newValue) {
+        if (newValue) {
+          this.$store.commit("saveNodeConfig", null);
+          this.save();
+        }
+      }
+    },
     "$store.getters.copyNode": {
       handler(newNode) {
         if (newNode) {
           newNode.id = this.editor.generateId("node_");
-
           let node = new ButtonNode();
-          
           node.options = newNode.options;
           this.editor.addNode(node);
         }

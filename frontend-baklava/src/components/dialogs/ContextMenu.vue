@@ -187,6 +187,7 @@
       openSettings() {
         this.$store.commit("setOptionNode", this.nodeData.id);
         this.menu = false;
+        setTimeout(() =>{this.$store.commit("setOptionNode", null)}, 1); // Hacky way to implement an event bus
       },
       createTemplate() {
         let template = {
