@@ -89,13 +89,19 @@
             startDrag() {
                 this.dragging = true;
                 document.addEventListener("mousemove", this.handleMove);
-                document.addEventListener("mouseup", this.stopDrag);
+                document.addEventListener("mouseup", this.mouseUp);
                 this.select();
             },
             optionChange(option, data) {
                 //console.log(`Option ${option} changed to ${data}`);
                 if (option === "color") this.myStyle.backgroundColor = data;
                 this.data.setOptionValue(option, data);
+            },
+            mouseUp(event) {
+                if (event.target.parentElement.id === this.data.id) {
+                    this.stopDrag();
+                    this.$store.commit("saveNodeConfig", this.data.id);
+                }
             }
         },
         computed: {

@@ -28,7 +28,7 @@ export class HttpNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(): void {
+    execute() {
         axios.get(this.url, {headers: this.headers, timeout: 2500})
         .then((response: any) => {
             if (response.data) {
