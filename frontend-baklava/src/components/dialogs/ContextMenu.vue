@@ -24,7 +24,7 @@
             <v-list-item-avatar :color="color" size="56">
               <v-icon>{{typeIcon}}</v-icon>
             </v-list-item-avatar>
-            <v-list-item-content class="text-left align-self-start" style="max-width: 200px">
+            <v-list-item-content class="text-left align-self-start" style="max-width: 200px;">
               <v-list-item-title >Name: {{nodeData.name}}</v-list-item-title>
               <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
             </v-list-item-content>
@@ -134,7 +134,7 @@
         nodeTypes: [
           {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false},
           {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false, configurable: false},
-          {type: "button", icon: "mdi-gesture-tap-button", resettable: false, stoppable: false, configurable: false},
+          {type: "button", icon: "mdi-gesture-tap-button", resettable: true, stoppable: false, configurable: false},
           {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: false},
           {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true, configurable: false},
           {type: "httpGet", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true},
@@ -205,11 +205,14 @@
           intfs: null,
           options: this.nodeData.options,
         }
-        console.l
         this.$store.commit("copyNode", template);
       },
       resetNode() {
-
+        // Create more general reset endpoint
+        let url = `http://localhost:3000/reset-exec-count/${this.nodeData.id}`;
+        this.axios.get(url).then(() => {
+            console.log("%cSuccessfully resetted ", this.nodeData.name);
+        });
       }
     },
     watch: {
