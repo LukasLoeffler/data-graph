@@ -24,7 +24,7 @@
             <v-list-item-avatar :color="color" size="56">
               <v-icon>{{typeIcon}}</v-icon>
             </v-list-item-avatar>
-            <v-list-item-content class="text-left align-self-start" style="max-width: 200px">
+            <v-list-item-content class="text-left align-self-start" style="max-width: 200px;">
               <v-list-item-title >Name: {{nodeData.name}}</v-list-item-title>
               <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
             </v-list-item-content>
@@ -64,6 +64,15 @@
           </v-list-item-icon>
           <v-list-item-action-text>
             <v-list-item-title >Reset Node</v-list-item-title>
+          </v-list-item-action-text>
+        </v-list-item>
+
+        <v-list-item dense @click="openSettings" v-if="isConfigurable">
+          <v-list-item-icon>
+            <v-icon color="teal">mdi-cog-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-action-text>
+            <v-list-item-title >Open Settings</v-list-item-title>
           </v-list-item-action-text>
         </v-list-item>
 
@@ -123,26 +132,25 @@
         color: "white",
         running: true,
         nodeTypes: [
-          {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false},
-          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false},
-          {type: "button", icon: "mdi-gesture-tap-button", resettable: false, stoppable: false},
-          {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true},
-          {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true},
-          {type: "httpGet", icon: "mdi-wan", resettable: false, stoppable: false},
-          {type: "httpPostPut", icon: "mdi-wan", resettable: false, stoppable: false},
-          {type: "arrayMapping", icon: "mdi-code-array", resettable: false, stoppable: false},
-          {type: "objectMapping", icon: "mdi-code-braces", resettable: false, stoppable: false},
-          {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false},
-          {type: "objectPath", icon: "mdi-map-marker-path", resettable: false, stoppable: false},
-          {type: "fileSave", icon: "mdi-content-save-outline", resettable: false, stoppable: false},
-          {type: "postgresSave", icon: "mdi-elephant", resettable: false, stoppable: false},
-          {type: "mqttSub", icon: "mdi-alpha-m", resettable: false, stoppable: true},
-          {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false},
-          {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false},
-          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false},
+          {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false},
+          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false, configurable: false},
+          {type: "button", icon: "mdi-gesture-tap-button", resettable: true, stoppable: false, configurable: false},
+          {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: false},
+          {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true, configurable: false},
+          {type: "httpGet", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true},
+          {type: "httpPostPut", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true},
+          {type: "arrayMapping", icon: "mdi-code-array", resettable: false, stoppable: false, configurable: true},
+          {type: "objectMapping", icon: "mdi-code-braces", resettable: false, stoppable: false, configurable: true},
+          {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false},
+          {type: "objectPath", icon: "mdi-map-marker-path", resettable: false, stoppable: false, configurable: false},
+          {type: "fileSave", icon: "mdi-content-save-outline", resettable: false, stoppable: false, configurable: false},
+          {type: "postgresSave", icon: "mdi-elephant", resettable: false, stoppable: false, configurable: false},
+          {type: "mqttSub", icon: "mdi-alpha-m", resettable: false, stoppable: true, configurable: false},
+          {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: false},
+          {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: false},
+          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false, configurable: false},
         ],
         actions: [
-          {text: "Open Settings", color: "teal", callable: "openSettings", icon: "mdi-cog-outline"},
           {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
           {text: "Delete Node", color: "red", callable: "deleteNode", icon: "mdi-trash-can-outline"},
         ]
@@ -197,11 +205,14 @@
           intfs: null,
           options: this.nodeData.options,
         }
-        console.l
         this.$store.commit("copyNode", template);
       },
       resetNode() {
-
+        // Create more general reset endpoint
+        let url = `http://localhost:3000/reset-exec-count/${this.nodeData.id}`;
+        this.axios.get(url).then(() => {
+            console.log("%cSuccessfully resetted ", this.nodeData.name);
+        });
       }
     },
     watch: {
@@ -225,6 +236,9 @@
       },
       isStoppable() {
         return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
+      },
+      isConfigurable() {
+        return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).configurable;
       },
       /**
        * Returns different width for title, depending if the node is stoppable or not.
