@@ -6,6 +6,8 @@ export default class LoggingNode extends Node {
     type = "logging";
     name = "Logging";
 
+    optionValue = null;
+
     constructor() {
         super();
         this.addInputInterface("event")
@@ -17,8 +19,16 @@ export default class LoggingNode extends Node {
         this.addOption("color", undefined, "#3dd4f2");
         this.addOption("running", undefined, true);
 
-        this.events.update.addListener(this, () => {
-            store.commit("setDataChanged", true);
+        this.events.update.addListener(this, (event) => {
+            
+            if (event.name === "Operation") {
+                if (event.option.value !== this.optionValue) {
+                    store.commit("saveNodeConfig", this.id);
+                }
+                this.optionValue = event.option.value;
+            }
+
+
         });
     }
 }
