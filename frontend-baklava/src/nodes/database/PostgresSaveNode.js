@@ -7,7 +7,7 @@ export default class PostgresSaveNode extends Node {
 
     constructor() {
         super();
-        this.addInputInterface("Payload");
+        this.addInputInterface("Payload", undefined, undefined, {type: "JSON"});
         this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
         this.addOption("connection", "PostgresInsertDialog", {
@@ -27,6 +27,7 @@ export default class PostgresSaveNode extends Node {
         const state = super.save();
         state.interfaces.forEach(([name, intfState]) => {
             intfState.isInput = this.getInterface(name).isInput;
+            intfState.type = this.getInterface(name).type;
         });
         return state;
     }
@@ -35,6 +36,7 @@ export default class PostgresSaveNode extends Node {
         state.interfaces.forEach(([name, intfState]) => {
             const intf = intfState.isInput ? this.addInputInterface(name) : this.addOutputInterface(name);
             intf.id = intfState.id;
+            intf.type = intfState.type;
         });
         super.load(state);
     }

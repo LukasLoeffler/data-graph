@@ -27,6 +27,9 @@
                                     :rules="[rules.required, rules.timeout]" hide-details>
                                 </v-text-field>
                             </v-col>
+                            <v-col cols="6">
+                                <v-select :items="['JSON', 'XML']" label="Expected output" :rules="[rules.required]" v-model="valueCopy.expectedOutput" hide-details></v-select>
+                            </v-col>
                         </v-row>
                     </v-form>
                 </v-card-text>
@@ -87,6 +90,7 @@ export default {
         valid: null
     }),
     props: ["option", "node", "value"],
+    inject: ['editor', "plugin"],
     created() {
         this.nodeCopy = {...this.node};
         this.valueCopy = {...this.value};
@@ -106,10 +110,18 @@ export default {
             this.valueCopy.headers.splice(index, 1);
         },
         save() {
-            console.log("Saving:", this.valueCopy);
+            //console.log("Saving:", this.valueCopy);
             this.node.setOptionValue("settings", this.valueCopy);
             this.node.name = this.nodeCopy.name;
-            //this.$store.commit("setDataChanged", true);
+
+            let intf = this.node.getInterface("onSuccess");
+
+            if (intf.type !== this.valueCopy.expectedOutput) {
+                console.log("Updating interface type");
+                intf.type = this.valueCopy.expectedOutput;
+                setTimeout(() => location.reload(), 15);
+            }
+
             this.$store.commit("saveNodeConfig", this.node.id);
             this.dialog = false;
         },

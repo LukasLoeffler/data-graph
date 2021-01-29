@@ -52,6 +52,14 @@
         </v-col>
       </v-row>
     </v-flex>
+    <v-snackbar v-model="snackbar" timeout="1000" color="teal lighten-2" right transition="slide-x-reverse-transition">
+      Config successfully saved!
+      <template v-slot:action="{ attrs }">
+        <v-btn  text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -113,74 +121,14 @@ export default {
       nodeConfig: null,
       selectedConfig: null,
       configIndex: null,
-      stateCopy: null
+      stateCopy: null,
+      snackbar: false
     }
   },
   components: { },
   created() {
-    this.editor.use(this.viewPlugin);
-    this.editor.use(this.optionPlugin);
 
-    this.viewPlugin.components.connection = CustomConnection;
-    this.viewPlugin.components.nodeInterface = CustomInterface;
-    //this.viewPlugin.components.contextMenu = CustomContextMenu;
-    this.viewPlugin.components.node = CustomNode;
-
-    const intfTypePlugin = new InterfaceTypePlugin();
-
-    this.editor.use(intfTypePlugin);
-
-    intfTypePlugin.addType("JSON", "orange");
-    intfTypePlugin.addType("Message", "#038cfc");
-
-
-    // this.viewPlugin.enableMinimap = true;
-
-    // register your nodes, node options, node interface types, ...
-    this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
-    this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
-    this.viewPlugin.registerOption("InfoOption", InfoOption);
-
-    this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
-    this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
-    this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
-    this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
-
-
-    this.editor.registerNodeType("cron", CronNode, "Time")
-    this.editor.registerNodeType("interval", IntervalNode, "Time")
-
-    this.editor.registerNodeType("logging", Logging, "Logging")
-    this.editor.registerNodeType("info", InfoNode, "Logging")
-
-    this.editor.registerNodeType("httpGet", HttpGet, "Http")
-    this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
-
-    // Object
-    this.editor.registerNodeType("filter", Filter, "Object")
-    this.editor.registerNodeType("objectPath", Path, "Object")
-    this.editor.registerNodeType("arrayMapping", ArrayMappingNode, "Object")
-    this.editor.registerNodeType("objectMapping", ObjectMappingNode, "Object")
-    this.viewPlugin.setNodeTypeAlias("objectFilter", "Filter array");
-    this.viewPlugin.setNodeTypeAlias("objectPath", "Extract object path");
-
-    // Filesystem
-    this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
-    this.viewPlugin.setNodeTypeAlias("fileSave", "Save as file");
-
-    // User input
-    this.editor.registerNodeType("button", ButtonNode, "Input")
-    this.viewPlugin.setNodeTypeAlias("button", "Button");
-
-    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
-
-    // MQTT
-    this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
-    this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
-    this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");
-    this.viewPlugin.setNodeTypeAlias("mqttPub", "Publish");
-
-    this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
+    this.init();
 
     /**
     The resets the data change attribute initially. 
@@ -191,19 +139,19 @@ export default {
     }, 500)
 
     this.editor.events.beforeAddNode.addListener(this, ()=> {
-        this.$store.commit("setDataChanged", true);
+      this.$store.commit("saveNodeConfig", 1);
     });
 
     this.editor.events.beforeAddConnection.addListener(this, ()=> {
-        this.$store.commit("setDataChanged", true);
+      this.$store.commit("saveNodeConfig", 1);
     });
 
     this.editor.events.beforeRemoveNode.addListener(this, ()=> {
-        this.$store.commit("setDataChanged", true);
+      this.$store.commit("saveNodeConfig", 1);
     });
 
     this.editor.events.beforeRemoveConnection.addListener(this, ()=> {
-        this.$store.commit("setDataChanged", true);
+      this.$store.commit("saveNodeConfig", 1);
     });
 
     this.initialLoad();
@@ -212,18 +160,15 @@ export default {
     logEvent() {
       console.log("Changed");
     },
-    sendMessage() {
-      this.$socket.send('some data')
-    },
     save() {
-      console.log("Saving state");
       let state = this.editor.save();
       
       let saveStateUrl = "http://localhost:3000/save-node-config/"+this.selectedConfig._id;
       this.axios.put(saveStateUrl, state).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold")
         this.$store.commit("setDataChanged", false);
-      })
+        this.snackbar = true;
+      });
     },
     createWorkspace() {
       let emptyConfig = {
@@ -288,14 +233,75 @@ export default {
           this.editor.load(response.data);
           this.stateCopy = this.editor.save();
         }
-        setTimeout(() => {
-          this.$store.commit("setDataChanged", false);
-        }, 100)
       })
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
     },
+    init() {
+    this.editor.use(this.viewPlugin);
+    this.editor.use(this.optionPlugin);
+
+    this.viewPlugin.components.connection = CustomConnection;
+    this.viewPlugin.components.nodeInterface = CustomInterface;
+    //this.viewPlugin.components.contextMenu = CustomContextMenu;
+    this.viewPlugin.components.node = CustomNode;
+
+    const intfTypePlugin = new InterfaceTypePlugin();
+
+    this.editor.use(intfTypePlugin);
+
+
+
+    // this.viewPlugin.enableMinimap = true;
+
+    // register your nodes, node options, node interface types, ...
+    this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
+    this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
+    this.viewPlugin.registerOption("InfoOption", InfoOption);
+
+    this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
+    this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
+    this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
+    this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
+
+
+    this.editor.registerNodeType("cron", CronNode, "Time")
+    this.editor.registerNodeType("interval", IntervalNode, "Time")
+
+    this.editor.registerNodeType("logging", Logging, "Logging")
+    this.editor.registerNodeType("info", InfoNode, "Logging")
+
+    this.editor.registerNodeType("httpGet", HttpGet, "Http")
+    this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
+
+    // Object
+    this.editor.registerNodeType("filter", Filter, "Object")
+    this.editor.registerNodeType("objectPath", Path, "Object")
+    this.editor.registerNodeType("arrayMapping", ArrayMappingNode, "Object")
+    this.editor.registerNodeType("objectMapping", ObjectMappingNode, "Object")
+    this.viewPlugin.setNodeTypeAlias("objectFilter", "Filter array");
+    this.viewPlugin.setNodeTypeAlias("objectPath", "Extract object path");
+
+    // Filesystem
+    this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
+    this.viewPlugin.setNodeTypeAlias("fileSave", "Save as file");
+
+    // User input
+    this.editor.registerNodeType("button", ButtonNode, "Input")
+    this.viewPlugin.setNodeTypeAlias("button", "Button");
+
+    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
+    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
+
+    // MQTT
+    this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
+    this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
+    this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");
+    this.viewPlugin.setNodeTypeAlias("mqttPub", "Publish");
+
+    this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
+    }
   },
   watch: {
     "configIndex": {
@@ -340,7 +346,7 @@ export default {
           this.editor.addNode(node);
         }
       }
-    }
+    },
   }
 }
 </script>

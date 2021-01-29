@@ -14,19 +14,9 @@
         <div class="__content">
 
             <!-- Rows -->
-            <div v-for="(row, i) in rows"
-                :key="i"
-                class="interface-row">
-                <node-interface
-                    v-if="!!row.input"
-                    :name="row.input[0]"
-                    :data="row.input[1]"
-                ></node-interface>
-                <node-interface
-                    v-if="!!row.output"
-                    :name="row.output[0]"
-                    :data="row.output[1]"
-                ></node-interface>
+            <div v-for="(row, i) in rows" :key="i" class="interface-row">
+                <CustomInterface v-if="!!row.input" :name="row.input[0]" :data="row.input[1]"/>
+                <CustomInterface v-if="!!row.output" :name="row.output[0]" :data="row.output[1]"/>
             </div>
 
             <!-- Options -->
@@ -57,11 +47,13 @@
 <script>
     import { Components } from '@baklavajs/plugin-renderer-vue'
     import ContextMenu from '../components/dialogs/ContextMenu'
+    import CustomInterface from './CustomInterface'
 
     export default {
         extends: Components.Node,
         components: {
-            NodeInterface: Components.NodeInterface,
+            //NodeInterface: Components.NodeInterface,
+            CustomInterface,
             NodeOption: Components.NodeOption,
             ContextMenu
         },
@@ -72,10 +64,15 @@
                 y: 0,
                 myStyle: {
                     backgroundColor: this.data.getOptionValue("color")
-                },
+                }
             }
         },
-        created() {},
+        created() {
+            // console.log(this.data);
+            if (this.data.options.has('settings')) {
+                this.data.getOptionValue("settings").expectedValue
+            } 
+        },
         methods: {
             openAltContextMenu(e) {
                 e.preventDefault()
@@ -93,9 +90,10 @@
                 this.select();
             },
             optionChange(option, data) {
-                //console.log(`Option ${option} changed to ${data}`);
+                console.log(`Option ${option} changed to ${data}`);
                 if (option === "color") this.myStyle.backgroundColor = data;
                 this.data.setOptionValue(option, data);
+                this.$store.commit("saveNodeConfig", this.data.id);
             },
             mouseUp(event) {
                 if (event.target.parentElement.id === this.data.id) {

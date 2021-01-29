@@ -90,11 +90,6 @@ export default {
         }
     },
     computed: {
-        state() {
-            return this.connection.isInDanger ?
-                "" :
-                "";
-        },
         classes() {
             return {
                 "connection": true,

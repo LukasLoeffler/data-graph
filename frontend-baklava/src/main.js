@@ -31,7 +31,8 @@ export const store = new Vuex.Store({
     selectedWorkspaceId: "",
     deleteNode: null,
     copyNode: null,
-    saveNode: null
+    saveNode: null,
+    renderInterfaceConnections: null
   },
   mutations: {
     setOptionNode (state, node) {
@@ -51,6 +52,9 @@ export const store = new Vuex.Store({
     },
     saveNodeConfig(state, node) {
       state.saveNode = node;
+    },
+    renderInterfaceConnections(state, intf) {
+      state.renderInterfaceConnections = intf;
     }
   },
   getters: {
@@ -71,6 +75,9 @@ export const store = new Vuex.Store({
     },
     saveNode: state => {
       return state.saveNode;
+    },
+    renderInterfaceConnections: state => {
+      return state.renderInterfaceConnections;
     }
   }
 })
