@@ -1,17 +1,9 @@
 <template>
-    <div :id="data.id" :class="classes">
-        <div class="__port" @mouseover="startHover" @mouseout="endHover"></div>
-        <span v-if="data.connectionCount > 0 || !data.option || !getOptionComponent(data.option)" class="align-middle">
+    <div :id="data.id" :class="classes" >
+        <div class="__port" @mouseover="startHover" @mouseout="endHover" :style="color"></div>
+        <span v-if="data.connectionCount > 0 || !data.option || !getOptionComponent(data.option)" class="align-middle" >
             {{ displayName }}
         </span>
-        <component
-            v-else
-            :is="getOptionComponent(data.option)"
-            :option="data"
-            :value="value"
-            @input="data.value = $event"
-            :name="displayName"
-        ></component>
     </div>
 </template>
 
@@ -22,13 +14,14 @@ export default {
     data: function() {
         return {
             isActive: false,
-            isConnected: false
+            isConnected: false,
         }
     },
     inject: ['editor', "plugin"],
     props: {
         data: Object,
         name: String,
+        type: Object,
     },
     mounted() {
         this.plugin.hooks.renderInterface.execute(this);
@@ -66,7 +59,13 @@ export default {
         },
         endHover() {
             this.editor.hoveredOver(undefined);
-        }
+        },
+        getOptionComponent(name) {
+            if (!name || !this.plugin.options) { return; }
+            let options = this.plugin.options[name];
+            console.log(options);
+            return options;
+        },
     },
     computed: {
         classes() {
@@ -80,7 +79,22 @@ export default {
         },
         displayName() {
             return this.data.displayName || this.name;
+        },
+        color() {
+            if (this.data.type === "JSON") return {"background-color": "orange"};
+            if (this.data.type === "XML") return {"background-color": "blue"};
+            if (this.data.type === "Message") return {"background-color": "blue"};
+            else return {"background-color": "white"};
         }
+    },
+    watch: {
+        "data.type": {
+            handler(newValue) {
+                console.log("data changed");
+                this.plugin.hooks.renderInterface.execute(this);  
+            },
+            deep: true
+        },
     }
 }
 </script>
