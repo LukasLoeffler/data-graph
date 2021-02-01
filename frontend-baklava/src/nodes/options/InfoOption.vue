@@ -1,19 +1,19 @@
 <template>
         <v-simple-table dense dark style="overflow: hidden;">
             <tbody @click="viewDetails" @contextmenu.prevent="resetInfo">
-                <tr>
+                <tr v-if="options.count">
                     <td>Events</td>
                     <td>{{executionCount}}</td>
                 </tr>
-                <tr>
+                <tr v-if="options.bytes">
                     <td>Bytes</td>
                     <td>{{totalBytes}}</td>
                 </tr>
-                <tr>
+                <tr v-if="options.time">
                     <td>Time</td>
                     <td>{{lastTime}}</td>
                 </tr>
-                <tr>
+                <tr v-if="options.date">
                     <td>Date</td>
                     <td>{{lastDate}}</td>
                 </tr>
@@ -52,10 +52,21 @@ export default {
             console.log("viewDetails");
         },
         resetInfo() {
-            let url = `http://localhost:3000/reset-exec-count/${this.node.id}`;
-            this.axios.get(url).then(() => {
-                console.log("%cSuccessfully reset counter for", "color: green; font-weight: bold", this.node.name)
+            let resetUrl = `http://localhost:3000/reset/${this.node.id}`;
+            this.axios.get(resetUrl).then(() => {
+                console.log("%cSuccessfully resetted ", this.node.name);
             });
+        }
+    },
+    computed: {
+        options() {
+            let options = {
+                count: this.node.options.get("settings").value[0],
+                bytes: this.node.options.get("settings").value[3],
+                time: this.node.options.get("settings").value[1],
+                date: this.node.options.get("settings").value[2],
+            }
+            return options;
         }
     }
 }

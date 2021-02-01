@@ -23,4 +23,8 @@ export class ButtonNode extends BaseNode{
         let msg = new Message(this.id, NODE_TYPE, new Date());
         this.onSuccess(msg);
     }
+
+    reset() {
+        ExecutionCounter.resetCount(this.id);
+    }
 }

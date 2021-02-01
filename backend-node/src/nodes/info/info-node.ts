@@ -19,4 +19,8 @@ export class InfoNode extends BaseNode {
         ExecutionCounter.incrInfo(this.id, bytes);
         this.onSuccess(msg);
     }
+
+    reset() {
+        ExecutionCounter.resetCount(this.id);
+    }
 }

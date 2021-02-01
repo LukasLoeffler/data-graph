@@ -27,8 +27,6 @@ export default class LoggingNode extends Node {
                 }
                 this.optionValue = event.option.value;
             }
-
-
         });
     }
 }

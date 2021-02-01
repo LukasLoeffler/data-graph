@@ -58,4 +58,11 @@ export class CronNode extends BaseNode{
         this.running = false;
         return this.running;
     }
+
+    reset() {
+        console.log(`Cron Node ${chalk.cyan(this.id)} resetted.`);
+        this.task.stop();
+        this.cronExpression = "* * * * *";
+        this.task = this.createTask();
+    }
 }
