@@ -10,8 +10,18 @@
         </v-btn>
 
         <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode">
-          <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
-          <v-icon color="red" v-else>mdi-pause</v-icon>
+          <v-tooltip bottom :color="running ? 'green' : 'red'">
+                <template v-slot:activator="{ on, attrs }">
+                    <div v-on="on">
+                      <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
+                        <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
+                        <v-icon color="red" v-else>mdi-pause</v-icon>
+                      </v-btn>
+                    </div>
+                </template>
+                <span v-if="running">Running. Click to pause.</span>
+                <span v-else>Stopped. Click to start.</span>
+            </v-tooltip>
         </v-btn>
       </v-btn-toggle>
 
@@ -113,7 +123,7 @@
           <v-btn text @click="menu = false">
             Cancel
           </v-btn>
-          <v-btn color="primary" text @click="save">
+          <v-btn color="primary" text @click="save" :disabled="color === colorCopy">
             Save
           </v-btn>
         </v-card-actions>
@@ -133,7 +143,7 @@
         running: true,
         nodeTypes: [
           {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false},
-          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false, configurable: false},
+          {type: "info", icon: "mdi-information-outline", resettable: true, stoppable: false, configurable: true},
           {type: "button", icon: "mdi-gesture-tap-button", resettable: true, stoppable: false, configurable: false},
           {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: false},
           {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true, configurable: false},
@@ -148,7 +158,6 @@
           {type: "mqttSub", icon: "mdi-alpha-m", resettable: false, stoppable: true, configurable: false},
           {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: false},
           {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: false},
-          {type: "info", icon: "mdi-information-outline", resettable: false, stoppable: false, configurable: false},
         ],
         actions: [
           {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
@@ -208,15 +217,16 @@
         this.$store.commit("copyNode", template);
       },
       resetNode() {
-        // Create more general reset endpoint
-        let url = `http://localhost:3000/reset-exec-count/${this.nodeData.id}`;
-        this.axios.get(url).then(() => {
+        let resetUrl = `http://localhost:3000/reset/${this.nodeData.id}`;
+        this.axios.get(resetUrl).then(() => {
             console.log("%cSuccessfully resetted ", this.nodeData.name);
         });
       }
     },
     watch: {
-
+      menu(newVal) {
+        if (newVal) this.colorCopy = this.nodeData.getOptionValue("color");
+      }
     },
     computed: {
       typeIcon() {
