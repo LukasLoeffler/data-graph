@@ -98,6 +98,7 @@ import HttpNodeDialog from "../components/dialogs/HttpNodeDialog"
 import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog"
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog"
 import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog"
+import InfoConfigDialog from "../nodes/info/InfoConfigDialog"
 
 import CustomConnection from "../components/CustomConnection"
 import CustomInterface from "../components/CustomInterface"
@@ -264,6 +265,7 @@ export default {
     this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
     this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
     this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
+    this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
 
 
     this.editor.registerNodeType("cron", CronNode, "Time")

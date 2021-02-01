@@ -67,12 +67,7 @@
                 }
             }
         },
-        created() {
-            // console.log(this.data);
-            if (this.data.options.has('settings')) {
-                this.data.getOptionValue("settings").expectedValue
-            } 
-        },
+        created() {},
         methods: {
             openAltContextMenu(e) {
                 e.preventDefault()
