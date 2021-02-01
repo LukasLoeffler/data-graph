@@ -4,7 +4,6 @@ import { NodeManager } from "./nodes/node-manager";
 import { connectToServer, getDb } from "./manager/mongo-manager";
 import { WsManager } from "./ws";
 import { ExecutionCounter } from "./exec-info";
-import fs from 'fs';
 import path from 'path';
 import express from "express";
 import chalk from "chalk";
@@ -111,7 +110,7 @@ app.get("/recieve-event/:nodeId", (req, res) => {
 });
 
 app.get("/reset-exec-count/:nodeId", (req, res) => {
-    ExecutionCounter.resetCount(req.params.nodeId);
+    
     res.send("Successfully resetted");
 })
 
@@ -137,6 +136,13 @@ app.get("/stop/:nodeId", (req, res) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
     let running = node.stop();
     res.send({"running": running});
+});
+
+app.get("/reset/:nodeId", (req, res) => {
+    let node = NodeManager.getNodeById(req.params.nodeId);
+    console.log("Resetting Node:", node.name);
+    let running = node.reset();
+    res.send({"reset": "success"});
 });
 
 

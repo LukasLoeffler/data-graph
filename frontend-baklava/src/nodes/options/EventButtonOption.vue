@@ -43,9 +43,9 @@ export default {
             this.axios.get(url).then(() => {});
         },
         resetCounter() {
-            let url = `http://localhost:3000/reset-exec-count/${this.node.id}`;
-            this.axios.get(url).then(() => {
-                console.log("%cSuccessfully reset counter for", "color: green; font-weight: bold", this.node.name)
+            let resetUrl = `http://localhost:3000/reset/${this.node.id}`;
+            this.axios.get(resetUrl).then(() => {
+                console.log("%cSuccessfully resetted ", this.node.name);
             });
         }
     }
