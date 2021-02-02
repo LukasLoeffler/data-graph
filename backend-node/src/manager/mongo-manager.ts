@@ -7,7 +7,7 @@ let url = "mongodb+srv://lukloe:010184Lukas@cluster0.oorug.mongodb.net?retryWrit
 let _db: any;
 
 
-let requiredCollections = ["mqtt-servers", "workspaces", "node-configs"]
+let requiredCollections = ["mqtt-servers", "workspaces", "node-configs", "node-templates"]
 
 
 function connectToServer( callback: any ) {

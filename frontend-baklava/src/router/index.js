@@ -7,8 +7,8 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Editor',
+    path: '/workspace/:index',
+    name: 'workspace',
     component: Editor
   },
   {

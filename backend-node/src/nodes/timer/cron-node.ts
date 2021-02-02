@@ -64,5 +64,6 @@ export class CronNode extends BaseNode{
         this.task.stop();
         this.cronExpression = "* * * * *";
         this.task = this.createTask();
+        return true;
     }
 }

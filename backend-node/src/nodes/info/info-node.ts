@@ -22,5 +22,6 @@ export class InfoNode extends BaseNode {
 
     reset() {
         ExecutionCounter.resetCount(this.id);
+        return true;
     }
 }
