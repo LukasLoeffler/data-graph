@@ -18,7 +18,7 @@
       <v-divider></v-divider>
       <v-list nav dense>
         <v-list-item-group v-model="configIndex" mandatory style="max-height: 200px; overflow-y: scroll;">
-          <v-list-item v-for="node in nodeConfig" :key="node._id" class="workplace">
+          <v-list-item v-for="(node, index) in nodeConfig" :key="node._id" class="workplace" @click="changeWorkspace(index)">
             <v-list-item-title>{{node.workspace}}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
@@ -128,7 +128,7 @@ export default {
   },
   components: { },
   created() {
-
+    this.configIndex = this.$route.params.index-1;
     this.init();
 
     /**
@@ -194,16 +194,11 @@ export default {
       this.axios.get(loadStateUrl).then((response) => {
         this.nodeConfig = response.data;
 
-        let selectedWorkspaceId = this.$store.getters.workspaceId;
-        if (last && !selectedWorkspaceId) {
-          this.configIndex = response.data.length-1;
-        } else if (selectedWorkspaceId) {
-          console.log("By Workspace Id");
-          this.configIndex = this.findWithAttr(this.nodeConfig, "_id", selectedWorkspaceId);
-        } else {
-          this.configIndex = 0;
+        if (this.nodeConfig.length < this.$route.params.index) {
+          this.$router.push('/settings')
         }
         
+        this.loadConfig();
       })
     },
     findWithAttr(array, attr, value) {
@@ -215,6 +210,8 @@ export default {
       return -1;
     },
     loadConfig() {
+      this.configIndex = this.$route.params.index-1;
+      this.selectedConfig = this.nodeConfig[this.configIndex];
       let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedConfig._id;
       this.axios.get(loadStateUrl).then((response) => {
         // If loaded object from backend is empty the default graph is loaded
@@ -235,6 +232,10 @@ export default {
           this.stateCopy = this.editor.save();
         }
       })
+    },
+    changeWorkspace(index) {
+      index++;
+      this.$router.push({ name: 'workspace', params: { index }});
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
@@ -306,12 +307,9 @@ export default {
     }
   },
   watch: {
-    "configIndex": {
-      handler(newValue) {
-        this.selectedConfig = this.nodeConfig[newValue];
-        this.drawer = false;
-        this.loadConfig();
-      }
+    $route(to, from) {
+      this.loadConfig();
+      this.configIndex = this.$route.params.index-1;
     },
     "viewPlugin.scaling": {
       handler() {
@@ -320,7 +318,7 @@ export default {
     },
     "viewPlugin.panning": {
       handler() {
-        //this.$store.commit("setDataChanged", true);
+        //debounce(500, this.$store.commit("saveNodeConfig", 1));
       },
       deep: true
     },
