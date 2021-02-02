@@ -1,5 +1,8 @@
 <template>
     <v-card>
+        <v-btn class="d-flex ml-1 mt-1" color="green darken-2" small text @click="createWorkspace">
+            <v-icon color="green">mdi-shape-rectangle-plus</v-icon>
+        </v-btn>
         <v-simple-table style="text-align:left">
             <template>
                 <thead>
@@ -13,9 +16,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="workspace in workspaces" :key="workspace._id">
+                    <tr v-for="(workspace, index) in workspaces" :key="index">
                         <td>
-                            <a @click="routeToWorkspace(workspace._id)">{{workspace.workspace}}</a>
+                            <a @click="routeToWorkspace(index)">{{workspace.workspace}}</a>
                         </td>
                         <td>{{workspace._id }}</td>
                         <td>{{workspace.nodes.length}}</td>
@@ -50,9 +53,24 @@ export default {
                 this.workspaces = response.data;
             })
         },
-        routeToWorkspace(workspaceId) {
-            this.$store.commit("setSelectedWorkspace", workspaceId);
-            this.$router.push({path: '/'});
+        routeToWorkspace(index) {
+            this.$router.push({path: `workspace/${index+1}`});
+        },
+        createWorkspace() {
+            let emptyConfig = {
+                nodes: [],
+                connections: [],
+                panning: {
+                    x: 0,
+                    y: 0
+                },
+                scaling: 1,
+                workspace: "NewWorkspace"
+            }
+            let saveStateUrl = "http://localhost:3000/save-node-config/";
+            this.axios.post(saveStateUrl, emptyConfig).then(() => {
+                this.loadWorkspaces();
+            })
         }
     },
     created() {
