@@ -23,5 +23,6 @@ export class ButtonNode extends BaseNode{
 
     reset() {
         ExecutionCounter.resetCount(this.id);
+        return true;
     }
 }
