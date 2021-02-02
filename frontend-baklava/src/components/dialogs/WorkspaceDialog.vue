@@ -12,8 +12,10 @@
                     <v-btn text x-small class="mr-1">
                         <v-icon color="green darken-2" @click="backupWorkspace()">mdi-file-download-outline</v-icon>
                     </v-btn>
-                    <v-file-input @change="restored" color="orange" hide-input prepend-icon="mdi-file-upload-outline" style="width: 25px; margin: 0px !important">
-                    </v-file-input>
+                    <label :for="'label-' + localNodeConfig._id" style="cursor: pointer">
+                        <v-icon color="orange darken-2">mdi-file-upload-outline</v-icon>
+                    </label>
+                    <input type="file" v-bind:id="'label-' + localNodeConfig._id" @change="restored" style="display: none;"/>
                 </div>
             </template>
             <v-card>
@@ -108,11 +110,12 @@ export default {
         },
         saveWorkspace() {
             let saveStateUrl = "http://localhost:3000/save-node-config/"+this.localNodeConfig._id;
-            delete this.localNodeConfig._id;
-
-            console.log(this.localNodeConfig);
             
-            this.axios.put(saveStateUrl, this.localNodeConfig).then(() => {
+            let saveObj = {...this.localNodeConfig};
+
+            delete saveObj._id;
+
+            this.axios.put(saveStateUrl, saveObj).then(() => {
                 this.$store.commit("setDataChanged", false);
                 this.dialog = false;
                 this.$emit("reloadData");
@@ -122,9 +125,9 @@ export default {
             return (typeof num == 'string' || typeof num == 'number') && !isNaN(num - 0) && num !== '';
         },
         backupWorkspace() {
-            const data = JSON.stringify(this.localNodeConfig, null, 4)
-            const blob = new Blob([data], {type: 'application/json'})
-            const e = document.createEvent('MouseEvents'),
+            let data = JSON.stringify(this.localNodeConfig, null, 4)
+            let blob = new Blob([data], {type: 'application/json'})
+            let e = document.createEvent('MouseEvents'),
             a = document.createElement('a');
             a.download = `${this.localNodeConfig._id}.json`;
             a.href = window.URL.createObjectURL(blob);
@@ -132,12 +135,30 @@ export default {
             e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
             a.dispatchEvent(e);
         },
-        restored(newVal) {
-            console.log(newVal);
+        restored(event) {
+            let reader = new FileReader();
+            reader.readAsText(event.target.files[0]);
+            
+            reader.addEventListener('load', (event) => {
+                let loadedConfig = JSON.parse(event.target.result);
+
+                let saveStateUrl = "http://localhost:3000/save-node-config/"+this.localNodeConfig._id;
+
+                delete loadedConfig._id;
+
+                this.axios.put(saveStateUrl, loadedConfig)
+                .then((response) => {
+                    console.log(response);
+                    this.dialog = false;
+                    this.$emit("reloadData");
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+            });
         }
     },
-    created() {
-    },
+    created() {},
 
 }
 </script>

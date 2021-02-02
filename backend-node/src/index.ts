@@ -97,10 +97,11 @@ app.post("/save-node-config/", ( req, res ) => {
         else {
             WsManager.sendMessage("Refreshed");
             Loader.loadConfig(dbo);
-            res.send(`Updated ${obj.result.n}`);
+            res.send(`Created ${obj.result.n}`);
         }
     });
 });
+
 
 app.get("/recieve-event/:nodeId", (req, res) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
@@ -109,10 +110,6 @@ app.get("/recieve-event/:nodeId", (req, res) => {
     else res.send("Successfully executed");
 });
 
-app.get("/reset-exec-count/:nodeId", (req, res) => {
-    
-    res.send("Successfully resetted");
-})
 
 app.get("/last-value/:nodeId", (req, res) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
@@ -217,5 +214,13 @@ app.delete("/workspace/:id", (req, res) => {
         else res.send({
             "num_deleted": obj.result.n
         });
+    });
+});
+
+
+app.post("/node-template", (req, res) => {
+    dbo.collection("node-templates").insertOne(req.body, function(err: any, result: any) {
+        if (err) res.status(400).send(err);
+        else res.send(result);
     });
 });
