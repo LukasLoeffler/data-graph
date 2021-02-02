@@ -162,7 +162,8 @@
         actions: [
           {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
           {text: "Delete Node", color: "red", callable: "deleteNode", icon: "mdi-trash-can-outline"},
-        ]
+        ],
+        colorCopy: null
     }),
     props: {
       nodeData: Object
@@ -207,19 +208,23 @@
         setTimeout(() =>{this.$store.commit("setOptionNode", null)}, 1); // Hacky way to implement an event bus
       },
       createTemplate() {
-        let template = {
-          type: this.nodeData.type,
-          name: "template_"+this.nodeData.name,
-          interfaces: [],
-          intfs: null,
-          options: this.nodeData.options,
-        }
-        this.$store.commit("copyNode", template);
+        let template = {...this.nodeData.save()};
+        delete template.id;
+        
+        template.position.x = 0;
+        template.position.y = 0;
+
+        let createTemplateUrl = `http://localhost:3000/node-template`;
+        this.axios.post(createTemplateUrl, template).then(() => {
+          console.log("%cSuccessfully created template. ", this.nodeData.name);
+          this.menu = false;
+        });
       },
       resetNode() {
         let resetUrl = `http://localhost:3000/reset/${this.nodeData.id}`;
         this.axios.get(resetUrl).then(() => {
-            console.log("%cSuccessfully resetted ", this.nodeData.name);
+          console.log("%cSuccessfully resetted ", this.nodeData.name);
+          this.menu = false;
         });
       }
     },
