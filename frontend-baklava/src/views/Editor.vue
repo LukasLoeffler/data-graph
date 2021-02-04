@@ -298,7 +298,6 @@ export default {
     this.viewPlugin.setNodeTypeAlias("button", "Button");
 
     this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
-    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
 
     // MQTT
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
