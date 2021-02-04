@@ -5,7 +5,7 @@
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
         <div class="flex-grow-1"></div>
-        <v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-content-save-outline</v-icon>
+        <!--<v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-content-save-outline</v-icon>-->
       </v-toolbar>
     </v-card>
     <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
@@ -99,12 +99,14 @@ import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog"
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog"
 import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog"
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog"
+import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog"
 
 import CustomConnection from "../components/CustomConnection"
 import CustomInterface from "../components/CustomInterface"
 import CustomNode from "../components/CustomNode"
 
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode"
+import PythonFunctionNode from "../nodes/function/PythonFunctionNode"
 
 
 import { debounce } from "../helper/debounce"
@@ -267,6 +269,7 @@ export default {
     this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
     this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
     this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
+    this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
 
 
     this.editor.registerNodeType("cron", CronNode, "Time")
@@ -295,7 +298,6 @@ export default {
     this.viewPlugin.setNodeTypeAlias("button", "Button");
 
     this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
-    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
 
     // MQTT
     this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
@@ -304,6 +306,8 @@ export default {
     this.viewPlugin.setNodeTypeAlias("mqttPub", "Publish");
 
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
+
+    this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
     }
   },
   watch: {

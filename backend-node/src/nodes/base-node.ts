@@ -48,7 +48,7 @@ export class BaseNode {
     }
 
     stop() {
-        console.log(chalk.red("Stop method not implemented for node type:", this.type));
+        //console.log(chalk.red("Stop method not implemented for node type:", this.type));
     }
 
     reset(): boolean {
