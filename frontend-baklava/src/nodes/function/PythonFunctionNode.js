@@ -11,8 +11,8 @@ export default class PythonFunctionNode extends Node {
         this.addInputInterface("payload");
         this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
-        this.addOption("settings", "PythonFunctionNodeDialog", {});
-
+        
+        this.addOption("settings", "PythonFunctionNodeDialog", {code: "print(payload)"});
         this.addOption("color", undefined, "yellow");
         this.addOption("running", undefined, true);
     }

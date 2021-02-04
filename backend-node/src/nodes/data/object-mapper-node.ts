@@ -33,11 +33,14 @@ export class ObjectMapperNode extends BaseNode {
         return this.lastValue;
     }
 
-    test(mapping: any) {
+    test(mapping: any, res: any) {
         if (Array.isArray(this.lastValue)) {
-            return mapObject(this.lastValue.slice(0, 10), mapping);
+            res.send(mapObject(this.lastValue.slice(0, 10), mapping));
+        } else {
+            let result = mapObject(this.lastValue, mapping);
+            console.log(result);
+            res.send(result);
         }
-        return mapObject(this.lastValue, mapping);
     }
 }
 

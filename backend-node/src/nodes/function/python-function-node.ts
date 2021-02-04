@@ -3,40 +3,90 @@ import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 import {PythonShell} from 'python-shell';
 const chalk = require('chalk');
-
+const fs = require('fs');
 
 const NODE_TYPE = "PYTHON-FUNC"
 
 export class PythonFunctionNode extends BaseNode {
 
+    userCode: String;
+    lastValue: any = {};
     
-    constructor(name: string, id: string, successTargets: any, failureTargets: any) {
+    constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
         super(name, NODE_TYPE, id, successTargets, failureTargets);
         
+        this.userCode = this.getOption("settings", options).code;
+        this.userCode = this.userCode.replace(/\n/g, ";");
+        this.userCode = this.userCode.replace(/;;/g, ";");
+
+        fs.writeFile(`temp/${this.id}-eval-code`, this.getOption("settings", options).code,  (err: any) => {
+            if (err) this.onFailure(err);
+            //this.onSuccess(file)
+        });
         NodeManager.addNode(this);
     }
 
+
+
     execute(msg: Message) {
-        let x = 4;
+        let options = {
+            args: [this.id]
+        }
 
-        let options: any = {
-            args: JSON.stringify(msg.payload),
-        };
+        this.lastValue = msg.payload;
 
-        let userInjectedCode = "from datetime import datetime;payload['timestamp'] = datetime.utcfromtimestamp(payload['timestamp']).strftime('%Y-%m-%d %H:%M:%S');print(json.dumps(payload))"
+        fs.writeFile(`temp/${this.id}-payload.json`, JSON.stringify(msg.payload,  null, 4),  (err: any) => {
+            if (err) this.onFailure(err);
 
-        let string = `import sys; import json; payload = json.loads(sys.argv[1:][0]);${userInjectedCode}`
-
-
-        PythonShell.runString(string, options, (err, output: any) => {
-            if (err) {
-                let errMsg = new Message(this.id, NODE_TYPE, err);
-                console.log(errMsg);
+            try {
+                PythonShell.run("temp/script.py", options, (err, output: any) => {
+                    if (err) {
+                        let errMsg = new Message(this.id, NODE_TYPE, err);
+                        console.log("Inner;", errMsg);
+                        this.onFailure(errMsg);
+                    } else {
+                        let out = output[0];
+                        let msg = new Message(this.id, NODE_TYPE, JSON.parse(out));
+                        this.onSuccess(msg);
+                    }
+                });
+            } catch (error) {
+                let errMsg = new Message(this.id, NODE_TYPE, error);
                 this.onFailure(errMsg);
-            } else {
-                let msg = new Message(this.id, NODE_TYPE, output[0]);
-                this.onSuccess(msg);
             }
         });
+
+
+
+
+    }
+
+    test(testCode: any, res: any) {
+        testCode = testCode.replace(/\n/g, ";");
+        testCode = testCode.replace(/;;/g, ";");
+
+        let options: any = {
+            args: this.lastValue,
+        };
+
+        let string = `import sys; import json; payload = json.loads(sys.argv[1:][0]);${testCode}`
+        PythonShell.runString(string, options, (err, output: any) => {
+            try {
+                if (err) {
+                    res.send(err.traceback);
+                } else {
+                    console.log(typeof output[0]);
+                    let out =  JSON.parse(output[0]);
+                    res.send(out);
+                }   
+            } catch (error) {
+                res.send(error);
+            }
+
+        });
+    }
+
+    getLastValue() {
+        return this.lastValue;
     }
 }

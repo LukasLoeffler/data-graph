@@ -8,7 +8,7 @@
             -->
             <v-card>
                 <v-card-title>
-                    <span class="headline">Node settings: {{node.name}}</span>
+                    <span class="headline">Node settings: {{nodeCopy.name}}</span>
                     <v-spacer></v-spacer>
                     <v-btn color="grey" class="mr-1" outlined>
                         <v-icon>mdi-cog-outline</v-icon>
@@ -16,7 +16,7 @@
                     <v-btn color="blue" class="mr-1" outlined>
                         <v-icon>mdi-information-outline</v-icon>
                     </v-btn>
-                    <v-btn @click="addHeader" color="green" outlined>
+                    <v-btn @click="addMapping" color="green" outlined>
                         <v-icon>mdi-plus-circle-outline</v-icon>
                     </v-btn>
                 </v-card-title>
@@ -33,8 +33,8 @@
                                     <td style="width: 20px">Delete</td>
                                 </tr>
                             </thead>
-                            <draggable :list="mappingCopy" tag="tbody" handle=".handle">
-                                <tr v-for="(mapper, index) in mappingCopy" :key="index">
+                            <draggable :list="valueCopy.mappings" tag="tbody" handle=".handle">
+                                <tr v-for="(mapper, index) in valueCopy.mappings" :key="index">
                                     <td class="handle">
                                         <v-icon class="page__grab-icon">mdi-drag-horizontal-variant</v-icon>
                                     </td>
@@ -103,36 +103,38 @@ export default {
     },
     props: ["option", "node", "value"],
     created() {
-        this.mappingCopy = JSON.parse(JSON.stringify(this.value.mappings));
+        this.nodeCopy = {...this.node};
+        this.valueCopy = {...this.value};
     },
     methods: {
         fetchData() {
             let lastValueUrl = `http://localhost:3000/last-value/${this.node.id}`;
-            console.log(lastValueUrl);
             this.axios.get(lastValueUrl).then((response) => {
                 this.codeRaw = response.data;
             })
         },
-        addHeader() {
+        addMapping() {
             let newMapping = {
                 source: "Source",
                 target: "Target"
             }
-            this.mappingCopy.push(newMapping);
+            this.valueCopy.mappings.push(newMapping);
+            this.$forceUpdate();
         },
         deleteMapping(index) {
-            this.mappingCopy.splice(index, 1);
+            this.valueCopy.mappings.splice(index, 1);
+            this.$forceUpdate()
         },
         save() {
-            this.$store.commit("setDataChanged", true);
-            this.value.mappings = this.mappingCopy;
+            this.node.setOptionValue("mapping", this.valueCopy);
+            this.node.name = this.nodeCopy.name;
+            this.$store.commit("saveNodeConfig", this.node.id);
             this.dialog = false;
         },
         test() {
             let testUrl = `http://localhost:3000/test/${this.node.id}`;
             let payload = {
-                data: this.code,
-                mapping: this.mappingCopy
+                mapping: this.valueCopy.mappings
             }
             this.axios.post(testUrl, payload).then((response) => {
                 this.codeFormatted = response.data;
@@ -140,15 +142,11 @@ export default {
         }
     },
     watch: {
-        dialog(newValue) {
-            if (newValue) {
-                this.fetchData();
-            }
-        },
         "$store.getters.optionNode": {
             handler(nodeId) {
                 if (nodeId === this.node.id) {
                     this.dialog = true;
+                    this.fetchData();
                 }
             }
         },

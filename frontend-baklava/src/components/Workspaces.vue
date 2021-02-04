@@ -48,6 +48,7 @@ export default {
     },
     methods: {
         loadWorkspaces() {
+            this.workspaces = [];
             let loadStateUrl = "http://localhost:3000/node-configs/all";
             this.axios.get(loadStateUrl).then((response) => {
                 this.workspaces = response.data;

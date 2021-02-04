@@ -5,7 +5,7 @@
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
         <div class="flex-grow-1"></div>
-        <v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-content-save-outline</v-icon>
+        <!--<v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-content-save-outline</v-icon>-->
       </v-toolbar>
     </v-card>
     <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
