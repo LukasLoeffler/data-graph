@@ -9,23 +9,17 @@ const NODE_TYPE = "PYTHON-FUNC"
 
 export class PythonFunctionNode extends BaseNode {
 
-    userCode: String;
     lastValue: any = {};
     
     constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
         super(name, NODE_TYPE, id, successTargets, failureTargets);
-        
-        this.userCode = this.getOption("settings", options).code;
-        this.userCode = this.userCode.replace(/\n/g, ";");
-        this.userCode = this.userCode.replace(/;;/g, ";");
 
+        // Writes user code into file
         fs.writeFile(`temp/${this.id}-eval-code`, this.getOption("settings", options).code,  (err: any) => {
-            if (err) this.onFailure(err);
-            //this.onSuccess(file)
+            if (err) throw new Error("EvalCode file could not be created.");
         });
         NodeManager.addNode(this);
     }
-
 
 
     execute(msg: Message) {
@@ -39,7 +33,7 @@ export class PythonFunctionNode extends BaseNode {
             if (err) this.onFailure(err);
 
             try {
-                PythonShell.run("temp/script.py", options, (err, output: any) => {
+                PythonShell.run("script/python-exec-script.py", options, (err, output: any) => {
                     if (err) {
                         let errMsg = new Message(this.id, NODE_TYPE, err);
                         console.log("Inner;", errMsg);
@@ -55,10 +49,6 @@ export class PythonFunctionNode extends BaseNode {
                 this.onFailure(errMsg);
             }
         });
-
-
-
-
     }
 
     test(testCode: any, res: any) {
@@ -82,7 +72,6 @@ export class PythonFunctionNode extends BaseNode {
             } catch (error) {
                 res.send(error);
             }
-
         });
     }
 
