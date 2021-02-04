@@ -6,13 +6,15 @@ const chalk = require('chalk');
 
 const NODE_TYPE = "LOGGING"
 
+const requiredOptions = ["operation"];
+
 export class LoggingNode extends BaseNode {
 
     level: string;
     
-    constructor(name: string, id: string, level: string = "INFO") {
+    constructor(name: string, id: string, options: any) {
         super(name, NODE_TYPE, id, [], [])
-        this.level = level;
+        this.level = this.getOption("operation", options) || "NO_LEVEL_SET";
         NodeManager.addNode(this);
     }
 
@@ -20,7 +22,7 @@ export class LoggingNode extends BaseNode {
         if (this.level === "INFO") this.level = chalk.bold(chalk.blue(this.level));
         if (this.level === "WARN") this.level = chalk.bold(chalk.yellow(this.level));
         if (this.level === "DANGER") this.level = chalk.bold(chalk.red(this.level));
+        if (this.level === "NO_LEVEL_SET") this.level = chalk.bold(chalk.bgRed(this.level));
         console.log(`${new Date().toISOString()} - ${this.level} - ${this.name} - ${JSON.stringify(msg.payload)}`)
-        //this.onSuccess(payload);
     }
 }

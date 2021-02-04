@@ -9,8 +9,8 @@ const NODE_TYPE = "BUTTON"
 
 export class ButtonNode extends BaseNode{
     callCount: number = 0;
-    constructor(name: string, id: string, targetsSuccess: any) {
-        super(name, NODE_TYPE, id, targetsSuccess, [])
+    constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
+        super(name, NODE_TYPE, id, successTargets, failureTargets)
         NodeManager.addNode(this);
     }
 

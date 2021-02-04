@@ -13,6 +13,7 @@ import { MqttSubNode } from "./mqtt/mqtt-sub-node";
 import { AggregatorNode } from "./aggregator/aggregator-node"
 import { PostgresSaveNode } from "./database/postgres-save-node"
 import { InfoNode } from "./info/info-node"
+import { PythonFunctionNode } from "./function/python-function-node"
 
 
 
@@ -51,7 +52,8 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("mqttSub", "mqtt", MqttSubNode),
     new RegEntry("aggregator", "aggregator", AggregatorNode),
     new RegEntry("postgresSave", "database", PostgresSaveNode),
-    new RegEntry("info", "info", InfoNode)
+    new RegEntry("info", "info", InfoNode),
+    new RegEntry("python-function", "function", PythonFunctionNode)
 ]
 
 

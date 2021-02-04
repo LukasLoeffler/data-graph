@@ -10,7 +10,7 @@ export default class MqttPubNode extends Node {
 
     constructor() {
         super();
-        this.addOption("Server", "SelectOption", undefined, undefined, {
+        this.addOption("Server", "SelectOption", items[0].value, undefined, {
             items: items
         });
         this.addOption("Topic", "InputOption", "topic")
