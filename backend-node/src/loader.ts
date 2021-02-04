@@ -180,6 +180,11 @@ function loadConfig(dbo: any) {
                 } catch (error) {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
+                if (node.type === "python-function") {
+                    let successTargets = getSuccessTargets(data, node);
+                    let failureTargets = getFailureTargets(data, node)
+                    let instance = new newCls.clss(node.name, node.id, successTargets, failureTargets);
+                }   
                 if (node.type === "postgresSave") {
                     let successTargets = getSuccessTargets(data, node);
                     let failureTargets = getFailureTargets(data, node)
