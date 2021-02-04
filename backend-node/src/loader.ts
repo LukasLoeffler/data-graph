@@ -182,8 +182,9 @@ function loadConfig(dbo: any) {
                 }
                 if (node.type === "python-function") {
                     let successTargets = getSuccessTargets(data, node);
-                    let failureTargets = getFailureTargets(data, node)
-                    let instance = new newCls.clss(node.name, node.id, successTargets, failureTargets);
+                    let failureTargets = getFailureTargets(data, node);
+                    let options = extractOptionsFromNode(node);
+                    let instance = new newCls.clss(node.name, node.id, options, successTargets, failureTargets);
                 }   
                 if (node.type === "postgresSave") {
                     let successTargets = getSuccessTargets(data, node);

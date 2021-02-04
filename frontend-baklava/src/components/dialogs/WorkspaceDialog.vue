@@ -103,9 +103,8 @@ export default {
         deleteSelectedWorkspace() {
             let deleteWorkspaceUrl = `http://localhost:3000/node-configs/${this.localNodeConfig._id}`;
             this.axios.delete(deleteWorkspaceUrl).then(() => {
-                console.log("Workspace successfully deleted");
-                this.dialog = false;
                 this.$emit("reloadData");
+                this.dialog = false;
             });
         },
         saveWorkspace() {

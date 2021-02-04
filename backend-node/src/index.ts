@@ -117,10 +117,9 @@ app.get("/last-value/:nodeId", (req, res) => {
     res.send(lastValue);
 })
 
-app.post("/test/:nodeId", (req, res) => {
+app.post("/test/:nodeId", async (req, res) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
-    let result = node.test(req.body.mapping);
-    res.send(result);
+    node.test(req.body.mapping, res);
 })
 
 app.get("/start/:nodeId", (req, res) => {
