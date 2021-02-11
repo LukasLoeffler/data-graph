@@ -8,7 +8,6 @@
         <v-btn v-on="on" v-bind="attrs" dense :style="titleStyle" style="height: 30px">
           {{nodeData.name}}
         </v-btn>
-
         <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode">
           <v-tooltip bottom :color="running ? 'green' : 'red'">
                 <template v-slot:activator="{ on, attrs }">
@@ -23,9 +22,8 @@
                 <span v-else>Stopped. Click to start.</span>
             </v-tooltip>
         </v-btn>
+        
       </v-btn-toggle>
-
-
       </template>
 
       <v-card width="350px" style="max-height: 400px;" class="scroll-card">
