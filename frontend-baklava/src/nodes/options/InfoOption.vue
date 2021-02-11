@@ -67,7 +67,18 @@ export default {
                 date: this.node.options.get("settings").value[2],
             }
             return options;
+        },
+    },
+    watch: {
+        "$store.getters.saveNode": {
+            handler(nodeId) {
+                if (nodeId && nodeId === this.node.id) {
+                    this._computedWatchers.options.run();
+                    this.$forceUpdate();
+                }
+            }
         }
     }
+
 }
 </script>
