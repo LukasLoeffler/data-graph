@@ -6,11 +6,11 @@
                     <span class="headline">{{nodeCopy.name}}</span>
                 </v-card-title>
                 <v-card-text>
-                    <prism-editor class="my-editor" v-model="valueCopy.code" :highlight="highlighter" line-numbers></prism-editor>    
-                </v-card-text>
+                    <prism-editor class="my-editor" v-model="valueCopy.code" :highlight="highlighter" :tabSize="4" line-numbers></prism-editor>    
+                
                 <v-row justify="center" style="max-height: 300px; overflow: scroll">
                     <v-col cols="6">
-                        <h3 class="ml-5">Latest input</h3>
+                        <h3 >Latest input</h3>
                         <json-viewer :value="codeRaw || {}" :expand-depth=4 expanded preview-mode style="text-align:left;"></json-viewer>
                     </v-col>
                     <v-col cols="6">
@@ -18,6 +18,7 @@
                         <json-viewer :value="codeFormatted || {}" :expand-depth=4 expanded preview-mode style="padding-left: 0px; text-align:left;"></json-viewer>
                     </v-col>
                 </v-row>
+                </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="dialog = false">
