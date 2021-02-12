@@ -6,7 +6,7 @@ const intervals = [
     {text: "every 10 sec", value: "*/10 * * * * *"},
     {text: "every 20 sec", value: "*/20 * * * * *"},
     {text: "every 30 sec", value: "*/30 * * * * *"},
-    {text: "every minute", value: "* * * * *"},
+    {text: "Every Minute", value: "* * * * *"},
     {text: "every 5 min", value: "*/5 * * * *"},
     {text: "every 10 min", value: "*/10 * * * *"},
     {text: "every 15 min", value: "*/15 * * * *"},
@@ -23,7 +23,7 @@ export default class IntervalNode extends Node {
     constructor() {
         super();
         this.addOutputInterface("onSuccess")
-        this.addOption("CronExpression", "SelectOption", "INFO", "*/10 * * * * *", {
+        this.addOption("CronExpression", "SelectOption", intervals[3].value, undefined, {
             items:intervals
         })
         this.addOption("color", undefined, "#607565");

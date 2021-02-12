@@ -336,7 +336,7 @@ export default {
     "$store.getters.saveNode": {
       handler(newValue) {
         if (newValue) {
-          this.$store.commit("saveNodeConfig", null);
+          setTimeout(() => this.$store.commit("saveNodeConfig", null) ,1);  
           this.save();
         }
       }

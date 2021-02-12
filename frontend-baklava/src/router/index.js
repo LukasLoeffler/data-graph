@@ -6,6 +6,10 @@ import Settings from '../views/Settings.vue'
 Vue.use(VueRouter)
 
 const routes = [
+    {
+    path: '/',
+    redirect: '/workspace/1'
+  },
   {
     path: '/workspace/:index',
     name: 'workspace',
