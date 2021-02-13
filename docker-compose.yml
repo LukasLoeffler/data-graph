@@ -1,0 +1,34 @@
+version: "3"
+
+
+services:
+  backend:
+    container_name: processor_backend
+    image: processor-backend:latest
+    build: ./backend-node
+    environment:
+      - REDIS_URL="redis://redis:6379/0"
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    links:
+      - redis
+      - mongo
+
+  frontend:
+    container_name: processor_frontend
+    build: ./frontend-baklava
+    image: processor-frontend:latest
+    ports:
+      - "80:80"
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo
+    ports:
+    - "27017:27017"
