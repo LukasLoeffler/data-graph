@@ -8,6 +8,7 @@ services:
     build: ./backend-node
     environment:
       - REDIS_URL="redis://redis:6379/0"
+      - NODE_ENV="PROD"
     ports:
       - "3000:3000"
       - "3001:3001"
