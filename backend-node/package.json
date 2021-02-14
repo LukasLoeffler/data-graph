@@ -6,6 +6,8 @@
   "scripts": {
     "start:dev": "nodemon",
     "start": "npm run build && node build/index.js",
+    "start:prod:windows": "npm run build && set NODE_ENV=PROD && node build/index.js",
+    "start:prod:linux": "npm run build && NODE_ENV=PROD node build/index.js",
     "build": "tsc"
   },
   "keywords": [],
