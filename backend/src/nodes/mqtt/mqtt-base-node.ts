@@ -25,9 +25,9 @@ export abstract class MqttBaseNode extends BaseNode {
     }
 
     createClient() {
-        this.client = connect(this.server.url);
+        this.client = connect(this.server);
         this.client.on('connect', () => {
-            console.log(`MQTT-Server: ${this.server.name} (${this.server.url}): ${chalk.greenBright("connected")}`);
+            console.log(`MQTT-Server: ${this.server}: ${chalk.greenBright("connected")}`);
         })
     }
 

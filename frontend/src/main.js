@@ -12,13 +12,6 @@ import VueNativeSock from 'vue-native-websocket'
 import "@baklavajs/plugin-renderer-vue/dist/styles.css";
 import 'vuetify/dist/vuetify.min.css'
 
-
-Vue.use(Vuex)
-Vue.use(VueAxios, axios)
-Vue.use(Vuetify)
-Vue.use(BaklavaVuePlugin);
-
-
 export let wsUrl;
 export let apiBaseUrl;
 
@@ -29,6 +22,11 @@ if (process.env.VUE_APP_MODE === "PROD") {
   apiBaseUrl = "http://localhost:3000"
   wsUrl = "ws://localhost:3001"
 }
+
+Vue.use(Vuex)
+Vue.use(VueAxios, axios)
+Vue.use(Vuetify)
+Vue.use(BaklavaVuePlugin);
 
 
 Vue.use(VueNativeSock, wsUrl, {
