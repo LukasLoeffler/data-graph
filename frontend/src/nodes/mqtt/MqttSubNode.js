@@ -3,8 +3,12 @@ import axios from "axios"
 import { apiBaseUrl } from "../../main.js"
 
 
-let items = [];
-loadData();
+let items = [{
+    value: "mqtt://test.mosquitto.org",
+    text: "Mosquitto"
+}];
+
+
 
 export default class MqttSubNode extends Node {
     type = "mqttSub";
@@ -12,6 +16,7 @@ export default class MqttSubNode extends Node {
 
     constructor() {
         super();
+        loadData();
         this.addOption("Server", "SelectOption", items[0].value, undefined, {
             items: items
         });
@@ -28,13 +33,15 @@ export default class MqttSubNode extends Node {
  */
 function loadData() {
     let url = `${apiBaseUrl}/mqtt-server/all`;
+    console.log(url);
     axios.get(url).then((response) => {
 
-        items = response.data.map(server => {
+        let append_items = response.data.map(server => {
             return {
                 value: server,
                 text: server.name
             }
-        })
+        });
+        items.concat(append_items);
     });
 }
