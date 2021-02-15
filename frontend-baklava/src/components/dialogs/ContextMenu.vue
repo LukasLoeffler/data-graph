@@ -131,6 +131,8 @@
 </template>
 
 <script>
+import {apiBaseUrl} from "../../main.js";
+
   export default {
     data: () => ({
         fav: true,
@@ -152,7 +154,7 @@
           {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false},
           {type: "objectPath", icon: "mdi-map-marker-path", resettable: false, stoppable: false, configurable: false},
           {type: "fileSave", icon: "mdi-content-save-outline", resettable: false, stoppable: false, configurable: false},
-          {type: "postgresSave", icon: "mdi-elephant", resettable: false, stoppable: false, configurable: false},
+          {type: "postgresSave", icon: "mdi-elephant", resettable: false, stoppable: false, configurable: true},
           {type: "mqttSub", icon: "mdi-alpha-m", resettable: false, stoppable: true, configurable: false},
           {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: false},
           {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: false},
@@ -191,7 +193,7 @@
 
         let action = this.running ? "stop" : "start";
 
-        let lastValueUrl = `http://localhost:3000/${action}/${this.nodeData.id}`;
+        let lastValueUrl = `${apiBaseUrl}/${action}/${this.nodeData.id}`;
         this.axios.get(lastValueUrl)
           .then((response) => {
             this.running = response.data.running;
@@ -213,14 +215,14 @@
         template.position.x = 0;
         template.position.y = 0;
 
-        let createTemplateUrl = `http://localhost:3000/node-template`;
+        let createTemplateUrl = `${apiBaseUrl}/node-template`;
         this.axios.post(createTemplateUrl, template).then(() => {
           console.log("%cSuccessfully created template. ", this.nodeData.name);
           this.menu = false;
         });
       },
       resetNode() {
-        let resetUrl = `http://localhost:3000/reset/${this.nodeData.id}`;
+        let resetUrl = `${apiBaseUrl}/reset/${this.nodeData.id}`;
         this.axios.get(resetUrl).then(() => {
           console.log("%cSuccessfully resetted ", this.nodeData.name);
           this.menu = false;

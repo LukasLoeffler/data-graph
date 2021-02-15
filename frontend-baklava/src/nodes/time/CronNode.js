@@ -14,7 +14,6 @@ export default class CronNode extends Node {
         this.addOption("running", undefined, true);
 
         this.events.update.addListener(this, () => {
-            //store.commit("setDataChanged", true);
             store.commit("saveNodeConfig", this.id);
         });
     }

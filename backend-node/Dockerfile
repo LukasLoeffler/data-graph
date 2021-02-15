@@ -1,4 +1,4 @@
-FROM node:12.13.0 AS builder
+FROM node:lts-alpine as build-stage
 
 WORKDIR /usr/src/app
 
@@ -9,7 +9,7 @@ RUN npm ci --quiet && npm run build
 
 
 
-FROM node:12.13.0-alpine
+FROM node:lts-alpine
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN npm ci --quiet --only=production
 EXPOSE 3000 3001
 
 ## We just need the build to execute the command
-COPY --from=builder /usr/src/app/build ./build
+COPY --from=build-stage /usr/src/app/build ./build
 COPY ./script ./script
 
 RUN mkdir output

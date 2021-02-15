@@ -26,15 +26,20 @@ export class ArrayMapperNode extends BaseNode {
     }
 
     getLastValue() {
-        return this.lastValue.slice(0, 10);  // Limiting the size of the array to the last 10 values (performance)
+        if (this.lastValue) {
+            return this.lastValue.slice(0, 10);  // Limiting the size of the array to the last 10 values (performance)
+        } else {
+            return [];
+        }
+        
     }
 
     /**
      * Function to test the mapping against the latest input data. Output data is returned.
      * @param mapping Mapping to test
      */
-    test(mapping: any) {
-        return mapObjectArray(this.lastValue, mapping).slice(0, 10);  // Same limitation for the test
+    test(mapping: any, res: any) {
+        res.send(mapObjectArray(this.lastValue, mapping).slice(0, 10));  // Same limitation for the test
     }
 }
 

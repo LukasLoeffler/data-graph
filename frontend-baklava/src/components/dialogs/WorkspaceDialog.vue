@@ -75,7 +75,7 @@
 </template>
 
 <script>
-
+import {apiBaseUrl} from "../../main.js";
 
 export default {
     data () {
@@ -101,21 +101,20 @@ export default {
             this.deleteDialog = true;
         },
         deleteSelectedWorkspace() {
-            let deleteWorkspaceUrl = `http://localhost:3000/node-configs/${this.localNodeConfig._id}`;
+            let deleteWorkspaceUrl = `${apiBaseUrl}/node-configs/${this.localNodeConfig._id}`;
             this.axios.delete(deleteWorkspaceUrl).then(() => {
                 this.$emit("reloadData");
                 this.dialog = false;
             });
         },
         saveWorkspace() {
-            let saveStateUrl = "http://localhost:3000/save-node-config/"+this.localNodeConfig._id;
+            let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.localNodeConfig._id}`;
             
             let saveObj = {...this.localNodeConfig};
 
             delete saveObj._id;
 
             this.axios.put(saveStateUrl, saveObj).then(() => {
-                this.$store.commit("setDataChanged", false);
                 this.dialog = false;
                 this.$emit("reloadData");
             })
@@ -141,7 +140,7 @@ export default {
             reader.addEventListener('load', (event) => {
                 let loadedConfig = JSON.parse(event.target.result);
 
-                let saveStateUrl = "http://localhost:3000/save-node-config/"+this.localNodeConfig._id;
+                let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.localNodeConfig._id}`;
 
                 delete loadedConfig._id;
 

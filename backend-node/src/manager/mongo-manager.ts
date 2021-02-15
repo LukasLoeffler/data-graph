@@ -23,12 +23,12 @@ function connectToServer( callback: any ) {
     MongoClient.connect( url,  { useNewUrlParser: true, useUnifiedTopology: true }, function(err: any, client: any ) {
 
         if (err) {
-            console.log(`Mongo-Server: (${url}): ${chalk.redBright("connecting failed")}`);
+            console.log(`${chalk.magenta("Mongo-Server")}: (${url}): ${chalk.redBright("connecting failed")}`);
             process.exit(1);
         }
 
         _db  = client.db('mydb');
-        console.log(`Mongo-Server: (${url}): ${chalk.greenBright("connected")}`)
+        console.log(`${chalk.magenta("Mongo-Server")}: (${url}): ${chalk.greenBright("connected")}`)
 
         requiredCollections.forEach((collection: any) => {
             _db.createCollection(collection, function(err: any, res: any) {
