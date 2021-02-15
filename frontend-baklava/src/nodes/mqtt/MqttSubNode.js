@@ -1,5 +1,6 @@
 import { Node } from "@baklavajs/core";
 import axios from "axios"
+import { apiBaseUrl } from "../../main.js"
 
 
 let items = [];
@@ -26,7 +27,7 @@ export default class MqttSubNode extends Node {
  * Preloading the available mqtt servers so constructor cann access them
  */
 function loadData() {
-    let url = `http://localhost:3000/mqtt-server/all`;
+    let url = `${apiBaseUrl}/mqtt-server/all`;
     axios.get(url).then((response) => {
 
         items = response.data.map(server => {
