@@ -98,7 +98,6 @@ export default {
         }
     },
     created() {
-        this.$store.commit("setDataChanged", true);
         window.addEventListener("resize", () => {
             this.updateCoords();
         });

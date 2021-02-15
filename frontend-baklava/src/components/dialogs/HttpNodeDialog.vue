@@ -10,7 +10,7 @@
                 <v-card-title>
                     <span class="headline">{{nodeCopy.name}}</span>
                 </v-card-title>
-                <v-card-text>
+                <v-card-text class="pb-1">
                     <v-container>
                         <v-row>
                             <v-col cols="6">
@@ -23,34 +23,37 @@
                                 <v-text-field label="Url" required v-model="valueCopy.url"></v-text-field>
                             </v-col>
                         </v-row>
-
-                        <v-row>
-                            <v-col cols="12">
-                                <v-btn color="blue" @click="addHeader">Add header</v-btn>
-                                <v-btn color="red" class="ml-1" @click="resetHeader">Reset header</v-btn>
-                            </v-col>
-                        </v-row>
-                        <v-row v-for="(header, index) in valueCopy.headers" :key="`header-${index}`">
-                            <v-col cols="5">
-                                <v-text-field label="Header" required v-model="header.key" hide-details=""></v-text-field>
-                            </v-col>
-                            <v-col cols="5" >
-                                <v-text-field label="Value" required v-model="header.value" hide-details=""></v-text-field>
-                            </v-col>
-                            <v-col cols="1" class="mp-0">
-                                <v-btn small color="red">
-                                    <v-icon>mdi-delete-outline</v-icon>
-                                </v-btn>
-                            </v-col>
-                        </v-row>
                     </v-container>
                 </v-card-text>
+                <v-divider></v-divider>
+                <v-card-text class="pb-1">
+                    <v-form v-model="valid">
+                    <v-row v-for="(header, index) in valueCopy.headers" :key="`header-${index}`" style="max-height: 150px;">
+                        <v-col cols="4">
+                            <v-text-field label="Header" :rules="[rules.required]" v-model="header.key" hide-details dense class="pa-0"></v-text-field>
+                        </v-col>
+                        <v-col cols="7" >
+                            <v-text-field label="Value" :rules="[rules.required]" v-model="header.value" hide-details dense class="pa-0"></v-text-field>
+                        </v-col>
+                        <v-col cols="1" class="mp-0">
+                            <v-btn small color="red" @click="removeHeader(index)" text>
+                                <v-icon>mdi-delete-outline</v-icon>
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                    </v-form>
+                    <v-row class="d-flex">
+                        <v-btn color="blue" text @click="addHeader">Add header</v-btn>
+                        <v-btn color="red" text class="ml-1" @click="resetHeader">Reset header</v-btn>
+                    </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="dialog = false">
                         Close
                     </v-btn>
-                    <v-btn color="blue darken-1" text @click="save">
+                    <v-btn color="blue darken-1" :disabled="!valid" text @click="save">
                         Save
                     </v-btn>
                 </v-card-actions>
@@ -66,6 +69,12 @@ export default {
         dialog: false,
         nodeCopy: null,
         valueCopy: null,
+        rules: {
+            required: value => !!value || 'Required.',
+            positive: value => value > 0 || 'Positive number required.',
+            timeout: value => value > 0 && value < 300000|| 'Number between 0 and 300.000 required.'
+        },
+        valid: false
     }),
     props: ["option", "node", "value"],
     created() {
@@ -88,7 +97,10 @@ export default {
             this.node.name = this.nodeCopy.name;
             this.$store.commit("saveNodeConfig", this.node.id);
             this.dialog = false;
-        }
+        },
+        removeHeader(index) {
+            this.valueCopy.headers.splice(index, 1);
+        },
     },
 
     watch: {

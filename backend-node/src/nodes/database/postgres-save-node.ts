@@ -23,6 +23,7 @@ export class PostgresSaveNode extends BaseNode {
         try {
             this.client.connect();
         } catch (error) {
+            console.log(`${chalk.magenta("Postgres-Server")}: (${this.client.host}:${this.client.port}): ${chalk.redBright("connecting failed")}`);
             console.log(chalk.red("Database does not exist"))
         }
 

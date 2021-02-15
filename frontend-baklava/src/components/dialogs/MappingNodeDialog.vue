@@ -88,7 +88,7 @@
 <script>
 import Draggable from 'vuedraggable';
 import JsonViewer from 'vue-json-viewer'
-
+import {apiBaseUrl} from "../../main.js";
 
 export default {
     data: () => ({
@@ -108,7 +108,7 @@ export default {
     },
     methods: {
         fetchData() {
-            let lastValueUrl = `http://localhost:3000/last-value/${this.node.id}`;
+            let lastValueUrl = `${apiBaseUrl}/last-value/${this.node.id}`;
             this.axios.get(lastValueUrl).then((response) => {
                 this.codeRaw = response.data;
             })
@@ -132,7 +132,7 @@ export default {
             this.dialog = false;
         },
         test() {
-            let testUrl = `http://localhost:3000/test/${this.node.id}`;
+            let testUrl = `${apiBaseUrl}/test/${this.node.id}`;
             let payload = {
                 mapping: this.valueCopy.mappings
             }

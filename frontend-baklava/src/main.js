@@ -18,7 +18,20 @@ Vue.use(VueAxios, axios)
 Vue.use(Vuetify)
 Vue.use(BaklavaVuePlugin);
 
-Vue.use(VueNativeSock, 'ws://localhost:3001', {
+
+export let wsUrl;
+export let apiBaseUrl;
+
+if (process.env.VUE_APP_MODE === "PROD") {
+  apiBaseUrl = window.location.protocol + "//" +window.location.host+"3000";
+  wsUrl = "ws://"+window.location.host+":3001";
+} else {
+  apiBaseUrl = "http://localhost:3000"
+  wsUrl = "ws://localhost:3001"
+}
+
+
+Vue.use(VueNativeSock, wsUrl, {
   reconnection: true,
   reconnectionAttempts: 10,
   reconnectionDelay: 1500,
@@ -27,22 +40,13 @@ Vue.use(VueNativeSock, 'ws://localhost:3001', {
 export const store = new Vuex.Store({
   state: {
     optionNode: null,
-    dataChanged: false,
-    selectedWorkspaceId: "",
     deleteNode: null,
     copyNode: null,
     saveNode: null,
-    renderInterfaceConnections: null
   },
   mutations: {
     setOptionNode (state, node) {
       state.optionNode = node;
-    },
-    setDataChanged(state, dataChanged) {
-      state.dataChanged = dataChanged;
-    },
-    setSelectedWorkspace(state, workspaceId) {
-      state.selectedWorkspaceId = workspaceId;
     },
     deleteNode(state, node) {
       state.deleteNode = node;
@@ -53,16 +57,10 @@ export const store = new Vuex.Store({
     saveNodeConfig(state, node) {
       state.saveNode = node;
     },
-    renderInterfaceConnections(state, intf) {
-      state.renderInterfaceConnections = intf;
-    }
   },
   getters: {
     optionNode: state => {
       return state.optionNode;
-    },
-    dataChanged: state => {
-      return state.dataChanged;
     },
     workspaceId: state => {
       return state.selectedWorkspaceId;
@@ -76,9 +74,6 @@ export const store = new Vuex.Store({
     saveNode: state => {
       return state.saveNode;
     },
-    renderInterfaceConnections: state => {
-      return state.renderInterfaceConnections;
-    }
   }
 })
 

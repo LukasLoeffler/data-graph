@@ -37,10 +37,10 @@
                 <v-card-text class="pb-1">
                     <v-form v-model="valid">
                     <v-row v-for="(header, index) in valueCopy.headers" :key="`header-${index}`" style="max-height: 150px;">
-                        <v-col cols="5">
+                        <v-col cols="4">
                             <v-text-field label="Header" :rules="[rules.required]" v-model="header.key" hide-details dense class="pa-0"></v-text-field>
                         </v-col>
-                        <v-col cols="5" >
+                        <v-col cols="7" >
                             <v-text-field label="Value" :rules="[rules.required]" v-model="header.value" hide-details dense class="pa-0"></v-text-field>
                         </v-col>
                         <v-col cols="1" class="mp-0">
