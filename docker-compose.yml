@@ -5,7 +5,7 @@ services:
   backend:
     container_name: processor_backend
     image: processor-backend:latest
-    build: ./backend-node
+    build: ./backend
     environment:
       - REDIS_URL="redis://redis:6379/0"
       - NODE_ENV="PROD"
@@ -18,7 +18,7 @@ services:
 
   frontend:
     container_name: processor_frontend
-    build: ./frontend-baklava
+    build: ./frontend
     image: processor-frontend:latest
     ports:
       - "80:80"
