@@ -15,11 +15,11 @@ const client = redis.createClient(url);
 const getAsync = promisify(client.get).bind(client);
 
 client.on("error", () => {
-    console.log(`Redis-Server: (${url}): ${chalk.redBright("connecting failed")}`)
+    console.log(`${chalk.magenta("Redis-Server")}: (${url}): ${chalk.redBright("connecting failed")}`)
 });
 
 client.on("connect", () => {
-    console.log(`Redis-Server: (${url}): ${chalk.greenBright("connected")}`)
+    console.log(`${chalk.magenta("Redis-Server")}: (${url}): ${chalk.greenBright("connected")}`)
 });
 
 export class RedisClient {

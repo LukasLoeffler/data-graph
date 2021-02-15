@@ -12,30 +12,39 @@ export class FileSaveNode extends BaseNode {
     fileName: string;
     fileType: string;
     filePath: string;
-    constructor(name: string, id: string, fileName: string, fileType: string, filePath: string) {
-        super(name, NODE_TYPE, id, [], [])
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.filePath = filePath;
+    constructor(name: string, id: string, options: any, targetsSuccess: any, targetFailue: any) {
+        super(name, NODE_TYPE, id, targetsSuccess, targetFailue);
+
+        this.fileName = this.getOption("filename", options);
+        this.fileType = this.getOption("filetype", options);
+        this.filePath = this.getOption("path", options);
         NodeManager.addNode(this);
     }
 
     execute(msgIn: Message) {
-        
         let payload = msgIn.payload;
         let datetime = new Date().toISOString().replace(/:/g, "-")
         let file = `${this.filePath}/${this.fileName}-${datetime}.${this.fileType}`
+
+        // FileType JSON: saving json
         if (this.fileType === "json") {
             fs.writeFile(file, JSON.stringify(payload,  null, 4),  (err: any) => {
-                if (err) this.onFailure(err);
-                //this.onSuccess(file)
+                if (err) {
+                    this.onFailure(err);
+                } else {
+                    let msgOut = new Message(this.id, NODE_TYPE, payload);
+                    this.onSuccess(msgOut);
+                }
             });
         } else if (this.fileType === "csv") {
             this.writeToCsv(payload, file);
         } else {
             fs.writeFile(file, payload,  (err: any) => {
-                if (err) this.onFailure(err);
-                //this.onSuccess(file)
+                if (err) {
+                    this.onFailure(err);
+                } else {
+                    this.onSuccess(new Message(this.id, NODE_TYPE, payload));
+                }
             });
         }
     }
@@ -48,7 +57,7 @@ export class FileSaveNode extends BaseNode {
             }
             // write CSV to a file
             fs.writeFileSync(filePath, csv);
-            
+            this.onSuccess(new Message(this.id, NODE_TYPE, csv));
         });
     }
 }

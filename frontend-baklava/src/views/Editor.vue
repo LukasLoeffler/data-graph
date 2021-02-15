@@ -109,8 +109,7 @@ import PostgresSaveNode from "../nodes/database/PostgresSaveNode"
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode"
 
 
-import { debounce } from "../helper/debounce"
-
+import { apiBaseUrl } from '../main';
 
 export default {
   data() {
@@ -125,21 +124,13 @@ export default {
       selectedConfig: null,
       configIndex: null,
       stateCopy: null,
-      snackbar: false
+      snackbar: false,
     }
   },
   components: { },
   created() {
     this.configIndex = this.$route.params.index-1;
     this.init();
-
-    /**
-    The resets the data change attribute initially. 
-    The event listener triggers on startup and sets dataChanged to true, even with no change.
-    */
-    setTimeout(() => {
-      this.$store.commit("setDataChanged", false);
-    }, 500)
 
     this.editor.events.beforeAddNode.addListener(this, ()=> {
       this.$store.commit("saveNodeConfig", 1);
@@ -166,10 +157,10 @@ export default {
     save() {
       let state = this.editor.save();
       
-      let saveStateUrl = "http://localhost:3000/save-node-config/"+this.selectedConfig._id;
+    
+      let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.selectedConfig._id}`;
       this.axios.put(saveStateUrl, state).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold")
-        this.$store.commit("setDataChanged", false);
         this.snackbar = true;
       });
     },
@@ -184,15 +175,14 @@ export default {
         scaling: 1,
         workspace: "NewWorkspace"
       }
-      let saveStateUrl = "http://localhost:3000/save-node-config/";
+      let saveStateUrl = `${apiBaseUrl}/save-node-config/`;
       this.axios.post(saveStateUrl, emptyConfig).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold");
-        this.$store.commit("setDataChanged", false);
         this.initialLoad(true);
       })
     },
     initialLoad(last = false) {
-      let loadStateUrl = "http://localhost:3000/node-configs/all";
+      let loadStateUrl = `${apiBaseUrl}/node-configs/all`;
       this.axios.get(loadStateUrl).then((response) => {
         this.nodeConfig = response.data;
 
@@ -214,7 +204,8 @@ export default {
     loadConfig() {
       this.configIndex = this.$route.params.index-1;
       this.selectedConfig = this.nodeConfig[this.configIndex];
-      let loadStateUrl = "http://localhost:3000/get-node-config/"+this.selectedConfig._id;
+
+      let loadStateUrl = `${apiBaseUrl}/get-node-config/${this.selectedConfig._id}`;
       this.axios.get(loadStateUrl).then((response) => {
         // If loaded object from backend is empty the default graph is loaded
         if (this.isEmpty(response.data)){
@@ -317,7 +308,7 @@ export default {
     },
     "viewPlugin.scaling": {
       handler() {
-        //this.$store.commit("setDataChanged", true);
+        // Currently no implementation
       }
     },
     "viewPlugin.panning": {

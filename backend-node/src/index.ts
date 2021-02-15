@@ -9,6 +9,8 @@ import express from "express";
 import chalk from "chalk";
 var mongodb = require('mongodb');
 
+console.log("Running v1.0.0");
+
 
 const  cors = require('cors')
 

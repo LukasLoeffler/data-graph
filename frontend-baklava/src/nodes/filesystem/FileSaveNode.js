@@ -7,12 +7,14 @@ export default class FileSaveNode extends Node {
 
     constructor() {
         super();
-        this.addInputInterface("Payload", undefined, undefined, {type: "JSON"})
-        this.addOption("Path", "InputOption")
-        this.addOption("Filename", "InputOption", "example")
+        this.addInputInterface("Payload", undefined, undefined, {type: "JSON"});
+        this.addOutputInterface("onSuccess");
+        this.addOutputInterface("onFailure");
+        this.addOption("Path", "InputOption");
+        this.addOption("Filename", "InputOption", "example");
         this.addOption("Filetype", "SelectOption", "json", undefined, {
             items: [ "json", "csv"]
-        })
+        });
         this.addOption("color", undefined, "#7eb342");
         this.addOption("running", undefined, true);
     }
