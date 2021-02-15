@@ -41,12 +41,13 @@
 import JsonViewer from 'vue-json-viewer'
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
-
 // import highlighting library (you can use any library you want just return html string)
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-python';
 import 'prismjs/themes/prism-tomorrow.css'; // import syntax highlighting styles
+
+import {apiBaseUrl} from "../../main.js";
 
 export default {
     data: () => ({
@@ -87,7 +88,7 @@ export default {
             return highlight(code, languages.python); // languages.<insert language> to return html with markup
         },
         fetchData() {
-            let lastValueUrl = `http://localhost:3000/last-value/${this.node.id}`;
+            let lastValueUrl = `${apiBaseUrl}/last-value/${this.node.id}`;
             this.axios.get(lastValueUrl)
             .then((response) => {
                 this.codeRaw = response.data;
@@ -97,7 +98,7 @@ export default {
             })
         },
         test() {
-            let testUrl = `http://localhost:3000/test/${this.node.id}`;
+            let testUrl = `${apiBaseUrl}/test/${this.node.id}`;
             let payload = {
                 mapping: this.valueCopy.code
             }

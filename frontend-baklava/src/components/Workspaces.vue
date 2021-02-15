@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import WorkspaceDialog from "../components/dialogs/WorkspaceDialog"
+import WorkspaceDialog from "../components/dialogs/WorkspaceDialog";
+import {apiBaseUrl} from "../main.js";
 
 export default {
     data() {
@@ -49,7 +50,7 @@ export default {
     methods: {
         loadWorkspaces() {
             this.workspaces = [];
-            let loadStateUrl = "http://localhost:3000/node-configs/all";
+            let loadStateUrl = `${apiBaseUrl}/node-configs/all`;
             this.axios.get(loadStateUrl).then((response) => {
                 this.workspaces = response.data;
             })
@@ -68,7 +69,7 @@ export default {
                 scaling: 1,
                 workspace: "NewWorkspace"
             }
-            let saveStateUrl = "http://localhost:3000/save-node-config/";
+            let saveStateUrl = `${apiBaseUrl}/save-node-config/`;
             this.axios.post(saveStateUrl, emptyConfig).then(() => {
                 this.loadWorkspaces();
             })

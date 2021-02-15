@@ -19,6 +19,7 @@ export class PythonFunctionNode extends BaseNode {
             if (err) throw new Error("EvalCode file could not be created.");
         });
         NodeManager.addNode(this);
+        
     }
 
 
@@ -52,25 +53,31 @@ export class PythonFunctionNode extends BaseNode {
     }
 
     test(testCode: any, res: any) {
-        testCode = testCode.replace(/\n/g, ";");
-        testCode = testCode.replace(/;;/g, ";");
+        let options = {
+            args: [this.id]
+        }
 
-        let options: any = {
-            args: this.lastValue,
-        };
+        fs.writeFile(`temp/${this.id}-eval-code`, testCode,  (err: any) => {
+            if (err) throw new Error("EvalCode file could not be created.");
+        });
 
-        let string = `import sys; import json; payload = json.loads(sys.argv[1:][0]);${testCode}`
-        PythonShell.runString(string, options, (err, output: any) => {
+        fs.writeFile(`temp/${this.id}-payload.json`, JSON.stringify(this.lastValue,  null, 4),  (err: any) => {
+            if (err) this.onFailure(err);
+
             try {
-                if (err) {
-                    res.send(err.traceback);
-                } else {
-                    console.log(typeof output[0]);
-                    let out =  JSON.parse(output[0]);
-                    res.send(out);
-                }   
+                PythonShell.run("script/python-exec-script.py", options, (err, output: any) => {
+                    if (err) {
+                        let errMsg = new Message(this.id, NODE_TYPE, err);
+                        console.log("Inner;", errMsg);
+                        res.send(errMsg);
+                    } else {
+                        let out = output[0];
+                        res.send(JSON.parse(out));
+                    }
+                });
             } catch (error) {
-                res.send(error);
+                let errMsg = new Message(this.id, NODE_TYPE, error);
+                this.onFailure(errMsg);
             }
         });
     }

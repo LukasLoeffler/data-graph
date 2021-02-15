@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import {apiBaseUrl} from "../../main.js";
+
 export default {
     props: ["option", "node", "value"],
     data: () => {
@@ -31,7 +33,7 @@ export default {
     },
     methods: {
         resetCounter() {
-            let url = `http://localhost:3000/reset-exec-count/${this.node.id}`;
+            let url = `${apiBaseUrl}/reset-exec-count/${this.node.id}`;
             this.axios.get(url).then(() => {
                 console.log("%cSuccessfully reset counter for", "color: green; font-weight: bold", this.node.name)
             });

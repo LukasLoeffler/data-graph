@@ -6,7 +6,7 @@
                     <span class="headline">{{node.name}}</span>
                 </v-card-title>
                 <v-card-text>
-                    <PostgresConnectionEditor :connection="value" :node="node"/>
+                    <PostgresConnectionEditor :connection="valueCopy" :node="node"/>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -37,8 +37,9 @@ export default {
     },
     methods: {
         save() {
-            this.$store.commit("setDataChanged", true);
-            this.dialog = false;
+            this.node.setOptionValue("connection", this.valueCopy);
+            this.node.name = this.nodeCopy.name;
+            this.$store.commit("saveNodeConfig", this.node.id);
         },
         abort() {
             this.node = this.nodeCopy;

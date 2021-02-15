@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import {apiBaseUrl} from "../../main.js";
+
 export default {
     props: ["option", "node", "value"],
     data: () => {
@@ -39,11 +41,11 @@ export default {
     methods: {
         onClick() {
             let nodeId = this.node.id;
-            let url = `http://localhost:3000/recieve-event/${nodeId}`
+            let url = `${apiBaseUrl}/recieve-event/${nodeId}`
             this.axios.get(url).then(() => {});
         },
         resetCounter() {
-            let resetUrl = `http://localhost:3000/reset/${this.node.id}`;
+            let resetUrl = `${apiBaseUrl}/reset/${this.node.id}`;
             this.axios.get(resetUrl).then(() => {
                 console.log("%cSuccessfully resetted ", this.node.name);
             });
