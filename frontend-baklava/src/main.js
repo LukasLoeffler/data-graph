@@ -23,7 +23,7 @@ export let wsUrl;
 export let apiBaseUrl;
 
 if (process.env.VUE_APP_MODE === "PROD") {
-  apiBaseUrl = window.location.protocol + "//" +window.location.host+"3000";
+  apiBaseUrl = window.location.protocol + "//" +window.location.host+":3000";
   wsUrl = "ws://"+window.location.host+":3001";
 } else {
   apiBaseUrl = "http://localhost:3000"
