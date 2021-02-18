@@ -1,5 +1,5 @@
 <template>
-    <div :id="data.id" :class="classes" :style="styles">
+    <div :id="data.id" class="node" :class="classes" :style="styles">
 
         <div
             class="__title"
@@ -49,6 +49,8 @@
     import ContextMenu from '../components/dialogs/ContextMenu'
     import CustomInterface from './CustomInterface'
 
+    const ERROR_PULSE_LENGTH = 2000;
+
     export default {
         extends: Components.Node,
         components: {
@@ -64,10 +66,28 @@
                 y: 0,
                 myStyle: {
                     backgroundColor: this.data.getOptionValue("color")
+                },
+                errorOccured: false
+            }
+        },
+        created() {
+            let timeOut = null;
+            this.$options.sockets.onmessage = (message) => {
+                try {
+                    let data = JSON.parse(message.data);
+                    if (data.type === "NodeExecutionError" && data.data.nodeId === this.data.id) {
+
+                        this.errorOccured = true; // Activate animation
+                        clearTimeout( timeOut ); // Reset timeout if called
+                        timeOut = setTimeout(() => {
+                            this.errorOccured = false; // Deactivate animation if method is not called within interval.
+                        }, ERROR_PULSE_LENGTH)
+                    }
+                } catch (error) {
+                    // console.log("Message")
                 }
             }
         },
-        created() {},
         methods: {
             openAltContextMenu(e) {
                 e.preventDefault()
@@ -112,7 +132,25 @@
                 }
                 
                 return rows;
+            },
+            classes() {
+                return {
+                    "pulse": this.errorOccured,
+                };
             }
         },
     }
 </script>
+
+<style scoped>
+
+.pulse {
+    animation: pulsate 2s ease-out infinite;
+}
+
+@-webkit-keyframes pulsate {
+    0%   { box-shadow: 0 0 0 red; }
+    50%  { box-shadow: 0 0 40px red; }
+    100% { box-shadow: 0 0 0 red; }
+}
+</style>

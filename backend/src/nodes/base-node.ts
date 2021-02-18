@@ -4,7 +4,8 @@ import { Message } from "../message";
 import { NodeManager } from "../nodes/node-manager";
 import { WsManager } from "../ws";
 
-const NODE_TYPE = "BASE_NODE"
+const NODE_TYPE = "BASE_NODE";
+
 
 export class BaseNode {
     name: string;
@@ -37,6 +38,7 @@ export class BaseNode {
     }
 
     onFailure(msg: Message) {
+        WsManager.sendMessage(this.buildErrorMessage(this.id));  // Red shadow pulse trigger
         this.targetsFailure.forEach(target => {
             WsManager.sendMessage(this.buildMessage(this.id, target));
             NodeManager.getNodeById(target).execute(msg);
@@ -82,6 +84,17 @@ export class BaseNode {
             data: {
                 from: fromNodeId,
                 to: toNodeId
+            }
+        }
+        return JSON.stringify(message);
+    }
+
+    
+    buildErrorMessage(nodeId: string): string {
+        let message = {
+            type: "NodeExecutionError",
+            data: {
+                nodeId: nodeId
             }
         }
         return JSON.stringify(message);
