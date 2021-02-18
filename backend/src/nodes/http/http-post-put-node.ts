@@ -31,7 +31,6 @@ export class HttpPostPutNode extends BaseNode {
     }
 
     execute(msg: Message): void {
-        console.log(msg);
         axios.post(this.url, msg, {headers: this.headers, timeout: this.timeout})
         .then((response: any) => {
             if (response.data) {
@@ -42,7 +41,6 @@ export class HttpPostPutNode extends BaseNode {
                 this.onFailure(msg);
             }
         }).catch((err: AxiosError) => {
-            console.log("Catched:", err);
             let payload = {
                 code: err.code,
                 message: err.message
