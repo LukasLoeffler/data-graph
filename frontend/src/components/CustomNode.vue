@@ -1,6 +1,5 @@
 <template>
-    <div :id="data.id" class="node" :class="classes" :style="styles">
-
+    <div :id="data.id" class="node" :class="classes" :style="styles" @wheel.prevent="">
         <div
             class="__title"
             :style="myStyle"
