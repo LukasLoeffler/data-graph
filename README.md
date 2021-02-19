@@ -6,6 +6,11 @@ Incorporates concepts of NodeRED and ApacheNiFi and focuses on user-interaction 
  
 ![example](docs/img/S7frblKawa.gif)
 
+![context-menu](docs/img/chrome_E71RDSP2mw.png)
+
+
+
+
 ## Backend
 Data processing backend written in JavaScript/TypeScript executed by NodeJS.
 ## Frontend
