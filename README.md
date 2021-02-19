@@ -1,7 +1,8 @@
 # Master-Code
 
 Application to showcase concepts and ideas for event-based data processing.
-Focusing on user-interaction and user-feedback to improve the understanding of thedata flow.
+Incorporates concepts of NodeRED and ApacheNiFi and focuses on user-interaction and user-feedback to improve the understanding of the data flow.
+
  
 ![example](docs/img/S7frblKawa.gif)
 
