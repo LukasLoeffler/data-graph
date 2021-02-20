@@ -1,5 +1,5 @@
 <template>
-    <svg  @click="console.log('MouseOver')">
+    <svg>
         <path :d="d" :class="classes"/>
     </svg>
 </template>
