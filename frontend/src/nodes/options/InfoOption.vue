@@ -38,8 +38,8 @@ export default {
         this.$options.sockets.onmessage = (message) => {
             try {
                 let data = JSON.parse(message.data);
-                if (data.nodeId === this.node.id && data.type === "InfoNode") {
-                    this.executionCount = data.executionCount;
+                if (data.type === "ExecutionCount" &&  data.nodeId === this.node.id) {
+                    this.executionCount = data.triggerCount;
                     this.totalBytes = data.executionByte;
                     this.lastTime = data.lastTime;
                     this.lastDate = data.lastDate;

@@ -1,6 +1,27 @@
 <template>
-    <div>
-        <v-chip small label color="primary" class="mr-1" v-bind:class="{ count: isActive }" @click="resetCounter">Executed: {{executionCount}}</v-chip>
+    <div class="mt-2">
+
+        <v-tooltip bottom open-delay="300">
+            <template v-slot:activator="{ on, attrs }">
+                <v-chip label small color="primary" class="mr-1" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{triggerCount}}</v-chip>
+            </template>
+            <span>Number of activations</span>
+        </v-tooltip>
+        <v-tooltip bottom open-delay="300">
+            <template v-slot:activator="{ on, attrs }">
+                <v-chip label small color="green" class="mr-1" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{successCount}}</v-chip>
+            </template>
+            <span>Number of successful activations</span>
+        </v-tooltip>
+        <v-tooltip bottom open-delay="300">
+            <template v-slot:activator="{ on, attrs }">
+                <v-chip label small color="red" class="mr-1" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{failureCount}}</v-chip>
+            </template>
+            <span>Number of unsuccessful activations</span>
+        </v-tooltip>
+        
+        
+        
     </div>
 </template>
 
@@ -11,8 +32,9 @@ export default {
     props: ["option", "node", "value"],
     data: () => {
         return {
-            executionCount: 0,
-            isActive: false,
+            triggerCount: 0,
+            successCount: 0,
+            failureCount: 0,
         }
     },
     created() {
@@ -20,11 +42,10 @@ export default {
             try {
                 let data = JSON.parse(message.data);
                 // Filter only messages for own node
-                if (data.nodeId === this.node.id) {
-                    this.executionCount = data.executionCount;
-                    this.isActive = true;
-                    let timeout = 1500; // timeout reset in case of 2 close consecutive calls
-                    setTimeout(() => this.isActive = false, timeout);
+                if (data.type === "ExecutionCount" &&  data.nodeId === this.node.id) {
+                    this.triggerCount = data.triggerCount || 0;
+                    this.successCount = data.successCount || 0;
+                    this.failureCount = data.failureCount || 0;
                 }
             } catch(error) {
                 // No error. Not all websocket message-payloads are in json format.
@@ -43,22 +64,5 @@ export default {
 </script>
 
 <style>
-.count {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 1);
-    animation: pulse 1.5s infinite !important;
-}
 
-@keyframes pulse {
-	0% {
-		box-shadow: 0 0 0 0 rgb(74, 123, 168);
-	}
-
-	70% {
-		box-shadow: 0 0 0 2px rgb(168, 74, 74);
-	}
-
-	100% {
-		box-shadow: 0 0 0 0 rgba(74, 123, 168);
-	}
-}
 </style>

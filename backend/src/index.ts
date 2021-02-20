@@ -1,20 +1,14 @@
-import { NodeRegistry } from "./nodes/node-registry";
 import { Loader } from "./loader";
 import { NodeManager } from "./nodes/node-manager";
 import { connectToServer, getDb } from "./manager/mongo-manager";
 import { WsManager } from "./ws";
 import { ExecutionCounter } from "./exec-info";
-import path from 'path';
 import express from "express";
-import chalk from "chalk";
 var mongodb = require('mongodb');
-
-console.log("Running v1.0.0");
 
 
 const  cors = require('cors')
 
-var jsonPath = path.join(__dirname, '.', 'config', 'node-config.json');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -140,6 +134,11 @@ app.get("/reset/:nodeId", (req, res) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
     console.log("Resetting Node:", node.name);
     let running = node.reset();
+    res.send({"reset": "success"});
+});
+
+app.get("/reset-exec-count/:nodeId", (req, res) => {
+    ExecutionCounter.resetCount(req.params.nodeId);
     res.send({"reset": "success"});
 });
 

@@ -9,7 +9,7 @@
           {{nodeData.name}}
         </v-btn>
         <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode">
-          <v-tooltip bottom :color="running ? 'green' : 'red'">
+          <v-tooltip bottom open-delay="300" :color="running ? 'green' : 'red'">
                 <template v-slot:activator="{ on, attrs }">
                     <div v-on="on">
                       <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">

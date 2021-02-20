@@ -18,7 +18,6 @@ export class MqttSubNode extends MqttBaseNode {
         })
 
         this.client.on("message",  (topic: any, message: string) => {
-            ExecutionCounter.incrCount(this.id);
             let msgOut = new Message(this.id, NODE_TYPE, message.toString())
             this.onSuccess(msgOut);
         });

@@ -32,8 +32,7 @@ function connectToServer( callback: any ) {
 
         requiredCollections.forEach((collection: any) => {
             _db.createCollection(collection, function(err: any, res: any) {
-                if (err) console.log(`Collection ${collection} already exists`);
-                else console.log(`Collection ${collection} successfully created`);
+                if (!err) console.log(`Collection ${collection} successfully created`);
             });
         });
 
