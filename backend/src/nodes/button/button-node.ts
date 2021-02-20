@@ -16,7 +16,7 @@ export class ButtonNode extends BaseNode{
 
 
     execute() {
-        ExecutionCounter.incrCount(this.id);
+        ExecutionCounter.incrCountType(this.id, "trigger");
         let msg = new Message(this.id, NODE_TYPE, new Date());
         this.onSuccess(msg);
     }

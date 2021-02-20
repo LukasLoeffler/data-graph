@@ -35,7 +35,7 @@ export class NodeManager {
      * Resets the active nodes array.
      */
     static reset() {
-        if (nodes.length > 0) console.log(chalk.bgRedBright("RESETTING CONFIG"))
+        if (nodes.length > 0) console.log(chalk.redBright("RESETTING CONFIG"))
         // Calling stop function for each node
         nodes.forEach((node: BaseNode) => {
             node.stop();

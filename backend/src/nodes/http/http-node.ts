@@ -2,6 +2,7 @@ import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
 import { Message } from "../../message";
 import { AxiosResponse, AxiosError } from 'axios'
+import { ExecutionCounter } from "../../exec-info";
 
 const axios = require('axios');
 const headerUtils = require('./helper')
@@ -29,6 +30,7 @@ export class HttpNode extends BaseNode {
     }
 
     execute() {
+        ExecutionCounter.incrCountType(this.id, "trigger");
         axios.get(this.url, {headers: this.headers, timeout: 2500})
         .then((response: any) => {
             if (response.data) {

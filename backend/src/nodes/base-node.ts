@@ -3,6 +3,7 @@ import chalk from "chalk";
 import { Message } from "../message";
 import { NodeManager } from "../nodes/node-manager";
 import { WsManager } from "../ws";
+import { ExecutionCounter } from "../exec-info"
 
 const NODE_TYPE = "BASE_NODE";
 
@@ -29,7 +30,12 @@ export class BaseNode {
         return `${this.type} (id: ${this.id}, name: ${this.name})`;
     }
 
+    execute(msg: Message) {
+        console.log("Execute Base Node");
+    }
+
     onSuccess(payload: any) {
+        ExecutionCounter.incrCountType(this.id, "success");
         this.targetsSuccess.forEach(target => {
             let message = this.buildMessage(this.id, target);
             WsManager.sendMessage(message);
@@ -38,6 +44,7 @@ export class BaseNode {
     }
 
     onFailure(msg: Message) {
+        ExecutionCounter.incrCountType(this.id, "failure");
         WsManager.sendMessage(this.buildErrorMessage(this.id));  // Red shadow pulse trigger
         this.targetsFailure.forEach(target => {
             WsManager.sendMessage(this.buildMessage(this.id, target));
