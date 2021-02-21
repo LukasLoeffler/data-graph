@@ -10,13 +10,16 @@
                 <v-card-title>
                     <span class="headline">Node settings: {{nodeCopy.name}}</span>
                     <v-spacer></v-spacer>
+                    <v-btn @click="mirrorObject" color="orange" class="mr-1" outlined :disabled="Object.keys(codeRaw).length === 0">
+                        <v-icon>mdi-transfer-right</v-icon>
+                    </v-btn>
                     <v-btn color="grey" class="mr-1" outlined>
                         <v-icon>mdi-cog-outline</v-icon>
                     </v-btn>
                     <v-btn color="blue" class="mr-1" outlined>
                         <v-icon>mdi-information-outline</v-icon>
                     </v-btn>
-                    <v-btn @click="addMapping" color="green" outlined>
+                    <v-btn @click="addMapping" color="green" class="mr-1" outlined>
                         <v-icon>mdi-plus-circle-outline</v-icon>
                     </v-btn>
                 </v-card-title>
@@ -58,7 +61,7 @@
                         <v-col cols="6">
                             <h3 class="ml-5">Latest input</h3>
                             <json-viewer v-if="Object.keys(codeRaw).length !== 0" :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
-                            <p v-else>No data present yet</p>
+                            <p v-else>No data present yet <br> Activate node at least once.</p>
                         </v-col>
                         <v-col cols="6">
                             <h3>Test output</h3>
@@ -140,6 +143,33 @@ export default {
             this.axios.post(testUrl, payload).then((response) => {
                 this.codeFormatted = response.data;
             })
+        },
+        mirrorObject() {
+            this.valueCopy.mappings = [];
+            let keys = this.getKeys(this.codeRaw);
+            keys.forEach(element => {
+                this.valueCopy.mappings.push({
+                    source: element,
+                    target: element
+                })
+            });
+            this.$forceUpdate();
+        },
+        getKeys(object) {
+            function iter(o, p) {
+                if (Array.isArray(o)) { return; }
+                if (o && typeof o === 'object') {
+                    var keys = Object.keys(o);
+                    if (keys.length) {
+                        keys.forEach(function (k) { iter(o[k], p.concat(k)); });
+                    }
+                    return;
+                }
+                result.push(p.join('.'));
+            }
+            var result = [];
+            iter(object, []);
+            return result;
         }
     },
     watch: {
