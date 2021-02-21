@@ -8,12 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "baklavajs": "^1.7.5",
     "core-js": "^3.6.5",
     "prismjs": "^1.23.0",
     "vue": "^2.6.11",
-    "vue-axios": "^3.1.3",
+    "vue-axios": "^3.2.4",
     "vue-class-component": "^7.2.6",
     "vue-json-viewer": "^2.2.16",
     "vue-native-websocket": "^2.0.14",
