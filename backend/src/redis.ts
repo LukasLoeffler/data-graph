@@ -28,6 +28,10 @@ export class RedisClient {
         client.set(key, value);
     }
 
+    static incrby(key: string, value: any) {
+        client.incrby(key, value);
+    }
+
     static async get(key: string) {
         return getAsync(key);
     }

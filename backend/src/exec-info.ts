@@ -37,11 +37,7 @@ export class ExecutionCounter {
         RedisClient.set(execInfoDate, format(new Date, "HH:mm:ss:SS"));
         RedisClient.set(execInfoTime, format(new Date, "HH:mm:ss:SS"));
 
-        let data = await RedisClient.get(execInfoString)
-
-        let incrData = 1; // Initial initalization at 1 as fallback
-        if (data) incrData = parseInt(data)+incrWidth; // Override initial value if value is present in database
-        RedisClient.set(execInfoString, incrData); // Setting value to database
+        RedisClient.incrby(execInfoString, incrWidth); // Setting value to database
         this.sendExecutionCountWithoutInfo(nodeId);
     }
 
