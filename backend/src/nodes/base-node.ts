@@ -30,9 +30,7 @@ export class BaseNode {
         return `${this.type} (id: ${this.id}, name: ${this.name})`;
     }
 
-    execute(msg: Message) {
-        console.log("Execute Base Node");
-    }
+    execute(msg: Message) {}
 
     onSuccess(payload: any) {
         ExecutionCounter.incrCountType(this.id, "success");

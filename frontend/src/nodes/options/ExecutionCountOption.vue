@@ -1,6 +1,5 @@
 <template>
-    <div class="mt-2">
-
+    <div class="mt-0">
         <v-tooltip bottom open-delay="300">
             <template v-slot:activator="{ on, attrs }">
                 <v-chip label small color="primary" class="mr-1" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{triggerCount}}</v-chip>
@@ -19,9 +18,6 @@
             </template>
             <span>Number of unsuccessful activations</span>
         </v-tooltip>
-        
-        
-        
     </div>
 </template>
 
