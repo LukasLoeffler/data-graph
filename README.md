@@ -22,3 +22,26 @@ Node-Editor based on [BaklavaJS](https://github.com/newcat/baklavajs).
 
 The application is fully dockerized and ca be started with ```docker-compose up```.
 The frontend and the backend are built. Redis and MongoDB are pulled from DockerHub.
+
+
+# Development
+
+NodeJS > v12 required and npm required.
+
+Installation of frontend:
+```
+cd frontend
+npm install
+```
+
+Installation of backend:
+```
+cd backend
+npm install
+```
+
+Running local instances of redis and mongo-db on default ports:
+* Redis: 6379
+* Mongo: 27017
+
+For startup of both backend and frontend npm scripts are provided in respective packacke.json
