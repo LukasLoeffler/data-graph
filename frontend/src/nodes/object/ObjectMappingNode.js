@@ -10,7 +10,7 @@ export default class ObjectMappingNode extends Node {
         this.addInputInterface("payload")
         this.addOutputInterface("onSuccess")
 
-        this.addOption("mapping", "MapingNodeDialog", {mappings: [{source: "source", target: "target"}]});
+        this.addOption("mapping", "MappingNodeDialog", {mappings: [{source: "source", target: "target"}]});
         this.addOption("color", undefined, "#a32bb3");
         this.addOption("running", undefined, true);
     }
