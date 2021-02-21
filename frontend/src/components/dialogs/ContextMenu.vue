@@ -35,6 +35,7 @@
             <v-list-item-content class="text-left align-self-start" style="max-width: 200px;">
               <v-list-item-title >Name: {{nodeData.name}}</v-list-item-title>
               <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
+              <v-list-item-subtitle>Id: {{nodeData.id}}</v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action v-if="isStoppable">
               <v-tooltip bottom :color="running ? 'green' : 'red'">

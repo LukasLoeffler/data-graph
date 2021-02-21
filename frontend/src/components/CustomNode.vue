@@ -1,13 +1,12 @@
 <template>
-    <div :id="data.id" class="node" :class="classes" :style="styles" @wheel.prevent="">
+    <div :id="data.id" class="node" :class="classes" :style="styles" @wheel.stop="" @contextmenu.prevent.capture="">
         <div
             class="__title"
             :style="myStyle"
             @mousedown.self.prevent.stop="startDrag"
-            @contextmenu.self.prevent="openAltContextMenu"
+            @contextmenu.prevent.capture=""
         >
-        <ContextMenu :menu="showMenu" :nodeData="data" @optionChange="optionChange"/>  
-
+            <ContextMenu :menu="showMenu" :nodeData="data" @optionChange="optionChange"/>  
         </div>
 
         <div class="__content">
@@ -97,11 +96,19 @@
                     this.showMenu = true
                 })
             },
-            startDrag() {
-                this.dragging = true;
-                document.addEventListener("mousemove", this.handleMove);
-                document.addEventListener("mouseup", this.mouseUp);
-                this.select();
+            startDrag(event) {
+                let isRightMB;
+                if ("which" in event)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+                    isRightMB = event.which == 3; 
+                else if ("button" in event)  // IE, Opera 
+                    isRightMB = event.button == 2;
+
+                if (!isRightMB) {
+                    this.dragging = true;
+                    document.addEventListener("mousemove", this.handleMove);
+                    document.addEventListener("mouseup", this.mouseUp);
+                    this.select();
+                }
             },
             optionChange(option, data) {
                 //console.log(`Option ${option} changed to ${data}`);
