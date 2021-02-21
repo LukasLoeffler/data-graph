@@ -111,13 +111,12 @@
               Node Info
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+              <p v-html="description" style="text-align: left !important"></p>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
         <v-card-actions>
           <v-spacer></v-spacer>
-
           <v-btn text @click="menu = false">
             Cancel
           </v-btn>
@@ -132,6 +131,7 @@
 
 <script>
 import {apiBaseUrl} from "../../main.js";
+import {getDescription} from "./nodeDescription.js";
 
   export default {
     data: () => ({
@@ -141,6 +141,7 @@ import {apiBaseUrl} from "../../main.js";
         hints: true,
         color: "white",
         running: true,
+        description: "",
         nodeTypes: [
           {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false},
           {type: "info", icon: "mdi-information-outline", resettable: true, stoppable: false, configurable: true},
@@ -173,6 +174,7 @@ import {apiBaseUrl} from "../../main.js";
     created() {
       this.color = this.nodeData.getOptionValue("color");
       this.running = this.nodeData.getOptionValue("running");
+      this.description = getDescription(this.nodeData.type);
     },
     methods: {
       execute(action) {
@@ -209,8 +211,18 @@ import {apiBaseUrl} from "../../main.js";
         setTimeout(() =>{this.$store.commit("setOptionNode", null)}, 1); // Hacky way to implement an event bus
       },
       createTemplate() {
-        let template = {...this.nodeData.save()};
+
+        let data = this.nodeData.save()
+
+        let template = {...data};
+
+        
         delete template.id;
+        delete template.state;
+
+        template.interfaces;
+
+        console.log(template);
         
         template.position.x = 0;
         template.position.y = 0;
