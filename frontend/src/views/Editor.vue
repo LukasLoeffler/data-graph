@@ -160,7 +160,7 @@ export default {
     
       let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.selectedConfig._id}`;
       this.axios.put(saveStateUrl, state).then(() => {
-        console.log("%c Config successfully saved", "color: green; font-weight: bold")
+        //console.log("%c Config successfully saved", "color: green; font-weight: bold")
         this.snackbar = true;
       });
     },
@@ -187,7 +187,7 @@ export default {
         this.nodeConfig = response.data;
 
         if (this.nodeConfig.length < this.$route.params.index) {
-          this.$router.push('/settings')
+          this.$router.push('/settings');
         }
         
         this.loadConfig();
@@ -205,26 +205,18 @@ export default {
       this.configIndex = this.$route.params.index-1;
       this.selectedConfig = this.nodeConfig[this.configIndex];
 
-      let loadStateUrl = `${apiBaseUrl}/get-node-config/${this.selectedConfig._id}`;
-      this.axios.get(loadStateUrl).then((response) => {
-        // If loaded object from backend is empty the default graph is loaded
-        if (this.isEmpty(response.data)){
-          let emptyConfig = {
-            nodes: [],
-            connections: [],
-            panning: {
-              x: 0,
-              y: 0
-            },
-            scaling: 1
+      if (this.selectedConfig) {
+        let loadStateUrl = `${apiBaseUrl}/get-node-config/${this.selectedConfig._id}`;
+        this.axios.get(loadStateUrl).then((response) => {
+          // If loaded object from backend is empty the default graph is loaded
+          if (this.isEmpty(response.data)){
+            //this.$router.push('/settings');
+          } else {
+            this.editor.load(response.data);
+            this.stateCopy = this.editor.save();
           }
-          this.editor.load(emptyConfig);
-          this.stateCopy = this.editor.save();
-        } else {
-          this.editor.load(response.data);
-          this.stateCopy = this.editor.save();
-        }
-      })
+        })
+      }
     },
     changeWorkspace(index) {
       index++;
@@ -257,7 +249,7 @@ export default {
 
     this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
     this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
-    this.viewPlugin.registerOption("MapingNodeDialog", MappingNodeDialog);
+    this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
     this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
     this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
     this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
