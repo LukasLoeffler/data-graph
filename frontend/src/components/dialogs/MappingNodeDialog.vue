@@ -57,7 +57,8 @@
                     <v-row justify="center" >
                         <v-col cols="6">
                             <h3 class="ml-5">Latest input</h3>
-                            <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
+                            <json-viewer v-if="Object.keys(codeRaw).length !== 0" :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
+                            <p v-else>No data present yet</p>
                         </v-col>
                         <v-col cols="6">
                             <h3>Test output</h3>

@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <h1>This is an about page</h1>
-
-
-    <p>Mode: {{mode}}</p>
-    <p>Api: {{apiBaseUrl}}</p>
-    <p>Api: {{wsUrl}}</p>
-  </div>
+  <v-card dark style="width: 300px" class="ma-2">
+    <v-card-title>
+      Application 
+    </v-card-title>
+    <v-card-text>
+      Mode: {{mode}}
+      Backend Api Url: {{apiBaseUrl}}
+      Websocket Api Url: {{wsUrl}}
+    </v-card-text>
+  </v-card>
 </template>
 
 
@@ -19,7 +21,7 @@ export default {
     return {
       mode: process.env.VUE_APP_MODE,
       wsUrl: wsUrl,
-      apiBaseUrl: apiBaseUrl
+      apiBaseUrl: apiBaseUrl,
     }
   })
 }

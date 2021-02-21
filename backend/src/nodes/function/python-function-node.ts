@@ -41,7 +41,13 @@ export class PythonFunctionNode extends BaseNode {
                         this.onFailure(errMsg);
                     } else {
                         let out = output[0];
-                        let msg = new Message(this.id, NODE_TYPE, JSON.parse(out));
+                        let msg;
+                        console.log(output);
+                        try {
+                            msg = new Message(this.id, NODE_TYPE, JSON.parse(out));
+                        } catch (error) {
+                            msg = new Message(this.id, NODE_TYPE, out);
+                        }
                         this.onSuccess(msg);
                     }
                 });
