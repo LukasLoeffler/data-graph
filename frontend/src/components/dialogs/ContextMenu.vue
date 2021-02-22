@@ -112,7 +112,7 @@
               Node Info
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <p v-html="description" style="text-align: left !important"></p>
+              <p v-html="description" style="text-align: left !important; font-size: 13px"></p>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>

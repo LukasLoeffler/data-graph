@@ -30,8 +30,42 @@ let descriptions = [
             More information is provided here: <a href="https://www.npmjs.com/package/node-cron" target="_blank">node-cron</a>.
             Check out the interval node for a more convient way to trigger downstream nodes periodically.
         `
-    }
+    },
+    {
+        type: "interval",
+        text: `
+            Triggers the a <a href="/wiki/downstream">downstream</a> node periodically. The perid can be selected right on the node itself in the editor.
+        `
+    },
+    {
+        type: "httpGet",
+        text: `
+            Executes an http-get request. The name and url of the node can be set in the settings menu.
+            This node does not make use of input data. Input messages only triggers request.
+        `
+    },
+    {
+        type: "httpPostPut",
+        text: `
+            Executes an http-post / gttp-get request. The name, url and http method of the node can be set in the settings menu.
+            Takes the input data as request body. <br>
+            <ul>
+                <li>Url</li>
+                <li>Name</li>
+                <li>Timeout</li>
+                <li>Expected output</li>
+            </ul> 
+        `
+    },
+    {
+        type: "fileSave",
+        text: `
+            Saves the input data to the filesystem of the server. <br>
+            <b>Note:</b> Local file saves over the browser are not supported.
+        `
+    },
 ]
+
 
 
 export function getDescription(nodeType) {
