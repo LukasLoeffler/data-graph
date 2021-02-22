@@ -5,7 +5,7 @@
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
         <div class="flex-grow-1"></div>
-        <!--<v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-content-save-outline</v-icon>-->
+        <ConnectionIndicator :status="websocketConnected"/>
       </v-toolbar>
     </v-card>
     <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
@@ -60,6 +60,10 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+    <v-snackbar v-model="notifySnack" :timeout="notifyTimeout" :color="notifyColor" right transition="slide-x-reverse-transition">
+      {{notifyMessage}}
+    </v-snackbar>
   </div>
 </template>
 
@@ -110,6 +114,7 @@ import PythonFunctionNode from "../nodes/function/PythonFunctionNode"
 
 
 import { apiBaseUrl } from '../main';
+import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 
 export default {
   data() {
@@ -125,9 +130,14 @@ export default {
       configIndex: null,
       stateCopy: null,
       snackbar: false,
+      websocketConnected: false,
+      notifySnack: false,
+      notifyMessage: "",
+      notifyColor: "white",
+      notifyTimeout: 1000
     }
   },
-  components: { },
+  components: {ConnectionIndicator },
   created() {
     this.configIndex = this.$route.params.index-1;
     this.init();
@@ -148,9 +158,26 @@ export default {
       this.$store.commit("saveNodeConfig", 1);
     });
 
+    this.$options.sockets.onopen = () => {
+      this.websocketConnected = true;
+      this.sendNotification("Server connected", "green", 1000);
+    }
+    this.$options.sockets.onmessage = () => this.websocketConnected = true;
+    this.$options.sockets.onclose = () => {
+      this.websocketConnected = false;
+      this.sendNotification("Server not connected. Trying to reestablish connection", "red", 2000);
+    }
+
+
     this.initialLoad();
   },
   methods: {
+    sendNotification(message, color, timeout) {
+      this.notifyMessage = message;
+      this.notifyColor = color;
+      this.notifyTimeout = timeout;
+      this.notifySnack = true;
+    },
     logEvent() {
       console.log("Changed");
     },

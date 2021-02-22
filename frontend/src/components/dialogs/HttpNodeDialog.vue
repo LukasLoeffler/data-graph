@@ -12,17 +12,19 @@
                 </v-card-title>
                 <v-card-text class="pb-1">
                     <v-container>
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field label="Url" required v-model="nodeCopy.name"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-select :items="['GET', 'POST', 'PUT', 'DELETE']" label="HTTP Method" required v-model="valueCopy.requestType"></v-select>
-                            </v-col>
-                            <v-col cols="12">
-                                <v-text-field label="Url" required v-model="valueCopy.url"></v-text-field>
-                            </v-col>
-                        </v-row>
+                        <v-form v-model="valid">
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-text-field label="Url" required v-model="nodeCopy.name"></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-select :items="['GET', 'POST', 'PUT', 'DELETE']" label="HTTP Method" required v-model="valueCopy.requestType"></v-select>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-text-field label="Url" required v-model="valueCopy.url" :rules="[rules.required, rules.protocol]"></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-form>
                     </v-container>
                 </v-card-text>
                 <v-divider></v-divider>
@@ -72,6 +74,7 @@ export default {
         rules: {
             required: value => !!value || 'Required.',
             positive: value => value > 0 || 'Positive number required.',
+            protocol: value => (value.includes("http://") || value.includes("https://")) || 'Protocol is false or missing entirely.',
             timeout: value => value > 0 && value < 300000|| 'Number between 0 and 300.000 required.'
         },
         valid: false
@@ -87,10 +90,10 @@ export default {
                 key: "",
                 value: ""
             }
-            this.value.headers.push(newHeader);
+            this.valueCopy.headers.push(newHeader);
         },
         resetHeader() {
-            this.value.headers = [];
+            this.valueCopy.headers = [];
         },
         save() {
             this.node.setOptionValue("settings", this.valueCopy);

@@ -6,76 +6,51 @@ import { format } from 'date-fns'
 class NodeExecutionCount {
     type: string;
     nodeId: string;
-    executionCount: number
+    triggerCount: number;
+    successCount: number;
+    failureCount: number;
+    bytesCount  : number;
+    time: string;
+    date: string
 
-    constructor(type: string, nodeId: string, executionCount: number) {
+    constructor(type: string, nodeId: string, triggerCount: number, successCount: number, failureCount: number, bytesCount: number, time: string, date: string) {
         this.type = type;
         this.nodeId = nodeId;
-        this.executionCount = executionCount;
+        this.triggerCount = triggerCount;
+        this.successCount = successCount;
+        this.failureCount = failureCount;
+        this.bytesCount   = bytesCount;
+        this.time = time;
+        this.date = date;
     }
 }
 
 
 export class ExecutionCounter {
 
-    /**
-     * Increments the execution counter for the given node by one and writes these changes to the redis-database.
-     * If no data is existing for the given node 1 is set as start value.
-     * After the value is incremented and set the data is send via websockets.
-     * @param nodeId ID of the node created.
-     */
-    static incrCount(nodeId: string): void {
-        RedisClient.get(nodeId).then((data: any) => {
-            let incrData = 1; // Initial initalization at 1 as fallback
-            if (data) incrData = parseInt(data)+1; // Override initial value if value is present in database
-            RedisClient.set(nodeId, incrData); // Setting value to database 
-            this.sendExecutionCount(nodeId, incrData); // Send data to frontend
-        })
+
+    static async incrCountType(nodeId: string, type: string, incrWidth: number = 1) {
+        let execInfoString = `exex_info_${type}_${nodeId}`;
+
+        let execInfoDate= `exex_info_time_${nodeId}`;
+        let execInfoTime = `exex_info_date_${nodeId}`;
+        RedisClient.set(execInfoDate, format(new Date, "HH:mm:ss:SS"));
+        RedisClient.set(execInfoTime, format(new Date, "HH:mm:ss:SS"));
+
+        RedisClient.incrby(execInfoString, incrWidth); // Setting value to database
+        this.sendExecutionCountWithoutInfo(nodeId);
     }
-
-    static async incrInfo(nodeId: string, bytes: number) {
-
-        let incrData = 1;
-        let dbIncrData = await RedisClient.get(nodeId);
-        if (dbIncrData) incrData = parseInt(dbIncrData)+1;
-
-        let defaultBytes = 0;
-        let dbBytes = await RedisClient.get("bytes"+nodeId);
-        if (dbBytes) defaultBytes = parseInt(dbBytes)+bytes;
-
-
-
-        RedisClient.set(nodeId, incrData);
-        RedisClient.set("bytes"+nodeId, defaultBytes);
-        this.sendInfoNode(nodeId, incrData, defaultBytes);
-    }
-
 
     /**
      * Fetches list of all active nodes and get the respective node count. Emitting these node counts to frontent
      * for proper initialization.
      */
-    static initialEmitAllCounts(): void {
+    static async initialEmitAllCounts() {
         let activeNodes = NodeManager.getActiveNodes();
-        activeNodes.forEach(node => {
-            RedisClient.get(node.id).then((data: any) => {
-                let count = 0; // Initial initalization at 0 as fallback
-                if (data) count = parseInt(data); // Override initial value if value is present in database
-                this.sendInitialExecutionCount(node.id, count); // Send data to frontend
-            })
-        });
-    }
-
-    static async initialExecData() {
-        let activeNodes = await NodeManager.getActiveNodes();
-
         for (const node of activeNodes) {
-            let dbIncrData = await RedisClient.get(node.id);
-            let dbBytes = await RedisClient.get("bytes"+node.id);
-
             // Frontend is not fast enough to initialize in time.
             setTimeout(() => {
-                this.sendInfoNode(node.id, dbIncrData, dbBytes);
+                this.sendExecutionCountWithoutInfo(node.id);
             }, 1000);
         };
     }
@@ -86,11 +61,35 @@ export class ExecutionCounter {
      * @param nodeId Id of the node
      */
     static resetCount(nodeId: string): void {
-        RedisClient.set(nodeId, 0);
-        RedisClient.set("bytes"+nodeId, 0);
-        this.sendExecutionCount(nodeId, 0);
-        this.sendInfoNode(nodeId, 0, 0, true);
+
+        let execInfoTrigger = `exex_info_trigger_${nodeId}`;
+        let execInfoSuccess = `exex_info_success_${nodeId}`;
+        let execInfoFailure = `exex_info_failure_${nodeId}`;
+        let byteInfoTrigger = `exex_info_bytes_${nodeId}`;
+        let execInfoDate    = `exex_info_time_${nodeId}`;
+        let execInfoTime    = `exex_info_date_${nodeId}`;
+
+        RedisClient.set(execInfoTrigger, 0);
+        RedisClient.set(execInfoSuccess, 0);
+        RedisClient.set(execInfoFailure, 0);
+        RedisClient.set(byteInfoTrigger, 0);
+        RedisClient.set(execInfoDate, "-");
+        RedisClient.set(execInfoTime, "-");
+
+        let payload: NodeExecutionCount = {
+            type: "ExecutionCount",
+            nodeId: nodeId,
+            triggerCount: 0,
+            successCount: 0,
+            failureCount: 0,
+            bytesCount  : 0,
+            time: "-",
+            date: "-"
+        }
+        WsManager.sendMessage(JSON.stringify(payload));
     }
+
+
 
 
     /**
@@ -98,43 +97,30 @@ export class ExecutionCounter {
      * @param nodeId Id of the node
      * @param count Count to emit
      */
-    static sendExecutionCount(nodeId: string, count: number): void {
+    static async sendExecutionCountWithoutInfo(nodeId: string) {
+        let execInfoTrigger = `exex_info_trigger_${nodeId}`;
+        let execInfoSuccess = `exex_info_success_${nodeId}`;
+        let execInfoFailure = `exex_info_failure_${nodeId}`;
+        let byteInfoTrigger = `exex_info_bytes_${nodeId}`;
+        let execInfoDate    = `exex_info_time_${nodeId}`;
+        let execInfoTime    = `exex_info_date_${nodeId}`;
+
+        let triggerCount = await RedisClient.get(execInfoTrigger);
+        let successCount = await RedisClient.get(execInfoSuccess);
+        let failureCount = await RedisClient.get(execInfoFailure);
+        let bytesCount   = await RedisClient.get(byteInfoTrigger);
+        let date         = await RedisClient.get(execInfoDate);
+        let time         = await RedisClient.get(execInfoTime);
+
         let payload: NodeExecutionCount = {
             type: "ExecutionCount",
             nodeId: nodeId,
-            executionCount: count
-        }
-        WsManager.sendMessage(JSON.stringify(payload));
-    }
-
-
-    static sendInfoNode(nodeId: string, count: number, bytes: number, reset=false) {
-
-        let payload = {
-            type: "InfoNode",
-            nodeId: nodeId,
-            executionCount: count,
-            executionByte: bytes,
-            lastTime: reset ? "-": format(new Date, "HH:mm:ss:SS"),
-            lastDate: reset ? "-": format(new Date, "dd.MM.yyyy")
-        }
-        WsManager.sendMessage(JSON.stringify(payload));
-    }
-
-    static getNodeExecutionInfo(nodeId: string) {
-        return RedisClient.get(nodeId);
-    }
-
-        /**
-     * Emits the count of a node via websockets to the frontend.
-     * @param nodeId Id of the node
-     * @param count Count to emit
-     */
-    static sendInitialExecutionCount(nodeId: string, count: number): void {
-        let payload: NodeExecutionCount = {
-            type: "InitialExecutionCount",
-            nodeId: nodeId,
-            executionCount: count
+            triggerCount: triggerCount,
+            successCount: successCount,
+            failureCount: failureCount,
+            bytesCount  : bytesCount,
+            time: time,
+            date: date
         }
         WsManager.sendMessage(JSON.stringify(payload));
     }

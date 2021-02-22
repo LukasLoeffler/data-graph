@@ -30,19 +30,19 @@ export default {
         return {
             executionCount: 0,
             totalBytes: 0,
-            lastTime: null,
-            lastDate: null,
+            lastTime: "-",
+            lastDate: "-",
         }
     },
     created() {
         this.$options.sockets.onmessage = (message) => {
             try {
                 let data = JSON.parse(message.data);
-                if (data.nodeId === this.node.id && data.type === "InfoNode") {
-                    this.executionCount = data.executionCount;
-                    this.totalBytes = data.executionByte;
-                    this.lastTime = data.lastTime;
-                    this.lastDate = data.lastDate;
+                if (data.type === "ExecutionCount" &&  data.nodeId === this.node.id) {
+                    this.executionCount = data.triggerCount;
+                    this.totalBytes = data.bytesCount;
+                    this.lastTime = data.time;
+                    this.lastDate = data.date;
                 }
             } catch (error) {
                 // console.log("Message")
