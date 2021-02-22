@@ -29,11 +29,13 @@ Vue.use(Vuetify)
 Vue.use(BaklavaVuePlugin);
 
 
-Vue.use(VueNativeSock, wsUrl, {
+const socket = Vue.use(VueNativeSock, wsUrl, {
   reconnection: true,
   reconnectionAttempts: 10,
   reconnectionDelay: 1500,
 })
+
+
 
 export const store = new Vuex.Store({
   state: {
