@@ -5,7 +5,7 @@
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
         <div class="flex-grow-1"></div>
-        <!--<v-icon @click="save" :disabled="!$store.getters.dataChanged" color="orange">mdi-content-save-outline</v-icon>-->
+        <ConnectionIndicator :connected="websocketConnected"/>
       </v-toolbar>
     </v-card>
     <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
@@ -110,6 +110,7 @@ import PythonFunctionNode from "../nodes/function/PythonFunctionNode"
 
 
 import { apiBaseUrl } from '../main';
+import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 
 export default {
   data() {
@@ -125,9 +126,10 @@ export default {
       configIndex: null,
       stateCopy: null,
       snackbar: false,
+      websocketConnected: false
     }
   },
-  components: { },
+  components: {ConnectionIndicator },
   created() {
     this.configIndex = this.$route.params.index-1;
     this.init();
@@ -147,6 +149,11 @@ export default {
     this.editor.events.beforeRemoveConnection.addListener(this, ()=> {
       this.$store.commit("saveNodeConfig", 1);
     });
+
+    this.$options.sockets.onopen = () => this.websocketConnected = true;
+    this.$options.sockets.onmessage = () => this.websocketConnected = true;
+    this.$options.sockets.onclose = () => this.websocketConnected = false;
+
 
     this.initialLoad();
   },
