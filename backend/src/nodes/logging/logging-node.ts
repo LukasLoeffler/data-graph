@@ -1,4 +1,5 @@
 import { Message } from "../../message";
+import { WsManager } from "../../ws";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 const chalk = require('chalk');
@@ -19,10 +20,23 @@ export class LoggingNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        if (this.level === "INFO") this.level = chalk.bold(chalk.blue(this.level));
-        if (this.level === "WARN") this.level = chalk.bold(chalk.yellow(this.level));
-        if (this.level === "DANGER") this.level = chalk.bold(chalk.red(this.level));
-        if (this.level === "NO_LEVEL_SET") this.level = chalk.bold(chalk.bgRed(this.level));
-        console.log(`${new Date().toISOString()} - ${this.level} - ${this.name} - ${JSON.stringify(msg.payload)}`)
+        this.sendData(msg);
+        let levelOut = "";
+        if (this.level === "INFO") levelOut = chalk.bold(chalk.blue(this.level));
+        if (this.level === "WARN") levelOut = chalk.bold(chalk.yellow(this.level));
+        if (this.level === "DANGER") levelOut = chalk.bold(chalk.red(this.level));
+        if (this.level === "NO_LEVEL_SET") levelOut = chalk.bold(chalk.bgRed(this.level));
+        console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${JSON.stringify(msg.payload)}`)
+    }
+
+    sendData(msg: Message) {
+        let payload = {
+            type: "EventLog",
+            originNodeId: msg.sourceNodeId,
+            targetNodeId: this.id,
+            time: new Date(),
+            level: this.level
+        }
+        WsManager.sendMessage(JSON.stringify(payload));
     }
 }

@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import WorkspaceDialog from "../components/dialogs/WorkspaceDialog";
-import {apiBaseUrl} from "../main.js";
+import WorkspaceDialog from "./WorkspaceDialog";
+import {apiBaseUrl} from "@/main.js";
 
 export default {
     data() {
@@ -48,7 +48,7 @@ export default {
         }
     },
     components: {
-        WorkspaceDialog
+        WorkspaceDialog,
     },
     methods: {
         loadWorkspaces() {

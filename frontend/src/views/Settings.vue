@@ -12,21 +12,25 @@
     <v-tabs-items v-model="tab" style="position: absolute; top: 50px; width: 100%">
       <v-tab-item v-for="item in items" :key="item"></v-tab-item>
       <Workspaces v-if="tab === 0"/>
+      <EventLog v-if="tab === 1"/>
     </v-tabs-items>
   </v-card>
 </template>
 
 <script>
-import Workspaces from '../components/Workspaces.vue'
+import EventLog from '../components/settings/EventLog.vue'
+import Workspaces from '../components/settings/Workspaces.vue'
+
 export default {
   components: {
-    Workspaces
+    Workspaces,
+    EventLog
   },
   data () {
     return {
       tab: null,
       items: [
-        'Workspaces', 'Info',
+        'Workspaces', 'EventLog',
       ],
     }
   },
