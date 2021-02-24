@@ -48,7 +48,7 @@
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
-          <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
+          <baklava-editor id="editor" :plugin="viewPlugin" @contextmenu.prevent.capture="console.log('captured')"></baklava-editor>
         </v-col>
       </v-row>
     </v-flex>
@@ -72,18 +72,18 @@ import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
-
+import { apiBaseUrl } from '../main';
 
 import ButtonNode from "../nodes/ButtonNode";
-import IntervalNode from "../nodes/time/IntervalNode"
+import IntervalNode from "../nodes/time/IntervalNode";
 import CronNode from "../nodes/time/CronNode";
 
-import HttpGet from "../nodes/http/HttpGetNode"
-import ArrayMappingNode from "../nodes/object/ArrayMappingNode"
-import ObjectMappingNode from "../nodes/object/ObjectMappingNode"
-import HttpPostPut from "../nodes/http/HttpPostPutNode"
-import Filter from "../nodes/object/FilterNode"
-import Path from "../nodes/object/PathNode.ts"
+import HttpGet from "../nodes/http/HttpGetNode";
+import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
+import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
+import HttpPostPut from "../nodes/http/HttpPostPutNode";
+import Filter from "../nodes/object/FilterNode";
+import PathNode from "../nodes/object/PathNode";
 import FileSave from "../nodes/filesystem/FileSaveNode"
 
 import MqttSubNode from "../nodes/mqtt/MqttSubNode";
@@ -94,26 +94,24 @@ import InfoNode from "../nodes/info/InfoNode";
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
 
-import EventButtonOption from "../nodes/options/EventButtonOption"
-import ExecutionCountOption from "../nodes/options/ExecutionCountOption"
-import InfoOption from "../nodes/options/InfoOption"
+import EventButtonOption from "../nodes/options/EventButtonOption";
+import ExecutionCountOption from "../nodes/options/ExecutionCountOption";
+import InfoOption from "../nodes/options/InfoOption";
 
-import HttpNodeDialog from "../components/dialogs/HttpNodeDialog"
-import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog"
-import MappingNodeDialog from "../components/dialogs/MappingNodeDialog"
-import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog"
-import InfoConfigDialog from "../nodes/info/InfoConfigDialog"
-import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog"
+import HttpNodeDialog from "../components/dialogs/HttpNodeDialog";
+import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog";
+import MappingNodeDialog from "../components/dialogs/MappingNodeDialog";
+import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog";
+import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
+import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog";
 
-import CustomConnection from "../components/CustomConnection"
-import CustomInterface from "../components/CustomInterface"
-import CustomNode from "../components/CustomNode"
+import CustomConnection from "../components/CustomConnection";
+import CustomInterface from "../components/CustomInterface";
+import CustomNode from "../components/CustomNode";
 
-import PostgresSaveNode from "../nodes/database/PostgresSaveNode"
-import PythonFunctionNode from "../nodes/function/PythonFunctionNode"
+import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
+import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
 
-
-import { apiBaseUrl } from '../main';
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 
 export default {
@@ -293,7 +291,7 @@ export default {
 
     // Object
     this.editor.registerNodeType("filter", Filter, "Object")
-    this.editor.registerNodeType("objectPath", Path, "Object")
+    this.editor.registerNodeType("objectPath", PathNode, "Object")
     this.editor.registerNodeType("arrayMapping", ArrayMappingNode, "Object")
     this.editor.registerNodeType("objectMapping", ObjectMappingNode, "Object")
     this.viewPlugin.setNodeTypeAlias("objectFilter", "Filter array");
