@@ -4,6 +4,7 @@ import { connectToServer, getDb } from "./manager/mongo-manager";
 import { WsManager } from "./ws";
 import { ExecutionCounter } from "./exec-info";
 import express from "express";
+import chalk from "chalk";
 var mongodb = require('mongodb');
 
 
@@ -17,6 +18,9 @@ app.use(express.json());
 app.use(cors())
 
 let dbo: any;
+
+
+let lastSave = {};  // Object to cache last node config to check if changes occured.
 
 
 connectToServer( function( err: any, client: any ) {
@@ -75,16 +79,25 @@ app.put("/save-node-config/:id", ( req, res ) => {
     };
     var newvalues = { $set: req.body };
     const options = { upsert: true };
-    dbo.collection("node-configs").updateOne(query, newvalues, options, function(err: any, obj: any) {
-        if (err) {
-            console.log(err);
-            res.status(500).send("Configuation not saved");
-        } else {
-            WsManager.sendMessage("Refreshed");
-            Loader.loadConfig(dbo);
-            res.send(`Updated ${obj.result.n}`);
-        }
-    });
+
+    if (JSON.stringify(newvalues) === JSON.stringify(lastSave)) {
+        console.log(chalk.yellow("No changes detected. Not saving."))
+        res.status(400).send("No changes detected");
+    } else {
+        
+        dbo.collection("node-configs").updateOne(query, newvalues, options, function(err: any, obj: any) {
+            if (err) {
+                console.log(err);
+                res.status(500).send("Configuation not saved");
+            } else {
+                WsManager.sendMessage("Refreshed");
+                Loader.loadConfig(dbo);
+                res.send(`Updated ${obj.result.n}`);
+            }
+        });
+    }
+
+    lastSave = newvalues;
 });
 
 app.post("/save-node-config/", ( req, res ) => {
