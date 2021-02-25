@@ -8,43 +8,11 @@
         <ConnectionIndicator :status="websocketConnected"/>
       </v-toolbar>
     </v-card>
-    <v-navigation-drawer id="drawer" v-model="drawer" absolute dark bottom temporary>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="title title-hidden" >-</v-list-item-title>
-          <v-list-item-subtitle class="title-hidden">-</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider></v-divider>
-      <v-list nav dense>
-        <v-list-item-group v-model="configIndex" mandatory style="max-height: 200px; overflow-y: scroll;">
-          <v-list-item v-for="(node, index) in nodeConfig" :key="node._id" class="workplace" @click="changeWorkspace(index)">
-            <v-list-item-title>{{node.workspace}}</v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-        <v-btn block color="green" class="mt-2" @click="createWorkspace()">Add Workspace</v-btn>
-      </v-list>
-      <v-spacer></v-spacer>
-      <v-divider></v-divider>
-      <v-list-item-group color="primary">
-          <v-list-item dense @click="$router.push('/settings')">
-              <v-list-item-icon>
-                  <v-icon>mdi-cog-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                  <v-list-item-title >Settings</v-list-item-title>
-              </v-list-item-content>
-          </v-list-item>
-          <v-list-item dense @click="$router.push('/about')">
-              <v-list-item-icon>
-                  <v-icon>mdi-information-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                  <v-list-item-title>About</v-list-item-title>
-              </v-list-item-content>
-          </v-list-item>
-      </v-list-item-group>
-    </v-navigation-drawer>
+    <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" 
+      @createWorkspace="createWorkspace" 
+      @changeworkspace="changeWorkspace" 
+      @drawerClosed="drawer = false"
+    />
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
@@ -113,6 +81,7 @@ import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
+import NavigationDrawer from '../components/NavigationDrawer'
 
 export default {
   data() {
@@ -135,7 +104,10 @@ export default {
       notifyTimeout: 1000
     }
   },
-  components: {ConnectionIndicator },
+  components: {
+    ConnectionIndicator,
+    NavigationDrawer
+  },
   created() {
     this.configIndex = this.$route.params.index-1;
     this.init();
