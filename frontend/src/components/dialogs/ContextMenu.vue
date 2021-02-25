@@ -166,7 +166,8 @@ import {getDescription} from "./nodeDescription.js";
           {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
           {text: "Delete Node", color: "red", callable: "deleteNode", icon: "mdi-trash-can-outline"},
         ],
-        colorCopy: null
+        colorCopy: null,
+        expanded: []
     }),
     props: {
       nodeData: Object
