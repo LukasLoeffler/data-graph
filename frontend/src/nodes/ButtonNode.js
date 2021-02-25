@@ -11,8 +11,4 @@ export default class ButtonNode extends Node {
         this.addOption("running", undefined, true);
         this.addOutputInterface("onClick");
     }
-
-    onClick(ev) {
-        console.log(ev);
-    }
 }
