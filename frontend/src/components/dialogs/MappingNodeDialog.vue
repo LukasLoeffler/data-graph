@@ -13,11 +13,9 @@
                     <v-btn @click="mirrorObject" color="orange" class="mr-1" outlined :disabled="Object.keys(codeRaw).length === 0">
                         <v-icon>mdi-transfer-right</v-icon>
                     </v-btn>
+                    <NodeInfoDialog type="mapping"/>
                     <v-btn color="grey" class="mr-1" outlined>
                         <v-icon>mdi-cog-outline</v-icon>
-                    </v-btn>
-                    <v-btn color="blue" class="mr-1" outlined>
-                        <v-icon>mdi-information-outline</v-icon>
                     </v-btn>
                     <v-btn @click="addMapping" color="green" class="mr-1" outlined>
                         <v-icon>mdi-plus-circle-outline</v-icon>
@@ -39,7 +37,7 @@
                             <draggable :list="valueCopy.mappings" tag="tbody" handle=".handle">
                                 <tr v-for="(mapper, index) in valueCopy.mappings" :key="index">
                                     <td class="handle">
-                                        <v-icon class="page__grab-icon">mdi-drag-horizontal-variant</v-icon>
+                                        <v-icon style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
                                     </td>
                                     <td>
                                         <v-text-field v-model="mapper.source" outlined dense hide-details></v-text-field>
@@ -57,21 +55,24 @@
                             </draggable>
                         </v-simple-table>
                     </v-container>
-                    <v-row justify="center" >
+                    <v-row justify="center" v-if="Object.keys(codeRaw).length !== 0">
                         <v-col cols="6">
                             <h3 class="ml-5">Latest input</h3>
-                            <json-viewer v-if="Object.keys(codeRaw).length !== 0" :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
-                            <p v-else>No data present yet <br> Activate node at least once.</p>
+                            <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
+                            
                         </v-col>
                         <v-col cols="6">
                             <h3>Test output</h3>
                             <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode style="padding-left: 0px; text-align:left"></json-viewer>
                         </v-col>
                     </v-row>
+                    <p v-else class="no-data-info mt-5">
+                        No data present yet. Interactive testing feature is disabled. <br>
+                        To learn more click on the info icon in the upper right corner.
+                    </p>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions class="pl-6">
-                    <p class="caption">* The changes still have to be deployed in the node editor.</p>
                     <v-spacer></v-spacer>
                     <v-btn color="red" text @click="dialog = false">
                         Close
@@ -90,6 +91,7 @@
 
 
 <script>
+import NodeInfoDialog from "./NodeInfoDialog"
 import Draggable from 'vuedraggable';
 import JsonViewer from 'vue-json-viewer'
 import {apiBaseUrl} from "../../main.js";
@@ -99,11 +101,13 @@ export default {
         mappingCopy: null,
         dialog: false,
         codeRaw: [],
-        codeFormatted: []
+        codeFormatted: [],
+        infoMode: false
     }),
     components: {
         Draggable,
-        JsonViewer
+        JsonViewer,
+        NodeInfoDialog
     },
     props: ["option", "node", "value"],
     created() {
@@ -184,3 +188,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.no-data-info {
+    color: #B71C1C;
+}
+</style>
