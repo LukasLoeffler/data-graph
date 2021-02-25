@@ -1,7 +1,7 @@
 <template>
     <div :id="data.id" class="node" :class="classes" :style="styles" @wheel.stop="" @contextmenu.prevent.capture="">
         <div
-            class="__title"
+            :class="classTitle"
             :style="myStyle"
             @mousedown.self.prevent.stop="startDrag"
             @contextmenu.prevent.capture=""
@@ -143,7 +143,21 @@
                 return {
                     "pulse": this.errorOccured,
                 };
-            }
+            },
+            classTitle() {
+                return {
+                    "__title": true,
+                    "grabbed": this.dragging,
+                    "grabbable": !this.dragging,
+                }; 
+            },
+            styles()  {
+                return {
+                    top: `${this.data.position.y}px`,
+                    left: `${this.data.position.x}px`,
+                    width: `${this.data.width}px`,
+                };
+            },
         },
     }
 </script>
@@ -152,6 +166,14 @@
 
 .pulse {
     animation: pulsate 2s ease-out infinite;
+}
+
+.grabbed {
+    cursor: grabbing;
+}
+
+.grabbable {
+    cursor: grab;
 }
 
 @-webkit-keyframes pulsate {

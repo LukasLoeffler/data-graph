@@ -96,7 +96,7 @@
         <v-divider></v-divider>
 
         <v-divider></v-divider>
-        <v-expansion-panels>
+        <v-expansion-panels v-model="expanded">
           <v-expansion-panel>
             <v-expansion-panel-header>
               Edit Color
@@ -166,7 +166,8 @@ import {getDescription} from "./nodeDescription.js";
           {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
           {text: "Delete Node", color: "red", callable: "deleteNode", icon: "mdi-trash-can-outline"},
         ],
-        colorCopy: null
+        colorCopy: null,
+        expanded: []
     }),
     props: {
       nodeData: Object
@@ -244,7 +245,11 @@ import {getDescription} from "./nodeDescription.js";
     },
     watch: {
       menu(newVal) {
-        if (newVal) this.colorCopy = this.nodeData.getOptionValue("color");
+        if (newVal) {
+          // If menu (re-)opened thie block is executed
+          this.colorCopy = this.nodeData.getOptionValue("color");
+          this.expanded = [];
+        }
       }
     },
     computed: {
