@@ -2,13 +2,15 @@
     <div class="container">
         <v-btn
             :disabled="$store.getters.dataChanged" class="btn-execute"
-            @click="onClick" @contextmenu.prevent="resetCounter"
+            @click="onClick"
             color="blue darken-3" small>
             {{option.title}}
         </v-btn>
         <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-                <v-chip v-on="on" class="btn-counter ml-1 justify-center" style="height: 28px" color="green" label small>{{executionCount}}</v-chip>
+                <v-chip v-on="on" class="btn-counter ml-1 justify-center" 
+                    style="height: 28px" color="green" label small @contextmenu.prevent="resetCounter"
+                >{{executionCount}}</v-chip>
             </template>
             <span>Number of executions</span>
         </v-tooltip>
