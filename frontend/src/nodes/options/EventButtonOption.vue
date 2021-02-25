@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="opt-container">
     <v-btn
       :disabled="$store.getters.dataChanged" class="btn-execute"
       @click="onClick"
@@ -59,7 +59,7 @@ export default {
 
 
 <style scoped>
-.container {
+.opt-container {
   display: grid;
   grid-template-columns:  3fr 1fr;
   grid-template-rows:  1fr;
