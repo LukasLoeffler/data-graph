@@ -156,10 +156,13 @@ export default {
       
     
       let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.selectedConfig._id}`;
-      this.axios.put(saveStateUrl, state).then(() => {
+      this.axios.put(saveStateUrl, state)
+      .then(() => {
         //console.log("%c Config successfully saved", "color: green; font-weight: bold")
         this.snackbar = true;
-      });
+      })
+      .catch((err) => {
+      })
     },
     createWorkspace() {
       let emptyConfig = {
