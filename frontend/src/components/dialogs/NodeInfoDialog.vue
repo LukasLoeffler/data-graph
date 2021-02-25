@@ -1,13 +1,10 @@
 <template>
-
-<div>
+  <div>
     <v-btn color="blue" class="mr-1" outlined @click.stop="dialog = true">
-        <v-icon>mdi-information-outline</v-icon>
+      <v-icon>mdi-information-outline</v-icon>
     </v-btn>
 
-    <v-dialog
-      v-model="dialog"
-    >
+    <v-dialog v-model="dialog">
       <v-card>
         <v-card-title>
           Node Info: {{type}}
