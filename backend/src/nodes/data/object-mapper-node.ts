@@ -38,7 +38,6 @@ export class ObjectMapperNode extends BaseNode {
             res.send(mapObject(this.lastValue.slice(0, 10), mapping));
         } else {
             let result = mapObject(this.lastValue, mapping);
-            console.log(result);
             res.send(result);
         }
     }
