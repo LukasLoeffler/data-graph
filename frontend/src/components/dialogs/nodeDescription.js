@@ -11,8 +11,8 @@ let descriptions = [
         type: "button",
         text: `
             Triggers a <a href="/wiki/downstream">downstream</a> node by clicking on the blue <b>EXECUTE</b> button in the node.<br><br>
-            The green bubble indicates the number of times the button has been pressed.
-            This number can be resetted by right-clicking the blue button.
+            The green chip indicates the number of times the button has been pressed.
+            This number can be resetted by right-clicking the green indicator.
         `
     },
     {
