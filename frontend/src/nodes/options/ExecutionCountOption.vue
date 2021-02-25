@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-0 container">
+  <div class="mt-0 chip-container">
     <v-tooltip bottom open-delay="300">
       <template v-slot:activator="{ on, attrs }">
         <v-chip label small color="primary" class="mr-1 chip-trigger justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{triggerCount}}</v-chip>
@@ -59,8 +59,8 @@ export default {
 }
 </script>
 
-<style>
-.container {
+<style scoped>
+.chip-container {
   display: grid;
   grid-template-columns:  1fr 1fr 1fr 1fr;
   grid-template-rows:  1fr;
