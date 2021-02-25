@@ -14,7 +14,14 @@ let frontendNodes: any;
 
 function getSuccessTargets(node: any) {
     let targetType = "onSuccess";
-    return getConnectedNodeByInterface(node, targetType)
+
+    let conNodes = getConnectedNodeByInterface(node, targetType);
+    if (conNodes.length !== 0){
+        return conNodes;
+    } else {
+        conNodes = getConnectedNodeByInterface(node, "onClick");
+        return conNodes;
+    }
 }
 
 function getFailureTargets(node: any) {

@@ -6,7 +6,7 @@
             @mousedown.self.prevent.stop="startDrag"
             @contextmenu.prevent.capture=""
         >
-            <ContextMenu :menu="showMenu" :nodeData="data" @optionChange="optionChange"/>  
+            <ContextMenu :menu="showMenu" :nodeData="data" :dragging="dragging" @optionChange="optionChange" @start-drag="startDrag" @stop-drag="mouseUp"/>  
         </div>
 
         <div class="__content">
@@ -97,18 +97,10 @@
                 })
             },
             startDrag(event) {
-                let isRightMB;
-                if ("which" in event)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
-                    isRightMB = event.which == 3; 
-                else if ("button" in event)  // IE, Opera 
-                    isRightMB = event.button == 2;
-
-                if (!isRightMB) {
-                    this.dragging = true;
-                    document.addEventListener("mousemove", this.handleMove);
-                    document.addEventListener("mouseup", this.mouseUp);
-                    this.select();
-                }
+                this.dragging = true;
+                document.addEventListener("mousemove", this.handleMove);
+                document.addEventListener("mouseup", this.mouseUp);
+                this.select();
             },
             optionChange(option, data) {
                 //console.log(`Option ${option} changed to ${data}`);
@@ -117,7 +109,8 @@
                 this.$store.commit("saveNodeConfig", this.data.id);
             },
             mouseUp(event) {
-                if (event.target.parentElement.id === this.data.id) {
+                // Depending which element calls the mouseUp Event the id must be fetched from another element
+                if (event.target.parentElement.id === this.data.id || event.target.id === this.data.id) {
                     this.stopDrag();
                     this.$store.commit("saveNodeConfig", this.data.id);
                 }
