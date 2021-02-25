@@ -8,7 +8,7 @@
         </v-btn>
         <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-                <v-chip v-on="on" class="btn-counter ml-1" style="height: 28px" color="green" label small>{{executionCount}}</v-chip>
+                <v-chip v-on="on" class="btn-counter ml-1 justify-center" style="height: 28px" color="green" label small>{{executionCount}}</v-chip>
             </template>
             <span>Number of executions</span>
         </v-tooltip>
@@ -59,14 +59,14 @@ export default {
 <style scoped>
 .container {
     display: grid;
-    grid-template-columns:  3fr 3fr;
+    grid-template-columns:  3fr 1fr;
     grid-template-rows:  1fr;
     padding: 0px;
 }
 
 .btn-execute {
     grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column-end: 1;
     grid-row-start: 1;
     grid-row-end: 1;
     height: 90%; 
@@ -77,8 +77,8 @@ export default {
 }
 
 .btn-counter {
-    grid-column-start: 3;
-    grid-column-end: 4;
+    grid-column-start: 2;
+    grid-column-end: 2;
     grid-row-start: 1;
     grid-row-end: 1;
 }
