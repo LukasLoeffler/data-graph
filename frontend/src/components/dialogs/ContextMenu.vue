@@ -2,28 +2,31 @@
   <div class="text-center">
     <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="150" offset-x>
       <template v-slot:activator="{ on, attrs }">
-
-      <v-btn-toggle dense style="width: 180px; height: 30px; font-size: 25px" dark>
-
-        <v-btn v-on="on" v-bind="attrs" dense :style="titleStyle" style="height: 30px">
-          {{nodeData.name}}
-        </v-btn>
-        <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode">
-          <v-tooltip bottom open-delay="300" :color="running ? 'green' : 'red'">
-                <template v-slot:activator="{ on, attrs }">
-                    <div v-on="on">
-                      <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
-                        <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
-                        <v-icon color="red" v-else>mdi-pause</v-icon>
-                      </v-btn>
-                    </div>
-                </template>
-                <span v-if="running">Running. Click to pause.</span>
-                <span v-else>Stopped. Click to start.</span>
-            </v-tooltip>
-        </v-btn>
-        
-      </v-btn-toggle>
+        <div 
+          @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container" :class="classTitle"
+        >
+          <h3 
+            :id="nodeData.id" class="name" style="text-align: center;" 
+            @mousedown.self.prevent.stop="$emit('start-drag')" 
+            @mouseup.self.prevent.stop="$emit('stop-drag', $event)"
+          >
+            {{nodeData.name}}
+          </h3>
+          <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode" class="btn-ss">
+            <v-tooltip bottom open-delay="300" :color="running ? 'green' : 'red'">
+                  <template v-slot:activator="{ on, attrs }">
+                      <div v-on="on">
+                        <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
+                          <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
+                          <v-icon color="red" v-else>mdi-pause</v-icon>
+                        </v-btn>
+                      </div>
+                  </template>
+                  <span v-if="running">Running. Click to pause.</span>
+                  <span v-else>Stopped. Click to start.</span>
+              </v-tooltip>
+          </v-btn>
+        </div>
       </template>
 
       <v-card width="350px" style="max-height: 400px;" class="scroll-card">
@@ -170,7 +173,8 @@ import {getDescription} from "./nodeDescription.js";
         expanded: []
     }),
     props: {
-      nodeData: Object
+      nodeData: Object,
+      dragging: Boolean
     },
     inject: ['editor'],
     created() {
@@ -179,6 +183,10 @@ import {getDescription} from "./nodeDescription.js";
       this.description = getDescription(this.nodeData.type);
     },
     methods: {
+      prevent(evt) {
+        console.log("prevent");
+        evt.preventDefault();
+      },
       execute(action) {
         if(action === "deleteNode") this.deleteNode();
         if(action === "openSettings") this.openSettings();
@@ -284,7 +292,13 @@ import {getDescription} from "./nodeDescription.js";
         return {
           "width": stoppable ? "150px" : "180px",
         };
-      }
+      },
+      classTitle() {
+        return {
+            "grabbed": this.dragging,
+            "grabbable": !this.dragging,
+        }; 
+      },
     }
   }
 </script>
@@ -295,5 +309,38 @@ import {getDescription} from "./nodeDescription.js";
   overflow-y: scroll; 
   display: flex !important; 
   flex-direction: column;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns:  3fr 3fr;
+  grid-template-rows:  1fr;
+}
+
+.name {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 1;
+      height: 90%; 
+    width:100%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-ss {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.grabbed {
+    cursor: grabbing;
+}
+
+.grabbable {
+    cursor: grab;
 }
 </style>
