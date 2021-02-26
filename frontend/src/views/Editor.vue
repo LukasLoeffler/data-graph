@@ -8,7 +8,7 @@
         <ConnectionIndicator :status="websocketConnected"/>
       </v-toolbar>
     </v-card>
-    <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" 
+    <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" :configIndex="configIndex"
       @createWorkspace="createWorkspace" 
       @changeworkspace="changeWorkspace" 
       @drawerClosed="drawer = false"
