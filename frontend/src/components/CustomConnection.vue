@@ -108,7 +108,7 @@ export default {
         let data = JSON.parse(message.data);
         if (data.type === "ConnectionExecution") {
           // Check if connection is right one by gettomg from and to nodes and compare nodeIds
-          if (data.data.from === this.connection.from.parent.id && data.data.to === this.connection.to.parent.id) {
+          if (data.data.from === this.connection.from.id && data.data.to === this.connection.to.id) {
             this.connectionActive = true; // Activate animation
 
             clearTimeout( timeOut ); // Reset timeout if called

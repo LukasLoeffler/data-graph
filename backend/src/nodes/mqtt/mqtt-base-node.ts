@@ -14,8 +14,8 @@ export abstract class MqttBaseNode extends BaseNode {
     topic: string;
     client: any;
 
-    constructor(nodeType: string, name: string, id: string, options: any, targetsSuccess: any) {
-        super(name, nodeType, id, targetsSuccess, []);
+    constructor(nodeType: string, name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, nodeType, id, outputConnections);
         this.validateOptions(options, requiredOptions);
         this.options = options;
         this.server = this.getOption("server", options);

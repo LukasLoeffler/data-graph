@@ -11,8 +11,8 @@ export class ArrayMapperNode extends BaseNode {
     mapper: any;
     lastValue: any = [];
 
-    constructor(name: string, id: string, options: any, targetsSuccess: Array<string>, targetsFailure: Array<string>) {
-        super(name, NODE_TYPE, id, targetsSuccess, targetsFailure);
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections);
 
         this.mapper = options.mapping.mappings;
         NodeManager.addNode(this);
@@ -21,8 +21,7 @@ export class ArrayMapperNode extends BaseNode {
     execute(msgIn: Message) {
         this.lastValue = msgIn.payload;
         let newObject = mapObjectArray(msgIn.payload, this.mapper);
-        let msgOut = new Message(this.id, NODE_TYPE, newObject);
-        this.onSuccess(msgOut);
+        this.onSuccess(newObject);
     }
 
     getLastValue() {

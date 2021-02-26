@@ -21,8 +21,8 @@ export class HttpNode extends BaseNode {
     httpMethod: httpMethods;
     headers: Array<Record<string, any>>;
 
-    constructor(name: string, id: string, options: any, targetsSuccess: Array<String>, targetsFailure: Array<String>) {
-        super(name, NODE_TYPE, id, targetsSuccess, targetsFailure)
+    constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
+        super(name, NODE_TYPE, id, outputConnections)
         this.url = options.settings.url;
         this.httpMethod = options.settings.requestType;
         this.headers = headerUtils.buildHeader(options.settings.headers);
@@ -34,19 +34,16 @@ export class HttpNode extends BaseNode {
         axios.get(this.url, {headers: this.headers, timeout: 2500})
         .then((response: any) => {
             if (response.data) {
-                let msg = new Message(this.id, NODE_TYPE, response.data);
-                this.onSuccess(msg);
+                this.onSuccess(response.data);
             } else {
-                let msg = new Message(this.id, NODE_TYPE, null);
-                this.onFailure(msg);
+                this.onFailure(null);
             }
         }).catch((err: AxiosError) => {
             let payload = {
                 code: err.code,
                 message: err.message
             }
-            let errMsg = new Message(this.id, NODE_TYPE, payload);
-            this.onFailure(errMsg);
+            this.onFailure(payload);
         });
     }
 }

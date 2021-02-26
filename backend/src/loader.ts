@@ -29,8 +29,6 @@ function getFailureTargets(node: any) {
     return getConnectedNodeByInterface(node, targetType)
 }
 
-
-
 function getConnectedNodeByInterface(node: any, type: string) {
     let outInterface = node.interfaces.find((intface: any) => intface[0] === type);
 
@@ -58,7 +56,7 @@ function getNodeByInterfaceId(interfaceId: String) {
 }
 
 function getInterfaceByInterfaceId(interfaceId: String) {
-    let intf = null;
+    let intf: any;
     frontendNodes.nodes.forEach((node: any) => {
         let extractedIntf = node.interfaces.find((intf: any) => intf[1].id === interfaceId);
         if (extractedIntf) intf = {id: extractedIntf[1].id, name: extractedIntf[0]};
@@ -89,6 +87,23 @@ function extractOptionsFromNode(node: any): StringMap {
     return output;
 }
 
+function extractConnections(nodeConfig: any) {
+    return nodeConfig.connections.map((connection: any) => {
+        return {
+            from: {
+                id: getInterfaceByInterfaceId(connection.from).id,
+                name: getInterfaceByInterfaceId(connection.from).name,
+                nodeId: getNodeByInterfaceId(connection.from).id,
+            },
+            to: {
+                id: getInterfaceByInterfaceId(connection.to).id,
+                name: getInterfaceByInterfaceId(connection.to).name,
+                nodeId: getNodeByInterfaceId(connection.to).id,
+            }
+        }
+    });
+}
+
 
 
 function loadConfig(dbo: any) {
@@ -100,22 +115,24 @@ function loadConfig(dbo: any) {
     dbo.collection("node-configs").find({}).toArray(function(err: any, nodeConfigs: any) {
         nodeConfigs.forEach((nodeConfig: any)=> {
             frontendNodes = nodeConfig;
+            let connectionList = extractConnections(nodeConfig);
             nodeConfig.nodes.forEach((node: any) => {
-
                 let newCls: any;
                 try {
                     newCls = NodeRegistry.getNodeClassByName(node.type);
-
                 } catch (error) {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
                 let successTargets = getSuccessTargets(node);
                 let failureTargets = getFailureTargets(node);
                 let options = extractOptionsFromNode(node);
-                new newCls.clss(node.name, node.id, options, successTargets, failureTargets);
+                let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
+
+                new newCls.clss(node.name, node.id, options, outputConnections);
             });
             numberofTotalNodes = numberofTotalNodes + nodeConfig.nodes.length;
         });
+
 
         let numberOfNodesInit = NodeManager.getActiveNodes().length;
     

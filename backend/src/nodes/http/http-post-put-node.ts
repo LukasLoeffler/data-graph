@@ -21,8 +21,8 @@ export class HttpPostPutNode extends BaseNode {
     headers: Array<Record<string, any>>;
     timeout: number;
 
-    constructor(name: string, id: string, options: any, targetsSuccess: Array<String>, targetsFailure: Array<String>) {
-        super(name, NODE_TYPE, id, targetsSuccess, targetsFailure)
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections)
         this.url = options.settings.url;
         this.timeout = options.settings.timeout;
         this.httpMethod = options.settings.requestType;
@@ -34,19 +34,16 @@ export class HttpPostPutNode extends BaseNode {
         axios.post(this.url, msg, {headers: this.headers, timeout: this.timeout})
         .then((response: any) => {
             if (response.data) {
-                let msg = new Message(this.id, NODE_TYPE, response.data);
-                this.onSuccess(msg);
+                this.onSuccess(response.data);
             } else {
-                let msg = new Message(this.id, NODE_TYPE, null);
-                this.onFailure(msg);
+                this.onFailure(null);
             }
         }).catch((err: AxiosError) => {
             let payload = {
                 code: err.code,
                 message: err.message
             }
-            let errMsg = new Message(this.id, NODE_TYPE, payload);
-            this.onFailure(errMsg);
+            this.onFailure(payload);
         });
     }
 }
