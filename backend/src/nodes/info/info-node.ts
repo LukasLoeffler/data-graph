@@ -9,8 +9,8 @@ const NODE_TYPE = "INFO"
 export class InfoNode extends BaseNode {
 
     
-    constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
-        super(name, NODE_TYPE, id, successTargets, failureTargets)
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections)
         NodeManager.addNode(this);
     }
 

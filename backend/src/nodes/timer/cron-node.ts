@@ -14,8 +14,8 @@ export class CronNode extends BaseNode{
     running: boolean
 
 
-    constructor(name: string, id: string, options: any, targetsSuccess: any) {
-        super(name, NODE_TYPE, id, targetsSuccess, []);
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections);
 
         this.validateOptions(options, requiredOptions);
         this.cronExpression = this.getOption("cronexpression", options);
@@ -37,8 +37,7 @@ export class CronNode extends BaseNode{
 
     createTask() {
         return cron.schedule(this.cronExpression, () =>  {
-            let msgOut = new Message(this.id, NODE_TYPE, "")
-            this.onSuccess(msgOut);
+            this.on("onCron", new Date());
         }, {
             scheduled: false
         });

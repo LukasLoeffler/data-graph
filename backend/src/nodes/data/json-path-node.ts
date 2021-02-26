@@ -10,8 +10,8 @@ const NODE_TYPE = "JSON_PATH"
 export class ObjectPathNode extends BaseNode {
     path: string;
 
-    constructor(name: string, id: string, path: string, targetsSuccess: Array<String>, targetsFailure: Array<String>) {
-        super(name, NODE_TYPE, id, targetsSuccess, targetsFailure)
+    constructor(name: string, id: string, path: string, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections)
         this.path = path;
         NodeManager.addNode(this);
     }
@@ -20,11 +20,9 @@ export class ObjectPathNode extends BaseNode {
         // Check if msgIn and payload are provided
         if (msgIn && msgIn.payload) {
             let valueAtPath = _.get(msgIn.payload, this.path);
-            let msg = new Message(this.id, NODE_TYPE, valueAtPath);
-            this.onSuccess(msg);
+            this.onSuccess(valueAtPath);
         } else {
-            let msgOut = new Message(this.id, NODE_TYPE, "Input empty")
-            this.onFailure(msgOut);
+            this.onFailure("Input empty");
         }
     }
 }

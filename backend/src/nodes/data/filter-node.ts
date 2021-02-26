@@ -9,8 +9,8 @@ const NODE_TYPE = "FILTER"
 export class FilterNode extends BaseNode {
     filter: string;
 
-    constructor(name: string, id: string, filter: string, targetsSuccess: Array<String>, targetsFailure: Array<String>) {
-        super(name, NODE_TYPE, id, targetsSuccess, targetsFailure);
+    constructor(name: string, id: string, filter: string, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections);
         this.filter = filter;
         NodeManager.addNode(this);
     }
@@ -18,8 +18,7 @@ export class FilterNode extends BaseNode {
     execute(msgIn: Message) {
         try {
             let output = msgIn.payload.filter((element: any) => eval(this.filter));
-            let msgOut = new Message(this.id, NODE_TYPE, output);
-            this.onSuccess(msgOut);
+            this.onSuccess(output);
         } catch (error) {
             console.log("FilterNodeError:", error);
             this.onFailure(error);

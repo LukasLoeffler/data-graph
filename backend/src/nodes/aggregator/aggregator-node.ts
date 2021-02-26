@@ -13,7 +13,7 @@ export class AggregatorNode extends BaseNode {
     data = new Map();
 
     constructor(name: string, id: string, options: any, interfaces: Array<any>, targetsSuccess: Array<any>) {
-        super(name, NODE_TYPE, id, targetsSuccess, [])
+        super(name, NODE_TYPE, id, targetsSuccess)
         this.inputInterfaces = interfaces.filter((intf: any) => intf.name.includes("IN"));
         NodeManager.addNode(this);
     }
@@ -33,8 +33,7 @@ export class AggregatorNode extends BaseNode {
             this.data.forEach((value: any, key: string) => {
                 output.push(...value);
             });
-            let msgOut = new Message(this.id, NODE_TYPE, output)
-            this.onSuccess(msgOut);
+            this.onSuccess(output);
         } else {
             WsManager.sendMessage(this.buildAggregationCountMessage());
         }

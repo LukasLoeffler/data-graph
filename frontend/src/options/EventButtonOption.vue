@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {apiBaseUrl} from "../../main.js";
+import {apiBaseUrl} from "@/main.js";
 
 export default {
   props: ["option", "node", "value"],
