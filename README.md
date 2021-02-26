@@ -24,7 +24,8 @@ Node-Editor based on [BaklavaJS](https://github.com/newcat/baklavajs).
 # Deployment
 
 The application is fully dockerized and ca be started with ```docker-compose up```.
-The frontend and the backend are built. Redis and MongoDB are pulled from DockerHub.
+* The frontend and the backend are initially built. 
+* Redis and MongoDB are pulled from DockerHub.
 
 
 # Development
