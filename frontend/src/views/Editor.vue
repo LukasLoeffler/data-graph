@@ -79,6 +79,7 @@ import CustomNode from "../components/CustomNode";
 
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
+import TriggerAfterNode from "../nodes/flow/TriggerAfterNode"
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
@@ -291,6 +292,9 @@ export default {
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
     this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
+
+    // Flow
+    this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
     }
   },
   watch: {

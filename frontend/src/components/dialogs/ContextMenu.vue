@@ -164,6 +164,7 @@ import {getDescription} from "./nodeDescription.js";
       {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: false},
       {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: false},
       {type: "python-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true},
+      {type: "trigger-after", icon: "mdi-counter", resettable: false, stoppable: false, configurable: true},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},

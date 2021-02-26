@@ -14,6 +14,7 @@ import { AggregatorNode } from "./aggregator/aggregator-node"
 import { PostgresSaveNode } from "./database/postgres-save-node"
 import { InfoNode } from "./info/info-node"
 import { PythonFunctionNode } from "./function/python-function-node"
+import { TriggerAfterNode } from "./flow/trigger-after-node"
 
 
 
@@ -53,7 +54,8 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("aggregator", "aggregator", AggregatorNode),
     new RegEntry("postgresSave", "database", PostgresSaveNode),
     new RegEntry("info", "info", InfoNode),
-    new RegEntry("python-function", "function", PythonFunctionNode)
+    new RegEntry("python-function", "function", PythonFunctionNode),
+    new RegEntry("trigger-after", "flow", TriggerAfterNode)
 ]
 
 
