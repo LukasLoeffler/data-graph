@@ -11,8 +11,8 @@ export class PythonFunctionNode extends BaseNode {
 
     lastValue: any = {};
     
-    constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
-        super(name, NODE_TYPE, id, successTargets, failureTargets);
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections);
 
         // Writes user code into file
         fs.writeFile(`temp/${this.id}-eval-code`, this.getOption("settings", options).code,  (err: any) => {
@@ -36,23 +36,21 @@ export class PythonFunctionNode extends BaseNode {
             try {
                 PythonShell.run("script/python-exec-script.py", options, (err, output: any) => {
                     if (err) {
-                        let errMsg = new Message(this.id, NODE_TYPE, err);
-                        console.log("Inner;", errMsg);
-                        this.onFailure(errMsg);
+                        this.onFailure(err);
                     } else {
                         let out = output[0];
                         let msg;
                         console.log(output);
                         try {
-                            msg = new Message(this.id, NODE_TYPE, JSON.parse(out));
+                            msg = JSON.parse(out);
                         } catch (error) {
-                            msg = new Message(this.id, NODE_TYPE, out);
+                            msg = out;
                         }
                         this.onSuccess(msg);
                     }
                 });
             } catch (error) {
-                let errMsg = new Message(this.id, NODE_TYPE, error);
+                let errMsg = error;
                 this.onFailure(errMsg);
             }
         });
@@ -73,7 +71,7 @@ export class PythonFunctionNode extends BaseNode {
             try {
                 PythonShell.run("script/python-exec-script.py", options, (err, output: any) => {
                     if (err) {
-                        let errMsg = new Message(this.id, NODE_TYPE, err);
+                        let errMsg = err;
                         console.log("Inner;", errMsg);
                         res.send(errMsg);
                     } else {
@@ -82,7 +80,7 @@ export class PythonFunctionNode extends BaseNode {
                     }
                 });
             } catch (error) {
-                let errMsg = new Message(this.id, NODE_TYPE, error);
+                let errMsg = error;
                 this.onFailure(errMsg);
             }
         });

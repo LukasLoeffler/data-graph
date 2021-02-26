@@ -15,8 +15,8 @@ export class PostgresSaveNode extends BaseNode {
     client: any;
     options: any;
     
-    constructor(name: string, id: string, options: any, successTargets: any, failureTargets: any) {
-        super(name, NODE_TYPE, id, successTargets, failureTargets)
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections)
         
         this.options = options;
         this.client = new Client(options.connection);
@@ -57,10 +57,10 @@ export class PostgresSaveNode extends BaseNode {
         this.client
             .query(sql, values)
             .then((data: any) => {
-                this.onSuccess(new Message(this.id, NODE_TYPE, data));   
+                this.onSuccess(data);   
             })
             .catch((err: any) => {
-                this.onFailure(new Message(this.id, NODE_TYPE, err));
+                this.onFailure(err);
             })
     }
 }

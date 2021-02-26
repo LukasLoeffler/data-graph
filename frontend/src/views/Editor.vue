@@ -62,16 +62,18 @@ import InfoNode from "../nodes/info/InfoNode";
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
 
-import EventButtonOption from "../nodes/options/EventButtonOption";
-import ExecutionCountOption from "../nodes/options/ExecutionCountOption";
-import InfoOption from "../nodes/options/InfoOption";
+import EventButtonOption from "../options/EventButtonOption";
+import ExecutionCountOption from "../options/ExecutionCountOption";
+import InfoOption from "../options/InfoOption";
+import TriggerCountOption from "../options/TriggerCountOption";
 
-import HttpNodeDialog from "../components/dialogs/HttpNodeDialog";
+import HttpGetNodeDialog from "../components/dialogs/HttpGetNodeDialog";
 import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog";
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog";
 import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog";
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
 import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog";
+import TriggerAfterDialog from "../components/dialogs/TriggerAfterDialog";
 
 import CustomConnection from "../components/CustomConnection";
 import CustomInterface from "../components/CustomInterface";
@@ -79,6 +81,8 @@ import CustomNode from "../components/CustomNode";
 
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
+import TriggerAfterNode from "../nodes/flow/TriggerAfterNode"
+import DataChangeNode from "../nodes/flow/DataChangeNode"
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
@@ -246,14 +250,15 @@ export default {
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
     this.viewPlugin.registerOption("InfoOption", InfoOption);
+    this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
 
-    this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
+    this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
     this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
     this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
     this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
     this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
     this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
-
+    this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
 
     this.editor.registerNodeType("cron", CronNode, "Time")
     this.editor.registerNodeType("interval", IntervalNode, "Time")
@@ -291,6 +296,10 @@ export default {
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
     this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
+
+    // Flow
+    this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
+    this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
     }
   },
   watch: {

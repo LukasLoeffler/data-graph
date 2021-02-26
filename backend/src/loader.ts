@@ -29,8 +29,6 @@ function getFailureTargets(node: any) {
     return getConnectedNodeByInterface(node, targetType)
 }
 
-
-
 function getConnectedNodeByInterface(node: any, type: string) {
     let outInterface = node.interfaces.find((intface: any) => intface[0] === type);
 
@@ -50,6 +48,21 @@ function getConnectedNodeByInterface(node: any, type: string) {
     return targetNodes;
 }
 
+
+function getNodeByInterfaceId(interfaceId: String) {
+    return frontendNodes.nodes.find((node: any) => {
+        return node.interfaces.some((intf: any) => intf[1].id === interfaceId);
+    });
+}
+
+function getInterfaceByInterfaceId(interfaceId: String) {
+    let intf: any;
+    frontendNodes.nodes.forEach((node: any) => {
+        let extractedIntf = node.interfaces.find((intf: any) => intf[1].id === interfaceId);
+        if (extractedIntf) intf = {id: extractedIntf[1].id, name: extractedIntf[0]};
+    });
+    return intf;
+}
 
 /**
  * Baklava holds the node options in a format not usable by backend.
@@ -74,6 +87,23 @@ function extractOptionsFromNode(node: any): StringMap {
     return output;
 }
 
+function extractConnections(nodeConfig: any) {
+    return nodeConfig.connections.map((connection: any) => {
+        return {
+            from: {
+                id: getInterfaceByInterfaceId(connection.from).id,
+                name: getInterfaceByInterfaceId(connection.from).name,
+                nodeId: getNodeByInterfaceId(connection.from).id,
+            },
+            to: {
+                id: getInterfaceByInterfaceId(connection.to).id,
+                name: getInterfaceByInterfaceId(connection.to).name,
+                nodeId: getNodeByInterfaceId(connection.to).id,
+            }
+        }
+    });
+}
+
 
 
 function loadConfig(dbo: any) {
@@ -82,25 +112,27 @@ function loadConfig(dbo: any) {
 
     let numberofTotalNodes = 0;
 
-    dbo.collection("node-configs").find({}).toArray(function(err: any, nodes: any) {
-        nodes.forEach((data: any)=> {
-            frontendNodes = data;
-            data.nodes.forEach((node: any) => {
-
+    dbo.collection("node-configs").find({}).toArray(function(err: any, nodeConfigs: any) {
+        nodeConfigs.forEach((nodeConfig: any)=> {
+            frontendNodes = nodeConfig;
+            let connectionList = extractConnections(nodeConfig);
+            nodeConfig.nodes.forEach((node: any) => {
                 let newCls: any;
                 try {
                     newCls = NodeRegistry.getNodeClassByName(node.type);
-
                 } catch (error) {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
                 let successTargets = getSuccessTargets(node);
                 let failureTargets = getFailureTargets(node);
                 let options = extractOptionsFromNode(node);
-                new newCls.clss(node.name, node.id, options, successTargets, failureTargets);
+                let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
+
+                new newCls.clss(node.name, node.id, options, outputConnections);
             });
-            numberofTotalNodes = numberofTotalNodes + data.nodes.length;
+            numberofTotalNodes = numberofTotalNodes + nodeConfig.nodes.length;
         });
+
 
         let numberOfNodesInit = NodeManager.getActiveNodes().length;
     

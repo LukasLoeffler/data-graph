@@ -14,7 +14,7 @@ export class LoggingNode extends BaseNode {
     level: string;
     
     constructor(name: string, id: string, options: any) {
-        super(name, NODE_TYPE, id, [], [])
+        super(name, NODE_TYPE, id, [])
         this.level = this.getOption("operation", options) || "NO_LEVEL_SET";
         NodeManager.addNode(this);
     }

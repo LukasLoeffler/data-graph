@@ -1,5 +1,5 @@
 <template>
-<v-row justify="center">
+  <v-row justify="center">
     <v-dialog v-model="dialog" max-width="600px">
       <!--
       <template v-slot:activator="{ on, attrs }">
@@ -7,31 +7,28 @@
       </template>
       -->
       <v-card>
-        <v-card-title>{{nodeCopy.name}}</v-card-title>
-        <v-divider></v-divider>
+        <v-card-title>
+          <span class="headline">{{nodeCopy.name}}</span>
+        </v-card-title>
         <v-card-text class="pb-1">
-          <v-form v-model="valid">
-            <v-row>
-              <v-col cols="6">
-                <v-text-field label="Name" v-model="nodeCopy.name" :rules="[rules.required]" hide-details></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-select :items="['POST', 'PUT']" label="HTTP Method" :rules="[rules.required]" v-model="valueCopy.requestType" hide-details></v-select>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Url" required v-model="valueCopy.url" :rules="[rules.required]" hide-details></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field 
-                  label="Timeout" required v-model.number="valueCopy.timeout" type="number" 
-                  :rules="[rules.required, rules.timeout]" hide-details>
-                </v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-select :items="['JSON', 'XML']" label="Expected output" :rules="[rules.required]" v-model="valueCopy.expectedOutput" hide-details></v-select>
-              </v-col>
-            </v-row>
-          </v-form>
+          <v-container>
+            <v-form v-model="valid">
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field label="Url" required v-model="nodeCopy.name"></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field 
+                    label="Timeout" required v-model.number="valueCopy.timeout" type="number" 
+                    :rules="[rules.required, rules.timeout]" hide-details>
+                  </v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field label="Url" required v-model="valueCopy.url" :rules="[rules.required, rules.protocol]"></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-text class="pb-1">
@@ -62,10 +59,10 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="abort">
+          <v-btn color="blue darken-1" text @click="dialog = false">
             Close
           </v-btn>
-          <v-btn color="blue darken-1" text @click="save" :disabled="!valid">
+          <v-btn color="blue darken-1" :disabled="!valid" text @click="save">
             Save
           </v-btn>
         </v-card-actions>
@@ -77,20 +74,19 @@
 
 <script>
 export default {
-  name: "HttpPostPutDialog",
   data: () => ({
     dialog: false,
+    nodeCopy: null,
+    valueCopy: null,
     rules: {
       required: value => !!value || 'Required.',
       positive: value => value > 0 || 'Positive number required.',
+      protocol: value => (value.includes("http://") || value.includes("https://")) || 'Protocol is false or missing entirely.',
       timeout: value => value > 0 && value < 300000|| 'Number between 0 and 300.000 required.'
     },
-    nodeCopy: null,
-    valueCopy: null,
-    valid: null
+    valid: false
   }),
   props: ["option", "node", "value"],
-  inject: ['editor', "plugin"],
   created() {
     this.nodeCopy = {...this.node};
     this.valueCopy = {...this.value};
@@ -106,27 +102,14 @@ export default {
     resetHeader() {
       this.valueCopy.headers = [];
     },
-    removeHeader(index) {
-      this.valueCopy.headers.splice(index, 1);
-    },
     save() {
-      //console.log("Saving:", this.valueCopy);
       this.node.setOptionValue("settings", this.valueCopy);
       this.node.name = this.nodeCopy.name;
-
-      let intf = this.node.getInterface("onSuccess");
-
-      if (intf.type !== this.valueCopy.expectedOutput) {
-        console.log("Updating interface type");
-        intf.type = this.valueCopy.expectedOutput;
-        setTimeout(() => location.reload(), 15);
-      }
-
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
     },
-    abort() {
-      this.dialog = false;
+    removeHeader(index) {
+      this.valueCopy.headers.splice(index, 1);
     },
   },
 
@@ -135,6 +118,14 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+        }
+      }
+    },
+    "$dialog": {
+      handler(newValue) {
+        console.log("resetting");
+        if (!newValue) {
+          this.$store.commit("setOptionNode", null);
         }
       }
     },

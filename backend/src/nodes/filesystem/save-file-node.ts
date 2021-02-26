@@ -12,8 +12,8 @@ export class FileSaveNode extends BaseNode {
     fileName: string;
     fileType: string;
     filePath: string;
-    constructor(name: string, id: string, options: any, targetsSuccess: any, targetFailue: any) {
-        super(name, NODE_TYPE, id, targetsSuccess, targetFailue);
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, outputConnections);
 
         this.fileName = this.getOption("filename", options);
         this.fileType = this.getOption("filetype", options);
@@ -32,8 +32,7 @@ export class FileSaveNode extends BaseNode {
                 if (err) {
                     this.onFailure(err);
                 } else {
-                    let msgOut = new Message(this.id, NODE_TYPE, payload);
-                    this.onSuccess(msgOut);
+                    this.onSuccess(payload);
                 }
             });
         } else if (this.fileType === "csv") {
@@ -43,7 +42,7 @@ export class FileSaveNode extends BaseNode {
                 if (err) {
                     this.onFailure(err);
                 } else {
-                    this.onSuccess(new Message(this.id, NODE_TYPE, payload));
+                    this.onSuccess(payload);
                 }
             });
         }
@@ -57,7 +56,7 @@ export class FileSaveNode extends BaseNode {
             }
             // write CSV to a file
             fs.writeFileSync(filePath, csv);
-            this.onSuccess(new Message(this.id, NODE_TYPE, csv));
+            this.onSuccess(csv);
         });
     }
 }

@@ -41,6 +41,18 @@ export class ExecutionCounter {
         this.sendExecutionCountWithoutInfo(nodeId);
     }
 
+    static async setCountType(nodeId: string, type: string, value: number) {
+        let execInfoString = `exex_info_${type}_${nodeId}`;
+
+        let execInfoDate= `exex_info_time_${nodeId}`;
+        let execInfoTime = `exex_info_date_${nodeId}`;
+        RedisClient.set(execInfoDate, format(new Date, "HH:mm:ss:SS"));
+        RedisClient.set(execInfoTime, format(new Date, "HH:mm:ss:SS"));
+
+        RedisClient.set(execInfoString, value); // Setting value to database
+        this.sendExecutionCountWithoutInfo(nodeId);
+    }
+
     /**
      * Fetches list of all active nodes and get the respective node count. Emitting these node counts to frontent
      * for proper initialization.

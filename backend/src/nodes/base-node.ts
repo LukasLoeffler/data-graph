@@ -14,15 +14,17 @@ export class BaseNode {
     type: string;
     targetsSuccess: Array<any>;
     targetsFailure: Array<any>;
+    outputInterfaces: Array<any>;
     running: boolean;
 
-    constructor(name: string, type: string, id: string = "", targetsSuccess: Array<any> = [], targetsFailure: Array<any> = []) {
+    constructor(name: string, type: string, id: string = "", outputInterfaces: Array<any>) {
         this.name = name;
         this.type = type;
         if (id) this.id = id;
         else this.id = crypto.randomBytes(10).toString('hex');
-        this.targetsSuccess = targetsSuccess;
-        this.targetsFailure = targetsFailure;
+        this.outputInterfaces = outputInterfaces;
+        this.targetsSuccess = outputInterfaces.filter((intf: any) => intf.from.name === "onSuccess");
+        this.targetsFailure = outputInterfaces.filter((intf: any) => intf.from.name === "onFailure");
         this.running = true;
     }
 
@@ -35,18 +37,28 @@ export class BaseNode {
     onSuccess(payload: any) {
         ExecutionCounter.incrCountType(this.id, "success");
         this.targetsSuccess.forEach(target => {
-            let message = this.buildMessage(this.id, target);
-            WsManager.sendMessage(message);
-            NodeManager.getNodeById(target).execute(payload);
+            this.sendConnectionExec(target.from.id, target.to.id);
+            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload);
+            NodeManager.getNodeById(target.to.nodeId).execute(message);
         });
     }
 
-    onFailure(msg: Message) {
+    onFailure(payload: any) {
         ExecutionCounter.incrCountType(this.id, "failure");
         WsManager.sendMessage(this.buildErrorMessage(this.id));  // Red shadow pulse trigger
         this.targetsFailure.forEach(target => {
-            WsManager.sendMessage(this.buildMessage(this.id, target));
-            NodeManager.getNodeById(target).execute(msg);
+            this.sendConnectionExec(target.from.id, target.to.id);
+            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload);
+            NodeManager.getNodeById(target.to.nodeId).execute(message);
+        });
+    }
+
+    on(trigger: string, payload: any) {
+        let targets =  this.outputInterfaces.filter((intf: any) => intf.from.name === trigger);
+        targets.forEach(target => {
+            this.sendConnectionExec(target.from.id, target.to.id);
+            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload);
+            NodeManager.getNodeById(target.to.nodeId).execute(message);
         });
     }
 
@@ -83,7 +95,7 @@ export class BaseNode {
         return options[optionName];
     }
 
-    buildMessage(fromNodeId: string, toNodeId: string): string {
+    sendConnectionExec(fromNodeId: string, toNodeId: string): void {
         let message = {
             type: "ConnectionExecution",
             data: {
@@ -91,7 +103,7 @@ export class BaseNode {
                 to: toNodeId
             }
         }
-        return JSON.stringify(message);
+        WsManager.sendMessage(JSON.stringify(message));
     }
 
     
