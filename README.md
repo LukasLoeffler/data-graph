@@ -7,7 +7,7 @@ Features:
 * Realtime error indication
 * Focus on usability and UX
  
-![example](docs/img/S7frblKawa.gif)
+![example](docs/img/gif.gif)
 
 ![context-menu](docs/img/chrome_E71RDSP2mw.png)
 
