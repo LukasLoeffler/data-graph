@@ -82,6 +82,7 @@ import CustomNode from "../components/CustomNode";
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
 import TriggerAfterNode from "../nodes/flow/TriggerAfterNode"
+import DataChangeNode from "../nodes/flow/DataChangeNode"
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
@@ -298,6 +299,7 @@ export default {
 
     // Flow
     this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
+    this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
     }
   },
   watch: {
