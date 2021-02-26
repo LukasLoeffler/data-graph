@@ -18,7 +18,10 @@
                   <v-text-field label="Url" required v-model="nodeCopy.name"></v-text-field>
                 </v-col>
                 <v-col cols="6">
-                  <v-select :items="['GET', 'POST', 'PUT', 'DELETE']" label="HTTP Method" required v-model="valueCopy.requestType"></v-select>
+                  <v-text-field 
+                    label="Timeout" required v-model.number="valueCopy.timeout" type="number" 
+                    :rules="[rules.required, rules.timeout]" hide-details>
+                  </v-text-field>
                 </v-col>
                 <v-col cols="12">
                   <v-text-field label="Url" required v-model="valueCopy.url" :rules="[rules.required, rules.protocol]"></v-text-field>
@@ -49,6 +52,10 @@
             <v-btn color="red" text class="ml-1" @click="resetHeader">Reset header</v-btn>
           </v-row>
         </v-card-text>
+        <v-divider></v-divider>
+        <v-textarea
+          outlined label="Notes" class="px-5 py-2" rows="3" hide-details v-model="valueCopy.notes"
+        ></v-textarea>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>

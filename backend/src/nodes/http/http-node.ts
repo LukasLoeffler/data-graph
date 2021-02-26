@@ -20,18 +20,20 @@ export class HttpNode extends BaseNode {
     url: string;
     httpMethod: httpMethods;
     headers: Array<Record<string, any>>;
+    timeout: number;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
         super(name, NODE_TYPE, id, outputConnections)
         this.url = options.settings.url;
         this.httpMethod = options.settings.requestType;
+        this.timeout = options.settings.timeout;
         this.headers = headerUtils.buildHeader(options.settings.headers);
         NodeManager.addNode(this);
     }
 
     execute() {
         ExecutionCounter.incrCountType(this.id, "trigger");
-        axios.get(this.url, {headers: this.headers, timeout: 2500})
+        axios.get(this.url, {headers: this.headers, timeout: this.timeout})
         .then((response: any) => {
             if (response.data) {
                 this.onSuccess(response.data);

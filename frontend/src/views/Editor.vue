@@ -67,7 +67,7 @@ import ExecutionCountOption from "../options/ExecutionCountOption";
 import InfoOption from "../options/InfoOption";
 import TriggerCountOption from "../options/TriggerCountOption";
 
-import HttpNodeDialog from "../components/dialogs/HttpNodeDialog";
+import HttpGetNodeDialog from "../components/dialogs/HttpGetNodeDialog";
 import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog";
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog";
 import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog";
@@ -252,7 +252,7 @@ export default {
     this.viewPlugin.registerOption("InfoOption", InfoOption);
     this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
 
-    this.viewPlugin.registerOption("HttpNodeDialog", HttpNodeDialog);
+    this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
     this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
     this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
     this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)

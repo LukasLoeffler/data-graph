@@ -11,7 +11,7 @@ export default class HttpPostPutNode extends Node {
         this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
         this.addOption("settings", "HttpPostPutDialog", {
-            url: "google.de", 
+            url: "http://", 
             requestType: "POST", 
             headers: [],
             timeout: 2500,

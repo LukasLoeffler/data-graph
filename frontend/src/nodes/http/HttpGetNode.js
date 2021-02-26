@@ -10,11 +10,12 @@ export default class HttpGetNode extends Node {
         this.addInputInterface("Event")
         this.addOutputInterface("onSuccess")
         this.addOutputInterface("onFailure")
-        this.addOption("settings", "HttpNodeDialog", {
-            url: "google.de", 
+        this.addOption("settings", "HttpGetNodeDialog", {
+            url: "http://", 
             requestType: "GET", 
             headers: [],
-            timeout: 2500
+            timeout: 2500,
+            notes: "Enter description of functionallity here",
         });
         this.addOption("ExecutionCount", "ExecutionCountOption");
         this.addOption("color", undefined, "#ad173a");

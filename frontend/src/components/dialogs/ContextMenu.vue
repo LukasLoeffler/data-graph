@@ -6,11 +6,11 @@
       @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container" :class="classTitle"
     >
       <h3 
-      :id="nodeData.id" class="name" style="text-align: center;" 
-      @mousedown.self.prevent.stop="$emit('start-drag')" 
-      @mouseup.self.prevent.stop="$emit('stop-drag', $event)"
+        :id="nodeData.id" class="name" style="text-align: center;" 
+        @mousedown.self.prevent.stop="$emit('start-drag')" 
+        @mouseup.self.prevent.stop="$emit('stop-drag', $event)"
       >
-      {{nodeData.name}}
+        {{nodeData.name}}
       </h3>
       <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode" class="btn-ss">
       <v-tooltip bottom open-delay="300" :color="running ? 'green' : 'red'">
@@ -164,7 +164,8 @@ import {getDescription} from "./nodeDescription.js";
       {type: "mqttPub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: false},
       {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: false},
       {type: "python-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true},
-      {type: "trigger-after", icon: "mdi-counter", resettable: false, stoppable: false, configurable: true},
+      {type: "trigger-after", icon: "mdi-counter", resettable: true, stoppable: false, configurable: true},
+      {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: false},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
