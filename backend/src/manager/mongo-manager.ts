@@ -6,10 +6,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 const environment = process.env.NODE_ENV || 'DEV';
 
-console.log("Started application with ENV:", environment);
-
-
-let url = 'mongodb://mongo:27017';
+let url = 'mongodb://mongo:27017';  // Reachable by docker in PROD mode
 if (environment === "DEV") url = "mongodb://localhost:27017";
 
 
