@@ -51,6 +51,21 @@ function getConnectedNodeByInterface(node: any, type: string) {
 }
 
 
+function getNodeByInterfaceId(interfaceId: String) {
+    return frontendNodes.nodes.find((node: any) => {
+        return node.interfaces.some((intf: any) => intf[1].id === interfaceId);
+    });
+}
+
+function getInterfaceByInterfaceId(interfaceId: String) {
+    let intf = null;
+    frontendNodes.nodes.forEach((node: any) => {
+        let extractedIntf = node.interfaces.find((intf: any) => intf[1].id === interfaceId);
+        if (extractedIntf) intf = {id: extractedIntf[1].id, name: extractedIntf[0]};
+    });
+    return intf;
+}
+
 /**
  * Baklava holds the node options in a format not usable by backend.
  * This function takes a node as an input and extracts the options as a key-value pair usable by the backend.
