@@ -82,10 +82,10 @@ function loadConfig(dbo: any) {
 
     let numberofTotalNodes = 0;
 
-    dbo.collection("node-configs").find({}).toArray(function(err: any, nodes: any) {
-        nodes.forEach((data: any)=> {
-            frontendNodes = data;
-            data.nodes.forEach((node: any) => {
+    dbo.collection("node-configs").find({}).toArray(function(err: any, nodeConfigs: any) {
+        nodeConfigs.forEach((nodeConfig: any)=> {
+            frontendNodes = nodeConfig;
+            nodeConfig.nodes.forEach((node: any) => {
 
                 let newCls: any;
                 try {
@@ -99,7 +99,7 @@ function loadConfig(dbo: any) {
                 let options = extractOptionsFromNode(node);
                 new newCls.clss(node.name, node.id, options, successTargets, failureTargets);
             });
-            numberofTotalNodes = numberofTotalNodes + data.nodes.length;
+            numberofTotalNodes = numberofTotalNodes + nodeConfig.nodes.length;
         });
 
         let numberOfNodesInit = NodeManager.getActiveNodes().length;
