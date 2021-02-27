@@ -237,3 +237,25 @@ app.post("/node-template", (req, res) => {
         else res.send(result);
     });
 });
+
+
+
+app.get('/http-in/*', function(req, res) {
+    console.log(req.originalUrl);
+
+    let url = req.originalUrl.replace("/http-in/", "");
+
+    let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url);
+    if (node) node.execute(req, res);
+    else res.status(400).send({message: "no matching endpoint active"});
+});
+
+app.post('/http-in/*', function(req, res) {
+    console.log(req.originalUrl);
+
+    let url = req.originalUrl.replace("/http-in/", "");
+
+    let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url);
+    if (node) node.execute(req, res);
+    else res.status(400).send({message: "no matching endpoint active"});
+});

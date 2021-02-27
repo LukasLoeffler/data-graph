@@ -2,7 +2,7 @@ import { Node } from "@baklavajs/core";
 
 
 export default class ObjectMappingNode extends Node {
-    type = "objectMapping";
+    type = "object-mapping";
     name = "Object Mapping";
 
     constructor() {

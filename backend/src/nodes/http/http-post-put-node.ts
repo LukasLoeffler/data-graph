@@ -34,16 +34,16 @@ export class HttpPostPutNode extends BaseNode {
         axios.post(this.url, msg, {headers: this.headers, timeout: this.timeout})
         .then((response: any) => {
             if (response.data) {
-                this.onSuccess(response.data);
+                this.onSuccess(response.data, msg.additional);
             } else {
-                this.onFailure(null);
+                this.onFailure(null, msg.additional);
             }
         }).catch((err: AxiosError) => {
             let payload = {
                 code: err.code,
                 message: err.message
             }
-            this.onFailure(payload);
+            this.onFailure(payload, msg.additional);
         });
     }
 }

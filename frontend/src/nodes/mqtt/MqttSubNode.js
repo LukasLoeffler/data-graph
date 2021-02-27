@@ -11,7 +11,7 @@ let items = [{
 
 
 export default class MqttSubNode extends Node {
-    type = "mqttSub";
+    type = "mqtt-sub";
     name = "MQTT Subscribe";
 
     constructor() {

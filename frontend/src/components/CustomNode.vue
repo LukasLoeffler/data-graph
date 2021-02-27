@@ -52,7 +52,6 @@
   export default {
     extends: Components.Node,
     components: {
-      //NodeInterface: Components.NodeInterface,
       CustomInterface,
       NodeOption: Components.NodeOption,
       ContextMenu
