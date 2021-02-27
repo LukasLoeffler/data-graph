@@ -166,8 +166,8 @@ import {getDescription} from "./nodeDescription.js";
       {type: "python-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true},
       {type: "trigger-after", icon: "mdi-counter", resettable: true, stoppable: false, configurable: true},
       {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: false},
-      {type: "http-in-request", icon: "mdi-delta", resettable: false, stoppable: false, configurable: false},
-      {type: "http-in-response", icon: "mdi-delta", resettable: false, stoppable: false, configurable: false},
+      {type: "http-in-request", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
+      {type: "http-in-response", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
