@@ -1,7 +1,7 @@
 import { Node } from "@baklavajs/core";
 
 export default class PathNode extends Node {
-    type = "objectPath";
+    type = "object-path";
     name = "Object Path";
 
     constructor() {

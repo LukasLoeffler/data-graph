@@ -9,7 +9,7 @@ let items = [{
 
 
 export default class MqttPubNode extends Node {
-    type = "mqttPub";
+    type = "mqtt-pub";
     name = "MQTT Publish";
 
     constructor() {

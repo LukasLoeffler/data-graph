@@ -14,12 +14,12 @@
       </v-list-item>
       </v-list-item-group>
       <div>
-        <v-row>
+        <v-row class="pt-1">
           <v-col cols="6" class="pa-1 pl-3">
             <v-btn block color="green" @click="$emit('createWorkspace')">Add</v-btn>
           </v-col>
           <v-col cols="6" class="pa-1 pr-3">
-            <v-btn block color="purple" @click="$router.push('/settings')">Manage</v-btn>
+            <v-btn block color="purple lighten-1" @click="$router.push('/settings')">Manage</v-btn>
           </v-col>
         </v-row>
       </div>

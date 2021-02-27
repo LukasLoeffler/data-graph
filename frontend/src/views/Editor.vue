@@ -16,7 +16,7 @@
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
-          <baklava-editor id="editor" :plugin="viewPlugin" @contextmenu.prevent.capture="console.log('captured')"></baklava-editor>
+          <baklava-editor id="editor" :plugin="viewPlugin" @contextmenu.stop="console.log('captured')"></baklava-editor>
         </v-col>
       </v-row>
     </v-flex>
@@ -42,14 +42,24 @@ import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 import { apiBaseUrl } from '../main';
 
+// Custom Baklava Components
+import CustomConnection from "../components/CustomConnection";
+import CustomInterface from "../components/CustomInterface";
+import CustomNode from "../components/CustomNode";
+//import CustomContextMenu from "../components/CustomContextMenu"
+
 import ButtonNode from "../nodes/ButtonNode";
 import IntervalNode from "../nodes/time/IntervalNode";
 import CronNode from "../nodes/time/CronNode";
 
 import HttpGet from "../nodes/http/HttpGetNode";
+import HttpPostPut from "../nodes/http/HttpPostPutNode";
+import HttpInRequestNode from "../nodes/http/HttpInRequestNode"
+import HttpInResponseNode from "../nodes/http/HttpInResponseNode"
+
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
-import HttpPostPut from "../nodes/http/HttpPostPutNode";
+
 import Filter from "../nodes/object/FilterNode";
 import PathNode from "../nodes/object/PathNode";
 import FileSave from "../nodes/filesystem/FileSaveNode"
@@ -74,10 +84,8 @@ import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog";
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
 import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog";
 import TriggerAfterDialog from "../components/dialogs/TriggerAfterDialog";
+import AggregatorNodeDialog from "../components/dialogs/AggregatorNodeDialog";
 
-import CustomConnection from "../components/CustomConnection";
-import CustomInterface from "../components/CustomInterface";
-import CustomNode from "../components/CustomNode";
 
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
@@ -246,12 +254,13 @@ export default {
 
     // this.viewPlugin.enableMinimap = true;
 
-    // register your nodes, node options, node interface types, ...
+    // Register options
     this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
     this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
     this.viewPlugin.registerOption("InfoOption", InfoOption);
-    this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
 
+    // Register dialog options
+    this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
     this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
     this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
     this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
@@ -259,39 +268,47 @@ export default {
     this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
     this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
     this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
+    this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
 
+
+    // Register nodes
     this.editor.registerNodeType("cron", CronNode, "Time")
     this.editor.registerNodeType("interval", IntervalNode, "Time")
 
     this.editor.registerNodeType("logging", Logging, "Logging")
     this.editor.registerNodeType("info", InfoNode, "Logging")
 
-    this.editor.registerNodeType("httpGet", HttpGet, "Http")
-    this.editor.registerNodeType("httpPostPut", HttpPostPut, "Http")
+    this.editor.registerNodeType("http-get", HttpGet, "Http")
+    this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
+    this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
+    this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
+
+    
 
     // Object
     this.editor.registerNodeType("filter", Filter, "Object")
-    this.editor.registerNodeType("objectPath", PathNode, "Object")
-    this.editor.registerNodeType("arrayMapping", ArrayMappingNode, "Object")
-    this.editor.registerNodeType("objectMapping", ObjectMappingNode, "Object")
-    this.viewPlugin.setNodeTypeAlias("objectFilter", "Filter array");
-    this.viewPlugin.setNodeTypeAlias("objectPath", "Extract object path");
+    this.editor.registerNodeType("object-path", PathNode, "Object")
+    this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
+    this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
+
+    this.viewPlugin.setNodeTypeAlias("object-filter", "Filter array");
+    this.viewPlugin.setNodeTypeAlias("object-path", "Extract object path");
 
     // Filesystem
-    this.editor.registerNodeType("fileSave", FileSave, "Filesystem")
-    this.viewPlugin.setNodeTypeAlias("fileSave", "Save as file");
+    this.editor.registerNodeType("file-save", FileSave, "Filesystem")
+    this.viewPlugin.setNodeTypeAlias("file-save", "Save as file");
 
     // User input
     this.editor.registerNodeType("button", ButtonNode, "Input")
     this.viewPlugin.setNodeTypeAlias("button", "Button");
 
-    this.editor.registerNodeType("postgresSave", PostgresSaveNode, "Database")
+    this.editor.registerNodeType("postgres-save", PostgresSaveNode, "Database")
 
     // MQTT
-    this.editor.registerNodeType("mqttSub", MqttSubNode, "MQTT")
-    this.editor.registerNodeType("mqttPub", MqttPubNode, "MQTT")
-    this.viewPlugin.setNodeTypeAlias("mqttSub", "Subscribe");
-    this.viewPlugin.setNodeTypeAlias("mqttPub", "Publish");
+    this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
+    this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
+    this.viewPlugin.setNodeTypeAlias("mqtt-sub", "Subscribe");
+    this.viewPlugin.setNodeTypeAlias("mqtt-pub", "Publish");
 
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 

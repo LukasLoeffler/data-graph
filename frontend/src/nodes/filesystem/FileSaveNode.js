@@ -2,7 +2,7 @@ import { Node } from "@baklavajs/core";
 
 
 export default class FileSaveNode extends Node {
-    type = "fileSave";
+    type = "file-save";
     name = "FileSave";
 
     constructor() {

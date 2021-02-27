@@ -16,6 +16,8 @@ import { InfoNode } from "./info/info-node"
 import { PythonFunctionNode } from "./function/python-function-node"
 import { TriggerAfterNode } from "./flow/trigger-after-node"
 import { DataChangeNode } from "./flow/data-change-node"
+import { HttpInRequestNode } from "./http/http-in-request-node"
+import { HttpInResponseNode } from "./http/http-in-response-node"
 
 
 
@@ -42,22 +44,24 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("cron", "time", CronNode),
     new RegEntry("interval", "time", CronNode),
     new RegEntry("logging", "logging", LoggingNode),
-    new RegEntry("httpGet", "http", HttpNode),
-    new RegEntry("httpPostPut", "http", HttpPostPutNode),
-    new RegEntry("fileSave", "fileSystem", FileSaveNode),
-    new RegEntry("objectMapping", "object", ObjectMapperNode),
-    new RegEntry("objectPath", "object", ObjectPathNode),
-    new RegEntry("arrayMapping", "object", ArrayMapperNode),
+    new RegEntry("http-get", "http", HttpNode),
+    new RegEntry("http-post-put", "http", HttpPostPutNode),
+    new RegEntry("file-save", "fileSystem", FileSaveNode),
+    new RegEntry("object-mapping", "object", ObjectMapperNode),
+    new RegEntry("object-path", "object", ObjectPathNode),
+    new RegEntry("array-mapping", "object", ArrayMapperNode),
     new RegEntry("filter", "object", FilterNode),
     new RegEntry("button", "input", ButtonNode),
-    new RegEntry("mqttPub", "mqtt", MqttPubNode),
-    new RegEntry("mqttSub", "mqtt", MqttSubNode),
+    new RegEntry("mqtt-pub", "mqtt", MqttPubNode),
+    new RegEntry("mqtt-sub", "mqtt", MqttSubNode),
     new RegEntry("aggregator", "aggregator", AggregatorNode),
-    new RegEntry("postgresSave", "database", PostgresSaveNode),
+    new RegEntry("postgres-save", "database", PostgresSaveNode),
     new RegEntry("info", "info", InfoNode),
     new RegEntry("python-function", "function", PythonFunctionNode),
     new RegEntry("trigger-after", "flow", TriggerAfterNode),
-    new RegEntry("data-change", "flow", DataChangeNode)
+    new RegEntry("data-change", "flow", DataChangeNode),
+    new RegEntry("http-in-request", "http", HttpInRequestNode),
+    new RegEntry("http-in-response", "http", HttpInResponseNode),
 ]
 
 

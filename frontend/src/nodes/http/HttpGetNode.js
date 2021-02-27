@@ -2,7 +2,7 @@ import { Node } from "@baklavajs/core";
 
 
 export default class HttpGetNode extends Node {
-    type = "httpGet";
+    type = "http-get";
     name = "HTTP GET";
 
     constructor() {

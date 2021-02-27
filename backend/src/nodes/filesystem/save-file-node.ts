@@ -21,8 +21,8 @@ export class FileSaveNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(msgIn: Message) {
-        let payload = msgIn.payload;
+    execute(msg: Message) {
+        let payload = msg.payload;
         let datetime = new Date().toISOString().replace(/:/g, "-")
         let file = `${this.filePath}/${this.fileName}-${datetime}.${this.fileType}`
 
@@ -30,33 +30,33 @@ export class FileSaveNode extends BaseNode {
         if (this.fileType === "json") {
             fs.writeFile(file, JSON.stringify(payload,  null, 4),  (err: any) => {
                 if (err) {
-                    this.onFailure(err);
+                    this.onFailure(err, msg.additional);
                 } else {
-                    this.onSuccess(payload);
+                    this.onSuccess(payload, msg.additional);
                 }
             });
         } else if (this.fileType === "csv") {
-            this.writeToCsv(payload, file);
+            this.writeToCsv(payload, file, msg);
         } else {
             fs.writeFile(file, payload,  (err: any) => {
                 if (err) {
-                    this.onFailure(err);
+                    this.onFailure(err, msg.additional);
                 } else {
-                    this.onSuccess(payload);
+                    this.onSuccess(payload, msg.additional);
                 }
             });
         }
     }
 
 
-    writeToCsv(payload: any, filePath: string) {
+    writeToCsv(payload: any, filePath: string, msg: Message) {
         converter.json2csv(payload, (err: any, csv: any) => {
             if (err) {
                 throw err;
             }
             // write CSV to a file
             fs.writeFileSync(filePath, csv);
-            this.onSuccess(csv);
+            this.onSuccess(csv, msg.additional);
         });
     }
 }
