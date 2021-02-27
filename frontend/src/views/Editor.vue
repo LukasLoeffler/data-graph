@@ -56,6 +56,9 @@ import HttpGet from "../nodes/http/HttpGetNode";
 import HttpPostPut from "../nodes/http/HttpPostPutNode";
 import HttpInRequestNode from "../nodes/http/HttpInRequestNode"
 import HttpInResponseNode from "../nodes/http/HttpInResponseNode"
+import HttpGetNodeDialog from "../components/dialogs/HttpGetNodeDialog";
+import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog";
+import HttpInResponseDialog from "../nodes/http/HttpInResponseDialog"
 
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
@@ -77,8 +80,7 @@ import ExecutionCountOption from "../options/ExecutionCountOption";
 import InfoOption from "../options/InfoOption";
 import TriggerCountOption from "../options/TriggerCountOption";
 
-import HttpGetNodeDialog from "../components/dialogs/HttpGetNodeDialog";
-import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog";
+
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog";
 import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog";
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
@@ -269,6 +271,7 @@ export default {
     this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
     this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
     this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
+    this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
 
 
     // Register nodes

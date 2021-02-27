@@ -8,7 +8,6 @@ export default class HttpInRequestNode extends Node {
     constructor() {
         super();
         this.addOutputInterface("onRequest")
-        this.addOption("ExecutionCount", "ExecutionCountOption");
         this.addOption("color", undefined, "#ad173a");
         this.addOption("running", undefined, true);
     }
