@@ -2,7 +2,7 @@ import { Node } from "@baklavajs/core";
 
 
 export default class HttpPostPutNode extends Node {
-    type = "httpPostPut";
+    type = "http-post-put";
     name = "HTTP POST/PUT";
 
     constructor() {

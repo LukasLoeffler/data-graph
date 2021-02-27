@@ -18,10 +18,10 @@ export class ArrayMapperNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(msgIn: Message) {
-        this.lastValue = msgIn.payload;
-        let newObject = mapObjectArray(msgIn.payload, this.mapper);
-        this.onSuccess(newObject);
+    execute(msg: Message) {
+        this.lastValue = msg.payload;
+        let newObject = mapObjectArray(msg.payload, this.mapper);
+        this.onSuccess(newObject, msg.additional);
     }
 
     getLastValue() {

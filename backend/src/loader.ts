@@ -123,12 +123,11 @@ function loadConfig(dbo: any) {
                 } catch (error) {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
-                let successTargets = getSuccessTargets(node);
-                let failureTargets = getFailureTargets(node);
                 let options = extractOptionsFromNode(node);
                 let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
+                let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
 
-                new newCls.clss(node.name, node.id, options, outputConnections);
+                new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
             });
             numberofTotalNodes = numberofTotalNodes + nodeConfig.nodes.length;
         });

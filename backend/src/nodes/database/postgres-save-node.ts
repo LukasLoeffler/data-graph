@@ -57,10 +57,10 @@ export class PostgresSaveNode extends BaseNode {
         this.client
             .query(sql, values)
             .then((data: any) => {
-                this.onSuccess(data);   
+                this.onSuccess(data, msg.additional);   
             })
             .catch((err: any) => {
-                this.onFailure(err);
+                this.onFailure(err, msg.additional);
             })
     }
 }

@@ -22,7 +22,7 @@ export class ObjectMapperNode extends BaseNode {
     execute(msgIn: Message) {
         this.lastValue = msgIn.payload;
         let newObject = mapObject(msgIn.payload, this.mapper);
-        this.onSuccess(newObject);
+        this.onSuccess(newObject, msgIn.additional);
     }
 
     getLastValue() {

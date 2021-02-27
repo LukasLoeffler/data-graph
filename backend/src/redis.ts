@@ -3,8 +3,7 @@ const redis = require("redis");
 const { promisify } = require("util");
 
 
-let url = 'redis://redis:6379/0'
-
+let url = 'redis://redis:6379/0'  // Reachable by docker in PROD mode
 const environment = process.env.NODE_ENV || 'DEV';
 if (environment === "DEV") url = "redis://localhost:6379/0";
 

@@ -12,18 +12,22 @@ export class AggregatorNode extends BaseNode {
     slots = new Set();
     data = new Map();
 
-    constructor(name: string, id: string, options: any, interfaces: Array<any>, targetsSuccess: Array<any>) {
-        super(name, NODE_TYPE, id, targetsSuccess)
-        this.inputInterfaces = interfaces.filter((intf: any) => intf.name.includes("IN"));
+    additional: any;
+
+    constructor(name: string, id: string, options: any, outputInterfaces: Array<any>, inputInterfaces: Array<any>) {
+        super(name, NODE_TYPE, id, outputInterfaces)
+        this.inputInterfaces = inputInterfaces;
         NodeManager.addNode(this);
     }
 
     
-    execute(message: Message) {
-        let currentIntf = this.inputInterfaces.find((intf: any) => intf.originNodes.some((elem: any) => elem.id === message.sourceNodeId));
-        this.slots.add(currentIntf.id);
+    execute(msg: Message) {
 
-        this.data.set(currentIntf.id, message.payload); // Writing last message to map
+        this.data.set(msg.targetId, msg.payload); // Writing last message to map
+        this.slots.add(msg.targetId);
+
+        // Necessary because of possible additional requests -> Prevention of null override
+        if (msg.additional) this.additional = msg.additional;  
 
         //console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
         if (this.slots.size === this.inputInterfaces.length) {
@@ -31,9 +35,10 @@ export class AggregatorNode extends BaseNode {
             WsManager.sendMessage(this.buildAggregationCountMessage());
             let output: Array<any> = [];
             this.data.forEach((value: any, key: string) => {
-                output.push(...value);
+                output.push(value);
             });
-            this.onSuccess(output);
+
+            this.onSuccess(output, this.additional);
         } else {
             WsManager.sendMessage(this.buildAggregationCountMessage());
         }

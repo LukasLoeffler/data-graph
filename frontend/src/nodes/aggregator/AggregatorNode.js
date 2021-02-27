@@ -10,12 +10,12 @@ export default class AggregatorNode extends Node {
         super();
         this.addOption("color", undefined, "#f23fe3");
         this.addOption("running", undefined, true);
+        this.addOption("settings", "AggregatorNodeDialog");
         this.addOutputInterface("onSuccess", "Message");
     }
 
     addInput(name) {
         this.addInputInterface(name);
-        
     }
 
     save() {

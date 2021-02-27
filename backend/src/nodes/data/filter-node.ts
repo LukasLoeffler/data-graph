@@ -15,13 +15,13 @@ export class FilterNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(msgIn: Message) {
+    execute(msg: Message) {
         try {
-            let output = msgIn.payload.filter((element: any) => eval(this.filter));
-            this.onSuccess(output);
+            let output = msg.payload.filter((element: any) => eval(this.filter));
+            this.onSuccess(output, msg.additional);
         } catch (error) {
             console.log("FilterNodeError:", error);
-            this.onFailure(error);
+            this.onFailure(error, msg.additional);
         }
     }
 }

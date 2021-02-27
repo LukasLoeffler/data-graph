@@ -15,10 +15,9 @@ export class InfoNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        super.execute(msg);
         ExecutionCounter.incrCountType(this.id, "trigger");
         ExecutionCounter.incrCountType(this.id, "bytes", sizeof(msg.payload));
-        this.onSuccess(msg);
+        this.onSuccess(msg, msg.additional);
     }
 
     reset() {

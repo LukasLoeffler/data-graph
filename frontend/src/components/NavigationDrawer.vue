@@ -13,28 +13,18 @@
         <v-list-item-title>{{node.workspace}}</v-list-item-title>
       </v-list-item>
       </v-list-item-group>
-      <v-btn block color="green" class="mt-2" @click="$emit('createWorkspace')">Add Workspace</v-btn>
+      <div>
+        <v-row class="pt-1">
+          <v-col cols="6" class="pa-1 pl-3">
+            <v-btn block color="green" @click="$emit('createWorkspace')">Add</v-btn>
+          </v-col>
+          <v-col cols="6" class="pa-1 pr-3">
+            <v-btn block color="purple lighten-1" @click="$router.push('/settings')">Manage</v-btn>
+          </v-col>
+        </v-row>
+      </div>
     </v-list>
-    <v-spacer></v-spacer>
     <v-divider></v-divider>
-    <v-list-item-group color="primary">
-      <v-list-item dense @click="$router.push('/settings')">
-        <v-list-item-icon>
-          <v-icon>mdi-cog-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title >Settings</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item dense @click="$router.push('/about')">
-        <v-list-item-icon>
-          <v-icon>mdi-information-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>About</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list-item-group>
   </v-navigation-drawer>
 </template>
 
@@ -49,7 +39,7 @@ export default {
   props: {
     nodeConfig: Array,
     drawer: Boolean,
-    configIndex: Number
+    configIndex: Number,
   },
   created() {
     this.drawerCopy = this.drawer;

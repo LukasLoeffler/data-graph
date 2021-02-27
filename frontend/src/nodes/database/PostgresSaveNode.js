@@ -2,7 +2,7 @@ import { Node } from "@baklavajs/core";
 
 
 export default class PostgresSaveNode extends Node {
-    type = "postgresSave";
+    type = "postgres-save";
     name = "Postgres Save";
 
     constructor() {

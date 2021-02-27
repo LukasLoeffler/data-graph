@@ -32,32 +32,30 @@ export class BaseNode {
         return `${this.type} (id: ${this.id}, name: ${this.name})`;
     }
 
-    execute(msg: Message) {}
-
-    onSuccess(payload: any) {
+    onSuccess(payload: any, additional: any = null) {
         ExecutionCounter.incrCountType(this.id, "success");
         this.targetsSuccess.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
-            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload);
+            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
             NodeManager.getNodeById(target.to.nodeId).execute(message);
         });
     }
 
-    onFailure(payload: any) {
+    onFailure(payload: any, additional: any = null) {
         ExecutionCounter.incrCountType(this.id, "failure");
         WsManager.sendMessage(this.buildErrorMessage(this.id));  // Red shadow pulse trigger
         this.targetsFailure.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
-            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload);
+            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
             NodeManager.getNodeById(target.to.nodeId).execute(message);
         });
     }
 
-    on(trigger: string, payload: any) {
+    on(trigger: string, payload: any, additional: any = null) {
         let targets =  this.outputInterfaces.filter((intf: any) => intf.from.name === trigger);
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
-            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload);
+            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
             NodeManager.getNodeById(target.to.nodeId).execute(message);
         });
     }

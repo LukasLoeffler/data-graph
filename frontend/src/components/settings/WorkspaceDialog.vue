@@ -143,6 +143,7 @@ export default {
         let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.localNodeConfig._id}`;
 
         delete loadedConfig._id;
+        loadedConfig.workspace = this.nodeConfig.workspace;  // Rename workspace, otherwise same name is used
 
         this.axios.put(saveStateUrl, loadedConfig)
         .then((response) => {

@@ -12,6 +12,11 @@ export class NodeManager {
         let node = nodes.find(node => node.id === id);
         return node;
     }
+
+    static getNodesByType(type: string): any {
+        let filteredNodes = nodes.filter(node => node.type === type);
+        return filteredNodes;
+    }
     
     /**
      * Adds a node to the active nodes.

@@ -2,7 +2,7 @@ import { Node } from "@baklavajs/core";
 
 
 export default class ArrayMappingNode extends Node {
-    type = "arrayMapping";
+    type = "array-mapping";
     name = "Array Mapping";
 
     constructor() {
