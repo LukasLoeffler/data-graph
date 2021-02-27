@@ -3,7 +3,7 @@ import { Node } from "@baklavajs/core";
 
 export default class HttpInRequestNode extends Node {
     type = "http-in-request";
-    name = "HTTP In Request";
+    name = "HTTP-IN Request";
 
     constructor() {
         super();
