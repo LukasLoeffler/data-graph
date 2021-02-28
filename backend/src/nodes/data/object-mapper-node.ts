@@ -74,9 +74,14 @@ export function mapObject(input_object: any, mapping: any, mode = "explicit") {
             setCustomTime(mapper, newObject);
         } else if (mapper.source.includes("{{payload}}")) {
             _.set(newObject, mapper.target, input_object);
+        } else if (mapper.source === ".") {
+            _.set(newObject, mapper.target, input_object);
         } else if (mapper.target.includes("unix")) {
             let date = new Date(_.get(input_object, mapper.source)* 1000);
             _.set(newObject, mapper.target, date);
+        }
+        else if (mapper.target === ".") {
+            newObject = input_object[mapper.source];
         } else {
             // If source is path set origin as value
             _.set(newObject, mapper.target, _.get(input_object, mapper.source));

@@ -55,11 +55,6 @@ function storeLastValue(nodeId: string, payload: any) {
     const options = { upsert: true };
 
     _db.collection("last-values").updateOne(query, newvalues, options, function(err: any, obj: any) {
-        if (err) {
-            console.log(err);
-
-        } else {
-            console.log("success")
-        }
+        if (err) console.log(err);
     });
 }
