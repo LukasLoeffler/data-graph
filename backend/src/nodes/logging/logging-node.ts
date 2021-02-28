@@ -13,8 +13,8 @@ export class LoggingNode extends BaseNode {
 
     level: string;
     
-    constructor(name: string, id: string, options: any) {
-        super(name, NODE_TYPE, id, [])
+    constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
+        super(name, NODE_TYPE, id, outputConnections)
         this.level = this.getOption("operation", options) || "NO_LEVEL_SET";
         NodeManager.addNode(this);
     }
@@ -26,7 +26,9 @@ export class LoggingNode extends BaseNode {
         if (this.level === "WARN") levelOut = chalk.bold(chalk.yellow(this.level));
         if (this.level === "DANGER") levelOut = chalk.bold(chalk.red(this.level));
         if (this.level === "NO_LEVEL_SET") levelOut = chalk.bold(chalk.bgRed(this.level));
-        console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${JSON.stringify(msg.payload)}`)
+
+        this.on("onInput", msg.payload, msg.additional);
+        console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${JSON.stringify(msg.payload)}`);
     }
 
     sendData(msg: Message) {

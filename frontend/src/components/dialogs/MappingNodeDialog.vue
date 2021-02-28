@@ -1,12 +1,15 @@
 <template>
   <v-row justify="center" class="z-index: 10000;">
     <v-dialog v-model="dialog" scrollable>
-      <v-card>
+      <v-card v-if="nodeCopy">
         <v-card-title>
           <span class="headline">Node settings: {{nodeCopy.name}}</span>
           <v-spacer></v-spacer>
           <v-btn @click="mirrorObject" color="orange" class="mr-1" outlined :disabled="Object.keys(codeRaw).length === 0">
             <v-icon>mdi-transfer-right</v-icon>
+          </v-btn>
+          <v-btn @click="testHidden = !testHidden" color="teal" class="mr-1" outlined :disabled="Object.keys(codeRaw).length === 0">
+            <v-icon>mdi-file-hidden</v-icon>
           </v-btn>
           <NodeInfoDialog type="mapping"/>
           <v-btn color="grey" class="mr-1" outlined>
@@ -30,9 +33,9 @@
                 </tr>
               </thead>
               <draggable :list="valueCopy.mappings" tag="tbody" handle=".handle">
-                <tr v-for="(mapper, index) in valueCopy.mappings" :key="index">
+                <tr v-for="(mapper, index) in valueCopy.mappings" :key="mapper.value">
                   <td class="handle">
-                    <v-icon style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
+                    <v-icon class="page__grab-icon" style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
                   </td>
                   <td>
                     <v-text-field v-model="mapper.source" outlined dense hide-details></v-text-field>
@@ -50,7 +53,7 @@
               </draggable>
             </v-simple-table>
           </v-container>
-          <v-row justify="center" v-if="Object.keys(codeRaw).length !== 0">
+          <v-row justify="center" v-if="Object.keys(codeRaw).length !== 0 && !testHidden">
             <v-col cols="6">
               <h3 class="ml-5">Latest input</h3>
               <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
@@ -61,6 +64,10 @@
               <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode style="padding-left: 0px; text-align:left"></json-viewer>
             </v-col>
           </v-row>
+          <p v-else-if="testHidden" class="no-data-info mt-5">
+            Testbed was hidden by user. Activate by clicking on file symbol in top-right corner. <br>
+            This feature can be used in case of big objects/arrays for performance improvements.
+          </p>
           <p v-else class="no-data-info mt-5">
             No data present yet. Interactive testing feature is disabled. <br>
             To learn more click on the info icon in the upper right corner.
@@ -92,23 +99,22 @@ import JsonViewer from 'vue-json-viewer'
 import {apiBaseUrl} from "../../main.js";
 
 export default {
-  data: () => ({
-    mappingCopy: null,
-    dialog: false,
-    codeRaw: [],
-    codeFormatted: [],
-    infoMode: false
-  }),
+  props: ["option", "node", "value"],
   components: {
     Draggable,
     JsonViewer,
     NodeInfoDialog
   },
-  props: ["option", "node", "value"],
-  created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = {...this.value};
-  },
+  data: () => ({
+    valueCopy: null,
+    nodeCopy: null,
+    dialog: false,
+    codeRaw: [],
+    codeFormatted: [],
+    infoMode: false,
+    testHidden: false
+  }),
+  created() {},
   methods: {
     fetchData() {
       let lastValueUrl = `${apiBaseUrl}/last-value/${this.node.id}`;
@@ -126,7 +132,7 @@ export default {
     },
     deleteMapping(index) {
       this.valueCopy.mappings.splice(index, 1);
-      this.$forceUpdate()
+      this.$forceUpdate();
     },
     save() {
       this.node.setOptionValue("mapping", this.valueCopy);
@@ -145,7 +151,8 @@ export default {
     },
     mirrorObject() {
       this.valueCopy.mappings = [];
-      let keys = this.getKeys(this.codeRaw);
+      let keys = Array.isArray(this.codeRaw) ? this.getKeys(this.codeRaw[0]) : this.getKeys(this.codeRaw);
+
       keys.forEach(element => {
         this.valueCopy.mappings.push({
           source: element,
@@ -176,10 +183,12 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.nodeCopy = {...this.node};
+          this.valueCopy = {...this.value};
           this.fetchData();
         }
       }
-    },
+    }
   }
 }
 </script>

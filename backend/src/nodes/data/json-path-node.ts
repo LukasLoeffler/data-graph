@@ -19,7 +19,6 @@ export class ObjectPathNode extends BaseNode {
     execute(msg: Message) {
         // Check if msgIn and payload are provided
         if (msg && msg.payload) {
-            console.log(this.path)
             let valueAtPath = _.get(msg.payload, this.path);
             this.onSuccess(valueAtPath, msg.additional);
         } else {

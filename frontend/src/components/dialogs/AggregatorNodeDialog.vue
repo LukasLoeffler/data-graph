@@ -1,15 +1,35 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="dialog" max-width="600px">
-      <v-card>
+      <v-card v-if="nodeCopy">
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
         </v-card-title>
         <v-card-text class="pb-1">
-          <v-btn @click="addInterface" :disabled="!newName">Add Interface</v-btn>
-          <v-text-field v-model="newName"></v-text-field>
-
-          <p v-for="(intf, i) in inputInterfaces" :key="i">{{intf}}</p>
+        <v-row>
+          <v-col>
+            <v-text-field placeholder="New Interface Name" v-model="newName">
+              <template v-slot:append-outer>
+                <v-btn text @click="addInterface" color="green" :disabled="!newName">
+                  CREATE
+                </v-btn>
+              </template>
+            </v-text-field>
+          </v-col>
+        </v-row>
+        <v-row v-for="(intf, index) in inputInterfaces" :key="index">
+          <v-col dense class="pa-0 px-2">
+            <v-text-field v-model="intf.name"></v-text-field>
+          </v-col>
+          <v-col dense cols="5" class="pa-0">
+            <v-text-field disabled v-model="intf.id"></v-text-field>
+          </v-col>
+          <v-col cols="1" class="mp-0" dense>
+            <v-btn icon @click="removeInterface(index)" color="red">
+              <v-icon>mdi-trash-can-outline</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
 
         </v-card-text>
         <v-divider></v-divider>
@@ -46,33 +66,55 @@ export default {
     },
     valid: false,
     inputInterfaces: [],
-    newName: null
+    newName: null,
+    interfacesToRemove: [],
+    interfacesToAdd: []
   }),
   props: ["option", "node", "value"],
-  created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = {...this.value};
-
-    for (let [key, value] of this.nodeCopy.interfaces) {
-      this.inputInterfaces.push(
-        {
-          name: key,
-          id: value.id,
-          isInput: value.isInput,
-        }
-      )
-    }
-    this.inputInterfaces = this.inputInterfaces.filter(intf => intf.isInput);
-  },
+  created() {},
   methods: {
     save() {
+      this.interfacesToRemove.forEach((name) => {
+        this.node.removeInterface(name);
+      });
+      this.interfacesToAdd.forEach((name) => {
+        this.node.addInputInterface(name);
+      });
+
+
       this.node.setOptionValue("settings", this.valueCopy);
       this.node.name = this.nodeCopy.name;
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
     },
     addInterface() {
-      this.node.addInputInterface(this.newName);
+      this.interfacesToAdd.push(this.newName);
+      this.inputInterfaces.push({name: this.newName, id: "NOT SAVED YET", isInput: true})
+    },
+    removeInterface(index) {
+      this.interfacesToRemove.push(this.inputInterfaces[index].name);
+      this.inputInterfaces.splice(index, 1);
+    },
+    init() {
+      // Clear input interfaces (reopen issue)
+      this.interfacesToRemove = [];
+      this.interfacesToAdd = [];
+      this.inputInterfaces = [];  
+      this.nodeCopy = {...this.node};
+      this.valueCopy = {...this.value};
+    },
+    initInterfaceList() {
+      this.init();
+      for (let [key, value] of this.nodeCopy.interfaces) {
+        this.inputInterfaces.push(
+          {
+            name: key,
+            id: value.id,
+            isInput: value.isInput,
+          }
+        )
+      }
+      this.inputInterfaces = this.inputInterfaces.filter(intf => intf.isInput);
     }
   },
 
@@ -80,6 +122,7 @@ export default {
     "$store.getters.optionNode": {
       handler(nodeId) {
         if (nodeId === this.node.id) {
+          this.initInterfaceList();
           this.dialog = true;
         }
       }

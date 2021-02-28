@@ -3,6 +3,7 @@ import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 import { format } from 'date-fns'
 import { da } from "date-fns/locale";
+import { getDb, storeLastValue } from "../../manager/mongo-manager";
 var _ = require('lodash');
 
 
@@ -21,24 +22,28 @@ export class ObjectMapperNode extends BaseNode {
 
     execute(msgIn: Message) {
         this.lastValue = msgIn.payload;
+
+        storeLastValue(this.id, msgIn.payload);
         let newObject = mapObject(msgIn.payload, this.mapper);
         this.onSuccess(newObject, msgIn.additional);
     }
 
-    getLastValue() {
-        if (Array.isArray(this.lastValue)) {
-            return this.lastValue.slice(0, 10);
-        }
-        return this.lastValue;
-    }
-
     test(mapping: any, res: any) {
-        if (Array.isArray(this.lastValue)) {
-            res.send(mapObject(this.lastValue.slice(0, 10), mapping));
-        } else {
-            let result = mapObject(this.lastValue, mapping);
-            res.send(result);
-        }
+        let query = { 
+            _id: this.id
+        };
+
+        getDb().collection("last-values").findOne(query, function(err: any, result: any) {
+            if (err) res.status(404).send(err);
+            else {
+                if (Array.isArray(result.last)) {
+                    res.send(mapObject(result.last.slice(0, 10), mapping));
+                } else {
+                    let output = mapObject(result.last, mapping);
+                    res.send(output);
+                }
+            }
+        });
     }
 }
 
@@ -69,9 +74,14 @@ export function mapObject(input_object: any, mapping: any, mode = "explicit") {
             setCustomTime(mapper, newObject);
         } else if (mapper.source.includes("{{payload}}")) {
             _.set(newObject, mapper.target, input_object);
+        } else if (mapper.source === ".") {
+            _.set(newObject, mapper.target, input_object);
         } else if (mapper.target.includes("unix")) {
             let date = new Date(_.get(input_object, mapper.source)* 1000);
             _.set(newObject, mapper.target, date);
+        }
+        else if (mapper.target === ".") {
+            newObject = input_object[mapper.source];
         } else {
             // If source is path set origin as value
             _.set(newObject, mapper.target, _.get(input_object, mapper.source));
