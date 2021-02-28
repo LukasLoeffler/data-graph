@@ -1,3 +1,4 @@
+import { getDb, storeLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
@@ -9,7 +10,6 @@ const NODE_TYPE = "ARRAY_MAPPER"
 
 export class ArrayMapperNode extends BaseNode {
     mapper: any;
-    lastValue: any = [];
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, outputConnections);
@@ -19,18 +19,9 @@ export class ArrayMapperNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        this.lastValue = msg.payload;
+        storeLastValue(this.id, msg.payload);
         let newObject = mapObjectArray(msg.payload, this.mapper);
         this.onSuccess(newObject, msg.additional);
-    }
-
-    getLastValue() {
-        if (this.lastValue) {
-            return this.lastValue.slice(0, 10);  // Limiting the size of the array to the last 10 values (performance)
-        } else {
-            return [];
-        }
-        
     }
 
     /**
@@ -38,7 +29,19 @@ export class ArrayMapperNode extends BaseNode {
      * @param mapping Mapping to test
      */
     test(mapping: any, res: any) {
-        res.send(mapObjectArray(this.lastValue, mapping).slice(0, 10));  // Same limitation for the test
+        let query = { 
+            _id: this.id
+        };
+
+        getDb().collection("last-values").findOne(query, function(err: any, result: any) {
+            if (err) res.status(404).send(err);
+            if (result?.last) {
+                if (Array.isArray(result.last)) {
+                    res.send(mapObjectArray(result.last.slice(0, 10), mapping)); 
+                }
+            }
+            else res.status(404).send(err);
+        });
     }
 }
 

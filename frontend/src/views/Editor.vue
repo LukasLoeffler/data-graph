@@ -59,6 +59,7 @@ import HttpInResponseNode from "../nodes/http/HttpInResponseNode"
 import HttpGetNodeDialog from "../components/dialogs/HttpGetNodeDialog";
 import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog";
 import HttpInResponseDialog from "../nodes/http/HttpInResponseDialog"
+import HttpInRequestDialog from "../nodes/http/HttpInRequestDialog"
 
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
@@ -272,6 +273,7 @@ export default {
     this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
     this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
     this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
+    this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
 
 
     // Register nodes

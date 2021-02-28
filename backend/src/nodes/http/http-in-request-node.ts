@@ -13,10 +13,12 @@ const NODE_TYPE = "HTTP_IN_REQUEST"
 export class HttpInRequestNode extends BaseNode {
 
     listenUrl: String;
+    listenMethod: String;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
         super(name, NODE_TYPE, id, outputConnections);
-        this.listenUrl = "testrequest"
+        this.listenUrl = options.settings.endpoint;
+        this.listenMethod = options.settings.method;
         NodeManager.addNode(this);
     }
 

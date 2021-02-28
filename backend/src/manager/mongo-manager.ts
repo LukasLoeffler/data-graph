@@ -1,7 +1,7 @@
 import chalk from "chalk";
 
 const MongoClient = require('mongodb').MongoClient;
-
+var mongodb = require('mongodb');
 
 
 const environment = process.env.NODE_ENV || 'DEV';
@@ -13,7 +13,7 @@ if (environment === "DEV") url = "mongodb://localhost:27017";
 let _db: any;
 
 
-let requiredCollections = ["mqtt-servers", "workspaces", "node-configs", "node-templates"]
+let requiredCollections = ["mqtt-servers", "workspaces", "node-configs", "node-templates", "last-values"]
 
 
 function connectToServer( callback: any ) {
@@ -41,4 +41,25 @@ function getDb () {
     return _db;
 }
 
-export { connectToServer, getDb };
+export { connectToServer, getDb, storeLastValue };
+
+
+
+
+function storeLastValue(nodeId: string, payload: any) {
+    let query = { 
+        _id: nodeId
+    };
+
+    var newvalues = { $set: {"last": payload} };
+    const options = { upsert: true };
+
+    _db.collection("last-values").updateOne(query, newvalues, options, function(err: any, obj: any) {
+        if (err) {
+            console.log(err);
+
+        } else {
+            console.log("success")
+        }
+    });
+}

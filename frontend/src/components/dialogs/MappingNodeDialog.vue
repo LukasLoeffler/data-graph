@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" class="z-index: 10000;">
     <v-dialog v-model="dialog" scrollable>
-      <v-card>
+      <v-card v-if="nodeCopy">
         <v-card-title>
           <span class="headline">Node settings: {{nodeCopy.name}}</span>
           <v-spacer></v-spacer>
@@ -30,9 +30,9 @@
                 </tr>
               </thead>
               <draggable :list="valueCopy.mappings" tag="tbody" handle=".handle">
-                <tr v-for="(mapper, index) in valueCopy.mappings" :key="index">
+                <tr v-for="(mapper, index) in valueCopy.mappings" :key="mapper.value">
                   <td class="handle">
-                    <v-icon style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
+                    <v-icon class="page__grab-icon" style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
                   </td>
                   <td>
                     <v-text-field v-model="mapper.source" outlined dense hide-details></v-text-field>
@@ -92,23 +92,21 @@ import JsonViewer from 'vue-json-viewer'
 import {apiBaseUrl} from "../../main.js";
 
 export default {
-  data: () => ({
-    mappingCopy: null,
-    dialog: false,
-    codeRaw: [],
-    codeFormatted: [],
-    infoMode: false
-  }),
+  props: ["option", "node", "value"],
   components: {
     Draggable,
     JsonViewer,
     NodeInfoDialog
   },
-  props: ["option", "node", "value"],
-  created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = {...this.value};
-  },
+  data: () => ({
+    valueCopy: null,
+    nodeCopy: null,
+    dialog: false,
+    codeRaw: [],
+    codeFormatted: [],
+    infoMode: false
+  }),
+  created() {},
   methods: {
     fetchData() {
       let lastValueUrl = `${apiBaseUrl}/last-value/${this.node.id}`;
@@ -126,7 +124,7 @@ export default {
     },
     deleteMapping(index) {
       this.valueCopy.mappings.splice(index, 1);
-      this.$forceUpdate()
+      this.$forceUpdate();
     },
     save() {
       this.node.setOptionValue("mapping", this.valueCopy);
@@ -145,7 +143,8 @@ export default {
     },
     mirrorObject() {
       this.valueCopy.mappings = [];
-      let keys = this.getKeys(this.codeRaw);
+      let keys = Array.isArray(this.codeRaw) ? this.getKeys(this.codeRaw[0]) : this.getKeys(this.codeRaw);
+
       keys.forEach(element => {
         this.valueCopy.mappings.push({
           source: element,
@@ -176,10 +175,12 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.nodeCopy = {...this.node};
+          this.valueCopy = {...this.value};
           this.fetchData();
         }
       }
-    },
+    }
   }
 }
 </script>
