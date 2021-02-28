@@ -8,6 +8,9 @@
           <v-btn @click="mirrorObject" color="orange" class="mr-1" outlined :disabled="Object.keys(codeRaw).length === 0">
             <v-icon>mdi-transfer-right</v-icon>
           </v-btn>
+          <v-btn @click="testHidden = !testHidden" color="teal" class="mr-1" outlined :disabled="Object.keys(codeRaw).length === 0">
+            <v-icon>mdi-file-hidden</v-icon>
+          </v-btn>
           <NodeInfoDialog type="mapping"/>
           <v-btn color="grey" class="mr-1" outlined>
             <v-icon>mdi-cog-outline</v-icon>
@@ -50,7 +53,7 @@
               </draggable>
             </v-simple-table>
           </v-container>
-          <v-row justify="center" v-if="Object.keys(codeRaw).length !== 0">
+          <v-row justify="center" v-if="Object.keys(codeRaw).length !== 0 && !testHidden">
             <v-col cols="6">
               <h3 class="ml-5">Latest input</h3>
               <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode style="text-align:left"></json-viewer>
@@ -61,6 +64,10 @@
               <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode style="padding-left: 0px; text-align:left"></json-viewer>
             </v-col>
           </v-row>
+          <p v-else-if="testHidden" class="no-data-info mt-5">
+            Testbed was hidden by user. Activate by clicking on file symbol in top-right corner. <br>
+            This feature can be used in case of big objects/arrays for performance improvements.
+          </p>
           <p v-else class="no-data-info mt-5">
             No data present yet. Interactive testing feature is disabled. <br>
             To learn more click on the info icon in the upper right corner.
@@ -104,7 +111,8 @@ export default {
     dialog: false,
     codeRaw: [],
     codeFormatted: [],
-    infoMode: false
+    infoMode: false,
+    testHidden: false
   }),
   created() {},
   methods: {
