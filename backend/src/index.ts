@@ -121,9 +121,23 @@ app.get("/recieve-event/:nodeId", (req, res) => {
 
 
 app.get("/last-value/:nodeId", (req, res) => {
-    let node = NodeManager.getNodeById(req.params.nodeId);
-    let lastValue = node.getLastValue();
-    res.send(lastValue);
+
+    let query = { 
+        _id: req.params.nodeId
+    };
+
+    dbo.collection("last-values").findOne(query, function(err: any, result: any) {
+        if (err) res.status(404).send(err);
+        if (result?.last) {
+            if (Array.isArray(result.last)) {
+                res.send(result.last.slice(0, 10));
+            } else {
+                res.send(result.last);
+            }
+        } else {
+            res.status(404).send("Not found");
+        }
+    });
 })
 
 app.post("/test/:nodeId", async (req, res) => {
@@ -241,21 +255,17 @@ app.post("/node-template", (req, res) => {
 
 
 app.get('/http-in/*', function(req, res) {
-    console.log(req.originalUrl);
+    let url = req.originalUrl.replace("/http-in", "");
 
-    let url = req.originalUrl.replace("/http-in/", "");
-
-    let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url);
+    let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url && ( node.listenMethod === "GET" || node.listenMethod === "*") );
     if (node) node.execute(req, res);
     else res.status(400).send({message: "no matching endpoint active"});
 });
 
 app.post('/http-in/*', function(req, res) {
-    console.log(req.originalUrl);
+    let url = req.originalUrl.replace("/http-in", "");
 
-    let url = req.originalUrl.replace("/http-in/", "");
-
-    let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url);
+    let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url && ( node.listenMethod === "POST" || node.listenMethod === "*") );
     if (node) node.execute(req, res);
     else res.status(400).send({message: "no matching endpoint active"});
 });

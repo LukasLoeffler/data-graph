@@ -113,7 +113,7 @@
           this.stopDrag();
           this.$store.commit("saveNodeConfig", this.data.id);
         }
-      }
+      },
     },
     computed: {
       rows() {
@@ -151,6 +151,16 @@
         };
       },
     },
+    watch: {
+      "$store.getters.saveNode": {
+        handler(nodeId) {
+          if (nodeId && nodeId === this.data.id) {
+            this._computedWatchers.rows.run();
+            this.$forceUpdate();
+          }
+        }
+      }
+    }
   }
 </script>
 

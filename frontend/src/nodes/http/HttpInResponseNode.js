@@ -10,6 +10,9 @@ export default class HttpInResponseNode extends Node {
         this.addInputInterface("onTrigger")
         this.addOption("color", undefined, "#ad173a");
         this.addOption("running", undefined, true);
-        this.addOption("settings", "HttpInResponseDialog");
+        this.addOption("settings", "HttpInResponseDialog", {
+            statusCode: 200, 
+            notes: "Enter description of functionallity here",
+        });
     }
 }
