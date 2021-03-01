@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Editor from '../views/Editor.vue'
 import Settings from '../views/Settings.vue'
 import About from '../views/About.vue'
+import Wiki from '../views/Wiki.vue'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/wiki/:term',
+    name: 'Wiki',
+    component: Wiki
   }
 ]
 

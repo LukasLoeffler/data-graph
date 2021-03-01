@@ -11,7 +11,7 @@ let descriptions = [
     {
         type: "button",
         text: `
-            Triggers a <a href="/wiki/downstream">downstream</a> node by clicking on the blue <b>EXECUTE</b> button in the node.<br><br>
+            Triggers a <a href="/wiki/downstream" target="_blank">downstream</a> node by clicking on the blue <b>EXECUTE</b> button in the node.<br><br>
             The green chip indicates the number of times the button has been pressed.
             This number can be resetted by right-clicking the green indicator.
         `,
@@ -29,7 +29,7 @@ let descriptions = [
     {
         type: "cron",
         text: `
-            Triggers the a <a href="/wiki/downstream">downstream</a> node when a cron expression matches the current time.
+            Triggers the a <a href="/wiki/downstream" target="_blank">downstream</a> node when a cron expression matches the current time.
             More information is provided here: <a href="https://www.npmjs.com/package/node-cron" target="_blank">node-cron</a>.
             Check out the interval node for a more convient way to trigger downstream nodes periodically.
         `,
@@ -38,7 +38,7 @@ let descriptions = [
     {
         type: "interval",
         text: `
-            Triggers the a <a href="/wiki/downstream">downstream</a> node periodically. The perid can be selected right on the node itself in the editor.
+            Triggers the a <a href="/wiki/downstream" target="_blank">downstream</a> node periodically. The perid can be selected right on the node itself in the editor.
         `,
         tags: ["timer", "interval", "input"]
     },
