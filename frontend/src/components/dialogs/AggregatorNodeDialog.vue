@@ -25,7 +25,7 @@
             <v-text-field disabled v-model="intf.id"></v-text-field>
           </v-col>
           <v-col cols="1" class="mp-0" dense>
-            <v-btn icon @click="removeInterface(index)" color="red">
+            <v-btn icon @click="removeInterface(intf, index)" color="red">
               <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
           </v-col>
@@ -74,11 +74,16 @@ export default {
   created() {},
   methods: {
     save() {
-      this.interfacesToRemove.forEach((name) => {
-        this.node.removeInterface(name);
+      this.interfacesToRemove.forEach((intf) => {
+        this.node.removeInterface(intf.name);
       });
-      this.interfacesToAdd.forEach((name) => {
-        this.node.addInputInterface(name);
+
+      for (let [key, value] of this.nodeCopy.interfaces) {
+        this.node.removeInterface(key);
+      }
+      
+      this.inputInterfaces.forEach((intf) => {
+        this.node.addInputInterface(intf.name);
       });
 
 
@@ -88,18 +93,16 @@ export default {
       this.dialog = false;
     },
     addInterface() {
-      this.interfacesToAdd.push(this.newName);
       this.inputInterfaces.push({name: this.newName, id: "NOT SAVED YET", isInput: true})
     },
-    removeInterface(index) {
-      this.interfacesToRemove.push(this.inputInterfaces[index].name);
-      this.inputInterfaces.splice(index, 1);
+    removeInterface(intf, index) {
+      this.inputInterfaces.splice(index, 1)
+      this.interfacesToRemove.push(intf)
     },
     init() {
       // Clear input interfaces (reopen issue)
+      this.inputInterfaces = [];
       this.interfacesToRemove = [];
-      this.interfacesToAdd = [];
-      this.inputInterfaces = [];  
       this.nodeCopy = {...this.node};
       this.valueCopy = {...this.value};
     },
