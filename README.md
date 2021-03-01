@@ -1,10 +1,12 @@
 # Graken
 
 Application to showcase concepts and ideas for event-based data processing.
-It incorporates concepts of NodeRED and ApacheNiFi and focuses on user-interaction and user-feedback to improve the users understanding of the data flow.
+It incorporates concepts of NodeRED and ApacheNiFi and focuses on user-interaction and user-feedback to improve the users understanding of the data flow.  
 Features:
 * Realtime traffic indication
 * Realtime error indication
+* Multiple node inputs/outputs
+* Interactive node editing
 * Focus on usability and UX
  
 ![example](docs/img/gif.gif)
