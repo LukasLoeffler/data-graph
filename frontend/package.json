@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "baklavajs": "^1.7.5",
+    "baklavajs": "1.8.3",
     "core-js": "^3.6.5",
     "prismjs": "^1.23.0",
     "vue": "^2.6.11",
