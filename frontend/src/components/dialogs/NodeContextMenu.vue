@@ -2,9 +2,7 @@
   <div class="text-center">
   <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="150" offset-x>
     <template v-slot:activator="{ on, attrs }">
-    <div 
-      @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container" :class="classTitle"
-    >
+    <div @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container" :class="classTitle">
       <h3 
         :id="nodeData.id" class="name" style="text-align: center;" 
         @mousedown.self.prevent.stop="$emit('start-drag')" 
@@ -99,7 +97,7 @@
     <v-divider></v-divider>
 
     <v-divider></v-divider>
-    <v-expansion-panels v-model="expanded">
+    <v-expansion-panels v-model="expanded" accordion>
       <v-expansion-panel>
       <v-expansion-panel-header>
         Edit Color
@@ -257,11 +255,11 @@ import {getDescription} from "./nodeDescription.js";
   },
   watch: {
     menu(newVal) {
-    if (newVal) {
-      // If menu (re-)opened thie block is executed
-      this.colorCopy = this.nodeData.getOptionValue("color");
-      this.expanded = [];
-    }
+      if (newVal) {
+        // If menu (re-)opened thie block is executed
+        this.colorCopy = this.nodeData.getOptionValue("color");
+        this.expanded = [];
+      }
     }
   },
   computed: {

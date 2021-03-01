@@ -38,14 +38,14 @@ let descriptions = [
         `
     },
     {
-        type: "httpGet",
+        type: "http-get",
         text: `
             Executes an http-get request. The name and url of the node can be set in the settings menu.
             This node does not make use of input data. Input messages only triggers request.
         `
     },
     {
-        type: "httpPostPut",
+        type: "http-post-put",
         text: `
             Executes an http-post / http-get request. The name, url and http method of the node can be set in the settings menu.
             Takes the input data as request body. <br>
@@ -58,28 +58,28 @@ let descriptions = [
         `
     },
     {
-        type: "fileSave",
+        type: "file-save",
         text: `
             Saves the input data to the filesystem of the server. <br>
             <b>Note:</b> Local file saves over the browser are not supported.
         `
     },
     {
-        type: "postgresSave",
+        type: "postgres-save",
         text: `
             Takes an input object and tries to save to the postgres database/table provided in the settings.<br>
             <b>Note:</b> The input object has to match the database table in number of fields(columns) and in datatype of said fields(columns).
         `
     },
     {
-        type: "mqttSub",
+        type: "mqtt-sub",
         text: `
             Subscribes to a given topic on a mqtt server.
             Node can be stopped and won't recieve any messages while stopped.
         `
     },
         {
-        type: "mqttPub",
+        type: "mqtt-pub",
         text: `
             Publishes the input object to the given topic on a mqtt server.
         `

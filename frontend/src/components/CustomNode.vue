@@ -6,7 +6,7 @@
       @mousedown.self.prevent.stop="startDrag"
       @contextmenu.prevent.capture=""
     >
-      <ContextMenu :menu="showMenu" :nodeData="data" :dragging="dragging" @optionChange="optionChange" @start-drag="startDrag" @stop-drag="mouseUp"/>  
+      <NodeContextMenu :menu="showMenu" :nodeData="data" :dragging="dragging" @optionChange="optionChange" @start-drag="startDrag" @stop-drag="mouseUp"/>  
     </div>
 
     <div class="__content">
@@ -44,7 +44,7 @@
 
 <script>
   import { Components } from '@baklavajs/plugin-renderer-vue'
-  import ContextMenu from '../components/dialogs/ContextMenu'
+  import NodeContextMenu from '../components/dialogs/NodeContextMenu'
   import CustomInterface from './CustomInterface'
 
   const ERROR_PULSE_LENGTH = 2000;
@@ -54,7 +54,7 @@
     components: {
       CustomInterface,
       NodeOption: Components.NodeOption,
-      ContextMenu
+      NodeContextMenu
     },
     data: function() {
       return {
