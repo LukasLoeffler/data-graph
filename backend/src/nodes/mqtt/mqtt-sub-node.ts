@@ -8,17 +8,21 @@ const NODE_TYPE = "MQTT_SUB"
 export class MqttSubNode extends MqttBaseNode {
 
     constructor(name: string, id: string, options: any, targetsSuccess: []) {
-        super(NODE_TYPE, name, id, options, targetsSuccess)
+        super(NODE_TYPE, name, id, options, targetsSuccess);
+        this.running = options.running;
         this.subscribe();
     }
 
     subscribe() {
         this.client.subscribe(this.topic, (err: any) => {
-            if(err) console.log("SubNode:", err);
+            if(err) {
+                console.log("SubNodeSubscribe:", err);
+                this.createClient();
+            }
         })
 
         this.client.on("message",  (topic: any, message: string) => {
-            this.onSuccess(message.toString());
+            if (this.running) this.onSuccess(message.toString());
         });
     }
 

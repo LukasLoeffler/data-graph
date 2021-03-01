@@ -6,12 +6,12 @@ let descriptions = [
             Takes the input and logs the input to the console of the backend.
             In the future a log into the application console in the frontend is planned.
         `,
-        tags: ["logging", "console"]
+        tags: ["logging", "console", "output"]
     },
     {
         type: "button",
         text: `
-            Triggers a <a href="/wiki/downstream">downstream</a> node by clicking on the blue <b>EXECUTE</b> button in the node.<br><br>
+            Triggers a <a href="/wiki/downstream" target="_blank">downstream</a> node by clicking on the blue <b>EXECUTE</b> button in the node.<br><br>
             The green chip indicates the number of times the button has been pressed.
             This number can be resetted by right-clicking the green indicator.
         `,
@@ -24,23 +24,23 @@ let descriptions = [
             The amount of information shown on the node can be edited in settings menu.
             The information can be resetted over the context menu or by right clicking on the table.
         `,
-        tags: ["info", "counts", "events", "last", "date", "time"]
+        tags: ["info", "counts", "events", "last", "date", "time", "logging", "log"]
     },
     {
         type: "cron",
         text: `
-            Triggers the a <a href="/wiki/downstream">downstream</a> node when a cron expression matches the current time.
+            Triggers the a <a href="/wiki/downstream" target="_blank">downstream</a> node when a cron expression matches the current time.
             More information is provided here: <a href="https://www.npmjs.com/package/node-cron" target="_blank">node-cron</a>.
             Check out the interval node for a more convient way to trigger downstream nodes periodically.
         `,
-        tags: ["timer", "cron", "interval"]
+        tags: ["timer", "cron", "interval", "input"]
     },
     {
         type: "interval",
         text: `
-            Triggers the a <a href="/wiki/downstream">downstream</a> node periodically. The perid can be selected right on the node itself in the editor.
+            Triggers the a <a href="/wiki/downstream" target="_blank">downstream</a> node periodically. The perid can be selected right on the node itself in the editor.
         `,
-        tags: ["timer", "interval"]
+        tags: ["timer", "interval", "input"]
     },
     {
         type: "http-get",
@@ -62,7 +62,7 @@ let descriptions = [
                 <li>Expected output</li>
             </ul> 
         `,
-        tags: ["http", "post", "put"]
+        tags: ["http", "post", "put", "output"]
     },
     {
         type: "file-save",
@@ -70,7 +70,7 @@ let descriptions = [
             Saves the input data to the filesystem of the server. <br>
             <b>Note:</b> Local file saves over the browser are not supported.
         `,
-        tags: ["file", "save"]
+        tags: ["file", "save", "output"]
     },
     {
         type: "postgres-save",
@@ -78,7 +78,7 @@ let descriptions = [
             Takes an input object and tries to save to the postgres database/table provided in the settings.<br>
             <b>Note:</b> The input object has to match the database table in number of fields(columns) and in datatype of said fields(columns).
         `,
-        tags: ["postgres", "db", "save", "insert"]
+        tags: ["postgres", "db", "save", "insert", "output"]
     },
     {
         type: "mqtt-sub",
@@ -86,14 +86,14 @@ let descriptions = [
             Subscribes to a given topic on a mqtt server.
             Node can be stopped and won't recieve any messages while stopped.
         `,
-        tags: ["mqtt", "sub", "subscribe"]
+        tags: ["mqtt", "sub", "subscribe", "input"]
     },
     {
         type: "mqtt-pub",
         text: `
             Publishes the input object to the given topic on a mqtt server.
         `,
-        tags: ["mqtt", "pub", "publish"]
+        tags: ["mqtt", "pub", "publish", "output"]
     },
     {
         type: "http-in-request",
@@ -111,7 +111,7 @@ let descriptions = [
                 <li>Http Method</li>
             </ul> 
         `,
-        tags: ["http", "request", "in"]
+        tags: ["http", "request", "in" , "input"]
     },
         {
         type: "http-in-response",
@@ -127,7 +127,7 @@ let descriptions = [
                 <li>Status Code, Required, Default: 200</li>
             </ul>
         `,
-        tags: ["http", "request", "response", "in"]
+        tags: ["http", "request", "response", "in", "output"]
     },
 ]
 
