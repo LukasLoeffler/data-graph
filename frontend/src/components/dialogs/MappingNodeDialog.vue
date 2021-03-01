@@ -257,4 +257,8 @@ export default {
     }
   }
 }
+
+.v-expansion-panels{
+  background: #067bca !important;
+}
 </style>

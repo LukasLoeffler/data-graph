@@ -16,7 +16,7 @@
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
-          <baklava-editor id="editor" :plugin="viewPlugin" @contextmenu.stop="console.log('captured')"></baklava-editor>
+          <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
         </v-col>
       </v-row>
     </v-flex>
@@ -46,7 +46,7 @@ import { apiBaseUrl } from '../main';
 import CustomConnection from "../components/CustomConnection";
 import CustomInterface from "../components/CustomInterface";
 import CustomNode from "../components/CustomNode";
-//import CustomContextMenu from "../components/CustomContextMenu"
+import CustomContextMenu from "../components/CustomContextMenu"
 
 import ButtonNode from "../nodes/ButtonNode";
 import IntervalNode from "../nodes/time/IntervalNode";
@@ -157,6 +157,17 @@ export default {
     this.initialLoad();
   },
   methods: {
+    allowDrop(ev) {
+      ev.preventDefault();
+      console.log("AllowDrop:", ev);
+    },
+    drag(ev) {
+      console.log(ev);
+    },
+    drop(ev) {
+      ev.preventDefault();
+      console.log(ev);
+    },
     sendNotification(message, color, timeout) {
       this.notifyMessage = message;
       this.notifyColor = color;
@@ -246,13 +257,11 @@ export default {
 
     this.viewPlugin.components.connection = CustomConnection;
     this.viewPlugin.components.nodeInterface = CustomInterface;
-    //this.viewPlugin.components.contextMenu = CustomContextMenu;
+    this.viewPlugin.components.contextMenu = CustomContextMenu;
     this.viewPlugin.components.node = CustomNode;
 
     const intfTypePlugin = new InterfaceTypePlugin();
-
     this.editor.use(intfTypePlugin);
-
 
 
     // this.viewPlugin.enableMinimap = true;
@@ -296,24 +305,17 @@ export default {
     this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
     this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
 
-    this.viewPlugin.setNodeTypeAlias("object-filter", "Filter array");
-    this.viewPlugin.setNodeTypeAlias("object-path", "Extract object path");
-
     // Filesystem
     this.editor.registerNodeType("file-save", FileSave, "Filesystem")
-    this.viewPlugin.setNodeTypeAlias("file-save", "Save as file");
 
     // User input
     this.editor.registerNodeType("button", ButtonNode, "Input")
-    this.viewPlugin.setNodeTypeAlias("button", "Button");
 
     this.editor.registerNodeType("postgres-save", PostgresSaveNode, "Database")
 
     // MQTT
     this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
     this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
-    this.viewPlugin.setNodeTypeAlias("mqtt-sub", "Subscribe");
-    this.viewPlugin.setNodeTypeAlias("mqtt-pub", "Publish");
 
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
