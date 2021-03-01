@@ -38,14 +38,14 @@ let descriptions = [
         `
     },
     {
-        type: "httpGet",
+        type: "http-get",
         text: `
             Executes an http-get request. The name and url of the node can be set in the settings menu.
             This node does not make use of input data. Input messages only triggers request.
         `
     },
     {
-        type: "httpPostPut",
+        type: "http-post-put",
         text: `
             Executes an http-post / http-get request. The name, url and http method of the node can be set in the settings menu.
             Takes the input data as request body. <br>
@@ -58,30 +58,62 @@ let descriptions = [
         `
     },
     {
-        type: "fileSave",
+        type: "file-save",
         text: `
             Saves the input data to the filesystem of the server. <br>
             <b>Note:</b> Local file saves over the browser are not supported.
         `
     },
     {
-        type: "postgresSave",
+        type: "postgres-save",
         text: `
             Takes an input object and tries to save to the postgres database/table provided in the settings.<br>
             <b>Note:</b> The input object has to match the database table in number of fields(columns) and in datatype of said fields(columns).
         `
     },
     {
-        type: "mqttSub",
+        type: "mqtt-sub",
         text: `
             Subscribes to a given topic on a mqtt server.
             Node can be stopped and won't recieve any messages while stopped.
         `
     },
-        {
-        type: "mqttPub",
+    {
+        type: "mqtt-pub",
         text: `
             Publishes the input object to the given topic on a mqtt server.
+        `
+    },
+    {
+        type: "http-in-request",
+        text: `
+            Listens to an specific http-endpoint for incoming requests. If an request is incoming the node triggers the downstream nodes.
+            In case of an http request which contains a payload the payload is transferred to the downstream node. 
+            This data now can be used to be transformed or query other data sources. <br>
+            <b>Important:</b> Somewhere downstream an http-in-reponse node has to be called to close the request.<br>
+            
+            <b>Parameters:</b>
+            
+            <ul>
+                <li>Name</li>
+                <li>Endpoint</li>
+                <li>Http Method</li>
+            </ul> 
+        `
+    },
+        {
+        type: "http-in-response",
+        text: `
+            This node sends back the http reponse with the input payload.<br>
+            <b>Important:</b> This node has to be in the downstream of an http-in-request node. If an request is already 
+            answered by another http-in-response node, the response can not be sent due to the nature of http requests<br>
+            
+            <b>Parameters:</b>
+            
+            <ul>
+                <li>Name, Required</li>
+                <li>Status Code, Required, Default: 200</li>
+            </ul>
         `
     },
 ]
