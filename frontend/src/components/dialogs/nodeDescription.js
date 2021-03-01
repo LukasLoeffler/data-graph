@@ -78,10 +78,42 @@ let descriptions = [
             Node can be stopped and won't recieve any messages while stopped.
         `
     },
-        {
+    {
         type: "mqtt-pub",
         text: `
             Publishes the input object to the given topic on a mqtt server.
+        `
+    },
+    {
+        type: "http-in-request",
+        text: `
+            Listens to an specific http-endpoint for incoming requests. If an request is incoming the node triggers the downstream nodes.
+            In case of an http request which contains a payload the payload is transferred to the downstream node. 
+            This data now can be used to be transformed or query other data sources. <br>
+            <b>Important:</b> Somewhere downstream an http-in-reponse node has to be called to close the request.<br>
+            
+            <b>Parameters:</b>
+            
+            <ul>
+                <li>Name</li>
+                <li>Endpoint</li>
+                <li>Http Method</li>
+            </ul> 
+        `
+    },
+        {
+        type: "http-in-response",
+        text: `
+            This node sends back the http reponse with the input payload.<br>
+            <b>Important:</b> This node has to be in the downstream of an http-in-request node. If an request is already 
+            answered by another http-in-response node, the response can not be sent due to the nature of http requests<br>
+            
+            <b>Parameters:</b>
+            
+            <ul>
+                <li>Name, Required</li>
+                <li>Status Code, Required, Default: 200</li>
+            </ul>
         `
     },
 ]

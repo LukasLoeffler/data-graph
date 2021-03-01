@@ -41,7 +41,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text color="green" @click="addNode" :disabled="!nodeList[selected].node">
+          <v-btn text color="green" @click="addNode">
             Add Node
           </v-btn>
         </v-card-actions>
@@ -98,6 +98,10 @@ export default {
   },
   watch: {
     value() {
+      this.nodeList = [];
+      this.traverseSubmenues(this.items[0]);
+    },
+    items() {
       this.nodeList = [];
       this.traverseSubmenues(this.items[0]);
     },
