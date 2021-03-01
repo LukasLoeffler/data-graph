@@ -35,6 +35,16 @@
             <v-col class="pb-0" style="text-align: left; max-height: 300px; overflow: scroll">
               <h2 class="mb-3">{{nodeList[selected].node}}</h2>
               <p v-html="nodeList[selected].description" style="font-size: 16px"></p>
+                <v-chip-group active-class="primary--text" column>
+                  <v-chip label small :key="tag"
+                    v-for="tag in nodeList[selected].tags"
+                  >      
+                    <v-icon left>
+                      mdi-tag-text-outline
+                    </v-icon>
+                    {{ tag }}
+                  </v-chip>
+              </v-chip-group>
             </v-col>
           </v-row>
         </v-card-text>
@@ -52,7 +62,7 @@
 
 <script>
 import { Components } from '@baklavajs/plugin-renderer-vue';
-import { getDescription } from "../components/dialogs/nodeDescription";
+import { getDescription, getTags } from "../components/dialogs/nodeDescription";
 
 export default {
   extends: Components.ContextMenu,
@@ -73,7 +83,12 @@ export default {
         });
       } else {
         //console.log(`${submenu.label} -> ${submenu.value}`)
-        this.nodeList.push({node: submenu.label, callstr: submenu.value, description: getDescription(submenu.label)});
+        this.nodeList.push({
+          node: submenu.label, 
+          callstr: submenu.value, 
+          description: getDescription(submenu.label),
+          tags: getTags(submenu.label)
+        });
       }
     },
     include () {
@@ -82,16 +97,6 @@ export default {
     addNode() {
       this.onChildClick(`addNode:${this.nodeList[this.selected].node}`);
     }
-  },
-  computed: {
-    styles() {
-        const s = {};
-        if (!this.isNested) {
-            s.top = (this.flippedY ? this.y - this.height : this.y) + "px";
-            s.left = this.x + "px";
-        }
-        return s;
-    },
   },
   watch: {
     value() {
