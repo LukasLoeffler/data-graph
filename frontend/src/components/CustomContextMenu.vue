@@ -18,7 +18,7 @@
         <v-card-title>
           <span class="headline">Add Node</span>
           <v-spacer></v-spacer>
-          <v-text-field outlined label="Node Type" dense hide-details></v-text-field>
+          <v-text-field outlined label="Search Node Type" dense hide-details></v-text-field>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pb-0">
@@ -34,7 +34,7 @@
               </v-chip-group></v-col>
             <v-col class="pb-0" style="text-align: left; max-height: 300px; overflow: scroll">
               <h2 class="mb-3">{{nodeList[selected].node}}</h2>
-              <p v-html="description(nodeList[selected].node)" style="font-size: 16px"></p>
+              <p v-html="nodeList[selected].description" style="font-size: 16px"></p>
             </v-col>
           </v-row>
         </v-card-text>
@@ -73,14 +73,11 @@ export default {
         });
       } else {
         //console.log(`${submenu.label} -> ${submenu.value}`)
-        this.nodeList.push({node: submenu.label, callstr: submenu.value});
+        this.nodeList.push({node: submenu.label, callstr: submenu.value, description: getDescription(submenu.label)});
       }
     },
     include () {
       return [document.querySelector('.included')]
-    },
-    description(name) {
-      return getDescription(name);
     },
     addNode() {
       this.onChildClick(`addNode:${this.nodeList[this.selected].node}`);
