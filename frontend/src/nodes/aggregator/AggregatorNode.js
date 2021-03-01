@@ -12,8 +12,8 @@ export default class AggregatorNode extends Node {
         this.addOption("running", undefined, true);
         this.addOption("settings", "AggregatorNodeDialog");
         this.addOutputInterface("onSuccess", "Message");
-        this.addInputInterface("INPUT1");
-        this.addInputInterface("INPUT2");
+        this.addInputInterface("Input 1");
+        this.addInputInterface("Input 2");
     }
 
     addInput(name) {
