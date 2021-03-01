@@ -90,7 +90,6 @@ export default {
   watch: {
     "data.type": {
       handler(newValue) {
-        console.log("data changed");
         this.plugin.hooks.renderInterface.execute(this);  
       },
       deep: true
