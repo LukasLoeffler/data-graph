@@ -18,15 +18,15 @@
         <v-card-title>
           <span class="headline">Add Node</span>
           <v-spacer></v-spacer>
-          <v-text-field outlined label="Search Node Type" dense hide-details></v-text-field>
+          <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable></v-text-field>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pb-0">
-          <v-row v-if="nodeList">
+          <v-row v-if="nodeListFiltered && nodeListFiltered.length !== 0">
             <v-col class="pb-0" style="max-height: 300px; overflow: scroll">
               <v-chip-group active-class="primary--text" column v-model="selected" mandatory>
                 <v-chip
-                  v-for="node in nodeList"
+                  v-for="node in nodeListFiltered"
                   :key="node.node"
                 >
                   {{ node.node }}
@@ -35,16 +35,15 @@
             <v-col class="pb-0" style="text-align: left; max-height: 300px; overflow: scroll">
               <h2 class="mb-3">{{nodeList[selected].node}}</h2>
               <p v-html="nodeList[selected].description" style="font-size: 16px"></p>
-                <v-chip-group active-class="primary--text" column>
-                  <v-chip label small :key="tag"
-                    v-for="tag in nodeList[selected].tags"
+                  <v-chip 
+                    label small :key="tag" v-for="tag in nodeList[selected].tags" class="mr-1 mb-1"
+                    style="cursor: default" @click="search = tag"
                   >      
                     <v-icon left>
                       mdi-tag-text-outline
                     </v-icon>
                     {{ tag }}
                   </v-chip>
-              </v-chip-group>
             </v-col>
           </v-row>
         </v-card-text>
@@ -72,7 +71,8 @@ export default {
     return {
       nodeList: null,
       valueCopy: false,
-      selected: 0
+      selected: 0,
+      search: ""
     }
   },
   methods: {
@@ -107,6 +107,15 @@ export default {
       this.nodeList = [];
       this.traverseSubmenues(this.items[0]);
     },
+    search(newValue) {
+      if (newValue === null) this.search = "";
+    }
+  },
+  computed: {
+    nodeListFiltered() {
+      if (this.nodeList) return this.nodeList.filter(node => node.node.includes(this.search) || node.tags.some(tag  => tag.includes(this.search) ));
+      else return null;
+    }
   }
 }
 </script>
