@@ -166,6 +166,7 @@ import {getDescription} from "./nodeDescription.js";
       {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: false},
       {type: "http-in-request", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
       {type: "http-in-response", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
+      {type: "csv-to-json", icon: "mdi-file-delimited-outline", resettable: false, stoppable: false, configurable: true},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
@@ -186,22 +187,22 @@ import {getDescription} from "./nodeDescription.js";
   },
   methods: {
     prevent(evt) {
-    console.log("prevent");
-    evt.preventDefault();
+      console.log("prevent");
+      evt.preventDefault();
     },
     execute(action) {
-    if(action === "deleteNode") this.deleteNode();
-    if(action === "openSettings") this.openSettings();
-    if(action === "createTemplate") this.createTemplate();
-    if(action === "activateNode") this.activateNode();
-    if(action === "resetNode") this.resetNode();
+      if(action === "deleteNode") this.deleteNode();
+      if(action === "openSettings") this.openSettings();
+      if(action === "createTemplate") this.createTemplate();
+      if(action === "activateNode") this.activateNode();
+      if(action === "resetNode") this.resetNode();
     },
     save() {
     this.$emit("optionChange", "color", this.color);
-    this.menu = false;
+      this.menu = false;
     },
     deleteNode() {
-    this.$store.commit("deleteNode", this.nodeData);
+      this.$store.commit("deleteNode", this.nodeData);
     },
     activateNode() {
 
@@ -218,32 +219,32 @@ import {getDescription} from "./nodeDescription.js";
       });
     },
     openSettings() {
-    this.$store.commit("setOptionNode", this.nodeData.id);
-    this.menu = false;
-    setTimeout(() =>{this.$store.commit("setOptionNode", null)}, 1); // Hacky way to implement an event bus
+      this.$store.commit("setOptionNode", this.nodeData.id);
+      this.menu = false;
+      setTimeout(() =>{this.$store.commit("setOptionNode", null)}, 1); // Hacky way to implement an event bus
     },
     createTemplate() {
 
-    let data = this.nodeData.save()
+      let data = this.nodeData.save()
 
-    let template = {...data};
+      let template = {...data};
 
-    
-    delete template.id;
-    delete template.state;
 
-    template.interfaces;
+      delete template.id;
+      delete template.state;
 
-    console.log(template);
-    
-    template.position.x = 0;
-    template.position.y = 0;
+      template.interfaces;
 
-    let createTemplateUrl = `${apiBaseUrl}/node-template`;
-    this.axios.post(createTemplateUrl, template).then(() => {
-      console.log("%cSuccessfully created template. ", this.nodeData.name);
-      this.menu = false;
-    });
+      console.log(template);
+
+      template.position.x = 0;
+      template.position.y = 0;
+
+      let createTemplateUrl = `${apiBaseUrl}/node-template`;
+      this.axios.post(createTemplateUrl, template).then(() => {
+        console.log("%cSuccessfully created template. ", this.nodeData.name);
+        this.menu = false;
+      });
     },
     resetNode() {
     let resetUrl = `${apiBaseUrl}/reset/${this.nodeData.id}`;
