@@ -75,6 +75,7 @@ import Logging from "../nodes/LoggingNode";
 import InfoNode from "../nodes/info/InfoNode";
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
+import CsvToJsonNode from "../nodes/type/CsvToJsonNode"
 
 import EventButtonOption from "../options/EventButtonOption";
 import ExecutionCountOption from "../options/ExecutionCountOption";
@@ -324,6 +325,12 @@ export default {
     // Flow
     this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
     this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
+
+
+    this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
+
+
+    
     }
   },
   watch: {
