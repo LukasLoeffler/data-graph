@@ -113,7 +113,7 @@ let descriptions = [
         `,
         tags: ["http", "request", "in" , "input"]
     },
-        {
+    {
         type: "http-in-response",
         text: `
             This node sends back the http reponse with the input payload.<br>
@@ -128,6 +128,14 @@ let descriptions = [
             </ul>
         `,
         tags: ["http", "request", "response", "in", "output"]
+    },
+    {
+        type: "csv-to-json",
+        text: `
+            Converts CSV to JSON.<br>
+            <b>Important:</b> Currently first line has to be a header line to build keys correctly.
+        `,
+        tags: ["conversion", "datatype", "type", "csv", "json"]
     },
 ]
 

@@ -5,7 +5,9 @@ import { WsManager } from "./ws";
 import { ExecutionCounter } from "./exec-info";
 import express from "express";
 import chalk from "chalk";
+const { Client } = require('pg')
 var mongodb = require('mongodb');
+const bodyParser = require('body-parser');
 
 
 const  cors = require('cors')
@@ -14,13 +16,25 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+var rawBodySaver = function (req: any, res: any, buf: any, encoding: string) {
+  if (buf && buf.length) {
+    req.rawBody = buf.toString(encoding || 'utf8');
+  }
+}
+
 app.use(express.json()); 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.raw({ verify: rawBodySaver, type: '*/*' }));
+
 app.use(cors())
 
 let dbo: any;
 
 
 let lastSave = {};  // Object to cache last node config to check if changes occured.
+
+
 
 
 connectToServer( function( err: any, client: any ) {
@@ -125,8 +139,9 @@ app.get("/last-value/:nodeId", (req, res) => {
     let query = { 
         _id: req.params.nodeId
     };
-
+    console.log(query);
     dbo.collection("last-values").findOne(query, function(err: any, result: any) {
+        console.log(err);
         if (err) res.status(404).send(err);
         if (result?.last) {
             if (Array.isArray(result.last)) {
@@ -269,3 +284,40 @@ app.post('/http-in/*', function(req, res) {
     if (node) node.execute(req, res);
     else res.status(400).send({message: "no matching endpoint active"});
 });
+
+
+app.post('/get-db-schema', function(req, res) {
+
+    console.log(req.body);
+    res.status(200).send({message: "ok"});
+});
+
+app.post('/check-pg-connection', async function(req, res) {
+
+    let client = new Client(req.body);
+    await client.connect(async (err: any) =>  {
+        if (err) res.status(400).send({status: "error", message: err});
+        else {
+            let schema = await getPgTableSchema(req.body?.table, client);
+            res.status(200).send(schema);
+        }
+    });
+});
+
+
+async function getPgTableSchema(tableName: string, client: any) {
+        let sqlString = `SELECT * FROM information_schema.columns WHERE table_name = $1;`;
+        let res = await client.query(sqlString, [tableName]);
+
+        return res.rows.map((row: any) => {
+            return {
+                identity: row["is_identity"],
+                identityGeneration: row["identity_generation"],
+                name: row["column_name"],
+                position: row["ordinal_position"],
+                nullable: row["is_nullable"],
+                dataType: row["data_type"],
+                updateable: row["is_updatable"]
+            }
+        });
+    }

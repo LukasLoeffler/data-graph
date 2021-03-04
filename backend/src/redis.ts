@@ -8,7 +8,14 @@ const environment = process.env.NODE_ENV || 'DEV';
 if (environment === "DEV") url = "redis://localhost:6379/0";
 
 
-const client = redis.createClient(url);
+const client = redis.createClient(url, {
+    retry_strategy: ((options: any) => {
+        if (options.attempt > 3) {
+            console.log("3 retrys reached");
+            return undefined;
+        };
+    })
+});
 
 
 const getAsync = promisify(client.get).bind(client);
