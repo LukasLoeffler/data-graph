@@ -2,6 +2,7 @@ import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
 import { Message } from "../../message";
 import express = require('express');
+import { WsManager } from "../../ws";
 
 const NODE_TYPE = "HTTP_IN_RESPONSE"
 
@@ -20,7 +21,7 @@ export class HttpInResponseNode extends BaseNode {
         try {
             msg.additional.res.status(this.statusCode).send(msg.payload);
         } catch(err) {
-            this.onFailure({"error": err.code}, null); // For red shadow pulse
+            WsManager.sendMessage(this.buildErrorMessage(this.id, err.code)); // Trigger red pulse
         }
     }
 }

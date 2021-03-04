@@ -21,6 +21,7 @@ export default class PostgresSaveNode extends Node {
         });
         this.addOption("color", undefined, "#423dd9");
         this.addOption("running", undefined, true);
+        this.addOption("mapping", undefined, [{source: "sourceProperty", column: "targetColumn"}]);
     }
 
     save() {

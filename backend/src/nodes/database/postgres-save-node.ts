@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { storeLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
@@ -14,12 +15,16 @@ export class PostgresSaveNode extends BaseNode {
 
     client: any;
     options: any;
+    lastValue: any = {};
+    columns: Array<string>;
+    sources: Array<string>;
     
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, outputConnections)
-        
         this.options = options;
         this.client = new Client(options.connection);
+        this.columns = options.mapping.map((map: any) => { return map.column});
+        this.sources = options.mapping.map((map: any) => { return map.source});
         try {
             this.client.connect();
         } catch (error) {
@@ -47,12 +52,15 @@ export class PostgresSaveNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        let values = Object.values(msg.payload).map((value: any) => { return value });
+        storeLastValue(this.id, msg.payload);
+
+        //let values = Object.values(msg.payload).map((value: any) => { return value });
+
+        let values = this.sources.map((source: any) => { return msg.payload[source]});
 
         let placeholder = this.buildPlaceholder(values.length);
 
-        let sql = `INSERT INTO ${this.options.connection.table} (${Object.keys(msg.payload)}) VALUES (${placeholder})`;
-        //console.log("SQL:", sql);
+        let sql = `INSERT INTO ${this.options.connection.table} (${this.columns}) VALUES (${placeholder})`;
 
         this.client
             .query(sql, values)

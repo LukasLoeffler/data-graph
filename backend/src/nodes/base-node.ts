@@ -105,11 +105,12 @@ export class BaseNode {
     }
 
     
-    buildErrorMessage(nodeId: string): string {
+    buildErrorMessage(nodeId: string, errorMessage: string = ""): string {
         let message = {
             type: "NodeExecutionError",
             data: {
-                nodeId: nodeId
+                nodeId: nodeId,
+                message: errorMessage
             }
         }
         return JSON.stringify(message);
