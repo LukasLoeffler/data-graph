@@ -139,7 +139,6 @@ app.get("/last-value/:nodeId", (req, res) => {
     let query = { 
         _id: req.params.nodeId
     };
-    console.log(query);
     dbo.collection("last-values").findOne(query, function(err: any, result: any) {
         console.log(err);
         if (err) res.status(404).send(err);
