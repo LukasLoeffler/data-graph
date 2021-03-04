@@ -84,7 +84,7 @@ import TriggerCountOption from "../options/TriggerCountOption";
 
 
 import MappingNodeDialog from "../components/dialogs/MappingNodeDialog";
-import PostgresInsertDialog from "../components/dialogs/PostgresInsertDialog";
+import PostgresInsertDialog from "../nodes/database/PostgresInsertDialog";
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
 import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog";
 import TriggerAfterDialog from "../components/dialogs/TriggerAfterDialog";

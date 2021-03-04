@@ -1,5 +1,5 @@
 <template>
-  <v-card-text>
+  <v-card-text class="pa-1">
     <v-form v-model="valid">
       <v-container>
         <v-row>

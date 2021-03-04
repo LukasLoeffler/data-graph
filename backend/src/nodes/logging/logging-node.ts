@@ -2,6 +2,7 @@ import { Message } from "../../message";
 import { WsManager } from "../../ws";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
+const util = require('util')
 const chalk = require('chalk');
 
 
@@ -28,7 +29,11 @@ export class LoggingNode extends BaseNode {
         if (this.level === "NO_LEVEL_SET") levelOut = chalk.bold(chalk.bgRed(this.level));
 
         this.on("onInput", msg.payload, msg.additional);
-        console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${JSON.stringify(msg.payload)}`);
+        if (Buffer.isBuffer(msg.payload)) {
+            console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${msg.payload.toString()}`);
+        } else {
+            console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${util.inspect(msg.payload, {showHidden: false, depth: null})}`);
+        }
     }
 
     sendData(msg: Message) {

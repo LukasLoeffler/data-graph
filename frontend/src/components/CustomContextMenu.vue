@@ -78,7 +78,8 @@ export default {
       valueCopy: false,
       selected: 0,
       search: "",
-      maxed: false
+      maxed: false,
+      addList: []
     }
   },
   methods: {
@@ -102,11 +103,12 @@ export default {
     },
     addNode() {
       this.onChildClick(`addNode:${this.nodeListFiltered[this.selected].type}`);
-    }
+    },
   },
   watch: {
     value() {
       this.nodeList = [];
+      this.addList = [];
       this.traverseSubmenues(this.items[0]);
     },
     items() {
