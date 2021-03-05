@@ -88,20 +88,24 @@ function extractOptionsFromNode(node: any): StringMap {
 }
 
 function extractConnections(nodeConfig: any) {
-    return nodeConfig.connections.map((connection: any) => {
-        return {
-            from: {
-                id: getInterfaceByInterfaceId(connection.from).id,
-                name: getInterfaceByInterfaceId(connection.from).name,
-                nodeId: getNodeByInterfaceId(connection.from).id,
-            },
-            to: {
-                id: getInterfaceByInterfaceId(connection.to).id,
-                name: getInterfaceByInterfaceId(connection.to).name,
-                nodeId: getNodeByInterfaceId(connection.to).id,
+    try {
+        return nodeConfig.connections.map((connection: any) => {
+            return {
+                from: {
+                    id: getInterfaceByInterfaceId(connection.from).id,
+                    name: getInterfaceByInterfaceId(connection.from).name,
+                    nodeId: getNodeByInterfaceId(connection.from).id,
+                },
+                to: {
+                    id: getInterfaceByInterfaceId(connection.to).id,
+                    name: getInterfaceByInterfaceId(connection.to).name,
+                    nodeId: getNodeByInterfaceId(connection.to).id,
+                }
             }
-        }
-    });
+        });
+    } catch (error) {
+        return []
+    }
 }
 
 
