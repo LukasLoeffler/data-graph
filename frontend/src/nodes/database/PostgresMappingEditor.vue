@@ -11,8 +11,8 @@
       <tbody>
         <tr v-for="(row, index) in rows" :key="index">
           <td>
-            <v-text-field @change="changeHandler($event, row.name)" v-if="!lastValueKeys" v-model="row.source" :rules="[required(row)]"  outlined dense></v-text-field>
-            <v-combobox @change="changeHandler($event, row.name)" outlined dense v-else v-model="row.source" :rules="[required(row)]" :items="lastValueKeys"></v-combobox>
+            <v-text-field v-if="!lastValueKeys" v-model="row.source" :rules="[required(row)]"  outlined dense></v-text-field>
+            <v-combobox v-else outlined dense v-model="row.source" :rules="[required(row)]" :items="lastValueKeys"></v-combobox>
           </td>
           <td>
             <v-icon class="mb-6">mdi-ray-start-arrow</v-icon>
@@ -34,7 +34,6 @@ export default {
   data: function () {
     return {
       lastValueKeys: null,
-      mappings: new Map()
     }
   },
   props: {
@@ -44,27 +43,41 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log("FetchData");
       let lastValueUrl = `${apiBaseUrl}/last-value/${this.node.id}`;
       this.axios.get(lastValueUrl).then((response) => {
         this.lastValueKeys = Object.keys(response.data);
       })
+
+      // Fill the input source property field per row
+      let mappings = this.node.getOptionValue("mapping");
+      this.rows.forEach(row => {
+        let mapping = mappings.find((mapping) => row.name === mapping.column);
+        if (mapping) {
+          row.source = mapping.source;
+        }
+      });
     },
     required(value) { 
       if (value.nullable === "YES") {
         return true;
       }
       if (!!value.source && value.identityGeneration === "ALWAYS") {
-        return "Column is autoincremented."
+        return "Column is autoincremented in mode ALWAYS."
       } else if (!value.source && value.identityGeneration === "ALWAYS") {
         return true
       } else {
         return !!value.source || "Column is not nullable."
       }
     },
-    changeHandler(data, row) {
-      console.log(`${data} --> ${row}`)
-      this.mappings.set(data, row);
+    getMapping() {
+      return this.rows
+        .filter((row) => row.source && row.name)
+        .map((row) => {
+            return {
+              source: row.source,
+              column: row.name
+            }
+        });
     }
   },
   watch: {
