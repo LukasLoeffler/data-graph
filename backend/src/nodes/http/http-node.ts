@@ -48,4 +48,9 @@ export class HttpNode extends BaseNode {
             this.onFailure(payload, msg.additional);
         });
     }
+
+    async get() {
+        let response = await axios.get(this.url, {headers: this.headers, timeout: this.timeout});
+        return response.data;
+    }
 }

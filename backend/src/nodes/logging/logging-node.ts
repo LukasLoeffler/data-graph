@@ -36,6 +36,10 @@ export class LoggingNode extends BaseNode {
         }
     }
 
+    async get() {
+        return new Date().toISOString();
+    }
+
     sendData(msg: Message) {
         let payload = {
             type: "EventLog",
