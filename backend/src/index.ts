@@ -285,12 +285,6 @@ app.post('/http-in/*', function(req, res) {
 });
 
 
-app.post('/get-db-schema', function(req, res) {
-
-    console.log(req.body);
-    res.status(200).send({message: "ok"});
-});
-
 app.post('/check-pg-connection', async function(req, res) {
 
     let client = new Client(req.body);
