@@ -3,10 +3,8 @@ import { storeLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
-import { PostgresManager } from "./postgres-manager";
 
 const { Client } = require('pg')
-
 
 
 const NODE_TYPE = "POSTGRES_SAVE"
@@ -18,13 +16,16 @@ export class PostgresSaveNode extends BaseNode {
     lastValue: any = {};
     columns: Array<string>;
     sources: Array<string>;
+    placeholder: string;
     
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, outputConnections)
         this.options = options;
         this.client = new Client(options.connection);
+        // Combination out of columns and sources are the mapping
         this.columns = options.mapping.map((map: any) => { return map.column});
         this.sources = options.mapping.map((map: any) => { return map.source});
+        this.placeholder = this.buildPlaceholder(this.columns.length);
         try {
             this.client.connect();
         } catch (error) {
@@ -53,14 +54,9 @@ export class PostgresSaveNode extends BaseNode {
 
     execute(msg: Message) {
         storeLastValue(this.id, msg.payload);
-
-        //let values = Object.values(msg.payload).map((value: any) => { return value });
-
         let values = this.sources.map((source: any) => { return msg.payload[source]});
 
-        let placeholder = this.buildPlaceholder(values.length);
-
-        let sql = `INSERT INTO ${this.options.connection.table} (${this.columns}) VALUES (${placeholder})`;
+        let sql = `INSERT INTO ${this.options.connection.table} (${this.columns}) VALUES (${this.placeholder})`;
 
         this.client
             .query(sql, values)
