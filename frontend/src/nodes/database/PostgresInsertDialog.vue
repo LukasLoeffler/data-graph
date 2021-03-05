@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" max-width="800px">
+    <v-dialog v-model="dialog" max-width="800px" height="800px">
       <v-card>
         <v-card-title>
           <span class="headline">{{node.name}}</span>
@@ -28,6 +28,7 @@
                 <v-row class="ma-2">
                   <v-btn color="primary" @click="e1 = 1">Back</v-btn>
                   <v-spacer></v-spacer>
+                  <v-btn color="red" text @click="this.dialog = false">Abort</v-btn>
                   <v-btn color="primary" @click="save">Save</v-btn>
                 </v-row>
               </v-stepper-content>
@@ -64,17 +65,13 @@ export default {
   },
   methods: {
     save() {
-      console.log(this.$refs.mapping.mappings);
-
-      let mappings = []
-      for (var [key, value] of this.$refs.mapping.mappings) {
-        mappings.push({source: key, column: value})
-      }
+      let mappings = this.$refs.mapping.getMapping();
 
       this.node.setOptionValue("connection", this.valueCopy);
       this.node.setOptionValue("mapping", mappings);
       this.node.name = this.nodeCopy.name;
       this.$store.commit("saveNodeConfig", this.node.id);
+      this.dialog = false;
     },
     abort() {
       this.node = this.nodeCopy;
