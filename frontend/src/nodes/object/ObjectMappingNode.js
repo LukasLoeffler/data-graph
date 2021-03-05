@@ -14,4 +14,20 @@ export default class ObjectMappingNode extends Node {
         this.addOption("color", undefined, "#a32bb3");
         this.addOption("running", undefined, true);
     }
+
+    save() {
+        const state = super.save();
+        state.interfaces.forEach(([name, intfState]) => {
+            intfState.isInput = this.getInterface(name).isInput;
+        });
+        return state;
+    }
+
+    load(state) {
+        state.interfaces.forEach(([name, intfState]) => {
+            const intf = intfState.isInput ? this.addInputInterface(name) : this.addOutputInterface(name);
+            intf.id = intfState.id;
+        });
+        super.load(state);
+    }
 }

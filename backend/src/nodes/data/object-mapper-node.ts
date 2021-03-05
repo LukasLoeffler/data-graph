@@ -2,9 +2,13 @@ import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 import { format } from 'date-fns'
-import { da } from "date-fns/locale";
 import { getDb, storeLastValue } from "../../manager/mongo-manager";
 var _ = require('lodash');
+
+enum ExecMode {
+    TEST = "TEST",
+    EXEC = "EXEC"
+}
 
 
 const NODE_TYPE = "OBJECT_MAPPER"
@@ -12,17 +16,19 @@ const NODE_TYPE = "OBJECT_MAPPER"
 export class ObjectMapperNode extends BaseNode {
     mapper: any;
     lastValue: any = {};
+    injections: any;
 
-    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = [], inputConnctions: Array<any>) {
         super(name, NODE_TYPE, id, outputConnections);
-
         this.mapper = options.mapping.mappings;
+        this.injections = inputConnctions.filter((connection: any) => connection.to.name.includes("inject"));
+
         NodeManager.addNode(this);
     }
 
-    execute(msgIn: Message) {
+    async execute(msgIn: Message) {
         storeLastValue(this.id, msgIn.payload);
-        let newObject = mapObject(msgIn.payload, this.mapper);
+        let newObject = await mapObject(msgIn.payload, this.mapper, ExecMode.EXEC, this.injections, this.sendConnectionExec);
         this.onSuccess(newObject, msgIn.additional);
     }
 
@@ -31,13 +37,17 @@ export class ObjectMapperNode extends BaseNode {
             _id: this.id
         };
 
-        getDb().collection("last-values").findOne(query, function(err: any, result: any) {
+        // Copy for access in arrow function
+        let injections = this.injections;
+        let sendConnectionExec = this.sendConnectionExec;
+
+        getDb().collection("last-values").findOne(query, async function(err: any, result: any) {
             if (err) res.status(404).send(err);
             else {
                 if (Array.isArray(result.last)) {
                     res.send(mapObject(result.last.slice(0, 10), mapping));
                 } else {
-                    let output = mapObject(result.last, mapping);
+                    let output = await mapObject(result.last, mapping, undefined, injections, sendConnectionExec);
                     res.send(output);
                 }
             }
@@ -55,13 +65,10 @@ function setCustomTime(mapper: any, newObject: object) {
     }
 }
 
-
-export function mapObject(input_object: any, mapping: any, mode = "explicit") {
+export async function mapObject(input_object: any, mapping: any, mode: ExecMode = ExecMode.TEST, injections: any = [], sendConnectionExec: Function = () => {}): Promise<Object> {
     let newObject = {};
-    if (mode == "implicit") {
-        newObject = input_object;
-    }
-    mapping.forEach((mapper: any) => {
+
+    for await (let mapper of mapping) {
         if (mapper.source.includes("'")) {
             // If source is string set string as value
             _.set(newObject, mapper.target, mapper.source.replace(/'/g, ''));
@@ -77,17 +84,24 @@ export function mapObject(input_object: any, mapping: any, mode = "explicit") {
         } else if (mapper.target.includes("unix")) {
             let date = new Date(_.get(input_object, mapper.source)* 1000);
             _.set(newObject, mapper.target, date);
+        } else if (mapper.target.includes("unix")) {
+            let date = new Date(_.get(input_object, mapper.source)* 1000);
+            _.set(newObject, mapper.target, date);
         }
-        else if (mapper.target === ".") {
-            newObject = input_object[mapper.source];
-        } else {
-            // If source is path set origin as value
-            _.set(newObject, mapper.target, _.get(input_object, mapper.source));
-        }
+        else if (mapper.source.includes("inject")) {
 
-        if (mode === "implicit") {
-            _.set(input_object, mapper.source, undefined);
+            if (mode === ExecMode.EXEC) {
+                injections.forEach((element: any) => {
+                    sendConnectionExec(element.from.id, element.to.id);
+                });
+            }
+
+            let injectNodeId = injections.find((inject: any) => inject.to.name === mapper.source).from.nodeId;
+            let value = await NodeManager.getNodeById(injectNodeId).get();
+            _.set(newObject, mapper.target, value);
+        } else {
+            _.set(newObject, mapper.target, _.get(input_object, mapper.source)); 
         }
-    });
+    };
     return newObject;
 }

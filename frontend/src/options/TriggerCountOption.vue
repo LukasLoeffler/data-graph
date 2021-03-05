@@ -4,6 +4,7 @@
       v-model="percentage"
       color="lime lighten-2"
       height="20" rounded
+      @click.stop.capture=""
     >
       <template v-slot:default="{ }">
         <strong>{{triggerCount}}/{{threshhold}}</strong>
