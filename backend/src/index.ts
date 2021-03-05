@@ -140,7 +140,6 @@ app.get("/last-value/:nodeId", (req, res) => {
         _id: req.params.nodeId
     };
     dbo.collection("last-values").findOne(query, function(err: any, result: any) {
-        console.log(err);
         if (err) res.status(404).send(err);
         if (result?.last) {
             if (Array.isArray(result.last)) {
