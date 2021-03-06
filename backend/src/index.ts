@@ -47,6 +47,11 @@ connectToServer( function( err: any, client: any ) {
     io = require('socket.io')(server, {cors: { origins: '*:*'}});
     io.on('connection', function(socket: any) {
         console.log("NewConnection:", socket.id);
+
+        socket.on('BTN_CLICK', function(data: any) {
+            let node = NodeManager.getNodeById(data);
+            node.execute();
+        });
     });
 });
 
@@ -124,14 +129,6 @@ app.post("/save-node-config/", ( req, res ) => {
             res.send(`Created ${obj.result.n}`);
         }
     });
-});
-
-
-app.get("/recieve-event/:nodeId", (req, res) => {
-    let node = NodeManager.getNodeById(req.params.nodeId);
-    node.execute();
-    if (!node) res.status(404).send("Node not found");
-    else res.send("Successfully executed");
 });
 
 

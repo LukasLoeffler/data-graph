@@ -37,9 +37,7 @@ export default {
   },
   methods: {
     onClick() {
-      let nodeId = this.node.id;
-      let url = `${apiBaseUrl}/recieve-event/${nodeId}`
-      this.axios.get(url).then(() => {});
+      socketio.emit("BTN_CLICK", this.node.id);
     },
     resetCounter() {
       let resetUrl = `${apiBaseUrl}/reset/${this.node.id}`;
