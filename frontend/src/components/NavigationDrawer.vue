@@ -8,8 +8,8 @@
     </v-list-item>
     <v-divider></v-divider>
     <v-list nav dense>
-      <v-list-item-group :value="configIndex" mandatory style="max-height: 200px; overflow-y: scroll;">
-      <v-list-item v-for="(node, index) in nodeConfig" :key="node._id" class="workplace" @click="$emit('changeworkspace', index)">
+      <v-list-item-group :value="configIndex" mandatory style="overflow-y: scroll;">
+      <v-list-item v-for="(node, index) in nodeConfig" :key="node._id" class="workplace" :disabled="configIndex === index" @click="$emit('changeworkspace', index)">
         <v-list-item-title>{{node.workspace}}</v-list-item-title>
       </v-list-item>
       </v-list-item-group>
