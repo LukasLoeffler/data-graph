@@ -8,33 +8,27 @@ import vuetify from './plugins/vuetify';
 import router from './router';
 import { BaklavaVuePlugin } from "@baklavajs/plugin-renderer-vue";
 import VueNativeSock from 'vue-native-websocket'
+import io from 'socket.io-client';
 
 import "@baklavajs/plugin-renderer-vue/dist/styles.css";
 import 'vuetify/dist/vuetify.min.css'
 
 export let wsUrl;
 export let apiBaseUrl;
+export let socketio;
 
 if (process.env.VUE_APP_MODE === "PROD") {
   apiBaseUrl = window.location.protocol + "//" +window.location.host+":3000";
-  wsUrl = "ws://"+window.location.host+":3001";
+  socketio = io(apiBaseUrl)
 } else {
   apiBaseUrl = "http://localhost:3000"
-  wsUrl = "ws://localhost:3001"
+  socketio = io(apiBaseUrl)
 }
 
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
 Vue.use(Vuetify)
 Vue.use(BaklavaVuePlugin);
-
-
-const socket = Vue.use(VueNativeSock, wsUrl, {
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1500,
-})
-
 
 
 export const store = new Vuex.Store({

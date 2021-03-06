@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { socketio } from '@/main';
+
 export default {
   name: "EventLog",
   data () {
@@ -28,20 +30,12 @@ export default {
     }
   },
   created() {
-    this.$options.sockets.onmessage = (message) => {
-      try {
-        let data = JSON.parse(message.data);
-        if (data.type === "EventLog") {
-          this.events.push(data);
-          
-          if (this.events.length > 10) {
-            this.events.shift();
-          }
-        }
-      } catch (error) {
-        // console.log("Message")
+    socketio.on('EVENT_LOG', (data) => {
+      this.events.push(data);
+      if (this.events.length > 10) {
+        this.events.shift();
       }
-    }
+    });
   }
 }
 </script>

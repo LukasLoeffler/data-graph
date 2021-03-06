@@ -2,8 +2,8 @@ var crypto = require("crypto");
 import chalk from "chalk";
 import { Message } from "../message";
 import { NodeManager } from "../nodes/node-manager";
-import { WsManager } from "../ws";
 import { ExecutionCounter } from "../exec-info"
+import { io } from "..";
 
 const NODE_TYPE = "BASE_NODE";
 
@@ -43,7 +43,7 @@ export class BaseNode {
 
     onFailure(payload: any, additional: any = null) {
         ExecutionCounter.incrCountType(this.id, "failure");
-        WsManager.sendMessage(this.buildErrorMessage(this.id));  // Red shadow pulse trigger
+        this.sendErrorMessage(this.id);  // Red shadow pulse trigger
         this.targetsFailure.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
             let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
@@ -95,24 +95,24 @@ export class BaseNode {
 
     sendConnectionExec(fromNodeId: string, toNodeId: string): void {
         let message = {
-            type: "ConnectionExecution",
+            type: "CONNECTION_EXEC",
             data: {
                 from: fromNodeId,
                 to: toNodeId
             }
         }
-        WsManager.sendMessage(JSON.stringify(message));
+        io.emit('CONNECTION_EXEC', message);
     }
 
     
-    buildErrorMessage(nodeId: string, errorMessage: string = ""): string {
+    sendErrorMessage(nodeId: string, errorMessage: string = ""): void {
         let message = {
-            type: "NodeExecutionError",
+            type: "NODE_EXEC_ERROR",
             data: {
                 nodeId: nodeId,
                 message: errorMessage
             }
         }
-        return JSON.stringify(message);
+        io.emit("NODE_EXEC_ERROR", message);
     }
 }

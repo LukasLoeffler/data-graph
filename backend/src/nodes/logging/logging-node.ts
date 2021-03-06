@@ -1,5 +1,5 @@
+import { io } from "../..";
 import { Message } from "../../message";
-import { WsManager } from "../../ws";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 const util = require('util')
@@ -42,12 +42,12 @@ export class LoggingNode extends BaseNode {
 
     sendData(msg: Message) {
         let payload = {
-            type: "EventLog",
+            type: "EVENT_LOG",
             originNodeId: msg.sourceNodeId,
             targetNodeId: this.id,
             time: new Date(),
             level: this.level
         }
-        WsManager.sendMessage(JSON.stringify(payload));
+        io.emit('EVENT_LOG', payload);
     }
 }

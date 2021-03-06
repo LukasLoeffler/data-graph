@@ -1,7 +1,7 @@
 import { NodeManager } from "./nodes/node-manager";
 import { RedisClient } from "./redis";
-import { WsManager } from "./ws";
 import { format } from 'date-fns'
+import { io } from ".";
 
 class NodeExecutionCount {
     type: string;
@@ -32,9 +32,9 @@ export class ExecutionCounter {
     static async incrCountType(nodeId: string, type: string, incrWidth: number = 1) {
         let execInfoString = `exex_info_${type}_${nodeId}`;
 
-        let execInfoDate= `exex_info_time_${nodeId}`;
-        let execInfoTime = `exex_info_date_${nodeId}`;
-        RedisClient.set(execInfoDate, format(new Date, "HH:mm:ss:SS"));
+        let execInfoDate= `exex_info_date_${nodeId}`;
+        let execInfoTime = `exex_info_time_${nodeId}`;
+        RedisClient.set(execInfoDate, format(new Date, "MM.dd.yyyy"));
         RedisClient.set(execInfoTime, format(new Date, "HH:mm:ss:SS"));
 
         RedisClient.incrby(execInfoString, incrWidth); // Setting value to database
@@ -44,9 +44,9 @@ export class ExecutionCounter {
     static async setCountType(nodeId: string, type: string, value: number) {
         let execInfoString = `exex_info_${type}_${nodeId}`;
 
-        let execInfoDate= `exex_info_time_${nodeId}`;
-        let execInfoTime = `exex_info_date_${nodeId}`;
-        RedisClient.set(execInfoDate, format(new Date, "HH:mm:ss:SS"));
+        let execInfoTime= `exex_info_time_${nodeId}`;
+        let execInfoDate = `exex_info_date_${nodeId}`;
+        RedisClient.set(execInfoDate, format(new Date, "MM.dd.yyyy"));
         RedisClient.set(execInfoTime, format(new Date, "HH:mm:ss:SS"));
 
         RedisClient.set(execInfoString, value); // Setting value to database
@@ -98,7 +98,7 @@ export class ExecutionCounter {
             time: "-",
             date: "-"
         }
-        WsManager.sendMessage(JSON.stringify(payload));
+        io.emit("EXEC_COUNT", payload)
     }
 
 
@@ -114,8 +114,8 @@ export class ExecutionCounter {
         let execInfoSuccess = `exex_info_success_${nodeId}`;
         let execInfoFailure = `exex_info_failure_${nodeId}`;
         let byteInfoTrigger = `exex_info_bytes_${nodeId}`;
-        let execInfoDate    = `exex_info_time_${nodeId}`;
-        let execInfoTime    = `exex_info_date_${nodeId}`;
+        let execInfoDate    = `exex_info_date_${nodeId}`;
+        let execInfoTime    = `exex_info_time_${nodeId}`;
 
         let triggerCount = await RedisClient.get(execInfoTrigger);
         let successCount = await RedisClient.get(execInfoSuccess);
@@ -134,6 +134,6 @@ export class ExecutionCounter {
             time: time,
             date: date
         }
-        WsManager.sendMessage(JSON.stringify(payload));
+        io.emit("EXEC_COUNT", payload);
     }
 }

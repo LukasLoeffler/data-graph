@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {apiBaseUrl} from "@/main.js";
+import { apiBaseUrl, socketio } from "@/main.js";
 
 export default {
   props: ["option", "node", "value"],
@@ -35,19 +35,14 @@ export default {
     }
   },
   created() {
-    this.$options.sockets.onmessage = (message) => {
-      try {
-        let data = JSON.parse(message.data);
-        if (data.type === "ExecutionCount" &&  data.nodeId === this.node.id) {
-          this.executionCount = data.triggerCount;
-          this.totalBytes = data.bytesCount;
-          this.lastTime = data.time;
-          this.lastDate = data.date;
-        }
-      } catch (error) {
-        // console.log("Message")
+    socketio.on('EXEC_COUNT', (data) => {
+      if (data.nodeId === this.node.id) {
+        this.executionCount = data.triggerCount;
+        this.totalBytes = data.bytesCount;
+        this.lastTime = data.time;
+        this.lastDate = data.date;
       }
-    }
+    });
   },
   methods: {
     viewDetails() {

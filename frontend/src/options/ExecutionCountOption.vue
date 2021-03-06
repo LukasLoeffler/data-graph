@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {apiBaseUrl} from "@/main.js";
+import {apiBaseUrl, socketio} from "@/main.js";
 
 export default {
   props: ["option", "node", "value"],
@@ -34,19 +34,13 @@ export default {
     }
   },
   created() {
-    this.$options.sockets.onmessage = (message) => {
-      try {
-        let data = JSON.parse(message.data);
-        // Filter only messages for own node
-        if (data.type === "ExecutionCount" &&  data.nodeId === this.node.id) {
+    socketio.on('EXEC_COUNT', (data) => {
+      if (data.nodeId === this.node.id) {
           this.triggerCount = data.triggerCount || 0;
           this.successCount = data.successCount || 0;
           this.failureCount = data.failureCount || 0;
         }
-      } catch(error) {
-        // No error. Not all websocket message-payloads are in json format.
-      }
-    }
+    });
   },
   methods: {
     resetCounter() {

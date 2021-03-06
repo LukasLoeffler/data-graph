@@ -6,21 +6,18 @@
     <v-card-text>
       Mode: {{mode}}
       Backend Api Url: {{apiBaseUrl}}
-      Websocket Api Url: {{wsUrl}}
     </v-card-text>
   </v-card>
 </template>
 
 
 <script>
-import { wsUrl } from '../main';
 import { apiBaseUrl } from '../main';
 
 export default {
   data: (()=> {
     return {
       mode: process.env.VUE_APP_MODE,
-      wsUrl: wsUrl,
       apiBaseUrl: apiBaseUrl,
     }
   })

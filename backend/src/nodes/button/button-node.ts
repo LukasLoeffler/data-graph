@@ -1,8 +1,6 @@
 import { NodeManager } from "../node-manager";
 import { BaseNode } from "../base-node";
 import { ExecutionCounter } from "../../exec-info";
-import { Message } from "../../message";
-import { WsManager } from "../../ws";
 
 const NODE_TYPE = "BUTTON"
 
