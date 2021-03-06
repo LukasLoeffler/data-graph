@@ -1,9 +1,8 @@
+import { measure } from "../../decorators";
 import { getDb, storeLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
-var _ = require('lodash');
-
 import { mapObject } from "./object-mapper-node";
 
 const NODE_TYPE = "ARRAY_MAPPER"
