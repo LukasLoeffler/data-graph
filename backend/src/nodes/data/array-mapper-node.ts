@@ -1,9 +1,8 @@
+import { measure } from "../../decorators";
 import { getDb, storeLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
-var _ = require('lodash');
-
 import { mapObject } from "./object-mapper-node";
 
 const NODE_TYPE = "ARRAY_MAPPER"
@@ -18,9 +17,9 @@ export class ArrayMapperNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    execute(msg: Message) {
+    async execute(msg: Message) {
         storeLastValue(this.id, msg.payload);
-        let newObject = mapObjectArray(msg.payload, this.mapper);
+        let newObject = await mapObjectArray(msg.payload, this.mapper);
         this.onSuccess(newObject, msg.additional);
     }
 
@@ -28,16 +27,17 @@ export class ArrayMapperNode extends BaseNode {
      * Function to test the mapping against the latest input data. Output data is returned.
      * @param mapping Mapping to test
      */
-    test(mapping: any, res: any) {
+    async test(mapping: any, res: any) {
         let query = { 
             _id: this.id
         };
 
-        getDb().collection("last-values").findOne(query, function(err: any, result: any) {
+        getDb().collection("last-values").findOne(query, async function(err: any, result: any) {
             if (err) res.status(404).send(err);
             if (result?.last) {
                 if (Array.isArray(result.last)) {
-                    res.send(mapObjectArray(result.last.slice(0, 10), mapping)); 
+                    let data = await mapObjectArray(result.last.slice(0, 10), mapping);
+                    res.send(data); 
                 }
             }
             else res.status(404).send(err);
@@ -45,8 +45,11 @@ export class ArrayMapperNode extends BaseNode {
     }
 }
 
-function mapObjectArray(array: Array<any>, mapping: any) {
-    return array.map(elem => {
-        return mapObject(elem, mapping);
-    });
+async function mapObjectArray(array: Array<any>, mapping: any) {
+
+    let output = [];
+    for await (let element of array) {
+        output.push(await mapObject(element, mapping));
+    }
+    return output;
 }

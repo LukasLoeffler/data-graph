@@ -9,7 +9,7 @@
           <v-btn color="grey" class="mr-1" outlined>
             <v-icon>mdi-cog-outline</v-icon>
           </v-btn>
-          <v-btn @click="addMapping" color="green" class="mr-1" outlined>
+          <v-btn @click="addMapping('source', 'target')" color="green" class="mr-1" outlined @contextmenu.prevent="addInput">
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>
         </v-card-title>
@@ -22,13 +22,13 @@
                   <td style="width: 20px">Move</td>
                   <td>Source Property</td>
                   <td style="width: 20px">
-                    <v-tooltip bottom>
+                    <v-tooltip bottom color="orange">
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn @click="mirrorObject" icon color="orange" class="mr-1" v-bind="attrs" v-on="on" :disabled="Object.keys(codeRaw).length === 0">
                           <v-icon>mdi-arrow-up-bold-box-outline</v-icon>
                         </v-btn>
                       </template>
-                      <span>Extract schema of latest input</span>
+                      <span>Extract object schema from latest input</span>
                     </v-tooltip>
                   </td>
                   <td>Target Property</td>
@@ -41,7 +41,7 @@
                     <v-icon class="page__grab-icon" style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
                   </td>
                   <td>
-                    <v-text-field v-model="mapper.source" outlined dense hide-details></v-text-field>
+                    <v-text-field v-model="mapper.source" outlined dense hide-details :disabled="mapper.source.includes('inject:')"></v-text-field>
                   </td>
                   <td>
                     <v-icon>mdi-ray-start-arrow</v-icon>
@@ -56,29 +56,34 @@
               </draggable>
             </v-simple-table>
           </v-container>
-          <v-expansion-panels  class="mt-3" dark>
-          <v-expansion-panel>
-            <v-expansion-panel-header expand-icon="mdi-menu-down">
-              Interactive Testbed
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-row justify="center" v-if="Object.keys(codeRaw).length !== 0">
-              <v-col cols="6">
-                <h3 class="ml-5" style="text-align: left">Latest input</h3>
-                <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode theme="custom-theme" style="text-align:left;"></json-viewer>
-                
-              </v-col>
-              <v-col cols="6">
-                <h3 style="text-align: left">Test output</h3>
-                <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode theme="custom-theme" style="padding-left: 0px; text-align:left;"></json-viewer>
-              </v-col>
-              </v-row>
-              <p v-else class="no-data-info mt-5">
-                No data present yet. Interactive testing feature is disabled. <br>
-                To learn more click on the info icon in the upper right corner.
-              </p>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
+          <v-expansion-panels  class="mt-3" dark v-model="open">
+            <v-expansion-panel>
+              <v-expansion-panel-header expand-icon="mdi-menu-down">
+                Interactive Testbed
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-row justify="center" v-if="Object.keys(codeRaw).length !== 0">
+                <v-col cols="6">
+                  <h3 class="ml-5" style="text-align: left">Latest input</h3>
+                  <json-viewer :value="codeRaw" :expand-depth=4 expanded preview-mode theme="custom-theme" style="text-align:left;"></json-viewer>
+                  
+                </v-col>
+                <v-col cols="6">
+                  <v-row>
+                    <h3 style="text-align: left">Test output</h3>
+                    <v-btn icon x-small class="ml-3" @click="copyValue">
+                      <v-icon>mdi-content-copy</v-icon>
+                    </v-btn>
+                  </v-row>
+                  <json-viewer :value="codeFormatted" :expand-depth=4 expanded preview-mode theme="custom-theme" style="padding-left: 0px; text-align:left;"></json-viewer>
+                </v-col>
+                </v-row>
+                <p v-else class="no-data-info mt-5">
+                  No data present yet. Interactive testing feature is disabled. <br>
+                  To learn more click on the info icon in the upper right corner.
+                </p>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
         </v-expansion-panels>
         </v-card-text>
         <v-divider></v-divider>
@@ -96,6 +101,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="snackbar">Copied to clipboard</v-snackbar>
   </v-row>
 </template>
 
@@ -120,6 +127,8 @@ export default {
     codeRaw: [],
     codeFormatted: [],
     infoMode: false,
+    open: undefined,
+    snackbar: false
   }),
   created() {},
   methods: {
@@ -129,23 +138,27 @@ export default {
         this.codeRaw = response.data;
       })
     },
-    addMapping() {
+    addMapping(source, target) {
       let newMapping = {
-        source: "Source",
-        target: "Target"
+        source: source,
+        target: target
       }
       this.valueCopy.mappings.push(newMapping);
       this.$forceUpdate();
     },
     deleteMapping(index) {
+      if (this.valueCopy.mappings[index].source.includes("inject:")) {
+        this.node.removeInterface(this.valueCopy.mappings[index].source);
+        this.save(false);
+      }
       this.valueCopy.mappings.splice(index, 1);
       this.$forceUpdate();
     },
-    save() {
+    save(closeAfter = true) {
       this.node.setOptionValue("mapping", this.valueCopy);
       this.node.name = this.nodeCopy.name;
       this.$store.commit("saveNodeConfig", this.node.id);
-      this.dialog = false;
+      if (closeAfter )this.dialog = false;
     },
     test() {
       let testUrl = `${apiBaseUrl}/test/${this.node.id}`;
@@ -154,6 +167,7 @@ export default {
       }
       this.axios.post(testUrl, payload).then((response) => {
         this.codeFormatted = response.data;
+        this.open = 0
       })
     },
     mirrorObject() {
@@ -183,6 +197,29 @@ export default {
       var result = [];
       iter(object, []);
       return result;
+    },
+    addInput() {
+      let interfaces = [];
+      for (let [key, value] of this.nodeCopy.interfaces) {
+        interfaces.push(
+          {
+            name: key,
+            id: value.id,
+            isInput: value.isInput,
+          }
+        )
+      }
+
+      let lastIntf = interfaces.filter((intf) => intf.name.startsWith("inject:")).slice(-1)[0];
+      let lastIndex = (lastIntf) ? parseInt(lastIntf.name.split(":")[1]) : 0;
+      let newName = `inject:${lastIndex+1}`
+      this.node.addInputInterface(newName);
+      this.addMapping(newName, newName)
+    },
+    copyValue() {
+      let text = JSON.stringify(this.codeFormatted, null, 4);
+      this.snackbar = true;
+      navigator.clipboard.writeText(text);
     }
   },
   watch: {
@@ -196,7 +233,7 @@ export default {
         }
       }
     }
-  }
+  },
 }
 </script>
 

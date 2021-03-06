@@ -1,5 +1,5 @@
+import { io } from "../..";
 import { Message } from "../../message";
-import { WsManager } from "../../ws";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 const chalk = require('chalk');
@@ -32,7 +32,7 @@ export class AggregatorNode extends BaseNode {
         //console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
         if (this.slots.size === this.inputInterfaces.length) {
             this.slots.clear();
-            WsManager.sendMessage(this.buildAggregationCountMessage());
+            this.sendAggregationCountMessage();
             let output: Array<any> = [];
             this.data.forEach((value: any, key: string) => {
                 output.push(value);
@@ -40,15 +40,12 @@ export class AggregatorNode extends BaseNode {
 
             this.onSuccess(output, this.additional);
         } else {
-            WsManager.sendMessage(this.buildAggregationCountMessage());
+            this.sendAggregationCountMessage();
         }
     }
 
-    buildAggregationCountMessage(): string {
-        let message = {
-            type: "AggregatorCount",
-            data: Array.from( this.slots )
-        }
-        return JSON.stringify(message);
+    sendAggregationCountMessage(): void {
+        let message = Array.from(this.slots);
+        io.emit("INTERFACE_STATE", message);
     }
 }

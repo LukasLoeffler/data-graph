@@ -4,6 +4,7 @@
       v-model="percentage"
       color="lime lighten-2"
       height="20" rounded
+      @click.stop.capture=""
     >
       <template v-slot:default="{ }">
         <strong>{{triggerCount}}/{{threshhold}}</strong>
@@ -13,7 +14,7 @@
 </template>
 
 <script>
-import {apiBaseUrl} from "@/main.js";
+import { apiBaseUrl, socketio } from "@/main.js";
 
 export default {
   props: ["option", "node", "value"],
@@ -24,18 +25,12 @@ export default {
     }
   },
   created() {
-    this.$options.sockets.onmessage = (message) => {
-      try {
-        let data = JSON.parse(message.data);
-        // Filter only messages for own node
-        if (data.type === "ExecutionCount" &&  data.nodeId === this.node.id) {
-          this.triggerCount = data.triggerCount || 0;
-          this.percentage = data.triggerCount / this.threshhold * 100;
-        }
-      } catch(error) {
-        // No error. Not all websocket message-payloads are in json format.
+    socketio.on('EXEC_COUNT', (data) => {
+      if (data.nodeId === this.node.id) {
+        this.triggerCount = data.triggerCount || 0;
+        this.percentage = data.triggerCount / this.threshhold * 100;
       }
-    }
+    });
   },
   methods: {
     resetCounter() {

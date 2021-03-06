@@ -8,7 +8,7 @@
 </template>
 
 <script>
-
+import { socketio } from '@/main';
 
 export default {
   data: function() {
@@ -40,18 +40,13 @@ export default {
     this.isConnected = this.data.connectionCount > 0;
   },
   created() {
-    this.$options.sockets.onmessage = (message) => {
-      try {
-        let data = JSON.parse(message.data);
-        if (data.data.some(elem => elem === this.data.id)) {
-          this.isActive = true;
-        } else {
-          this.isActive = false;
-        }
-      } catch (error) {
-        // console.log("Message")
+    socketio.on('INTERFACE_STATE', (data) => {
+      if (data.some(elem => elem === this.data.id)) {
+        this.isActive = true;
+      } else {
+        this.isActive = false;
       }
-    }
+    });
   },
   methods: {
     startHover() {

@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { socketio } from '@/main';
+
 export default {
   props: {
     connection: Object
@@ -103,24 +105,16 @@ export default {
     });
 
     let timeOut = null;
-    this.$options.sockets.onmessage = (message) => {
-      try {
-        let data = JSON.parse(message.data);
-        if (data.type === "ConnectionExecution") {
-          // Check if connection is right one by gettomg from and to nodes and compare nodeIds
-          if (data.data.from === this.connection.from.id && data.data.to === this.connection.to.id) {
-            this.connectionActive = true; // Activate animation
+    socketio.on('CONNECTION_EXEC', (data) => {
+      if (data.data.from === this.connection.from.id && data.data.to === this.connection.to.id) {
+        this.connectionActive = true; // Activate animation
 
-            clearTimeout( timeOut ); // Reset timeout if called
-            timeOut = setTimeout(() => {
-              this.connectionActive = false; // Deactivate animation if method is not called within interval.
-            }, 750)
-          }
-        }
-      } catch (error) {
-        // Do nothing
+        clearTimeout( timeOut ); // Reset timeout if called
+        timeOut = setTimeout(() => {
+          this.connectionActive = false; // Deactivate animation if method is not called within interval.
+        }, 750)
       }
-    }
+    });
   }
 }
 </script>

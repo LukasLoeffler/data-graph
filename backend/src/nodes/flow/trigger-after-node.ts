@@ -12,12 +12,12 @@ let execInfoTrigger = `exex_info_trigger_`;
 export class TriggerAfterNode extends BaseNode {
 
     threshhold: number;
-    threshholdReached: boolean;
+    puffer: Array<any>;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, outputConnections);
         this.threshhold = options.settings.threshhold;
-        this.threshholdReached = false;
+        this.puffer = [];
         NodeManager.addNode(this);
     }
 
@@ -25,16 +25,19 @@ export class TriggerAfterNode extends BaseNode {
         let counter = await RedisClient.get(execInfoTrigger = `exex_info_trigger_${this.id}`);
 
         if (msg.targetName === "Counter") {
+
+            this.puffer.push(msg.payload);
             if (counter >= this.threshhold-1) {
-                this.on("onTrigger", msg.payload);
-                this.threshholdReached = true;
+                this.on("onTrigger", this.puffer);
                 ExecutionCounter.resetCount(this.id);
+                this.puffer = [];
             } else {
                 ExecutionCounter.incrCountType(this.id, "trigger");
             }
         }
         if (msg.targetName === "Reset") {
             ExecutionCounter.resetCount(this.id);
+            this.puffer = [];
         }
     }
 
