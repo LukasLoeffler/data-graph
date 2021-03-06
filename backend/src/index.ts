@@ -1,7 +1,6 @@
 import { Loader } from "./loader";
 import { NodeManager } from "./nodes/node-manager";
 import { connectToServer, getDb } from "./manager/mongo-manager";
-import { WsManager } from "./ws";
 import { ExecutionCounter } from "./exec-info";
 import express from "express";
 import chalk from "chalk";
@@ -13,13 +12,13 @@ const bodyParser = require('body-parser');
 const  cors = require('cors')
 
 const app = express();
-
+app.use(cors())
 const PORT = process.env.PORT || 3000;
 
 var rawBodySaver = function (req: any, res: any, buf: any, encoding: string) {
-  if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding || 'utf8');
-  }
+    if (buf && buf.length) {
+        req.rawBody = buf.toString(encoding || 'utf8');
+    }
 }
 
 app.use(express.json()); 
@@ -27,14 +26,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw({ verify: rawBodySaver, type: '*/*' }));
 
-app.use(cors())
-
 let dbo: any;
 
 
 let lastSave = {};  // Object to cache last node config to check if changes occured.
 
-
+export let io: any = null;
 
 
 connectToServer( function( err: any, client: any ) {
@@ -42,8 +39,14 @@ connectToServer( function( err: any, client: any ) {
 
     dbo = getDb();  // Fetching database object
     Loader.loadConfig(dbo);  // Loading nodes from config file.
-    app.listen( PORT, () => {
+    let server = app.listen( PORT, () => {
         console.log( `Server started at http://localhost:${ PORT }` );
+    });
+
+    
+    io = require('socket.io')(server, {cors: { origins: '*:*'}});
+    io.on('connection', function(socket: any) {
+        console.log("NewConnection:", socket.id);
     });
 });
 
@@ -104,7 +107,6 @@ app.put("/save-node-config/:id", ( req, res ) => {
                 console.log(err);
                 res.status(500).send("Configuation not saved");
             } else {
-                WsManager.sendMessage("Refreshed");
                 Loader.loadConfig(dbo);
                 res.send(`Updated ${obj.result.n}`);
             }
@@ -118,7 +120,6 @@ app.post("/save-node-config/", ( req, res ) => {
     dbo.collection("node-configs").insertOne(req.body, function(err: any, obj: any) {
         if (err) res.status(500).send("Configuation not saved");
         else {
-            WsManager.sendMessage("Refreshed");
             Loader.loadConfig(dbo);
             res.send(`Created ${obj.result.n}`);
         }
@@ -298,18 +299,18 @@ app.post('/check-pg-connection', async function(req, res) {
 
 
 async function getPgTableSchema(tableName: string, client: any) {
-        let sqlString = `SELECT * FROM information_schema.columns WHERE table_name = $1;`;
-        let res = await client.query(sqlString, [tableName]);
+    let sqlString = `SELECT * FROM information_schema.columns WHERE table_name = $1;`;
+    let res = await client.query(sqlString, [tableName]);
 
-        return res.rows.map((row: any) => {
-            return {
-                identity: row["is_identity"],
-                identityGeneration: row["identity_generation"],
-                name: row["column_name"],
-                position: row["ordinal_position"],
-                nullable: row["is_nullable"],
-                dataType: row["data_type"],
-                updateable: row["is_updatable"]
-            }
-        });
-    }
+    return res.rows.map((row: any) => {
+        return {
+            identity: row["is_identity"],
+            identityGeneration: row["identity_generation"],
+            name: row["column_name"],
+            position: row["ordinal_position"],
+            nullable: row["is_nullable"],
+            dataType: row["data_type"],
+            updateable: row["is_updatable"]
+        }
+    });
+}

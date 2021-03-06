@@ -1,5 +1,4 @@
 import { performance } from "perf_hooks";
-import { WsManager } from "./ws";
 
 export const measure = (
     target: Object,

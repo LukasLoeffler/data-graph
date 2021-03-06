@@ -46,6 +46,7 @@
   import { Components } from '@baklavajs/plugin-renderer-vue'
   import NodeContextMenu from '../components/dialogs/NodeContextMenu'
   import CustomInterface from './CustomInterface'
+  import { socketio } from '@/main';
 
   const ERROR_PULSE_LENGTH = 2000;
 
@@ -69,21 +70,15 @@
     },
     created() {
       let timeOut = null;
-      this.$options.sockets.onmessage = (message) => {
-        try {
-          let data = JSON.parse(message.data);
-          if (data.type === "NodeExecutionError" && data.data.nodeId === this.data.id) {
-
+      socketio.on('NODE_EXEC_ERROR', (data) => {
+        if (data.data.nodeId === this.data.id) {
             this.errorOccured = true; // Activate animation
             clearTimeout( timeOut ); // Reset timeout if called
             timeOut = setTimeout(() => {
               this.errorOccured = false; // Deactivate animation if method is not called within interval.
             }, ERROR_PULSE_LENGTH)
           }
-        } catch (error) {
-          // console.log("Message")
-        }
-      }
+      });
     },
     methods: {
       openAltContextMenu(e) {

@@ -40,7 +40,7 @@ import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
-import { apiBaseUrl } from '../main';
+import { apiBaseUrl, socketio } from '@/main';
 
 // Custom Baklava Components
 import CustomConnection from "../components/CustomConnection";
@@ -117,7 +117,7 @@ export default {
       notifySnack: false,
       notifyMessage: "",
       notifyColor: "white",
-      notifyTimeout: 1000
+      notifyTimeout: 1000,
     }
   },
   components: {
@@ -144,31 +144,19 @@ export default {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.$options.sockets.onopen = () => {
+    socketio.on('connect', () => {
       this.websocketConnected = true;
       this.sendNotification("Server connected", "green", 1000);
-    }
-    this.$options.sockets.onmessage = () => this.websocketConnected = true;
-    this.$options.sockets.onclose = () => {
+    });
+
+    socketio.on('disconnect', () => {
       this.websocketConnected = false;
       this.sendNotification("Server not connected. Trying to reestablish connection", "red", 2000);
-    }
-
+    });
 
     this.initialLoad();
   },
   methods: {
-    allowDrop(ev) {
-      ev.preventDefault();
-      console.log("AllowDrop:", ev);
-    },
-    drag(ev) {
-      console.log(ev);
-    },
-    drop(ev) {
-      ev.preventDefault();
-      console.log(ev);
-    },
     sendNotification(message, color, timeout) {
       this.notifyMessage = message;
       this.notifyColor = color;
