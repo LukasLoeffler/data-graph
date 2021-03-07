@@ -7,11 +7,18 @@ import Vuetify from 'vuetify'
 import vuetify from './plugins/vuetify';
 import router from './router';
 import { BaklavaVuePlugin } from "@baklavajs/plugin-renderer-vue";
-import VueNativeSock from 'vue-native-websocket'
 import io from 'socket.io-client';
+import { DrawInteraction } from 'vuelayers'
+import { ModifyInteraction } from 'vuelayers'
+import VueLayers from 'vuelayers'
 
 import "@baklavajs/plugin-renderer-vue/dist/styles.css";
 import 'vuetify/dist/vuetify.min.css'
+import 'vuelayers/lib/style.css' // needs css-loader
+
+Vue.use(ModifyInteraction)
+Vue.use(DrawInteraction)
+Vue.use(VueLayers)
 
 export let wsUrl;
 export let apiBaseUrl;

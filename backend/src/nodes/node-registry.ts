@@ -19,6 +19,7 @@ import { DataChangeNode } from "./flow/data-change-node"
 import { HttpInRequestNode } from "./http/http-in-request-node"
 import { HttpInResponseNode } from "./http/http-in-response-node"
 import { CsvToJsonNode } from "./type/csv-to-json-node"
+import { GeoFilterNode } from "./geo/geofilter-node"
 
 
 
@@ -64,6 +65,7 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("http-in-request", "http", HttpInRequestNode),
     new RegEntry("http-in-response", "http", HttpInResponseNode),
     new RegEntry("csv-to-json", "type", CsvToJsonNode),
+    new RegEntry("geo-filter", "geo", GeoFilterNode),
 ]
 
 
