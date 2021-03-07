@@ -23,6 +23,7 @@
     "vue-property-decorator": "^9.0.2",
     "vue-router": "^3.2.0",
     "vuedraggable": "^2.24.3",
+    "vuelayers": "^0.11.31",
     "vuetify": "^2.2.11",
     "vuex": "^3.4.0"
   },
