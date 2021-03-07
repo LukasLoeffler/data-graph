@@ -1,12 +1,10 @@
 const cron = require('node-cron');
 import { NodeManager } from "../node-manager";
 import { BaseNode } from "../base-node";
-import { Message } from "../../message";
 import chalk from "chalk";
 
 
 const NODE_TYPE = "CRON"
-const requiredOptions = ["cronexpression"];
 
 export class CronNode extends BaseNode{
     cronExpression: string;
@@ -17,7 +15,6 @@ export class CronNode extends BaseNode{
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, outputConnections);
 
-        this.validateOptions(options, requiredOptions);
         this.cronExpression = this.getOption("cronexpression", options);
         this.running = this.getOption("running", options);
 
