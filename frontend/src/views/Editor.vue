@@ -6,6 +6,9 @@
         <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
         <div class="flex-grow-1"></div>
         <ConnectionIndicator :status="websocketConnected"/>
+        <v-btn icon @click="console = !console">
+          <v-icon>mdi-console</v-icon>
+        </v-btn>
       </v-toolbar>
     </v-card>
     <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" :configIndex="configIndex"
@@ -13,6 +16,7 @@
       @changeworkspace="changeWorkspace" 
       @drawerClosed="drawer = false"
     />
+    <Console :console="console"/>
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
@@ -68,6 +72,8 @@ import Filter from "../nodes/object/FilterNode";
 import PathNode from "../nodes/object/PathNode";
 import FileSave from "../nodes/filesystem/FileSaveNode"
 
+import GeoFilterNode from "../nodes/geo/GeoFilterNode"
+
 import MqttSubNode from "../nodes/mqtt/MqttSubNode";
 import MqttPubNode from "../nodes/mqtt/MqttPubNode";
 import Logging from "../nodes/LoggingNode";
@@ -89,6 +95,7 @@ import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
 import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog";
 import TriggerAfterDialog from "../components/dialogs/TriggerAfterDialog";
 import AggregatorNodeDialog from "../components/dialogs/AggregatorNodeDialog";
+import GeoFilterDialog from "../nodes/geo/GeoFilterDialog"
 
 
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
@@ -98,6 +105,7 @@ import DataChangeNode from "../nodes/flow/DataChangeNode"
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
+import Console from '../components/Console.vue';
 
 export default {
   data() {
@@ -108,6 +116,7 @@ export default {
       viewPlugin: new ViewPlugin(),
       optionPlugin: new OptionPlugin(),
       drawer: false,
+      console: false,
       nodeConfig: null,
       selectedConfig: null,
       configIndex: null,
@@ -122,7 +131,8 @@ export default {
   },
   components: {
     ConnectionIndicator,
-    NavigationDrawer
+    NavigationDrawer,
+    Console
   },
   created() {
     this.configIndex = this.$route.params.index-1;
@@ -272,6 +282,7 @@ export default {
     this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
     this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
     this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
+    this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
 
 
     // Register nodes
@@ -286,13 +297,15 @@ export default {
     this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
     this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
 
-    
 
     // Object
     this.editor.registerNodeType("filter", Filter, "Object")
     this.editor.registerNodeType("object-path", PathNode, "Object")
     this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
     this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
+
+    // Geo
+    this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
 
     // Filesystem
     this.editor.registerNodeType("file-save", FileSave, "Filesystem")
@@ -379,7 +392,7 @@ export default {
   left: 0;
   right: 0;
   z-index: 100;
-  top: 10px;
+  top: 6px;
 }
 
 #drawer {

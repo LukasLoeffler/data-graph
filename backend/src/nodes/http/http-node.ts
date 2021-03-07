@@ -3,6 +3,7 @@ import { NodeManager } from "../../nodes/node-manager";
 import { Message } from "../../message";
 import { AxiosResponse, AxiosError } from 'axios'
 import { ExecutionCounter } from "../../exec-info";
+import { measure } from "../../decorators";
 
 const axios = require('axios');
 const headerUtils = require('./helper')
