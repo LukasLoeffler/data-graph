@@ -28,7 +28,7 @@ export class HttpNode extends BaseNode {
         this.url = options.settings.url;
         this.httpMethod = options.settings.requestType;
         this.timeout = options.settings.timeout;
-        this.headers = headerUtils.buildHeader(options.settings.headers);
+        this.headers = headerUtils.headerArrayToObject(options.settings.headers);
         NodeManager.addNode(this);
     }
 
