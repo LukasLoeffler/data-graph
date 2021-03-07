@@ -30,9 +30,9 @@ export class LoggingNode extends BaseNode {
 
         this.on("onInput", msg.payload, msg.additional);
         if (Buffer.isBuffer(msg.payload)) {
-            //console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${msg.payload.toString()}`);
+            console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${msg.payload.toString()}`);
         } else {
-            //console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${util.inspect(msg.payload, {showHidden: false, depth: null})}`);
+            console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${util.inspect(msg.payload, {showHidden: false, depth: null})}`);
         }
     }
 
