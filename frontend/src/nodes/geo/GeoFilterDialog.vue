@@ -145,6 +145,9 @@ export default {
         }
       }
     },
+    dialog() {
+      setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
+    },
     e1() {
       setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
     }
