@@ -8,7 +8,6 @@ const chalk = require('chalk');
 
 const NODE_TYPE = "LOGGING"
 
-const requiredOptions = ["operation"];
 
 export class LoggingNode extends BaseNode {
 
