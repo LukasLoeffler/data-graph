@@ -21,10 +21,9 @@ var rawBodySaver = function (req: any, res: any, buf: any, encoding: string) {
     }
 }
 
-app.use(express.json()); 
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(bodyParser.raw({ verify: rawBodySaver, type: '*/*' }));
+app.use(bodyParser.raw({ verify: rawBodySaver, type: '*/*', limit: '50mb' }));
 
 let dbo: any;
 
@@ -99,6 +98,7 @@ app.put("/save-node-config/:id", ( req, res ) => {
     let query = { 
         _id: new mongodb.ObjectID(req.params.id)
     };
+
     var newvalues = { $set: req.body };
     const options = { upsert: true };
 
