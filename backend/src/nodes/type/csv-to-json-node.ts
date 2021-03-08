@@ -21,11 +21,7 @@ export class CsvToJsonNode extends BaseNode {
         csv()
             .fromString(msg.payload.toString())
             .then((jsonObj: any) => {
-
-                jsonObj.forEach((element: any) => {
-                    this.onSuccess(element, msg.additional);
-                });
-                
+                this.onSuccess(jsonObj, msg.additional);
             })
             .catch((err: any) => {
                 this.onFailure(err, msg.additional);

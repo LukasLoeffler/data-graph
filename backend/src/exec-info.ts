@@ -28,7 +28,6 @@ class NodeExecutionCount {
 
 export class ExecutionCounter {
 
-
     static async incrCountType(nodeId: string, type: string, incrWidth: number = 1) {
         let execInfoString = `exex_info_${type}_${nodeId}`;
 

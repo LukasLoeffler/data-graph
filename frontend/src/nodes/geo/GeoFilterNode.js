@@ -9,6 +9,7 @@ export default class GeoFilterNode extends Node {
         super();
         this.addInputInterface("payload");
         this.addOutputInterface("onSuccess");
+        this.addOutputInterface("onFailure");
 
         this.addOption("filter", "GeoFilterDialog");
 

@@ -59,13 +59,13 @@
                   <vl-view :zoom.sync="zoom" :center.sync="center"></vl-view>
 
                   <vl-layer-vector :z-index="1">
-                    <vl-source-vector :features.sync="features" ident="the-source"></vl-source-vector>
+                    <vl-source-vector :features.sync="features" :ident="this.node.id"></vl-source-vector>
                   </vl-layer-vector>
 
-                  <vl-interaction-draw type="Polygon" source="the-source">
+                  <vl-interaction-draw type="Polygon" :source="this.node.id">
                   </vl-interaction-draw>
 
-                  <vl-interaction-modify type="Polygon" source="the-source">
+                  <vl-interaction-modify type="Polygon" :source="this.node.id">
 
                   </vl-interaction-modify>
 
@@ -116,12 +116,6 @@ export default {
       selectionMode: true
     }
   },
-  created() {
-    this.sourceLat = this.node.getOptionValue("filter").sourceLat;
-    this.sourceLon = this.node.getOptionValue("filter").sourceLon;
-    this.features = this.node.getOptionValue("filter").geometry;
-    this.selectionMode = this.node.getOptionValue("filter").filterMode;
-  },
   methods: {
     save(){
       let filter = {
@@ -134,6 +128,12 @@ export default {
       this.node.setOptionValue("filter", filter);
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
+    },
+    init() {
+      this.sourceLat = this.node.getOptionValue("filter")?.sourceLat || "longitude";
+      this.sourceLon = this.node.getOptionValue("filter")?.sourceLon || "latitude";
+      this.features = this.node.getOptionValue("filter")?.geometry || [];
+      this.selectionMode = this.node.getOptionValue("filter")?.filterMode || true;
     }
   },
   watch: {
@@ -141,12 +141,16 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
-          
+          this.init();
+          setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
         }
       }
     },
     e1() {
       setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
+    },
+    dialog() {
+      this.init();
     }
   }
 }
