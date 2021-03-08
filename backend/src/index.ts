@@ -2,17 +2,16 @@ import { Loader } from "./loader";
 import { NodeManager } from "./nodes/node-manager";
 import { connectToServer, getDb } from "./manager/mongo-manager";
 import { ExecutionCounter } from "./exec-info";
+import { Client } from 'pg';
 import express from "express";
 import chalk from "chalk";
-const { Client } = require('pg')
-var mongodb = require('mongodb');
-const bodyParser = require('body-parser');
-
-
-const  cors = require('cors')
+import * as mongodb from 'mongodb';
+import { urlencoded, json, raw } from 'body-parser';
+import cors from 'cors';
 
 const app = express();
 app.use(cors())
+
 const PORT = process.env.PORT || 3000;
 
 var rawBodySaver = function (req: any, res: any, buf: any, encoding: string) {
@@ -21,9 +20,9 @@ var rawBodySaver = function (req: any, res: any, buf: any, encoding: string) {
     }
 }
 
-//app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(bodyParser.raw({ verify: rawBodySaver, type: '*/*', limit: '50mb' }));
+app.use(urlencoded({ extended: true }));
+app.use(json());
+app.use(raw({ verify: rawBodySaver, type: '*/*', limit: '50mb' }));
 
 let dbo: any;
 
