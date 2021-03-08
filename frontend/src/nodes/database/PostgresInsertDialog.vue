@@ -28,7 +28,7 @@
                 <v-row class="ma-2">
                   <v-btn color="primary" @click="e1 = 1">Back</v-btn>
                   <v-spacer></v-spacer>
-                  <v-btn color="red" text @click="this.dialog = false">Abort</v-btn>
+                  <v-btn color="red" text @click="dialog = false">Abort</v-btn>
                   <v-btn color="primary" @click="save">Save</v-btn>
                 </v-row>
               </v-stepper-content>
