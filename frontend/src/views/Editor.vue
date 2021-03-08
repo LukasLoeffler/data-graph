@@ -138,19 +138,19 @@ export default {
     this.configIndex = this.$route.params.index-1;
     this.init();
 
-    this.editor.events.beforeAddNode.addListener(this, ()=> {
+    this.editor.events.beforeAddNode.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeAddConnection.addListener(this, ()=> {
+    this.editor.events.beforeAddConnection.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeRemoveNode.addListener(this, ()=> {
+    this.editor.events.beforeRemoveNode.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeRemoveConnection.addListener(this, ()=> {
+    this.editor.events.beforeRemoveConnection.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
@@ -178,8 +178,6 @@ export default {
     },
     save() {
       let state = this.editor.save();
-      
-    
       let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.selectedConfig._id}`;
       this.axios.put(saveStateUrl, state)
       .then(() => {
@@ -340,14 +338,10 @@ export default {
       this.configIndex = this.$route.params.index-1;
     },
     "viewPlugin.scaling": {
-      handler() {
-        // Currently no implementation
-      }
+      handler() {}
     },
     "viewPlugin.panning": {
-      handler() {
-        //debounce(500, this.$store.commit("saveNodeConfig", 1));
-      },
+      handler() {},
       deep: true
     },
     "$store.getters.deletedNode": {
