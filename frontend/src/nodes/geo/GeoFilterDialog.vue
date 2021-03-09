@@ -97,8 +97,8 @@ export default {
       e1: 1,
       sourceLat: null,
       sourceLon: null,
-      zoom: 15,
-      center: [8.4036527, 49.0068901],
+      zoom: 10,
+      center: [0, 0],
       features: [],
       availableBackgroundMaps: [
         {name: "OSM", url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"},
@@ -134,6 +134,25 @@ export default {
       this.sourceLon = this.node.getOptionValue("filter")?.sourceLon || "latitude";
       this.features = this.node.getOptionValue("filter")?.geometry || [];
       this.selectionMode = this.node.getOptionValue("filter")?.filterMode || true;
+
+
+      this.center = (this.features) ? this.calcCenter(this.features) : [0,0];
+      
+    },
+    calcCenter(features) {
+      let lats = [];
+      let lons = [];
+      features.forEach(feature => {
+        feature.geometry.coordinates.forEach(coordinate => {
+          coordinate.forEach(element => {
+            lats.push(element[0])
+            lons.push(element[1])
+          });
+        });
+      });
+      let centerLat = lats.reduce((a, b) => (a + b)) / lats.length;
+      let centerLon = lons.reduce((a, b) => (a + b)) / lons.length;
+      return [centerLat, centerLon]
     }
   },
   watch: {
@@ -141,7 +160,6 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
-          this.init();
           setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
         }
       }
