@@ -22,10 +22,12 @@ export class HttpNode extends BaseNode {
     httpMethod: httpMethods;
     headers: Array<Record<string, any>>;
     timeout: number;
+    options: any;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
-        super(name, NODE_TYPE, id, outputConnections)
+        super(name, NODE_TYPE, id, options, outputConnections);
         this.url = options.settings.url;
+        this.options = options;
         this.httpMethod = options.settings.requestType;
         this.timeout = options.settings.timeout;
         this.headers = headerUtils.headerArrayToObject(options.settings.headers);
