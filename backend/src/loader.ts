@@ -7,8 +7,6 @@ interface StringMap { [key: string]: string; }
 
 let frontendNodes: any;
 
-
-
 function getNodeByInterfaceId(interfaceId: String) {
     return frontendNodes.nodes.find((node: any) => {
         return node.interfaces.some((intf: any) => intf[1].id === interfaceId);
@@ -68,19 +66,30 @@ function extractConnections(nodeConfig: any) {
     }
 }
 
+/**
+ * Takes the nodeConfig and extracts all nodeIds contained in all workspaces. This list is then compared to all nodes
+ * active from the NodeManager. If the NodeManager contains more nodes than the config, all redundant (deleted) nodes
+ * are also deleted from NodeManager.
+ * @param nodeConfigs 
+ * @returns Number of deleted nodes
+ */
 function cleanNodeManager(nodeConfigs: any) {
-    // Getting deleted nodes
+    // Getting all nodes from all workspaces as flat array
     let configNodeIds = nodeConfigs.map((nodeConfig: any) => {
         if (!nodeConfig.nodes) return [];
         return nodeConfig.nodes.map((node: any) => {
             return node.id;
         });
     }).flat();
+    // Getting all active node from NodeManager
     let runningNodeIds = NodeManager.getActiveNodes().map((node: any) => {
         return node.id;
     })
+
+    // Getting deleted nodeIds by creating delta between the two arrays
     let deleted = runningNodeIds.filter((nodeIdRunning: string) => !configNodeIds.some((nodeIdConfig: string) => nodeIdConfig === nodeIdRunning));
 
+    // Delete all deletes nodes for real
     deleted.forEach((nodeId: string) => {
         NodeManager.resetNode(nodeId);
     });
