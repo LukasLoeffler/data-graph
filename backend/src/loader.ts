@@ -2,51 +2,11 @@ import { NodeManager } from "./nodes/node-manager";
 import { NodeRegistry } from "./nodes/node-registry";
 import chalk from "chalk";
 
-export class Loader {
-    static loadConfig(dbo: any) {
-        loadConfig(dbo);
-    }
-}
 
 interface StringMap { [key: string]: string; }
 
 let frontendNodes: any;
 
-function getSuccessTargets(node: any) {
-    let targetType = "onSuccess";
-
-    let conNodes = getConnectedNodeByInterface(node, targetType);
-    if (conNodes.length !== 0){
-        return conNodes;
-    } else {
-        conNodes = getConnectedNodeByInterface(node, "onClick");
-        return conNodes;
-    }
-}
-
-function getFailureTargets(node: any) {
-    let targetType = "onFailure";
-    return getConnectedNodeByInterface(node, targetType)
-}
-
-function getConnectedNodeByInterface(node: any, type: string) {
-    let outInterface = node.interfaces.find((intface: any) => intface[0] === type);
-
-    if (!outInterface) return [];
-
-    let outConnections = frontendNodes.connections.filter((conn: any) => conn.from === outInterface[1].id);
-    
-    let targetNodes: any = []
-
-    outConnections.forEach((out: any) => {
-        frontendNodes.nodes.forEach((node: any) => {
-            node.interfaces.forEach((intf: any) => {
-                if (out.to === intf[1].id) targetNodes.push(node.id);
-            });
-        });
-    });
-    return targetNodes;
-}
 
 
 function getNodeByInterfaceId(interfaceId: String) {
@@ -108,18 +68,39 @@ function extractConnections(nodeConfig: any) {
     }
 }
 
+function cleanNodeManager(nodeConfigs: any) {
+    // Getting deleted nodes
+    let configNodeIds = nodeConfigs.map((nodeConfig: any) => {
+        if (!nodeConfig.nodes) return [];
+        return nodeConfig.nodes.map((node: any) => {
+            return node.id;
+        });
+    }).flat();
+    let runningNodeIds = NodeManager.getActiveNodes().map((node: any) => {
+        return node.id;
+    })
+    let deleted = runningNodeIds.filter((nodeIdRunning: string) => !configNodeIds.some((nodeIdConfig: string) => nodeIdConfig === nodeIdRunning));
 
+    deleted.forEach((nodeId: string) => {
+        NodeManager.resetNode(nodeId);
+    });
 
-function loadConfig(dbo: any) {
-    NodeManager.reset();
+    return deleted.length;
+}
+
+export function loadConfig(dbo: any) {
     console.log(chalk.blueBright("LOADING CONFIG"))
 
     let numberofTotalNodes = 0;
+    let numberOfNodesChanged = 0;
+    let numberOfNodesInit = 0;
+    let nodesChanged: Array<String> = [];
 
     dbo.collection("node-configs").find({}).toArray(function(err: any, nodeConfigs: any) {
         nodeConfigs.forEach((nodeConfig: any)=> {
             frontendNodes = nodeConfig;
             let connectionList = extractConnections(nodeConfig);
+
             nodeConfig.nodes.forEach((node: any) => {
                 let newCls: any;
                 try {
@@ -127,22 +108,38 @@ function loadConfig(dbo: any) {
                 } catch (error) {
                     console.log(`Loader: Node type ${chalk.red(node.type)} not found`);
                 }
-                let options = extractOptionsFromNode(node);
-                let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
-                let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
 
-                new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
+                let options = extractOptionsFromNode(node);
+
+                let checkNode = NodeManager.getNodeById(node.id);
+                if (!checkNode) {
+                    let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
+                    let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
+                    new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
+                    numberOfNodesInit++;
+                } else {
+                    let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
+                    let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
+
+                    let nodeChanged = JSON.stringify(checkNode.options) !== JSON.stringify(options);
+                    let outputChanged = JSON.stringify(checkNode.outputInterfaces) !== JSON.stringify(outputConnections);
+
+                    if (checkNode && (nodeChanged || outputChanged)) {
+                        NodeManager.resetNode(node.id);
+                        console.log(`Reloading node config: ${chalk.cyan(node.name)}`)
+
+                        new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
+                        numberOfNodesChanged++;
+                        nodesChanged.push(node.name);
+                    }
+                }
             });
             numberofTotalNodes = numberofTotalNodes + nodeConfig.nodes.length;
         });
 
+        let numberOfDeletedNodes = cleanNodeManager(nodeConfigs);
 
-        let numberOfNodesInit = NodeManager.getActiveNodes().length;
-    
-        if (numberOfNodesInit !== numberofTotalNodes) {
-            console.log(`${chalk.redBright(numberOfNodesInit)}/${chalk.redBright(numberofTotalNodes)} nodes initalized.`)
-        } else {
-            console.log(`${chalk.greenBright(numberOfNodesInit)}/${chalk.greenBright(numberofTotalNodes)} nodes initalized.`)
-        }
+        console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofTotalNodes)}`);
+        if (nodesChanged.length !== 0) console.log(`Nodes Changed: ${chalk.yellow(nodesChanged)}`)
     });
 }

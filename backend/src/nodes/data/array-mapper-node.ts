@@ -11,7 +11,7 @@ export class ArrayMapperNode extends BaseNode {
     mapper: any;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
 
         this.mapper = options.mapping.mappings;
         NodeManager.addNode(this);
@@ -36,7 +36,7 @@ export class ArrayMapperNode extends BaseNode {
             if (err) res.status(404).send(err);
             if (result?.last) {
                 if (Array.isArray(result.last)) {
-                    let data = await mapObjectArray(result.last.slice(0, 10), mapping);
+                    let data = await mapObjectArray(result.last, mapping);
                     res.send(data); 
                 }
             }

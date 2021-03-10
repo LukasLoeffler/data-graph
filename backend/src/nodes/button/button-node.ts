@@ -7,8 +7,12 @@ const NODE_TYPE = "BUTTON"
 
 export class ButtonNode extends BaseNode{
     callCount: number = 0;
+    options: any;
+
+    
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
+        this.options = options;
         NodeManager.addNode(this);
     }
 

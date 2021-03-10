@@ -22,11 +22,11 @@ export class HttpPostPutNode extends BaseNode {
     timeout: number;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections)
+        super(name, NODE_TYPE, id, options, outputConnections)
         this.url = options.settings.url;
         this.timeout = options.settings.timeout;
         this.httpMethod = options.settings.requestType;
-        this.headers = headerUtils.buildHeader(options.settings.headers);
+        this.headers = headerUtils.headerArrayToObject(options.settings.headers);
         NodeManager.addNode(this);
     }
 

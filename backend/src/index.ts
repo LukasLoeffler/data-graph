@@ -1,4 +1,4 @@
-import { Loader } from "./loader";
+import { loadConfig } from "./loader";
 import { NodeManager } from "./nodes/node-manager";
 import { connectToServer, getDb } from "./manager/mongo-manager";
 import { ExecutionCounter } from "./exec-info";
@@ -36,7 +36,7 @@ connectToServer( function( err: any, client: any ) {
     if (err) console.log("Connection to Mongo:", err);
 
     dbo = getDb();  // Fetching database object
-    Loader.loadConfig(dbo);  // Loading nodes from config file.
+    loadConfig(dbo);  // Loading nodes from config file.
     let server = app.listen( PORT, () => {
         console.log( `Server started at http://localhost:${ PORT }` );
     });
@@ -44,7 +44,9 @@ connectToServer( function( err: any, client: any ) {
     
     io = require('socket.io')(server, {cors: { origins: '*:*'}});
     io.on('connection', function(socket: any) {
-        console.log("NewConnection:", socket.id);
+        console.log("New Websocket Connection:", socket.id);
+
+        ExecutionCounter.initialEmitAllCounts();
 
         socket.on('BTN_CLICK', function(data: any) {
             let node = NodeManager.getNodeById(data);
@@ -111,7 +113,7 @@ app.put("/save-node-config/:id", ( req, res ) => {
                 console.log(err);
                 res.status(500).send("Configuation not saved");
             } else {
-                Loader.loadConfig(dbo);
+                loadConfig(dbo);
                 res.send(`Updated ${obj.result.n}`);
             }
         });
@@ -124,7 +126,7 @@ app.post("/save-node-config/", ( req, res ) => {
     dbo.collection("node-configs").insertOne(req.body, function(err: any, obj: any) {
         if (err) res.status(500).send("Configuation not saved");
         else {
-            Loader.loadConfig(dbo);
+            loadConfig(dbo);
             res.send(`Created ${obj.result.n}`);
         }
     });

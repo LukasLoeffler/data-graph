@@ -12,7 +12,7 @@ export class PythonFunctionNode extends BaseNode {
     lastValue: any = {};
     
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
 
         // Writes user code into file
         fs.writeFile(`temp/${this.id}-eval-code`, this.getOption("settings", options).code,  (err: any) => {

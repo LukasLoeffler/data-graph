@@ -15,7 +15,7 @@ export class TriggerAfterNode extends BaseNode {
     puffer: Array<any>;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
         this.threshhold = options.settings.threshhold;
         this.puffer = [];
         NodeManager.addNode(this);

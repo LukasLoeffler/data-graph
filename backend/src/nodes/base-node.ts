@@ -15,11 +15,14 @@ export class BaseNode {
     targetsFailure: Array<any>;
     outputInterfaces: Array<any>;
     running: boolean;
+    options: any;
 
-    constructor(name: string, type: string, id: string = "", outputInterfaces: Array<any>) {
+    
+    constructor(name: string, type: string, id: string = "", options: any, outputInterfaces: Array<any>) {
         this.name = name;
         this.type = type;
         this.id = id;
+        this.options = options;
         this.outputInterfaces = outputInterfaces;
         this.targetsSuccess = outputInterfaces.filter((intf: any) => intf.from.name === "onSuccess");
         this.targetsFailure = outputInterfaces.filter((intf: any) => intf.from.name === "onFailure");

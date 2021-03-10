@@ -9,9 +9,9 @@ const NODE_TYPE = "FILTER"
 export class FilterNode extends BaseNode {
     filter: string;
 
-    constructor(name: string, id: string, filter: string, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
-        this.filter = filter;
+    constructor(name: string, id: string, options: string, outputConnections: Array<any> = []) {
+        super(name, NODE_TYPE, id, options, outputConnections);
+        this.filter = options;
         NodeManager.addNode(this);
     }
 
