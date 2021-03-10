@@ -139,11 +139,7 @@ app.get("/last-value/:nodeId", (req, res) => {
     dbo.collection("last-values").findOne(query, function(err: any, result: any) {
         if (err) res.status(404).send(err);
         if (result?.last) {
-            if (Array.isArray(result.last)) {
-                res.send(result.last.slice(0, 10));
-            } else {
-                res.send(result.last);
-            }
+            res.send(result.last);
         } else {
             res.status(404).send("Not found");
         }
