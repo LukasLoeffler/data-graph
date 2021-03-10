@@ -47,5 +47,13 @@ export class NodeManager {
         });
         nodes = [];
     }
+
+    static resetNode(nodeId: string) {
+        let node = this.getNodeById(nodeId);
+        if (node) {
+            nodes = nodes.filter((node: any) => node.id !== nodeId);
+            node.stop();
+        }
+    }
 }
 

@@ -14,9 +14,10 @@ export class HttpInRequestNode extends BaseNode {
 
     listenUrl: String;
     listenMethod: String;
+    options: any;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
         this.listenUrl = options.settings.endpoint;
         this.listenMethod = options.settings.method;
         NodeManager.addNode(this);

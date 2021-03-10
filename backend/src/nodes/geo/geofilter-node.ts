@@ -14,7 +14,7 @@ export class GeoFilterNode extends BaseNode {
     options: any;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
         this.options = options;
         NodeManager.addNode(this);
     }

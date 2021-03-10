@@ -13,7 +13,7 @@ export class CronNode extends BaseNode{
 
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
 
         this.cronExpression = this.getOption("cronexpression", options);
         this.running = this.getOption("running", options);

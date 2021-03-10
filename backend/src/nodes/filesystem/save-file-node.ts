@@ -13,7 +13,7 @@ export class FileSaveNode extends BaseNode {
     fileType: string;
     filePath: string;
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
-        super(name, NODE_TYPE, id, outputConnections);
+        super(name, NODE_TYPE, id, options, outputConnections);
 
         this.fileName = options.filename;
         this.fileType = options.filetype;

@@ -15,7 +15,7 @@ export class AggregatorNode extends BaseNode {
     additional: any;
 
     constructor(name: string, id: string, options: any, outputInterfaces: Array<any>, inputInterfaces: Array<any>) {
-        super(name, NODE_TYPE, id, outputInterfaces)
+        super(name, NODE_TYPE, id, options, outputInterfaces)
         this.inputInterfaces = inputInterfaces;
         NodeManager.addNode(this);
     }
