@@ -137,6 +137,24 @@ let descriptions = [
         `,
         tags: ["conversion", "datatype", "type", "csv", "json"]
     },
+    {
+        type: "trigger-after",
+        text: `
+            Counts the events on the 'Counter' input. If the counter reaches an user set threshhold for counts the 
+            downstream nodes are called. The counter is resetted afterwards. The counter can manually be resetted by
+            triggering the 'Reset' input.
+        `,
+        tags: ["counter", "flow"]
+    },
+    {
+        type: "aggregator",
+        text: `
+            The aggregator node has a dynamic number of input ports. If an input port is activated the data is stored 
+            in the input port. If all ports hold data at the same time all data is bundeled into an array and sent to
+            the downstream nodes.
+        `,
+        tags: ["flow"]
+    },
 ]
 
 
