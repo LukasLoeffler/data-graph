@@ -10,7 +10,7 @@ export class HttpInResponseNode extends BaseNode {
 
     statusCode: Number;
 
-    constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
+    constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.statusCode = options.settings.statusCode || 200;
         NodeManager.addNode(this);

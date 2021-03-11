@@ -24,7 +24,7 @@ export class HttpNode extends BaseNode {
     timeout: number;
     options: any;
 
-    constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
+    constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.url = options.settings.url;
         this.options = options;

@@ -7,13 +7,13 @@ interface StringMap { [key: string]: string; }
 
 let frontendNodes: any;
 
-function getNodeByInterfaceId(interfaceId: String) {
+function getNodeByInterfaceId(interfaceId: string) {
     return frontendNodes.nodes.find((node: any) => {
         return node.interfaces.some((intf: any) => intf[1].id === interfaceId);
     });
 }
 
-function getInterfaceByInterfaceId(interfaceId: String) {
+function getInterfaceByInterfaceId(interfaceId: string) {
     let intf: any;
     frontendNodes.nodes.forEach((node: any) => {
         let extractedIntf = node.interfaces.find((intf: any) => intf[1].id === interfaceId);
@@ -28,7 +28,7 @@ function getInterfaceByInterfaceId(interfaceId: String) {
  * @param node 
  */
 function extractOptionsFromNode(node: any): StringMap {
-    let options: Array<String> = node.options;
+    let options: Array<string> = node.options;
     let optionsArray = options.map((option: any) => {
         let optionName = option[0];
         let optionValue = option[1];
@@ -103,7 +103,7 @@ export function loadConfig(dbo: any) {
     let numberofTotalNodes = 0;
     let numberOfNodesChanged = 0;
     let numberOfNodesInit = 0;
-    let nodesChanged: Array<String> = [];
+    let nodesChanged: Array<string> = [];
 
     dbo.collection("node-configs").find({}).toArray(function(err: any, nodeConfigs: any) {
         nodeConfigs.forEach((nodeConfig: any)=> {
