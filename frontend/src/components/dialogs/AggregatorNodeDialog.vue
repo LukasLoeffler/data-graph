@@ -75,11 +75,11 @@ export default {
   methods: {
     save() {
       this.interfacesToRemove.forEach((intf) => {
-        this.node.removeInterface(intf.name);
+        if (intf.isInput) this.node.removeInterface(intf.name);
       });
 
       for (let [key, value] of this.nodeCopy.interfaces) {
-        this.node.removeInterface(key);
+        if (value.isInput) this.node.removeInterface(key);
       }
       
       this.inputInterfaces.forEach((intf) => {
