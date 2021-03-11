@@ -9,7 +9,7 @@ Features:
 * Interactive node editing
 * Focus on usability and UX
  
-![example](docs/img/gif.gif)
+![example](docs/img/5cons.gif)
 
 ![context-menu](docs/img/chrome_E71RDSP2mw.png)
 
