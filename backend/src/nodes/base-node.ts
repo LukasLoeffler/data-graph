@@ -13,19 +13,19 @@ export class BaseNode {
     type: string;
     targetsSuccess: Array<any>;
     targetsFailure: Array<any>;
-    outputInterfaces: Array<any>;
+    outputConnections: Array<any>;
     running: boolean;
     options: any;
 
     
-    constructor(name: string, type: string, id: string = "", options: any, outputInterfaces: Array<any>) {
+    constructor(name: string, type: string, id: string = "", options: any, outputConnections: Array<any>) {
         this.name = name;
         this.type = type;
         this.id = id;
         this.options = options;
-        this.outputInterfaces = outputInterfaces;
-        this.targetsSuccess = outputInterfaces.filter((intf: any) => intf.from.name === "onSuccess");
-        this.targetsFailure = outputInterfaces.filter((intf: any) => intf.from.name === "onFailure");
+        this.outputConnections = outputConnections;
+        this.targetsSuccess = outputConnections.filter((intf: any) => intf.from.name === "onSuccess");
+        this.targetsFailure = outputConnections.filter((intf: any) => intf.from.name === "onFailure");
         this.running = true;
     }
 
@@ -53,7 +53,7 @@ export class BaseNode {
     }
 
     on(trigger: string, payload: any, additional: any = null) {
-        let targets =  this.outputInterfaces.filter((intf: any) => intf.from.name === trigger);
+        let targets = this.outputConnections.filter((intf: any) => intf.from.name === trigger);
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
             let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
