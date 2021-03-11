@@ -121,17 +121,17 @@ export function loadConfig(dbo: any) {
                 let options = extractOptionsFromNode(node);
 
                 let checkNode = NodeManager.getNodeById(node.id);
+                let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
+                let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
+
                 if (!checkNode) {
-                    let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
-                    let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
+                    // If no node with given ID exists, the node will be instantiated
                     new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
                     numberOfNodesInit++;
                 } else {
-                    let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
-                    let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
-
+                    // If a node with the given ID exists, options will be checked for changes
                     let nodeChanged = JSON.stringify(checkNode.options) !== JSON.stringify(options);
-                    let outputChanged = JSON.stringify(checkNode.outputInterfaces) !== JSON.stringify(outputConnections);
+                    let outputChanged = JSON.stringify(checkNode.outputConnections) !== JSON.stringify(outputConnections);
 
                     if (checkNode && (nodeChanged || outputChanged)) {
                         NodeManager.resetNode(node.id);

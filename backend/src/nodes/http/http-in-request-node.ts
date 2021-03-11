@@ -28,7 +28,7 @@ export class HttpInRequestNode extends BaseNode {
         let additional = {
             res: response
         }
-        let targets =  this.outputInterfaces.filter((intf: any) => intf.from.name === "onRequest");
+        let targets = this.outputConnections.filter((intf: any) => intf.from.name === "onRequest");
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
             let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
