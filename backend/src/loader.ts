@@ -1,21 +1,60 @@
 import { NodeManager } from "./nodes/node-manager";
 import { NodeRegistry } from "./nodes/node-registry";
+import { getDb } from "./manager/mongo-manager";
 import chalk from "chalk";
 
+export enum LoadingMode {
+    INIT = "INIT",
+    CHANGE = "CHANGE"
+}
+
+export enum NodeChangeType {
+    CREATE = "CREATED",
+    MODIFY = "MODIFIED",
+    DELETE = "DELETE"
+}
+
+class NodeChange {
+    nodeId: string;
+    nodeName: string;
+    type: NodeChangeType;
+    optionsOld: any;
+    optionsNew: any;
+    date: Date;
+
+    constructor(nodeId: string, nodeName: string, type: NodeChangeType, optionsOld: any, optionsNew: any) {
+        this.nodeId = nodeId;
+        this.nodeName = nodeName;
+        this.type = type;
+        this.date = new Date();
+        this.optionsOld = optionsOld;
+        this.optionsNew = optionsNew;
+    }
+}
 
 interface StringMap { [key: string]: string; }
 
-let frontendNodes: any;
-
-function getNodeByInterfaceId(interfaceId: string) {
-    return frontendNodes.nodes.find((node: any) => {
+/**
+ * Extracts a node from the nodeConfig by a interfaceId of the node.
+ * @param nodeConfig NodeConfig to search in
+ * @param interfaceId InterfaceId to search for
+ * @returns the node with the given interfaceId
+ */
+function getNodeByInterfaceId(nodeConfig: any, interfaceId: string) {
+    return nodeConfig.nodes.find((node: any) => {
         return node.interfaces.some((intf: any) => intf[1].id === interfaceId);
     });
 }
 
-function getInterfaceByInterfaceId(interfaceId: string) {
+/**
+ * Searches the nodeConfig for an interface by its id
+ * @param nodeConfig NodeConfig to search in
+ * @param interfaceId InterfaceId to search for
+ * @returns the interface with the given interfaceId
+ */
+function getInterfaceByInterfaceId(nodeConfig: any, interfaceId: string) {
     let intf: any;
-    frontendNodes.nodes.forEach((node: any) => {
+    nodeConfig.nodes.forEach((node: any) => {
         let extractedIntf = node.interfaces.find((intf: any) => intf[1].id === interfaceId);
         if (extractedIntf) intf = {id: extractedIntf[1].id, name: extractedIntf[0]};
     });
@@ -45,25 +84,27 @@ function extractOptionsFromNode(node: any): StringMap {
     return output;
 }
 
+
+/**
+ * Extarcts a list of all connections from the nodeConfig
+ * @param nodeConfig The nodeConfig containing the connections
+ * @returns A list of all connections 
+ */
 function extractConnections(nodeConfig: any) {
-    try {
-        return nodeConfig.connections.map((connection: any) => {
-            return {
-                from: {
-                    id: getInterfaceByInterfaceId(connection.from).id,
-                    name: getInterfaceByInterfaceId(connection.from).name,
-                    nodeId: getNodeByInterfaceId(connection.from).id,
-                },
-                to: {
-                    id: getInterfaceByInterfaceId(connection.to).id,
-                    name: getInterfaceByInterfaceId(connection.to).name,
-                    nodeId: getNodeByInterfaceId(connection.to).id,
-                }
+    return nodeConfig.connections.map((connection: any) => {
+        return {
+            from: {
+                id: getInterfaceByInterfaceId(nodeConfig, connection.from).id,
+                name: getInterfaceByInterfaceId(nodeConfig, connection.from).name,
+                nodeId: getNodeByInterfaceId(nodeConfig, connection.from).id,
+            },
+            to: {
+                id: getInterfaceByInterfaceId(nodeConfig, connection.to).id,
+                name: getInterfaceByInterfaceId(nodeConfig, connection.to).name,
+                nodeId: getNodeByInterfaceId(nodeConfig, connection.to).id,
             }
-        });
-    } catch (error) {
-        return []
-    }
+        }
+    });
 }
 
 /**
@@ -91,14 +132,16 @@ function cleanNodeManager(nodeConfigs: any) {
 
     // Delete all deletes nodes for real
     deleted.forEach((nodeId: string) => {
+        let node = NodeManager.getNodeById(nodeId);
+        saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.DELETE, node.options, undefined));
         NodeManager.resetNode(nodeId);
     });
 
     return deleted.length;
 }
 
-export function loadConfig(dbo: any) {
-    console.log(chalk.blueBright("LOADING CONFIG"))
+export function loadConfig(dbo: any, mode: LoadingMode) {
+    console.log(`${chalk.blueBright("LOADING CONFIG")}: ${chalk.yellow(mode)}`);
 
     let numberofTotalNodes = 0;
     let numberOfNodesChanged = 0;
@@ -107,7 +150,6 @@ export function loadConfig(dbo: any) {
 
     dbo.collection("node-configs").find({}).toArray(function(err: any, nodeConfigs: any) {
         nodeConfigs.forEach((nodeConfig: any)=> {
-            frontendNodes = nodeConfig;
             let connectionList = extractConnections(nodeConfig);
 
             nodeConfig.nodes.forEach((node: any) => {
@@ -128,6 +170,9 @@ export function loadConfig(dbo: any) {
                     // If no node with given ID exists, the node will be instantiated
                     new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
                     numberOfNodesInit++;
+
+                    // History entry only should be created when a real change occurs, not on initial loading
+                    if (mode === LoadingMode.CHANGE) saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.CREATE, undefined, options));
                 } else {
                     // If a node with the given ID exists, options will be checked for changes
                     let nodeChanged = JSON.stringify(checkNode.options) !== JSON.stringify(options);
@@ -142,6 +187,8 @@ export function loadConfig(dbo: any) {
                         new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
                         numberOfNodesChanged++;
                         nodesChanged.push(node.name);
+
+                        saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.MODIFY, checkNode.options, options));
                     }
                 }
             });
@@ -152,5 +199,14 @@ export function loadConfig(dbo: any) {
 
         console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofTotalNodes)}`);
         if (nodesChanged.length !== 0) console.log(`Nodes Changed: ${chalk.yellow(nodesChanged)}`)
+    });
+}
+
+
+
+function saveNodeChange(nodeChange: NodeChange) {
+    let dbo = getDb();
+    dbo.collection("node-history").insertOne(nodeChange, function (err: any, obj: any) {
+        if (err) console.log(err);
     });
 }
