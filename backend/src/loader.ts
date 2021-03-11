@@ -3,9 +3,10 @@ import { NodeRegistry } from "./nodes/node-registry";
 import { getDb } from "./manager/mongo-manager";
 import chalk from "chalk";
 
+
 export enum LoadingMode {
-    INIT = "INIT",
-    CHANGE = "CHANGE"
+    STARTUP = "STARTUP",
+    RUNNING = "RUNNING"
 }
 
 export enum NodeChangeType {
@@ -143,7 +144,7 @@ function cleanNodeManager(nodeConfigs: any) {
 export function loadConfig(dbo: any, mode: LoadingMode) {
     console.log(`${chalk.blueBright("LOADING CONFIG")}: ${chalk.yellow(mode)}`);
 
-    let numberofTotalNodes = 0;
+    let numberofNodesTotal = 0;
     let numberOfNodesChanged = 0;
     let numberOfNodesInit = 0;
     let nodesChanged: Array<string> = [];
@@ -172,7 +173,7 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
                     numberOfNodesInit++;
 
                     // History entry only should be created when a real change occurs, not on initial loading
-                    if (mode === LoadingMode.CHANGE) saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.CREATE, undefined, options));
+                    if (mode === LoadingMode.RUNNING) saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.CREATE, undefined, options));
                 } else {
                     // If a node with the given ID exists, options will be checked for changes
                     let nodeChanged = JSON.stringify(checkNode.options) !== JSON.stringify(options);
@@ -192,12 +193,13 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
                     }
                 }
             });
-            numberofTotalNodes = numberofTotalNodes + nodeConfig.nodes.length;
+            numberofNodesTotal = numberofNodesTotal + nodeConfig.nodes.length;
         });
 
         let numberOfDeletedNodes = cleanNodeManager(nodeConfigs);
 
-        console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofTotalNodes)}`);
+        if (LoadingMode.RUNNING === mode) console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
+        if (LoadingMode.STARTUP === mode) console.log(`Initialized: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
         if (nodesChanged.length !== 0) console.log(`Nodes Changed: ${chalk.yellow(nodesChanged)}`)
     });
 }

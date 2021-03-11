@@ -36,7 +36,7 @@ connectToServer( function( err: any, client: any ) {
     if (err) console.log("Connection to Mongo:", err);
 
     dbo = getDb();  // Fetching database object
-    loadConfig(dbo, LoadingMode.INIT);  // Loading nodes from config file.
+    loadConfig(dbo, LoadingMode.STARTUP);  // Loading nodes from config file.
     let server = app.listen( PORT, () => {
         console.log( `Server started at http://localhost:${ PORT }` );
     });
@@ -113,7 +113,7 @@ app.put("/save-node-config/:id", ( req, res ) => {
                 console.log(err);
                 res.status(500).send("Configuation not saved");
             } else {
-                loadConfig(dbo, LoadingMode.CHANGE);
+                loadConfig(dbo, LoadingMode.RUNNING);
                 res.send(`Updated ${obj.result.n}`);
             }
         });
@@ -126,7 +126,7 @@ app.post("/save-node-config/", ( req, res ) => {
     dbo.collection("node-configs").insertOne(req.body, function(err: any, obj: any) {
         if (err) res.status(500).send("Configuation not saved");
         else {
-            loadConfig(dbo, LoadingMode.CHANGE);
+            loadConfig(dbo, LoadingMode.RUNNING);
             res.send(`Created ${obj.result.n}`);
         }
     });
