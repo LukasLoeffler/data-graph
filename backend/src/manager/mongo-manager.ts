@@ -13,7 +13,7 @@ if (environment === "DEV") url = "mongodb://localhost:27017";
 let _db: any;
 
 
-let requiredCollections = ["mqtt-servers", "workspaces", "node-configs", "node-templates", "last-values", "node-history"]
+let requiredCollections = ["mqtt-servers", "node-configs", "node-templates", "last-values", "node-history"]
 
 
 function connectToServer( callback: any ) {
