@@ -8,15 +8,15 @@ const chalk = require('chalk');
 const NODE_TYPE = "AGGREGATOR"
 
 export class AggregatorNode extends BaseNode {
-    inputInterfaces: Array<any>;
+    inputConnections: Array<any>;
     slots = new Set();
     data = new Map();
 
     additional: any;
 
-    constructor(name: string, id: string, options: any, outputInterfaces: Array<any>, inputInterfaces: Array<any>) {
+    constructor(name: string, id: string, options: any, outputInterfaces: Array<any>, inputConnections: Array<any>) {
         super(name, NODE_TYPE, id, options, outputInterfaces)
-        this.inputInterfaces = inputInterfaces;
+        this.inputConnections = inputConnections;
         NodeManager.addNode(this);
     }
 
@@ -30,7 +30,7 @@ export class AggregatorNode extends BaseNode {
         if (msg.additional) this.additional = msg.additional;  
 
         //console.log(`${this.slots.size}/${this.inputInterfaces.length}`)
-        if (this.slots.size === this.inputInterfaces.length) {
+        if (this.slots.size === this.inputConnections.length) {
             this.slots.clear();
             this.sendAggregationCountMessage();
             let output: Array<any> = [];

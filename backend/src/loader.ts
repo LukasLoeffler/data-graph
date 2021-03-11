@@ -133,7 +133,9 @@ export function loadConfig(dbo: any) {
                     let nodeChanged = JSON.stringify(checkNode.options) !== JSON.stringify(options);
                     let outputChanged = JSON.stringify(checkNode.outputConnections) !== JSON.stringify(outputConnections);
 
-                    if (checkNode && (nodeChanged || outputChanged)) {
+                    let inputChanged = checkNode.inputConnections !== undefined && JSON.stringify(checkNode.inputConnections) !== JSON.stringify(inputConnections);
+
+                    if (checkNode && (nodeChanged || outputChanged || inputChanged)) {
                         NodeManager.resetNode(node.id);
                         console.log(`Reloading node config: ${chalk.cyan(node.name)}`)
 
