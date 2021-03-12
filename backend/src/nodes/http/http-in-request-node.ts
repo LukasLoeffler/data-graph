@@ -12,11 +12,11 @@ const NODE_TYPE = "HTTP_IN_REQUEST"
 
 export class HttpInRequestNode extends BaseNode {
 
-    listenUrl: String;
-    listenMethod: String;
+    listenUrl: string;
+    listenMethod: string;
     options: any;
 
-    constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
+    constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.listenUrl = options.settings.endpoint;
         this.listenMethod = options.settings.method;
@@ -28,7 +28,7 @@ export class HttpInRequestNode extends BaseNode {
         let additional = {
             res: response
         }
-        let targets = this.outputConnections.filter((intf: any) => intf.from.name === "onRequest");
+        let targets =  this.outputConnections.filter((intf: any) => intf.from.name === "onRequest");
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
             let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);

@@ -13,7 +13,7 @@ export class LoggingNode extends BaseNode {
 
     level: string;
     
-    constructor(name: string, id: string, options: any, outputConnections: Array<String>) {
+    constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
         super(name, NODE_TYPE, id, options, outputConnections)
         this.level = this.getOption("operation", options) || "NO_LEVEL_SET";
         NodeManager.addNode(this);

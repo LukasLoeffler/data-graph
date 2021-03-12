@@ -13,7 +13,7 @@ if (environment === "DEV") url = "mongodb://localhost:27017";
 let _db: any;
 
 
-let requiredCollections = ["mqtt-servers", "workspaces", "node-configs", "node-templates", "last-values"]
+let requiredCollections = ["mqtt-servers", "node-configs", "node-templates", "last-values", "node-history"]
 
 
 function connectToServer( callback: any ) {
@@ -29,7 +29,7 @@ function connectToServer( callback: any ) {
 
         requiredCollections.forEach((collection: any) => {
             _db.createCollection(collection, function(err: any, res: any) {
-                if (!err) console.log(`Collection ${collection} successfully created`);
+                if (!err) console.log(`Collection ${chalk.green(collection)} successfully created`);
             });
         });
 

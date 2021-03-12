@@ -1,4 +1,4 @@
-import { loadConfig } from "./loader";
+import { loadConfig, LoadingMode } from "./loader";
 import { NodeManager } from "./nodes/node-manager";
 import { connectToServer, getDb } from "./manager/mongo-manager";
 import { ExecutionCounter } from "./exec-info";
@@ -36,7 +36,7 @@ connectToServer( function( err: any, client: any ) {
     if (err) console.log("Connection to Mongo:", err);
 
     dbo = getDb();  // Fetching database object
-    loadConfig(dbo);  // Loading nodes from config file.
+    loadConfig(dbo, LoadingMode.STARTUP);  // Loading nodes from config file.
     let server = app.listen( PORT, () => {
         console.log( `Server started at http://localhost:${ PORT }` );
     });
@@ -113,7 +113,7 @@ app.put("/save-node-config/:id", ( req, res ) => {
                 console.log(err);
                 res.status(500).send("Configuation not saved");
             } else {
-                loadConfig(dbo);
+                loadConfig(dbo, LoadingMode.RUNNING);
                 res.send(`Updated ${obj.result.n}`);
             }
         });
@@ -126,7 +126,7 @@ app.post("/save-node-config/", ( req, res ) => {
     dbo.collection("node-configs").insertOne(req.body, function(err: any, obj: any) {
         if (err) res.status(500).send("Configuation not saved");
         else {
-            loadConfig(dbo);
+            loadConfig(dbo, LoadingMode.RUNNING);
             res.send(`Created ${obj.result.n}`);
         }
     });
@@ -216,43 +216,6 @@ app.delete("/mqtt-server/:id", (req, res) => {
 });
 
 
-app.get("/workspaces/all", (req, res) => {
-    dbo.collection("workspaces").find({}).toArray(function(err: any, result: any) {
-        if (err) res.status(500).send(err);
-        else res.send(result);
-    });
-});
-
-app.get("/workspace/:id", (req, res) => {
-    let query = { 
-        _id: new mongodb.ObjectID(req.params.id)
-    };
-    dbo.collection("workspaces").findOne(query, function(err: any, result: any) {
-        if (err) res.status(404).send(err);
-        else res.send(result);
-    });
-});
-
-app.post("/workspace", (req, res) => {
-    dbo.collection("workspaces").insertOne(req.body, function(err: any, result: any) {
-        if (err) res.status(400).send(err);
-        else res.send(result);
-    });
-});
-
-app.delete("/workspace/:id", (req, res) => {
-    let query = { 
-        _id: new mongodb.ObjectID(req.params.id)
-    };
-    dbo.collection("workspaces").deleteOne(query, function(err: any, obj: any) {
-        if (err) res.status(404).send(err);
-        else res.send({
-            "num_deleted": obj.result.n
-        });
-    });
-});
-
-
 app.post("/node-template", (req, res) => {
     dbo.collection("node-templates").insertOne(req.body, function(err: any, result: any) {
         if (err) res.status(400).send(err);
@@ -308,3 +271,16 @@ async function getPgTableSchema(tableName: string, client: any) {
         }
     });
 }
+
+
+app.get("/node-history/:nodeId", (req, res) => {
+
+    let query = {
+        nodeId: req.params.nodeId
+    };
+
+    dbo.collection("node-history").find(query).toArray(function (err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else res.send(result);
+    });
+})
