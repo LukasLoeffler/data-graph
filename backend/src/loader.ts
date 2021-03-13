@@ -163,11 +163,11 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
 
                 let options = extractOptionsFromNode(node);
 
-                let checkNode = NodeManager.getNodeById(node.id);
+                let existingNode = NodeManager.getNodeById(node.id);
                 let outputConnections = connectionList.filter((connection: any) => connection.from.nodeId === node.id);
                 let inputConnections = connectionList.filter((connection: any) => connection.to.nodeId === node.id);
 
-                if (!checkNode) {
+                if (!existingNode) {
                     // If no node with given ID exists, the node will be instantiated
                     new newCls.clss(node.name, node.id, options, outputConnections, inputConnections);
                     numberOfNodesInit++;
@@ -176,12 +176,12 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
                     if (mode === LoadingMode.RUNNING) saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.CREATE, undefined, options));
                 } else {
                     // If a node with the given ID exists, options will be checked for changes
-                    let nodeChanged = JSON.stringify(checkNode.options) !== JSON.stringify(options);
-                    let outputChanged = JSON.stringify(checkNode.outputConnections) !== JSON.stringify(outputConnections);
+                    let nodeChanged = JSON.stringify(existingNode.options) !== JSON.stringify(options);
+                    let outputChanged = JSON.stringify(existingNode.outputConnections) !== JSON.stringify(outputConnections);
+                    // Input only relevant for existing nodes with inputConnections !== undefined
+                    let inputChanged = existingNode.inputConnections !== undefined && JSON.stringify(existingNode.inputConnections) !== JSON.stringify(inputConnections);
 
-                    let inputChanged = checkNode.inputConnections !== undefined && JSON.stringify(checkNode.inputConnections) !== JSON.stringify(inputConnections);
-
-                    if (checkNode && (nodeChanged || outputChanged || inputChanged)) {
+                    if (existingNode && (nodeChanged || outputChanged || inputChanged)) {
                         NodeManager.resetNode(node.id);
                         console.log(`Reloading node config: ${chalk.cyan(node.name)}`)
 
@@ -189,7 +189,7 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
                         numberOfNodesChanged++;
                         nodesChanged.push(node.name);
 
-                        saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.MODIFY, checkNode.options, options));
+                        saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.MODIFY, existingNode.options, options));
                     }
                 }
             });
@@ -198,8 +198,8 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
 
         let numberOfDeletedNodes = cleanNodeManager(nodeConfigs);
 
-        if (LoadingMode.RUNNING === mode) console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
-        if (LoadingMode.STARTUP === mode) console.log(`Initialized: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
+        if (mode === LoadingMode.RUNNING) console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
+        if (mode === LoadingMode.STARTUP) console.log(`Initialized: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
         if (nodesChanged.length !== 0) console.log(`Nodes Changed: ${chalk.yellow(nodesChanged)}`)
     });
 }

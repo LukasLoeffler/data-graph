@@ -56,7 +56,7 @@ connectToServer( function( err: any, client: any ) {
 });
 
 
-app.get("/get-node-config/:id", ( req, res ) => {
+app.get("/node-config/:id", ( req, res ) => {
     let query = { 
         _id: new mongodb.ObjectID(req.params.id)
     };
@@ -75,14 +75,7 @@ app.get("/node-configs/all", (req, res) => {
     });
 });
 
-app.delete("/node-configs/all", (req, res) => {
-    dbo.collection("node-configs").deleteMany({}, function(err: any, result: any) {
-        if (err) res.status(500).send(err);
-        else res.send(result);
-    });
-});
-
-app.delete("/node-configs/:id", (req, res) => {
+app.delete("/node-config/:id", (req, res) => {
     let query = { 
         _id: new mongodb.ObjectID(req.params.id)
     };
@@ -94,8 +87,7 @@ app.delete("/node-configs/:id", (req, res) => {
     });
 });
 
-
-app.put("/save-node-config/:id", ( req, res ) => {
+app.put("/node-config/:id", ( req, res ) => {
     let query = { 
         _id: new mongodb.ObjectID(req.params.id)
     };
@@ -122,7 +114,7 @@ app.put("/save-node-config/:id", ( req, res ) => {
     lastSave = newvalues;
 });
 
-app.post("/save-node-config/", ( req, res ) => {
+app.post("/node-config/", ( req, res ) => {
     dbo.collection("node-configs").insertOne(req.body, function(err: any, obj: any) {
         if (err) res.status(500).send("Configuation not saved");
         else {
@@ -272,6 +264,12 @@ async function getPgTableSchema(tableName: string, client: any) {
     });
 }
 
+app.get("/node-history/all", (req, res) => {
+    dbo.collection("node-history").find({}).toArray(function (err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else res.send(result);
+    });
+})
 
 app.get("/node-history/:nodeId", (req, res) => {
 

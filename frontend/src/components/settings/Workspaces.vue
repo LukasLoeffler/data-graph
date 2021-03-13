@@ -72,7 +72,7 @@ export default {
         scaling: 1,
         workspace: "NewWorkspace"
       }
-      let saveStateUrl = `${apiBaseUrl}/save-node-config/`;
+      let saveStateUrl = `${apiBaseUrl}/node-config/`;
       this.axios.post(saveStateUrl, emptyConfig).then(() => {
         this.loadWorkspaces();
       })
