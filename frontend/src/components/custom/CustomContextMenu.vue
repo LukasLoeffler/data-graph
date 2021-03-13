@@ -66,7 +66,7 @@
 
 <script>
 import { Components } from '@baklavajs/plugin-renderer-vue';
-import { getDescription, getTags } from "../components/dialogs/nodeDescription";
+import { getDescription, getTags } from "../dialogs/nodeDescription";
 
 export default {
   extends: Components.ContextMenu,

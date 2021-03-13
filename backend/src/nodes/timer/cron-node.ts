@@ -14,9 +14,8 @@ export class CronNode extends BaseNode{
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
-
-        this.cronExpression = this.getOption("cronexpression", options);
-        this.running = this.getOption("running", options);
+        this.cronExpression = options.settings?.cronExpression;
+        this.running = options.running;
 
         
         try {
@@ -34,7 +33,7 @@ export class CronNode extends BaseNode{
 
     createTask() {
         return cron.schedule(this.cronExpression, () =>  {
-            this.on("onCron", new Date());
+            this.on("onInterval", new Date());
         }, {
             scheduled: false
         });

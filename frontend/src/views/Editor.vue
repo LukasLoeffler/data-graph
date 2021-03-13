@@ -47,61 +47,80 @@ import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 import { apiBaseUrl, socketio } from '@/main';
 
 // Custom Baklava Components
-import CustomConnection from "../components/CustomConnection";
-import CustomInterface from "../components/CustomInterface";
-import CustomNode from "../components/CustomNode";
-import CustomContextMenu from "../components/CustomContextMenu"
+import CustomConnection from "../components/custom/CustomConnection";
+import CustomInterface from "../components/custom/CustomInterface";
+import CustomNode from "../components/custom/CustomNode";
+import CustomContextMenu from "../components/custom/CustomContextMenu"
 
 import ButtonNode from "../nodes/ButtonNode";
+
+// Interval Node
 import IntervalNode from "../nodes/time/IntervalNode";
-import CronNode from "../nodes/time/CronNode";
+import IntervalNodeDialog from "../nodes/time/IntervalNodeDialog"
 
 import HttpGet from "../nodes/http/HttpGetNode";
 import HttpPostPut from "../nodes/http/HttpPostPutNode";
 import HttpInRequestNode from "../nodes/http/HttpInRequestNode"
 import HttpInResponseNode from "../nodes/http/HttpInResponseNode"
-import HttpGetNodeDialog from "../components/dialogs/HttpGetNodeDialog";
-import HttpPostPutDialog from "../components/dialogs/HttpPostPutDialog";
+import HttpGetNodeDialog from "../nodes/http/HttpGetNodeDialog";
+import HttpPostPutDialog from "../nodes/http/HttpPostPutDialog";
 import HttpInResponseDialog from "../nodes/http/HttpInResponseDialog"
 import HttpInRequestDialog from "../nodes/http/HttpInRequestDialog"
 
+// Mapping node
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
+import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
+
 
 import Filter from "../nodes/object/FilterNode";
 import PathNode from "../nodes/object/PathNode";
 import FileSave from "../nodes/filesystem/FileSaveNode"
 
+
+// Geofilter
 import GeoFilterNode from "../nodes/geo/GeoFilterNode"
+import GeoFilterDialog from "../nodes/geo/GeoFilterDialog"
+
 
 import MqttSubNode from "../nodes/mqtt/MqttSubNode";
 import MqttPubNode from "../nodes/mqtt/MqttPubNode";
+
 import Logging from "../nodes/LoggingNode";
 
-import InfoNode from "../nodes/info/InfoNode";
+
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
+import AggregatorNodeDialog from "../nodes/aggregator/AggregatorNodeDialog";
+
 import CsvToJsonNode from "../nodes/type/CsvToJsonNode"
 
 import EventButtonOption from "../options/EventButtonOption";
 import ExecutionCountOption from "../options/ExecutionCountOption";
+
+import InfoNode from "../nodes/info/InfoNode";
 import InfoOption from "../options/InfoOption";
+import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
+
+
 import TriggerCountOption from "../options/TriggerCountOption";
 
 
-import MappingNodeDialog from "../components/dialogs/MappingNodeDialog";
-import PostgresInsertDialog from "../nodes/database/PostgresInsertDialog";
-import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
-import PythonFunctionNodeDialog from "../components/dialogs/PythonFunctionNodeDialog";
-import TriggerAfterDialog from "../components/dialogs/TriggerAfterDialog";
-import AggregatorNodeDialog from "../components/dialogs/AggregatorNodeDialog";
-import GeoFilterDialog from "../nodes/geo/GeoFilterDialog"
 
-
+// Postgres
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
+import PostgresInsertDialog from "../nodes/database/PostgresInsertDialog";
+
+// Python FunctionNode
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
+import PythonFunctionNodeDialog from "../nodes/function/PythonFunctionNodeDialog";
+
+// Trigger After
 import TriggerAfterNode from "../nodes/flow/TriggerAfterNode"
+import TriggerAfterDialog from "../nodes/flow/TriggerAfterDialog";
+
 import DataChangeNode from "../nodes/flow/DataChangeNode"
+
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
@@ -281,10 +300,10 @@ export default {
     this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
     this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
     this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
+    this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
 
 
     // Register nodes
-    this.editor.registerNodeType("cron", CronNode, "Time")
     this.editor.registerNodeType("interval", IntervalNode, "Time")
 
     this.editor.registerNodeType("logging", Logging, "Logging")

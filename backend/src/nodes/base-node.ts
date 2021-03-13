@@ -74,14 +74,6 @@ export class BaseNode {
         return false;
     }
 
-    /**
-     * Extracts the optionValue for optionName
-     * @param options 
-     */
-    getOption(optionName: string, options: any) {
-        return options[optionName];
-    }
-
     sendConnectionExec(fromNodeId: string, toNodeId: string): void {
         let message = {
             type: "CONNECTION_EXEC",

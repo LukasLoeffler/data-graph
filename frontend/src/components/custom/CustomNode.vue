@@ -44,7 +44,7 @@
 
 <script>
   import { Components } from '@baklavajs/plugin-renderer-vue'
-  import NodeContextMenu from '../components/dialogs/NodeContextMenu'
+  import NodeContextMenu from '@/components/dialogs/NodeContextMenu'
   import CustomInterface from './CustomInterface'
   import { socketio } from '@/main';
 

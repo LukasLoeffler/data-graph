@@ -22,7 +22,7 @@ export class ObjectMapperNode extends BaseNode {
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = [], inputConnctions: Array<any>) {
         super(name, NODE_TYPE, id, options, outputConnections);
-        this.mapper = options.mapping.mappings;
+        this.mapper = options.settings?.mapping;
         this.injections = inputConnctions.filter((connection: any) => connection.to.name.includes("inject"));
 
         NodeManager.addNode(this);

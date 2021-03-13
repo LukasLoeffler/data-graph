@@ -1,3 +1,4 @@
+import { Message } from "../../message";
 import { MqttBaseNode } from "./mqtt-base-node";
 
 
@@ -10,7 +11,7 @@ export class MqttPubNode extends MqttBaseNode {
         super(NODE_TYPE, name, id, options, [])
     }
 
-    execute(payload: any) {
-        this.client.publish(this.topic, null)
+    execute(msg: Message) {
+        this.client.publish(this.topic, JSON.stringify(msg.payload));
     }
 }
