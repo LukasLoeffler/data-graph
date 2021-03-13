@@ -101,14 +101,14 @@ export default {
       this.deleteDialog = true;
     },
     deleteSelectedWorkspace() {
-      let deleteWorkspaceUrl = `${apiBaseUrl}/node-configs/${this.localNodeConfig._id}`;
+      let deleteWorkspaceUrl = `${apiBaseUrl}/node-config/${this.localNodeConfig._id}`;
       this.axios.delete(deleteWorkspaceUrl).then(() => {
         this.$emit("reloadData");
         this.dialog = false;
       });
     },
     saveWorkspace() {
-      let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.localNodeConfig._id}`;
+      let saveStateUrl = `${apiBaseUrl}/node-config/${this.localNodeConfig._id}`;
       
       let saveObj = {...this.localNodeConfig};
 
@@ -140,7 +140,7 @@ export default {
       reader.addEventListener('load', (event) => {
         let loadedConfig = JSON.parse(event.target.result);
 
-        let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.localNodeConfig._id}`;
+        let saveStateUrl = `${apiBaseUrl}/node-config/${this.localNodeConfig._id}`;
 
         delete loadedConfig._id;
         loadedConfig.workspace = this.nodeConfig.workspace;  // Rename workspace, otherwise same name is used

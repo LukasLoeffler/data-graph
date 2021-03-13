@@ -178,7 +178,7 @@ export default {
     },
     save() {
       let state = this.editor.save();
-      let saveStateUrl = `${apiBaseUrl}/save-node-config/${this.selectedConfig._id}`;
+      let saveStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
       this.axios.put(saveStateUrl, state)
       .then(() => {
         //console.log("%c Config successfully saved", "color: green; font-weight: bold")
@@ -198,7 +198,7 @@ export default {
         scaling: 1,
         workspace: "NewWorkspace"
       }
-      let saveStateUrl = `${apiBaseUrl}/save-node-config/`;
+      let saveStateUrl = `${apiBaseUrl}/node-config/`;
       this.axios.post(saveStateUrl, emptyConfig).then(() => {
         console.log("%c Config successfully saved", "color: green; font-weight: bold");
         this.initialLoad(true);
@@ -229,7 +229,7 @@ export default {
       this.selectedConfig = this.nodeConfig[this.configIndex];
 
       if (this.selectedConfig) {
-        let loadStateUrl = `${apiBaseUrl}/get-node-config/${this.selectedConfig._id}`;
+        let loadStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
         this.axios.get(loadStateUrl).then((response) => {
           // If loaded object from backend is empty the default graph is loaded
           if (this.isEmpty(response.data)){
