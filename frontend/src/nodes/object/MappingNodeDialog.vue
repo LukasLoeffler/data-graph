@@ -35,8 +35,8 @@
                   <td style="width: 20px">Delete</td>
                 </tr>
               </thead>
-              <draggable :list="valueCopy.mappings" tag="tbody" handle=".handle">
-                <tr v-for="(mapper, index) in valueCopy.mappings" :key="mapper.value">
+              <draggable :list="valueCopy.mapping" tag="tbody" handle=".handle">
+                <tr v-for="(mapper, index) in valueCopy.mapping" :key="mapper.value">
                   <td class="handle">
                     <v-icon class="page__grab-icon" style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
                   </td>
@@ -108,10 +108,10 @@
 
 
 <script>
-import NodeInfoDialog from "./NodeInfoDialog"
+import NodeInfoDialog from "@/components/dialogs/NodeInfoDialog"
 import Draggable from 'vuedraggable';
 import JsonViewer from 'vue-json-viewer'
-import {apiBaseUrl} from "../../main.js";
+import {apiBaseUrl} from "@/main.js";
 
 export default {
   props: ["option", "node", "value"],
@@ -143,19 +143,19 @@ export default {
         source: source,
         target: target
       }
-      this.valueCopy.mappings.push(newMapping);
+      this.valueCopy.mapping.push(newMapping);
       this.$forceUpdate();
     },
     deleteMapping(index) {
-      if (this.valueCopy.mappings[index].source.includes("inject:")) {
-        this.node.removeInterface(this.valueCopy.mappings[index].source);
+      if (this.valueCopy.mapping[index].source.includes("inject:")) {
+        this.node.removeInterface(this.valueCopy.mapping[index].source);
         this.save(false);
       }
-      this.valueCopy.mappings.splice(index, 1);
+      this.valueCopy.mapping.splice(index, 1);
       this.$forceUpdate();
     },
     save(closeAfter = true) {
-      this.node.setOptionValue("mapping", this.valueCopy);
+      this.node.setOptionValue("settings", this.valueCopy);
       this.node.name = this.nodeCopy.name;
       this.$store.commit("saveNodeConfig", this.node.id);
       if (closeAfter )this.dialog = false;
@@ -163,7 +163,7 @@ export default {
     test() {
       let testUrl = `${apiBaseUrl}/test/${this.node.id}`;
       let payload = {
-        mapping: this.valueCopy.mappings
+        mapping: this.valueCopy.mapping
       }
       this.axios.post(testUrl, payload).then((response) => {
         this.codeFormatted = response.data;
@@ -171,11 +171,11 @@ export default {
       })
     },
     mirrorObject() {
-      this.valueCopy.mappings = [];
+      this.valueCopy.mapping = [];
       let keys = Array.isArray(this.codeRaw) ? this.getKeys(this.codeRaw[0]) : this.getKeys(this.codeRaw);
 
       keys.forEach(element => {
-        this.valueCopy.mappings.push({
+        this.valueCopy.mapping.push({
           source: element,
           target: element
         })

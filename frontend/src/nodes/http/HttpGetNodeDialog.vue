@@ -15,7 +15,7 @@
             <v-form v-model="valid">
               <v-row>
                 <v-col cols="6">
-                  <v-text-field label="Url" :rules="[rules.required]" v-model="nodeCopy.name"></v-text-field>
+                  <v-text-field label="Name" :rules="[rules.required]" v-model="nodeCopy.name"></v-text-field>
                 </v-col>
                 <v-col cols="6">
                   <v-text-field 

@@ -9,7 +9,7 @@ export default class CronNode extends Node {
     constructor() {
         super();
         this.addOutputInterface("onCron")
-        this.addOption("CronExpression", "InputOption", "* * * * *")
+        this.addOption("settings", "IntervalNodeDialog", {cronexpression: "* * * * *"})
         this.addOption("color", undefined, "black");
         this.addOption("running", undefined, true);
 

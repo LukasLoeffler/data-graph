@@ -15,7 +15,7 @@ export class PythonFunctionNode extends BaseNode {
         super(name, NODE_TYPE, id, options, outputConnections);
 
         // Writes user code into file
-        fs.writeFile(`temp/${this.id}-eval-code`, this.getOption("settings", options).code,  (err: any) => {
+        fs.writeFile(`temp/${this.id}-eval-code`, options.settings.code,  (err: any) => {
             if (err) throw new Error("EvalCode file could not be created.");
         });
         NodeManager.addNode(this);

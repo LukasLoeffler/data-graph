@@ -265,7 +265,7 @@ async function getPgTableSchema(tableName: string, client: any) {
 }
 
 app.get("/node-history/all", (req, res) => {
-    dbo.collection("node-history").find({}).toArray(function (err: any, result: any) {
+    dbo.collection("node-history").find({}).sort({ date: -1 }).toArray(function (err: any, result: any) {
         if (err) res.status(500).send(err);
         else res.send(result);
     });

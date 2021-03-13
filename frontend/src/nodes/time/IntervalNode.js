@@ -22,10 +22,8 @@ export default class IntervalNode extends Node {
 
     constructor() {
         super();
-        this.addOutputInterface("onCron")
-        this.addOption("CronExpression", "SelectOption", intervals[3].value, undefined, {
-            items:intervals
-        })
+        this.addOutputInterface("onInterval")
+        this.addOption("settings", "IntervalNodeDialog", {cronExpression: "* * * * *"})
         this.addOption("color", undefined, "#607565");
         this.addOption("running", undefined, true);
 
