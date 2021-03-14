@@ -40,7 +40,7 @@ let descriptions = [
         text: `
             Triggers the a <a href="/wiki/downstream" target="_blank">downstream</a> node periodically. The perid can be selected right on the node itself in the editor.
         `,
-        tags: ["timer", "interval", "input"]
+        tags: ["timer", "interval", "input", "cron", "time"]
     },
     {
         type: "http-get",

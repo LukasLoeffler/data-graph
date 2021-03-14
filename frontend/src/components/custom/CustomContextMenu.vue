@@ -20,8 +20,8 @@
           <v-spacer></v-spacer>
           <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable></v-text-field>
           <v-btn class="ml-2" dark @click="maxed = !maxed">
-            <v-icon v-if="maxed">mdi-window-maximize</v-icon>
-            <v-icon v-else>mdi-window-minimize</v-icon>
+            <v-icon v-if="maxed">mdi-window-minimize</v-icon>
+            <v-icon v-else>mdi-window-maximize</v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
@@ -66,7 +66,7 @@
 
 <script>
 import { Components } from '@baklavajs/plugin-renderer-vue';
-import { getDescription, getTags } from "../components/dialogs/nodeDescription";
+import { getDescription, getTags } from "../dialogs/nodeDescription";
 
 export default {
   extends: Components.ContextMenu,
@@ -126,10 +126,10 @@ export default {
       else return null;
     },
     width() {
-      return (this.maxed ? 600 : 1200)
+      return (this.maxed ? 1200 : 600)
     },
     cols() {
-      return (this.maxed ? 6 : 4)
+      return (this.maxed ? 4 : 6)
     },
   }
 }

@@ -13,7 +13,12 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Node History Entries</v-toolbar-title>
+          <v-toolbar-title>
+          Node History Entries
+          <v-btn icon color="grey" @click="refreshItems">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+          </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
       </template>
@@ -45,6 +50,7 @@
 <script>
 import {apiBaseUrl} from "@/main.js";
 import JsonViewer from 'vue-json-viewer'
+import { socketio } from '@/main';
 
 export default {
   name: "NodeHistory",
@@ -65,12 +71,18 @@ export default {
     }
   },
   created() {
-    let nodeHistoryUrl = `${apiBaseUrl}/node-history/all`;
-    this.axios.get(nodeHistoryUrl).then((response) => {
-      this.historyEntries = response.data;
-    })
+    this.loadData();
+    socketio.on('NODE_HISTORY_CHANGE', () => {
+      this.loadData();
+    });
   },
   methods: {
+    loadData() {
+      let nodeHistoryUrl = `${apiBaseUrl}/node-history/all`;
+      this.axios.get(nodeHistoryUrl).then((response) => {
+        this.historyEntries = response.data;
+      });
+    },
     getColor (mode) {
       if (mode === "DELETE") return 'red'
       else if (mode === "MODIFIED") return 'orange'
@@ -81,6 +93,9 @@ export default {
 
       console.log(tablePos);
       return null;
+    },
+    refreshItems() {
+      this.loadData();
     }
   },
   computed: {

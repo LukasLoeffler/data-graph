@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import {apiBaseUrl} from "../../main.js";
+import {apiBaseUrl} from "@/main.js";
 import {getDescription} from "./nodeDescription.js";
 
   export default {
@@ -148,7 +148,7 @@ import {getDescription} from "./nodeDescription.js";
       {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false},
       {type: "info", icon: "mdi-information-outline", resettable: true, stoppable: false, configurable: true},
       {type: "button", icon: "mdi-gesture-tap-button", resettable: true, stoppable: false, configurable: false},
-      {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: false},
+      {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: true},
       {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true, configurable: false},
       {type: "http-get", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true},
       {type: "http-post-put", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true},

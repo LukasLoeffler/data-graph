@@ -40,7 +40,7 @@ export class GeoFilterNode extends BaseNode {
                 let message = `No filter polygon set in ${this.id}`
                 this.onFailure(message, msg.additional);
             } else if (error.message === "coordinates must contain numbers"){
-                let message = `Coordinate properties '${latFilterField}' and/or '${lonFilterField}' don't match the input. Node: ${this.id}`
+                let message = `Coordinate properties '${latFilterField}' and/or '${lonFilterField}' don't match the input. Node: ${this.id} (${this.name})`
                 this.onFailure(message, msg.additional);
             } else if (error.message === "Cannot read property 'geometry' of null") {
                 let message = `Node settings not set. Node: ${this.id}`

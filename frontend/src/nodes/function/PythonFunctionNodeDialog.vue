@@ -47,7 +47,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-python';
 import 'prismjs/themes/prism-tomorrow.css'; // import syntax highlighting styles
 
-import {apiBaseUrl} from "../../main.js";
+import {apiBaseUrl} from "@/main.js";
 
 export default {
   data: () => ({

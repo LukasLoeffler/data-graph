@@ -2,6 +2,7 @@ import { NodeManager } from "./nodes/node-manager";
 import { NodeRegistry } from "./nodes/node-registry";
 import { getDb } from "./manager/mongo-manager";
 import chalk from "chalk";
+import { io } from ".";
 
 
 export enum LoadingMode {
@@ -134,7 +135,7 @@ function cleanNodeManager(nodeConfigs: any) {
     // Delete all deletes nodes for real
     deleted.forEach((nodeId: string) => {
         let node = NodeManager.getNodeById(nodeId);
-        saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.DELETE, node.options, undefined));
+        saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.DELETE, node.options.settings, undefined));
         NodeManager.resetNode(nodeId);
     });
 
@@ -173,15 +174,15 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
                     numberOfNodesInit++;
 
                     // History entry only should be created when a real change occurs, not on initial loading
-                    if (mode === LoadingMode.RUNNING) saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.CREATE, undefined, options));
+                    if (mode === LoadingMode.RUNNING) saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.CREATE, undefined, options.settings));
                 } else {
                     // If a node with the given ID exists, options will be checked for changes
-                    let nodeChanged = JSON.stringify(existingNode.options) !== JSON.stringify(options);
+                    let nodeSettingsChanged = JSON.stringify(existingNode.options?.settings) !== JSON.stringify(options?.settings);
                     let outputChanged = JSON.stringify(existingNode.outputConnections) !== JSON.stringify(outputConnections);
                     // Input only relevant for existing nodes with inputConnections !== undefined
                     let inputChanged = existingNode.inputConnections !== undefined && JSON.stringify(existingNode.inputConnections) !== JSON.stringify(inputConnections);
 
-                    if (existingNode && (nodeChanged || outputChanged || inputChanged)) {
+                    if (existingNode && (nodeSettingsChanged || outputChanged || inputChanged)) {
                         NodeManager.resetNode(node.id);
                         console.log(`Reloading node config: ${chalk.cyan(node.name)}`)
 
@@ -189,7 +190,9 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
                         numberOfNodesChanged++;
                         nodesChanged.push(node.name);
 
-                        saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.MODIFY, existingNode.options, options));
+                        if (nodeSettingsChanged) {
+                            saveNodeChange(new NodeChange(node.id, node.name, NodeChangeType.MODIFY, existingNode.options.settings, options.settings));
+                        }
                     }
                 }
             });
@@ -210,5 +213,6 @@ function saveNodeChange(nodeChange: NodeChange) {
     let dbo = getDb();
     dbo.collection("node-history").insertOne(nodeChange, function (err: any, obj: any) {
         if (err) console.log(err);
+        else io.emit("NODE_HISTORY_CHANGE");
     });
 }
