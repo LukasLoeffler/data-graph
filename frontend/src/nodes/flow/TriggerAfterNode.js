@@ -14,7 +14,7 @@ export default class TriggerAfterNode extends Node {
         this.addOption("color", undefined, "#26828c");
         this.addOption("trigger", "TriggerCountOption");
         this.addOption("settings", "TriggerAfterDialog", {
-            threshhold: 100
+            threshhold: 100, bufferData: true
         });
     }
 }

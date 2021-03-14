@@ -75,7 +75,10 @@ import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
 
 import Filter from "../nodes/object/FilterNode";
 import PathNode from "../nodes/object/PathNode";
+
+
 import FileSave from "../nodes/filesystem/FileSaveNode"
+import FileSaveDialog from "../nodes/filesystem/FileSaveDialog"
 
 
 // Geofilter
@@ -301,6 +304,7 @@ export default {
     this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
     this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
     this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
+    this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
 
 
     // Register nodes

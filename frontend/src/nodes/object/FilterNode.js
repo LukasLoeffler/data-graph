@@ -11,7 +11,7 @@ export default class FilterNode extends Node {
         this.addInputInterface("payload");
         this.addOutputInterface("onSuccess");
 
-        this.addOption("FilterExpression", "InputOption");
+        this.addOption("settings", "InputOption");
         this.addOption("color", undefined, "#E9C143FF");
         this.addOption("running", undefined, true);
 

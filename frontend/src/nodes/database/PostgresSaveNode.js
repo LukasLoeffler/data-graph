@@ -10,18 +10,22 @@ export default class PostgresSaveNode extends Node {
         this.addInputInterface("Payload", undefined, undefined, {type: "JSON"});
         this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
-        this.addOption("connection", "PostgresInsertDialog", {
-            name: "Processor", 
-            host: "localhost", 
-            port: 5432, 
-            database: "processor", 
-            user: "postgres", 
-            password: "admin", 
-            table: "processor"
+        this.addOption("settings", "PostgresInsertDialog", { 
+            connection: {
+                name: "Processor", 
+                host: "localhost", 
+                port: 5432, 
+                database: "processor", 
+                user: "postgres", 
+                password: "admin", 
+                table: "processor",
+            },
+            mapping: [
+                { source: "sourceProperty", column: "targetColumn" }
+            ]
         });
         this.addOption("color", undefined, "#423dd9");
         this.addOption("running", undefined, true);
-        this.addOption("mapping", undefined, [{source: "sourceProperty", column: "targetColumn"}]);
     }
 
     save() {

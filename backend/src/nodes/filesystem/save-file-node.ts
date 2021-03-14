@@ -15,9 +15,9 @@ export class FileSaveNode extends BaseNode {
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
 
-        this.fileName = options.filename;
-        this.fileType = options.filetype;
-        this.filePath = options.path;
+        this.fileName = options.settings?.filename;
+        this.fileType = options.settings?.filetype;
+        this.filePath = options.settings?.path;
         NodeManager.addNode(this);
     }
 
