@@ -12,6 +12,7 @@ export class FilterNode extends BaseNode {
     constructor(name: string, id: string, options: string, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.filter = options;
+        console.log(options);
         NodeManager.addNode(this);
     }
 

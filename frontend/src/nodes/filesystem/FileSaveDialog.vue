@@ -13,14 +13,21 @@
               </v-col>
               <v-col cols="6">
                 <v-text-field 
-                  label="Threshhold" required v-model.number="valueCopy.threshhold" type="number" 
-                  :rules="[rules.required, rules.positive]" hide-details>
+                  label="Path" required v-model="valueCopy.path"
+                  :rules="[rules.required]" hide-details>
                 </v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-checkbox
-                  v-model="valueCopy.bufferData" label="Buffer data into array?"
-                ></v-checkbox>
+                <v-select 
+                  label="Filetype" required v-model="valueCopy.filetype" :items="fileTypes"
+                  :rules="[rules.required]" hide-details>
+                </v-select>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field 
+                  label="Filename" required v-model="valueCopy.filename"
+                  :rules="[rules.required]" hide-details>
+                </v-text-field>
               </v-col>
             </v-row>
           </v-form>
@@ -53,9 +60,9 @@ export default {
     valueCopy: null,
     rules: {
       required: value => !!value || 'Required.',
-      positive: value => value > 0 || 'Positive number required.',
     },
-    valid: false
+    valid: false,
+    fileTypes: ["json", "csv"]
   }),
   props: ["option", "node", "value"],
   created() {

@@ -20,11 +20,10 @@ export class PostgresSaveNode extends BaseNode {
     
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections)
-        this.options = options;
-        this.client = new Client(options.connection);
+        this.client = new Client(options.settings.connection);
         // Combination out of columns and sources are the mapping
-        this.columns = options.mapping.map((map: any) => { return map.column});
-        this.sources = options.mapping.map((map: any) => { return map.source});
+        this.columns = options.settings.mapping.map((map: any) => { return map.column});
+        this.sources = options.settings.mapping.map((map: any) => { return map.source});
         this.placeholder = this.buildPlaceholder(this.columns.length);
         try {
             this.client.connect();

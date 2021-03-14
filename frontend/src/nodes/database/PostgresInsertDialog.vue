@@ -17,7 +17,7 @@
             </v-stepper-header>
             <v-stepper-items>
               <v-stepper-content step="1" class="pa-1">
-                <PostgresConnectionEditor :connection="valueCopy" :node="node" @validityChange="data => inputComplete = data "/> 
+                <PostgresConnectionEditor :connection="valueCopy.connection" :node="node" @validityChange="data => inputComplete = data "/> 
                 <v-row class="ma-2">
                   <v-spacer></v-spacer>
                   <v-btn color="primary" @click="checkAndContinue" :disabled="!inputComplete">Continue</v-btn>
@@ -65,10 +65,10 @@ export default {
   },
   methods: {
     save() {
-      let mappings = this.$refs.mapping.getMapping();
+      let mapping = this.$refs.mapping.getMapping();
+      this.valueCopy.mapping = mapping;
 
-      this.node.setOptionValue("connection", this.valueCopy);
-      this.node.setOptionValue("mapping", mappings);
+      this.node.setOptionValue("settings", this.valueCopy);
       this.node.name = this.nodeCopy.name;
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
@@ -81,7 +81,7 @@ export default {
     checkAndContinue() {
       let testUrl = `${apiBaseUrl}/check-pg-connection`;
 
-      this.axios.post(testUrl, this.valueCopy)
+      this.axios.post(testUrl, this.valueCopy.connection)
       .then((response) => {
         this.loadedTableRows = response.data;
         this.connectionValid = true;

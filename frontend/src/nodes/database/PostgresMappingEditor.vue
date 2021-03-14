@@ -49,7 +49,7 @@ export default {
       })
 
       // Fill the input source property field per row
-      let mappings = this.node.getOptionValue("mapping");
+      let mappings = this.node.getOptionValue("settings").mapping;
       this.rows.forEach(row => {
         let mapping = mappings.find((mapping) => row.name === mapping.column);
         if (mapping) {
