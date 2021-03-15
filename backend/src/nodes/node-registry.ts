@@ -20,6 +20,7 @@ import { HttpInRequestNode } from "./http/http-in-request-node"
 import { HttpInResponseNode } from "./http/http-in-response-node"
 import { CsvToJsonNode } from "./type/csv-to-json-node"
 import { GeoFilterNode } from "./geo/geofilter-node"
+import { JavaScriptFunctionNode } from "./function/javascript-function-node"
 
 
 
@@ -60,6 +61,7 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("postgres-save", "database", PostgresSaveNode),
     new RegEntry("info", "info", InfoNode),
     new RegEntry("python-function", "function", PythonFunctionNode),
+    new RegEntry("javascript-function", "function", JavaScriptFunctionNode),
     new RegEntry("trigger-after", "flow", TriggerAfterNode),
     new RegEntry("data-change", "flow", DataChangeNode),
     new RegEntry("http-in-request", "http", HttpInRequestNode),

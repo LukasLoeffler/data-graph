@@ -143,7 +143,7 @@ function cleanNodeManager(nodeConfigs: any) {
 }
 
 export function loadConfig(dbo: any, mode: LoadingMode) {
-    console.log(`${chalk.blueBright("LOADING CONFIG")}: ${chalk.yellow(mode)}`);
+    console.log(`${chalk.blueBright("LOADING CONFIG")}: ${chalk.cyanBright(mode)}`);
 
     let numberofNodesTotal = 0;
     let numberOfNodesChanged = 0;

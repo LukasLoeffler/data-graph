@@ -13,36 +13,47 @@ export class TriggerAfterNode extends BaseNode {
 
     threshhold: number;
     puffer: Array<any>;
+    counter: number
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.threshhold = options.settings.threshhold;
         this.puffer = [];
+        this.counter = -1;
+        this.init();
         NodeManager.addNode(this);
     }
-
+    init() {
+        RedisClient.get(execInfoTrigger = `exex_info_trigger_${this.id}`).then((data) => {
+            this.counter = data;
+        })
+    }
     async execute(msg: Message) {
-        let counter = await RedisClient.get(execInfoTrigger = `exex_info_trigger_${this.id}`);
 
         if (msg.targetName === "Counter") {
 
             this.puffer.push(msg.payload);
-            if (counter >= this.threshhold-1) {
+            if (this.counter >= this.threshhold-1) {
                 this.on("onTrigger", this.puffer);
                 ExecutionCounter.resetCount(this.id);
+                this.counter = 0;
                 this.puffer = [];
             } else {
+                this.counter++;
                 ExecutionCounter.incrCountType(this.id, "trigger");
             }
         }
         if (msg.targetName === "Reset") {
             ExecutionCounter.resetCount(this.id);
             this.puffer = [];
+            this.counter = 0;
         }
     }
 
     reset(): boolean {
         ExecutionCounter.resetCount(this.id);
+        this.counter = 0;
+        this.puffer = [];
         return true;
     }
 }
