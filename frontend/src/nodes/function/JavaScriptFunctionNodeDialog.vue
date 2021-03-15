@@ -12,7 +12,16 @@
               <h2 style="text-align: left">Output Ports</h2>
               <v-row>
                 <v-col v-for="(intf, index) in outputInterfaces" :key="index" dense cols="12">
-                  <v-text-field solo v-model="intf.name" hide-details="" prepend-icon="mdi-circle">
+                  <v-text-field solo v-model="intf.name" prepend-icon="mdi-circle" hide-details>
+                    <template v-slot:prepend>
+                        <v-icon color="green" v-if="valueCopy.code.includes(intf.name)">mdi-circle</v-icon>
+                        <v-tooltip top v-else color="red">
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-icon color="red" v-bind="attrs" v-on="on">mdi-circle</v-icon>
+                          </template>
+                          <span>Port not used in code.</span>
+                        </v-tooltip>
+                    </template>
                     <template v-slot:append>
                       <v-btn icon @click="removeInterface(intf, index)" color="red">
                         <v-icon>mdi-trash-can-outline</v-icon>
@@ -23,19 +32,19 @@
                 <v-col cols="12">
                   <v-text-field placeholder="New Interface" solo v-model="newName" hide-details>
                     <template v-slot:append>
-                      <v-btn text @click="addInterface" color="green" :disabled="!newName">
+                      <v-btn text @click="addInterface" color="blue" :disabled="!newName">
                         CREATE
                       </v-btn>
                     </template>
                     <template v-slot:prepend>
-                      <v-icon color="green">mdi-circle</v-icon>
+                      <v-icon color="blue">mdi-circle</v-icon>
                     </template>
                   </v-text-field>
                 </v-col>
               </v-row>
             </v-col>
             <v-col cols="8">
-              <prism-editor class="my-editor" v-model="valueCopy.code" :highlight="highlighter" :tabSize="4" line-numbers></prism-editor>  
+              <prism-editor class="my-editor" v-model="valueCopy.code" :highlight="highlighter" :tabSize="4" line-numbers style="max-height: 500px"></prism-editor>  
             </v-col>
           </v-row>
         </v-card-text>
@@ -77,7 +86,7 @@ export default {
     outputInterfaces: [],
     interfacesToRemove: [],
     interfacesToAdd: [],
-    newName: null
+    newName: null,
   }),
   components: {
     PrismEditor
@@ -89,6 +98,7 @@ export default {
   },
   methods: {
     addHeader() {
+      this.newName = ""
       let newHeader = {
         key: "",
         value: ""
@@ -104,7 +114,7 @@ export default {
       });
 
       for (let [key, value] of this.nodeCopy.interfaces) {
-        if (!value.isInput) this.node.removeInterface(key);
+        if (!value.isInput && !this.outputInterfaces.includes(value.name)) this.node.removeInterface(key);
       }
       
       this.outputInterfaces.forEach((intf) => {
