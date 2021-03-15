@@ -114,9 +114,11 @@ import TriggerCountOption from "../options/TriggerCountOption";
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
 import PostgresInsertDialog from "../nodes/database/PostgresInsertDialog";
 
-// Python FunctionNode
+// FunctionNode
 import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
 import PythonFunctionNodeDialog from "../nodes/function/PythonFunctionNodeDialog";
+import JavaScriptFunctionNode from "../nodes/function/JavaScriptFunctionNode";
+import JavaScriptFunctionNodeDialog from "../nodes/function/JavaScriptFunctionNodeDialog";
 
 // Trigger After
 import TriggerAfterNode from "../nodes/flow/TriggerAfterNode"
@@ -298,6 +300,7 @@ export default {
     this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
     this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
     this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
+    this.viewPlugin.registerOption("JavaScriptFunctionNodeDialog", JavaScriptFunctionNodeDialog)
     this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
     this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
     this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
@@ -343,6 +346,7 @@ export default {
     this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
 
     this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
+    this.editor.registerNodeType("javascript-function", JavaScriptFunctionNode, "Function")
 
     // Flow
     this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")

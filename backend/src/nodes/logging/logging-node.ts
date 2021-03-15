@@ -24,7 +24,7 @@ export class LoggingNode extends BaseNode {
         let levelOut = "";
         if (this.level === "INFO") levelOut = chalk.bold(chalk.blue(this.level));
         if (this.level === "WARN") levelOut = chalk.bold(chalk.yellow(this.level));
-        if (this.level === "DANGER") levelOut = chalk.bold(chalk.red(this.level));
+        if (this.level === "CRIT") levelOut = chalk.bold(chalk.red(this.level));
         if (this.level === "NO_LEVEL_SET") levelOut = chalk.bold(chalk.bgRed(this.level));
 
         this.on("onInput", msg.payload, msg.additional);
