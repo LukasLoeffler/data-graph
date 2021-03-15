@@ -13,7 +13,7 @@ export default class LoggingNode extends Node {
         this.addInputInterface("event")
         this.addOutputInterface("onInput")
         this.addOption("Operation", "SelectOption", "INFO", undefined, {
-            items: [ "INFO", "WARN", "DANGER" ]
+            items: [ "INFO", "WARN", "CRIT" ]
         });
 
         this.addOption("color", undefined, "#3dd4f2");
