@@ -8,34 +8,38 @@
         <v-divider></v-divider>
         <v-card-text>
           <v-row>
-            <v-col cols="6">
-              <v-text-field placeholder="New Interface Name" v-model="newName">
-                <template v-slot:append>
-                  <v-btn text @click="addInterface" color="green" :disabled="!newName">
-                    CREATE
-                  </v-btn>
-                </template>
-              </v-text-field>
+            <v-col cols="4">
+              <h2 style="text-align: left">Output Ports</h2>
+              <v-row>
+                <v-col v-for="(intf, index) in outputInterfaces" :key="index" dense cols="12">
+                  <v-text-field solo v-model="intf.name" hide-details="" prepend-icon="mdi-circle">
+                    <template v-slot:append>
+                      <v-btn icon @click="removeInterface(intf, index)" color="red">
+                        <v-icon>mdi-trash-can-outline</v-icon>
+                      </v-btn>
+                    </template>
+                  </v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field placeholder="New Interface" solo v-model="newName" hide-details>
+                    <template v-slot:append>
+                      <v-btn text @click="addInterface" color="green" :disabled="!newName">
+                        CREATE
+                      </v-btn>
+                    </template>
+                    <template v-slot:prepend>
+                      <v-icon color="green">mdi-circle</v-icon>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
             </v-col>
-          </v-row>
-          <v-row v-for="(intf, index) in outputInterfaces" :key="index">
-            <v-col dense class="pa-0 px-2">
-              <v-text-field v-model="intf.name"></v-text-field>
-            </v-col>
-            <v-col dense cols="5" class="pa-0">
-              <v-text-field disabled v-model="intf.id"></v-text-field>
-            </v-col>
-            <v-col cols="1" class="mp-0" dense>
-              <v-btn icon @click="removeInterface(intf, index)" color="red">
-                <v-icon>mdi-trash-can-outline</v-icon>
-              </v-btn>
+            <v-col cols="8">
+              <prism-editor class="my-editor" v-model="valueCopy.code" :highlight="highlighter" :tabSize="4" line-numbers></prism-editor>  
             </v-col>
           </v-row>
         </v-card-text>
         <v-divider></v-divider>
-        <v-card-text>
-          <prism-editor class="my-editor mt-2" v-model="valueCopy.code" :highlight="highlighter" :tabSize="4" line-numbers></prism-editor>  
-        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false">
