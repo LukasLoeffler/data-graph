@@ -12,7 +12,7 @@ export default class LoggingNode extends Node {
         super();
         this.addInputInterface("event")
         this.addOutputInterface("onInput")
-        this.addOption("Operation", "SelectOption", "INFO", undefined, {
+        this.addOption("settings", "SelectOption", "INFO", undefined, {
             items: [ "INFO", "WARN", "CRIT" ]
         });
 
@@ -21,7 +21,7 @@ export default class LoggingNode extends Node {
 
         this.events.update.addListener(this, (event) => {
             
-            if (event.name === "Operation") {
+            if (event.name === "settings") {
                 if (event.option.value !== this.optionValue) {
                     store.commit("saveNodeConfig", this.id);
                 }
