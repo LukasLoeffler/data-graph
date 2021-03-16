@@ -7,7 +7,7 @@ export default class HttpInResponseNode extends Node {
 
     constructor() {
         super();
-        this.addInputInterface("onTrigger")
+        this.addInputInterface("event")
         this.addOption("color", undefined, "#ad173a");
         this.addOption("running", undefined, true);
         this.addOption("settings", "HttpInResponseDialog", {

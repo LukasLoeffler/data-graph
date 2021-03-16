@@ -13,7 +13,7 @@
               </v-col>
               <v-col cols="6">
                 <v-text-field 
-                  label="Endpoint" required v-model="valueCopy.endpoint"
+                  label="Endpoint" required v-model="valueCopy.endpoint" :hint="uri" persistent-hint
                   :rules="[rules.required, rules.leadingSlash]">
                 </v-text-field>
               </v-col>
@@ -44,6 +44,8 @@
 
 
 <script>
+import {apiBaseUrl} from "@/main.js";
+
 export default {
   data: () => ({
     dialog: false,
@@ -68,7 +70,11 @@ export default {
       this.dialog = false;
     },
   },
-
+  computed: {
+    uri() {
+      return `${apiBaseUrl}/http-in${this.valueCopy.endpoint}`
+    }
+  },
   watch: {
     "$store.getters.optionNode": {
       handler(nodeId) {
