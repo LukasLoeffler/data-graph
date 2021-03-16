@@ -10,10 +10,7 @@ export default class JavaScriptFunctionNode extends Node {
         super();
         this.addInputInterface("payload");
 
-        this.addOutputInterface("onSuccess");
-        this.addOutputInterface("onFailure");
-
-        this.addOption("settings", "JavaScriptFunctionNodeDialog", { code: "return payload" });
+        this.addOption("settings", "JavaScriptFunctionNodeDialog", {code: `this.on("onSuccess", payload)\nthis.on("onFailure", payload, undefined, true)`});
         this.addOption("color", undefined, "#ff7777");
         this.addOption("running", undefined, true);
     }
@@ -27,6 +24,10 @@ export default class JavaScriptFunctionNode extends Node {
     }
 
     load(state) {
+        if (state.interfaces.length === 0 ) {
+            this.addOutputInterface("onSuccess");
+            this.addOutputInterface("onFailure");
+        }
         state.interfaces.forEach(([name, intfState]) => {
             const intf = intfState.isInput ? this.addInputInterface(name) : this.addOutputInterface(name);
             intf.id = intfState.id;

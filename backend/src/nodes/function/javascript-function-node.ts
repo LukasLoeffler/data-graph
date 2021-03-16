@@ -24,7 +24,8 @@ export class JavaScriptFunctionNode extends BaseNode {
             let additional = msg.additional 
             eval(this.code)
         } catch(err) {
-            console.log(err);
+            console.log(err.message);
+            this.onFailure(err.message, msg.additional);
         }
     }
 

@@ -5,14 +5,19 @@
         <v-expansion-panel>
           <v-expansion-panel-header>
             <v-row>
-              <v-col cols="7">
-                <h4 @click="hightlightNode" style="cursor: pointer">{{event.targetNodeId}}</h4>
+              <v-col cols="6">
+                <h5 class="mt-1">{{event.targetNodeId}}</h5>
               </v-col>
               <v-col cols="3">
                 <v-chip :color="levelColor" label small>{{event.level}}</v-chip>
               </v-col>
               <v-col cols="1">
-                <v-btn icon x-small class="ml-3" @click.prevent.stop="copyToClipboard">
+                <v-btn icon x-small @click.prevent.stop="hightlightNode">
+                  <v-icon>mdi-target</v-icon>
+                </v-btn>
+              </v-col>
+              <v-col cols="1">
+                <v-btn icon x-small @click.prevent.stop="copyToClipboard">
                   <v-icon>mdi-content-copy</v-icon>
                 </v-btn>
               </v-col>
