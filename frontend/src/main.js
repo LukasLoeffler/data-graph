@@ -44,6 +44,7 @@ export const store = new Vuex.Store({
     deleteNode: null,
     copyNode: null,
     saveNode: null,
+    hightlightNode: null,
   },
   mutations: {
     setOptionNode (state, node) {
@@ -58,6 +59,9 @@ export const store = new Vuex.Store({
     saveNodeConfig(state, node) {
       state.saveNode = node;
     },
+    setHighlightNode(state, node) {
+      state.hightlightNode = node;
+    }
   },
   getters: {
     optionNode: state => {
@@ -75,6 +79,9 @@ export const store = new Vuex.Store({
     saveNode: state => {
       return state.saveNode;
     },
+    hightlightNode: state => {
+      return state.hightlightNode
+    }
   }
 })
 

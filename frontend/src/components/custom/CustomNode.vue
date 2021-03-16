@@ -65,7 +65,9 @@
         myStyle: {
           backgroundColor: this.data.getOptionValue("color")
         },
-        errorOccured: false
+        errorOccured: false,
+        highlighted: false,
+        hightLightTimeout: null
       }
     },
     created() {
@@ -129,6 +131,7 @@
       classes() {
         return {
           "pulse": this.errorOccured,
+          "highlight": this.highlighted
         };
       },
       classTitle() {
@@ -154,6 +157,17 @@
             this.$forceUpdate();
           }
         }
+      },
+      "$store.getters.hightlightNode": {
+        handler(nodeId) {
+          if (nodeId && nodeId === this.data.id) {
+            this.highlighted = true; // Activate animation
+            clearTimeout( this.hightLightTimeout ); // Reset timeout if called
+            this.hightLightTimeout = setTimeout(() => {
+              this.highlighted = false; // Deactivate animation if method is not called within interval.
+            }, ERROR_PULSE_LENGTH)
+          }
+        }
       }
     }
   }
@@ -163,6 +177,10 @@
 
 .pulse {
   animation: pulsate 2s ease-out infinite;
+}
+
+.highlight {
+  animation: pursate 2s ease-out infinite;
 }
 
 .grabbed {
@@ -177,5 +195,11 @@
   0%   { box-shadow: 0 0 0 red; }
   50%  { box-shadow: 0 0 40px red; }
   100% { box-shadow: 0 0 0 red; }
+}
+
+@-webkit-keyframes pursate {
+  0%   { box-shadow: 0 0 0; }
+  50%  { box-shadow: 0 0 40px orange; }
+  100% { box-shadow: 0 0 0; }
 }
 </style>

@@ -1,34 +1,21 @@
 <template>
   <v-card class="ma-1" outlined>
-
-    <v-card-text class="pa-0">
-      <v-row>
-        <v-col>
-          <h4>{{event.targetNodeId}}</h4>
-        </v-col>
-        <v-col>
-          <v-chip :color="levelColor" label small>{{event.level}}</v-chip>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <h6>{{event.time}}</h6>
-        </v-col>
-        <v-col>
-
-        </v-col>
-      </v-row>
-    </v-card-text>
-    <v-divider></v-divider>
     <v-card-text class="pa-0">
       <v-expansion-panels v-model="expanded">
         <v-expansion-panel>
           <v-expansion-panel-header>
             <v-row>
-              Payload
-              <v-btn icon x-small class="ml-3" @click.prevent.stop="copyToClipboard">
-                <v-icon>mdi-content-copy</v-icon>
-              </v-btn>
+              <v-col cols="7">
+                <h4 @click="hightlightNode" style="cursor: pointer">{{event.targetNodeId}}</h4>
+              </v-col>
+              <v-col cols="3">
+                <v-chip :color="levelColor" label small>{{event.level}}</v-chip>
+              </v-col>
+              <v-col cols="1">
+                <v-btn icon x-small class="ml-3" @click.prevent.stop="copyToClipboard">
+                  <v-icon>mdi-content-copy</v-icon>
+                </v-btn>
+              </v-col>
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content style="white-space: pre-wrap; text-align:left;">
@@ -41,7 +28,6 @@
 </template>
 
 <script>
-
 export default {
   data: () => {
     return {
@@ -55,6 +41,10 @@ export default {
     copyToClipboard() {
       let text = JSON.stringify(this.event.payload, null, 4);
       //navigator.clipboard.writeText(text);
+    },
+    hightlightNode() {
+      this.$store.commit("setHighlightNode", this.event.targetNodeId);
+      setTimeout(() => this.$store.commit("setHighlightNode", null), 1)
     }
   },
   components: {},
