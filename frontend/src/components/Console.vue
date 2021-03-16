@@ -28,6 +28,7 @@ export default {
   },
   created() {
     socketio.on('EVENT_LOG', (data) => {
+        //console.log(data);
         this.events.splice(0, 0,data);
         if (this.events.length > 10) {
           this.events.shift();

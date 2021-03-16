@@ -11,8 +11,6 @@ export class BaseNode {
     name: string;
     id: string;
     type: string;
-    targetsSuccess: Array<any>;
-    targetsFailure: Array<any>;
     outputConnections: Array<any>;
     running: boolean;
     options: any;
@@ -24,8 +22,6 @@ export class BaseNode {
         this.id = id;
         this.options = options;
         this.outputConnections = outputConnections;
-        this.targetsSuccess = outputConnections.filter((intf: any) => intf.from.name === "onSuccess");
-        this.targetsFailure = outputConnections.filter((intf: any) => intf.from.name === "onFailure");
         this.running = true;
     }
 
@@ -35,25 +31,17 @@ export class BaseNode {
 
     onSuccess(payload: any, additional: any = null) {
         ExecutionCounter.incrCountType(this.id, "success");
-        this.targetsSuccess.forEach(target => {
-            this.sendConnectionExec(target.from.id, target.to.id);
-            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
-            NodeManager.getNodeById(target.to.nodeId).execute(message);
-        });
+        this.on("onSuccess", payload, additional)
     }
 
     onFailure(payload: any, additional: any = null) {
         ExecutionCounter.incrCountType(this.id, "failure");
-        this.sendErrorMessage(this.id);  // Red shadow pulse trigger
-        this.targetsFailure.forEach(target => {
-            this.sendConnectionExec(target.from.id, target.to.id);
-            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
-            NodeManager.getNodeById(target.to.nodeId).execute(message);
-        });
+        this.on("onFailure", payload, additional)
     }
 
-    on(trigger: string, payload: any, additional: any = null) {
+    on(trigger: string, payload: any, additional: any = null, pulse: boolean = false) {
         let targets = this.outputConnections.filter((intf: any) => intf.from.name === trigger);
+        if (pulse) this.sendErrorMessage(this.id);
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
             let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);

@@ -9,7 +9,7 @@
         <v-card-text>
           <v-row>
             <v-col cols="4">
-              <h2 style="text-align: left">Output Ports</h2>
+              <h3 style="text-align: left">Output Ports</h3>
               <v-row>
                 <v-col v-for="(intf, index) in outputInterfaces" :key="index" dense cols="12">
                   <v-text-field solo v-model="intf.name" prepend-icon="mdi-circle" hide-details>

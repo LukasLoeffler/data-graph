@@ -7,14 +7,9 @@ services:
     image: processor-backend:latest
     build: ./backend
     environment:
-      - REDIS_URL="redis://redis:6379/0"
       - NODE_ENV="PROD"
     ports:
       - "3000:3000"
-      - "3001:3001"
-    links:
-      - redis
-      - mongo
 
   frontend:
     container_name: processor_frontend
@@ -30,6 +25,7 @@ services:
       - "6379:6379"
 
   mongo:
+    container_name: mongo
     image: mongo
     ports:
     - "27017:27017"

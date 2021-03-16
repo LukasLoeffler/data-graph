@@ -20,15 +20,13 @@ export class JavaScriptFunctionNode extends BaseNode {
 
     execute(msg: Message) {
         try {
-            let payload = msg.payload; // Thats eval code can be evaluated 
+            let payload = msg.payload; // That payload can be used without this in eval statement
+            let additional = msg.additional 
             eval(this.code)
         } catch(err) {
-            console.log(err);
+            console.log(err.message);
+            this.onFailure(err.message, msg.additional);
         }
-    }
-
-    test(testCode: any, res: any) {
-    
     }
 
     sanitizeCodeInput(code: string): string {
