@@ -24,10 +24,6 @@ export default class JavaScriptFunctionNode extends Node {
     }
 
     load(state) {
-        if (state.interfaces.length === 0 ) {
-            this.addOutputInterface("onSuccess");
-            this.addOutputInterface("onFailure");
-        }
         state.interfaces.forEach(([name, intfState]) => {
             const intf = intfState.isInput ? this.addInputInterface(name) : this.addOutputInterface(name);
             intf.id = intfState.id;
