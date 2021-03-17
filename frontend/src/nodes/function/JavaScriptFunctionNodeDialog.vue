@@ -113,12 +113,10 @@ export default {
         if (!intf.isInput) this.node.removeInterface(intf.name);
       });
 
-      for (let [key, value] of this.nodeCopy.interfaces) {
-        if (!value.isInput && !this.outputInterfaces.includes(value.name)) this.node.removeInterface(key);
-      }
-      
-      this.outputInterfaces.forEach((intf) => {
-        this.node.addOutputInterface(intf.name);
+      this.interfacesToAdd.forEach((intf) => {
+        if (!intf.isInput) {
+          this.node.addOutputInterface(intf.name);
+        }
       });
 
       this.node.setOptionValue("settings", this.valueCopy);
@@ -142,7 +140,8 @@ export default {
       this.outputInterfaces = this.outputInterfaces.filter(intf => !intf.isInput);
     },
     addInterface() {
-      this.outputInterfaces.push({name: this.newName, id: "NOT SAVED YET", isInput: true})
+      this.outputInterfaces.push({name: this.newName, id: "NOT SAVED YET", isInput: false})
+      this.interfacesToAdd.push({name: this.newName, id: "NOT SAVED YET", isInput: false})
     },
     removeInterface(intf, index) {
       this.outputInterfaces.splice(index, 1)
