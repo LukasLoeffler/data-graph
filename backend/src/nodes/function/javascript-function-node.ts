@@ -20,7 +20,8 @@ export class JavaScriptFunctionNode extends BaseNode {
 
     execute(msg: Message) {
         try {
-            let payload = msg.payload; // That payload can be used without this in eval statement
+            // That payload and additional can be used without this in eval statement
+            let payload = msg.payload; 
             let additional = msg.additional 
             eval(this.code)
         } catch(err) {
@@ -30,6 +31,7 @@ export class JavaScriptFunctionNode extends BaseNode {
     }
 
     sanitizeCodeInput(code: string): string {
+        // Only obvious checks. More detailed check 
         if (code.includes("process.exit(")) {
             return `this.onFailure("Invalid keyword used (process.exit)")`
         }
