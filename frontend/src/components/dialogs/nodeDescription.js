@@ -144,7 +144,7 @@ let descriptions = [
             downstream nodes are called. The counter is resetted afterwards. The counter can manually be resetted by
             triggering the 'Reset' input.
         `,
-        tags: ["counter", "flow"]
+        tags: ["counter", "flow", "aggregator"]
     },
     {
         type: "aggregator",
@@ -153,7 +153,7 @@ let descriptions = [
             in the input port. If all ports hold data at the same time all data is bundeled into an array and sent to
             the downstream nodes.
         `,
-        tags: ["flow"]
+        tags: ["flow", "aggregator"]
     },
 ]
 
