@@ -12,7 +12,7 @@
               <h3 style="text-align: left">Output Ports</h3>
               <v-row>
                 <v-col v-for="(intf, index) in outputInterfaces" :key="index" dense cols="12">
-                  <v-text-field solo v-model="intf.name" prepend-icon="mdi-circle" hide-details>
+                  <v-text-field solo v-model="intf.name" prepend-icon="mdi-circle" hide-details readonly>
                     <template v-slot:prepend>
                         <v-icon color="green" v-if="portUsed(intf.name)">mdi-circle</v-icon>
                         <v-tooltip top v-else color="red">
@@ -114,7 +114,7 @@ export default {
           try {
             this.node.removeInterface(intf.name);
           } catch (error) {
-            console.log("Node not existing");
+            console.log(`Port ${intf.name} not existing`);
           }
         }
       });
@@ -151,7 +151,8 @@ export default {
     },
     removeInterface(intf, index) {
       this.outputInterfaces.splice(index, 1);
-      this.interfacesToAdd = this.interfacesToAdd.filter(intfToAdd => intfToAdd.id === intf.id);
+      this.interfacesToAdd = this.interfacesToAdd.filter(intfToAdd => intfToAdd.name !== intf.name);
+      console.log(this.interfacesToAdd);
       this.interfacesToRemove.push(intf);
     },
     portUsed(interfaceName) {
