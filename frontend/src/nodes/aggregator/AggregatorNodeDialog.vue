@@ -4,33 +4,46 @@
       <v-card v-if="nodeCopy">
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
+          <v-spacer></v-spacer>
+          <v-btn color="blue" class="mr-1" :outlined="!infoMode" @click="infoMode = !infoMode" >
+            <v-icon>mdi-information-outline</v-icon>
+          </v-btn>
         </v-card-title>
+        <v-divider></v-divider>
         <v-card-text class="pb-1">
-        <v-row>
-          <v-col>
-            <v-text-field placeholder="New Interface Name" v-model="newName">
-              <template v-slot:append-outer>
-                <v-btn text @click="addInterface" color="green" :disabled="!newName">
-                  CREATE
-                </v-btn>
-              </template>
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row v-for="(intf, index) in inputInterfaces" :key="index">
-          <v-col dense class="pa-0 px-2">
-            <v-text-field v-model="intf.name"></v-text-field>
-          </v-col>
-          <v-col dense cols="5" class="pa-0">
-            <v-text-field disabled v-model="intf.id"></v-text-field>
-          </v-col>
-          <v-col cols="1" class="mp-0" dense>
-            <v-btn icon @click="removeInterface(intf, index)" color="red">
-              <v-icon>mdi-trash-can-outline</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-
+          <v-row>
+            <v-col class="px-2">
+              <v-text-field placeholder="New Interface" v-model="newName" solo hide-details>
+                <template v-slot:append>
+                  <v-btn text @click="addInterface" color="blue" :disabled="newNameInvalid">
+                    CREATE
+                  </v-btn>
+                </template>
+              </v-text-field>
+              <v-alert border="bottom" colored-border type="info" elevation="2" style="text-align: left" 
+              transition="scale-transition" :value="infoMode" class="mt-2">
+                Interface name muste be unique and not null
+              </v-alert>
+            </v-col>
+          </v-row>
+          <v-row v-for="(intf, index) in inputInterfaces" :key="index">
+            <v-col dense class="pa-0 px-2">
+              <v-text-field v-model="intf.name" label="Port name" readonly></v-text-field>
+            </v-col>
+            <v-col dense cols="5" class="pa-0">
+              <v-text-field v-model="intf.alias" label="Data Alias"></v-text-field>
+            </v-col>
+            <v-col cols="1" dense>
+              <v-btn icon @click="removeInterface(intf, index)" color="red">
+                <v-icon>mdi-trash-can-outline</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-alert border="bottom" colored-border type="info" elevation="2" style="text-align: left" 
+          transition="scale-transition" :value="infoMode">
+            Data aliases define the name of the property in which the input data of the port is written. 
+            If no alias is set, the data port name will be used as data property name.
+          </v-alert>
         </v-card-text>
         <v-divider></v-divider>
         <v-textarea
@@ -68,22 +81,28 @@ export default {
     inputInterfaces: [],
     newName: null,
     interfacesToRemove: [],
-    interfacesToAdd: []
+    interfacesToAdd: [],
+    infoMode: false
   }),
   props: ["option", "node", "value"],
   created() {},
   methods: {
     save() {
+
       this.interfacesToRemove.forEach((intf) => {
-        if (intf.isInput) this.node.removeInterface(intf.name);
+        if (intf.isInput){
+          try {
+            this.node.removeInterface(intf.name);
+          } catch (error) {
+            console.log(`Port ${intf.name} not existing`);
+          }
+        }
       });
 
-      for (let [key, value] of this.nodeCopy.interfaces) {
-        if (value.isInput) this.node.removeInterface(key);
-      }
-      
-      this.inputInterfaces.forEach((intf) => {
-        this.node.addInputInterface(intf.name);
+      this.interfacesToAdd.forEach((intf) => {
+        if (intf.isInput) {
+          this.node.addInputInterface(intf.name);
+        }
       });
 
 
@@ -94,10 +113,12 @@ export default {
     },
     addInterface() {
       this.inputInterfaces.push({name: this.newName, id: "NOT SAVED YET", isInput: true})
+      this.interfacesToAdd.push({name: this.newName, id: "NOT SAVED YET", isInput: true})
     },
     removeInterface(intf, index) {
-      this.inputInterfaces.splice(index, 1)
-      this.interfacesToRemove.push(intf)
+      this.inputInterfaces.splice(index, 1);
+      this.interfacesToAdd = this.interfacesToAdd.filter(intfToAdd => intfToAdd.name !== intf.name);
+      this.interfacesToRemove.push(intf);
     },
     init() {
       // Clear input interfaces (reopen issue)
@@ -118,9 +139,14 @@ export default {
         )
       }
       this.inputInterfaces = this.inputInterfaces.filter(intf => intf.isInput);
+
+      let nodeAliases = this.node.getOptionValue("settings").nodeAliases;
+      nodeAliases.forEach(alias => {
+        let intf = this.inputInterfaces.find(intf => intf.name === alias.intfName);
+        if (intf) intf["alias"] = alias.alias;
+      })
     }
   },
-
   watch: {
     "$store.getters.optionNode": {
       handler(nodeId) {
@@ -138,6 +164,11 @@ export default {
         }
       }
     },
+  },
+  computed: {
+    newNameInvalid() {
+      return this.inputInterfaces.some(intf => intf.name === this.newName) || !this.newName;
+    }
   }
 }
 </script>

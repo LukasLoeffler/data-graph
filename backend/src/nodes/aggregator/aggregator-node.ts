@@ -13,17 +13,23 @@ export class AggregatorNode extends BaseNode {
     data = new Map();
 
     additional: any;
+    aliases: Array<any>;
 
     constructor(name: string, id: string, options: any, outputInterfaces: Array<any>, inputConnections: Array<any>) {
         super(name, NODE_TYPE, id, options, outputInterfaces)
         this.inputConnections = inputConnections;
+        this.aliases = options.settings.nodeAliases;
         NodeManager.addNode(this);
     }
 
+    // Checking aliases if alias for node is present. If so alias is returned, else targetName is returned.
+    getAliasForTarget(targetName: string) {
+        let alias = this.aliases.find((alias: any) => alias.intfName === targetName);
+        return (!!alias) ? alias.alias : targetName; 
+    }
     
     execute(msg: Message) {
-
-        this.data.set(msg.targetId, msg.payload); // Writing last message to map
+        this.data.set(this.getAliasForTarget(msg.targetName), msg.payload); // Writing last message to map
         this.slots.add(msg.targetId);
 
         // Necessary because of possible additional requests -> Prevention of null override
@@ -33,9 +39,10 @@ export class AggregatorNode extends BaseNode {
         if (this.slots.size === this.inputConnections.length) {
             this.slots.clear();
             this.sendAggregationCountMessage();
-            let output: Array<any> = [];
+            let output: any = {};
+
             this.data.forEach((value: any, key: string) => {
-                output.push(value);
+                output[key] = value;
             });
 
             this.onSuccess(output, this.additional);
