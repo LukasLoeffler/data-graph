@@ -24,15 +24,18 @@ export class DataChangeNode extends BaseNode {
 
     execute(msg: Message) {
         try {
+            // If property is set, get property, else use payload
             let dataToCheck = (this.property) ? msg.payload[this.property] : msg.payload;
+
+            // If data is undefined or null and null/undefined values are disallowed the onFailurePort is activated
             if (dataToCheck == null && !this.allowUndefined) {
                 let errorMsg = {status: "error", message: "Property is undefined. Settings do not allow undefined values."}
                 this.on("onFailure", errorMsg, msg.additional, true);
             } else {
                 if (JSON.stringify(dataToCheck) === JSON.stringify(this.previousPayload)) {
-                    this.on("onNoChange", msg.payload);
+                    this.on("onNoChange", msg.payload, msg.additional);
                 } else {
-                    this.on("onChange", msg.payload);
+                    this.on("onChange", msg.payload, msg.additional);
                 }
             }
             this.previousPayload = dataToCheck;
