@@ -32,8 +32,18 @@ export default {
     return {
       tab: null,
       items: [
-        'Workspaces', 'EventLog', 'NodeHistory',
+        'WORKSPACES', 'EVENTLOG', 'NODEHISTORY',
       ],
+      nav: ""
+    }
+  },
+  created() {
+    this.tab = this.items.indexOf(this.$route.params.tab.toUpperCase());
+  },
+  watch: {
+    tab(newTab, oldTab) {
+      let tabName = this.items[newTab].toLowerCase();
+      if (newTab != null && oldTab != null) this.$router.replace({path: `${tabName}`});
     }
   },
 }

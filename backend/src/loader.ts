@@ -96,14 +96,14 @@ function extractConnections(nodeConfig: any) {
     return nodeConfig.connections.map((connection: any) => {
         return {
             from: {
-                id: getInterfaceByInterfaceId(nodeConfig, connection.from).id,
-                name: getInterfaceByInterfaceId(nodeConfig, connection.from).name,
-                nodeId: getNodeByInterfaceId(nodeConfig, connection.from).id,
+                id: getInterfaceByInterfaceId(nodeConfig, connection.from)?.id,
+                name: getInterfaceByInterfaceId(nodeConfig, connection.from)?.name,
+                nodeId: getNodeByInterfaceId(nodeConfig, connection.from)?.id,
             },
             to: {
-                id: getInterfaceByInterfaceId(nodeConfig, connection.to).id,
-                name: getInterfaceByInterfaceId(nodeConfig, connection.to).name,
-                nodeId: getNodeByInterfaceId(nodeConfig, connection.to).id,
+                id: getInterfaceByInterfaceId(nodeConfig, connection.to)?.id,
+                name: getInterfaceByInterfaceId(nodeConfig, connection.to)?.name,
+                nodeId: getNodeByInterfaceId(nodeConfig, connection.to)?.id,
             }
         }
     });

@@ -234,7 +234,7 @@ export default {
         this.nodeConfig = response.data;
 
         if (this.nodeConfig.length < this.$route.params.index) {
-          this.$router.push('/settings');
+          this.$router.push('/manage/workspaces');
         }
         
         this.loadConfig();

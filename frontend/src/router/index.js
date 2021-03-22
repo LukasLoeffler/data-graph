@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Editor from '../views/Editor.vue'
-import Settings from '../views/Settings.vue'
+import Manage from '../views/Manage.vue'
 import About from '../views/About.vue'
 import Wiki from '../views/Wiki.vue'
 
@@ -18,9 +18,20 @@ const routes = [
     component: Editor
   },
   {
-    path: '/settings',
-    name: 'Settings',
-    component: Settings
+    path: '/manage/',
+    redirect: '/manage/1'
+  },
+  {
+    path: '/manage/:tab',
+    name: 'Manage',
+    component: Manage,
+    props: true
+  },
+  {
+    path: '/manage/:tab/:nodeId',
+    name: 'NodeHistory',
+    component: Manage,
+    props: true
   },
   {
     path: '/about',

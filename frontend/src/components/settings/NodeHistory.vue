@@ -1,5 +1,10 @@
 <template>
   <v-card>
+    <v-row>
+      <v-col cols="4" class="ml-2">
+        <v-text-field outlined dense v-model="search" hide-details="" clearable></v-text-field>
+      </v-col>
+    </v-row>
     <v-data-table
       :headers="headers"
       :items="historyEntries"
@@ -10,6 +15,7 @@
       class="elevation-1"
       ref="historyTable"
       :style="tableHeight"
+      :search="search"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -23,10 +29,13 @@
         </v-toolbar>
       </template>
       <template v-slot:item.type="{ item }">
-      <v-chip :color="getColor(item.type)" label small>
-        {{ item.type }}
-      </v-chip>
-    </template>
+        <v-chip :color="getColor(item.type)" label small @click="search = item.type">
+          {{ item.type }}
+        </v-chip>
+      </template>
+      <template v-slot:item.nodeId="{ item }">
+        <a @click="search = item.nodeId">{{item.nodeId}}</a>
+      </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <v-row justify="center">
@@ -57,6 +66,7 @@ export default {
   components: {
     JsonViewer,
   },
+  props: ['msg'],
   data () {
     return {
       headers: [
@@ -67,10 +77,16 @@ export default {
       ],
       expanded: [],
       singleExpand: false,
-      historyEntries: []
+      historyEntries: [],
+      search: null
     }
   },
+  mounted() {
+    console.log("data is", this.msg);
+  },
   created() {
+    let nodeId = this.$route.params.nodeId;
+    if (nodeId) this.search = nodeId;
     this.loadData();
     socketio.on('NODE_HISTORY_CHANGE', () => {
       this.loadData();

@@ -77,6 +77,15 @@
       </v-list-item-action-text>
     </v-list-item>
 
+    <v-list-item dense @click="openHistory">
+      <v-list-item-icon>
+      <v-icon color="grey">mdi-history</v-icon>
+      </v-list-item-icon>
+      <v-list-item-action-text>
+      <v-list-item-title>View History</v-list-item-title>
+      </v-list-item-action-text>
+    </v-list-item>
+
     <v-list-item dense @click="openSettings" v-if="isConfigurable">
       <v-list-item-icon>
       <v-icon color="teal">mdi-cog-outline</v-icon>
@@ -235,12 +244,15 @@ import {getDescription} from "./nodeDescription.js";
       delete template.id;
       delete template.state;
 
-      template.interfaces;
+      delete template.interfaces;
+
+      delete template.position;
+
+      template.position = {};
+      template["position"]["x"] = 0;
+      template["position"]["y"] = 0;
 
       console.log(template);
-
-      template.position.x = 0;
-      template.position.y = 0;
 
       let createTemplateUrl = `${apiBaseUrl}/node-template`;
       this.axios.post(createTemplateUrl, template).then(() => {
@@ -249,11 +261,14 @@ import {getDescription} from "./nodeDescription.js";
       });
     },
     resetNode() {
-    let resetUrl = `${apiBaseUrl}/reset/${this.nodeData.id}`;
-    this.axios.get(resetUrl).then(() => {
-      console.log("%cSuccessfully resetted ", this.nodeData.name);
-      this.menu = false;
-    });
+      let resetUrl = `${apiBaseUrl}/reset/${this.nodeData.id}`;
+      this.axios.get(resetUrl).then(() => {
+        console.log("%cSuccessfully resetted ", this.nodeData.name);
+        this.menu = false;
+      });
+    },
+    openHistory() {
+      this.$router.push({path: `/manage/nodehistory/${this.nodeData.id}`});
     }
   },
   watch: {
@@ -274,18 +289,18 @@ import {getDescription} from "./nodeDescription.js";
     return nodeType.icon;
     },
     isResettable() {
-    let nodeType = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type);
-    return nodeType.resettable;
+      let nodeType = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type);
+      return nodeType.resettable;
     },
     runningColor() {
-    if (this.running) return "green";
-    else return "red";
+      if (this.running) return "green";
+      else return "red";
     },
     isStoppable() {
-    return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
+      return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
     },
     isConfigurable() {
-    return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).configurable;
+      return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).configurable;
     },
     /**
      * Returns different width for title, depending if the node is stoppable or not.
@@ -293,16 +308,16 @@ import {getDescription} from "./nodeDescription.js";
      * - 180px if its not stoppable to make use of the full title width
      */
     titleStyle() {
-    let stoppable = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
-    return {
-      "width": stoppable ? "150px" : "180px",
-    };
+      let stoppable = this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).stoppable;
+      return {
+        "width": stoppable ? "150px" : "180px",
+      };
     },
     classTitle() {
-    return {
-      "grabbed": this.dragging,
-      "grabbable": !this.dragging,
-    }; 
+      return {
+        "grabbed": this.dragging,
+        "grabbable": !this.dragging,
+      }; 
     },
   }
   }

@@ -19,7 +19,7 @@
             <v-btn block color="green" @click="$emit('createWorkspace')">Add</v-btn>
           </v-col>
           <v-col cols="6" class="pa-1 pr-3">
-            <v-btn block color="purple lighten-1" @click="$router.push('/settings')">Manage</v-btn>
+            <v-btn block color="purple lighten-1" @click="$router.push('/manage/workspaces')">Manage</v-btn>
           </v-col>
         </v-row>
       </div>
