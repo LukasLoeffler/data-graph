@@ -155,6 +155,15 @@ let descriptions = [
         `,
         tags: ["flow", "aggregator"]
     },
+    {
+        type: "data-change",
+        text: `
+            The node checks if the input data changed from the last time. If so the output port is activated. If not
+            the data is sent to onNoChange-Port.
+        `,
+        tags: ["data", "change"]
+    },
+    
 ]
 
 

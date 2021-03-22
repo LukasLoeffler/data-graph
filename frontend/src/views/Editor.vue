@@ -124,7 +124,9 @@ import JavaScriptFunctionNodeDialog from "../nodes/function/JavaScriptFunctionNo
 import TriggerAfterNode from "../nodes/flow/TriggerAfterNode"
 import TriggerAfterDialog from "../nodes/flow/TriggerAfterDialog";
 
+// Data Change
 import DataChangeNode from "../nodes/flow/DataChangeNode"
+import DataChangeDialog from "../nodes/flow/DataChangeDialog"
 
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
@@ -308,6 +310,7 @@ export default {
     this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
     this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
     this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
+    this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
 
 
     // Register nodes

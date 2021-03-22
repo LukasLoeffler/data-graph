@@ -96,7 +96,7 @@
     </v-list-item>
     <v-list-item dense @click="openHistory">
       <v-list-item-icon>
-      <v-icon color="grey">mdi-history</v-icon>
+      <v-icon color="teal">mdi-history</v-icon>
       </v-list-item-icon>
       <v-list-item-action-text>
       <v-list-item-title>View History</v-list-item-title>
@@ -130,8 +130,8 @@
       <v-btn text @click="menu = false">
       Cancel
       </v-btn>
-      <v-btn color="primary" text @click="save" :disabled="color === colorCopy">
-      Save
+      <v-btn color="primary" text @click="save">
+      OK
       </v-btn>
     </v-card-actions>
     </v-card>
@@ -172,7 +172,7 @@ import {getDescription} from "./nodeDescription.js";
       {type: "python-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true},
       {type: "javascript-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true},
       {type: "trigger-after", icon: "mdi-counter", resettable: true, stoppable: false, configurable: true},
-      {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: false},
+      {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: true},
       {type: "http-in-request", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
       {type: "http-in-response", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
       {type: "csv-to-json", icon: "mdi-file-delimited-outline", resettable: false, stoppable: false, configurable: true},
