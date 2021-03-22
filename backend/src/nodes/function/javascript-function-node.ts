@@ -1,9 +1,6 @@
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
-const chalk = require('chalk');
-const vm = require('vm');
-var util = require('util');
 
 const NODE_TYPE = "JAVASCRIPT-FUNC"
 
@@ -37,6 +34,9 @@ export class JavaScriptFunctionNode extends BaseNode {
         }
         if (code.includes("eval")) {
             return `this.onFailure("Invalid keyword used (eval)")`
+        }
+        if (code.includes("setInterval")) {
+            return `this.onFailure("Invalid keyword used (setInterval)")`
         }
 
         return code
