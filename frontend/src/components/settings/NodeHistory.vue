@@ -81,9 +81,6 @@ export default {
       search: null
     }
   },
-  mounted() {
-    console.log("data is", this.msg);
-  },
   created() {
     let nodeId = this.$route.params.nodeId;
     if (nodeId) this.search = nodeId;
