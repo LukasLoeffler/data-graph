@@ -29,13 +29,11 @@
           <v-row v-if="nodeListFiltered && nodeListFiltered.length !== 0">
             <v-col :cols="cols" class="pb-0" style="max-height: 300px; overflow: scroll">
               <v-chip-group active-class="primary--text" column v-model="selected" mandatory>
-                <v-chip
-                  v-for="(node, index) in nodeListFiltered"
-                  :key="index"
-                >
+                <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed">
                   {{ node.type }}
                 </v-chip>
-              </v-chip-group></v-col>
+              </v-chip-group>
+            </v-col>
             <v-col class="pb-0" style="text-align: left; max-height: 300px; overflow: scroll">
               <h2 class="mb-3">{{nodeListFiltered[selected].type}}</h2>
               <p v-html="nodeListFiltered[selected].description" style="font-size: 16px"></p>
