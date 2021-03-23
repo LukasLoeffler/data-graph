@@ -94,9 +94,10 @@
       <v-list-item-title>{{action.text}}</v-list-item-title>
       </v-list-item-action-text>
     </v-list-item>
+
     <v-list-item dense @click="openHistory">
       <v-list-item-icon>
-      <v-icon color="teal">mdi-history</v-icon>
+      <v-icon color="purple lighten-1">mdi-history</v-icon>
       </v-list-item-icon>
       <v-list-item-action-text>
       <v-list-item-title>View History</v-list-item-title>

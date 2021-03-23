@@ -153,8 +153,10 @@
       "$store.getters.saveNode": {
         handler(nodeId) {
           if (nodeId && nodeId === this.data.id) {
+            console.log("Forcing update");
             this._computedWatchers.rows.run();
             this.$forceUpdate();
+            setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 1);  // Needed because of baklava issue
           }
         }
       },
