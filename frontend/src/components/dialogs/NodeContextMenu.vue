@@ -179,6 +179,7 @@ import {getDescription} from "./nodeDescription.js";
       {type: "csv-to-json", icon: "mdi-file-delimited-outline", resettable: false, stoppable: false, configurable: true},
       {type: "geo-filter", icon: "mdi-vector-polygon", resettable: false, stoppable: false, configurable: true},
       {type: "switch", icon: "mdi-electric-switch", resettable: false, stoppable: false, configurable: true},
+      {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
