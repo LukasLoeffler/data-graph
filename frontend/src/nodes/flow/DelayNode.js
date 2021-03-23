@@ -11,7 +11,7 @@ export default class DelayNode extends Node {
 
         this.addOutputInterface("onDelay");
 
-        this.addOption("settings", "DelayDialog", { delay: 1, timeunit: "seconds"});
+        this.addOption("settings", "DelayDialog", { delay: 1, timeunit: "seconds", override: false});
 
         this.addOption("running", undefined, true);
         this.addOption("color", undefined, "#8BC34A");

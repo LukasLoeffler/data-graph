@@ -7,10 +7,13 @@ const NODE_TYPE = "delay"
 
 export class DelayNode extends BaseNode {
     delayMillis: number;
+    overridePending: boolean;
+    timeout: any;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.delayMillis = this.getDelayInMillis(options.settings.delay, options.settings.timeunit);
+        this.overridePending = options.settings.override || false;
         NodeManager.addNode(this);
     }
 
@@ -21,7 +24,12 @@ export class DelayNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        setTimeout(()=> { this.on("onDelay", msg.payload, msg.additional)}, this.delayMillis);
+        if (this.overridePending) {
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => { this.on("onDelay", msg.payload, msg.additional) }, this.delayMillis);
+        } else  {
+            setTimeout(() => { this.on("onDelay", msg.payload, msg.additional) }, this.delayMillis);
+        }
     }
 
     reset(): boolean {

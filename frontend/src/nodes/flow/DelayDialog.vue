@@ -20,8 +20,9 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-checkbox>
-              </v-checkbox>
+              <v-col>
+                <v-checkbox v-model="valueCopy.override" label="Override pending delays?"></v-checkbox>
+              </v-col>
             </v-row>
           </v-form>
         </v-card-text>
