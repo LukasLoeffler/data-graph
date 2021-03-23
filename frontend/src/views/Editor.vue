@@ -168,6 +168,7 @@ export default {
     Console
   },
   created() {
+    
     this.configIndex = this.$route.params.index-1;
     this.init();
 
@@ -187,6 +188,8 @@ export default {
       this.$store.commit("saveNodeConfig", 1);
     });
 
+    this.websocketConnected =socketio.connected;
+
     socketio.on('connect', () => {
       this.websocketConnected = true;
       this.sendNotification("Server connected", "green", 1000);
@@ -197,6 +200,10 @@ export default {
       this.sendNotification("Server not connected. Trying to reestablish connection", "red", 2000);
     });
 
+    socketio.on('SAVE', () => {
+      this.snackbar = true;
+    });
+    
     this.initialLoad();
   },
   methods: {
@@ -213,10 +220,7 @@ export default {
       let state = this.editor.save();
       let saveStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
       this.axios.put(saveStateUrl, state)
-      .then(() => {
-        //console.log("%c Config successfully saved", "color: green; font-weight: bold")
-        this.snackbar = true;
-      })
+      .then(() => {})
       .catch((err) => {
       })
     },
