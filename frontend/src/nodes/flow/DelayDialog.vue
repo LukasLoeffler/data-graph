@@ -4,11 +4,8 @@
       <v-card>
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
-          <v-spacer></v-spacer>
-          <v-btn outlined color="green" @click="addExpression">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
         </v-card-title>
+        <v-divider></v-divider>
         <v-card-text class="pb-1">
           <v-form v-model="valid">
             <v-row>
@@ -20,7 +17,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col>
+              <v-col cols="6">
                 <v-checkbox v-model="valueCopy.override" label="Override pending delays?"></v-checkbox>
               </v-col>
             </v-row>
