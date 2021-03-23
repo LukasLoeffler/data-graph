@@ -1,18 +1,20 @@
 import { Node } from "@baklavajs/core";
 
 
-export default class SwitchNode extends Node {
-    type = "switch";
-    name = "Switch";
+export default class DelayNode extends Node {
+    type = "delay";
+    name = "Delay";
 
     constructor() {
         super();
         this.addInputInterface("input");
 
-        this.addOption("settings", "SwitchDialog", {expressions: []});
+        this.addOutputInterface("onDelay");
+
+        this.addOption("settings", "DelayDialog", { delay: 1, timeunit: "seconds", override: false});
 
         this.addOption("running", undefined, true);
-        this.addOption("color", undefined, "#26828c");
+        this.addOption("color", undefined, "#8BC34A");
     }
 
     save() {

@@ -132,6 +132,9 @@ import DataChangeDialog from "../nodes/flow/DataChangeDialog"
 import SwitchNode from "../nodes/flow/SwitchNode"
 import SwitchDialog from "../nodes/flow/SwitchDialog"
 
+// Delay
+import DelayNode from "../nodes/flow/DelayNode"
+import DelayDialog from "../nodes/flow/DelayDialog"
 
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
@@ -316,6 +319,7 @@ export default {
     this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
     this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
     this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
+    this.viewPlugin.registerOption("DelayDialog", DelayDialog);
 
 
     // Register nodes
@@ -360,6 +364,7 @@ export default {
     this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
     this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
     this.editor.registerNodeType("switch", SwitchNode, "Flow")
+    this.editor.registerNodeType("delay", DelayNode, "Flow")
 
 
     this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")

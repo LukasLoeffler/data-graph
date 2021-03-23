@@ -94,9 +94,10 @@
       <v-list-item-title>{{action.text}}</v-list-item-title>
       </v-list-item-action-text>
     </v-list-item>
+
     <v-list-item dense @click="openHistory">
       <v-list-item-icon>
-      <v-icon color="teal">mdi-history</v-icon>
+      <v-icon color="purple lighten-1">mdi-history</v-icon>
       </v-list-item-icon>
       <v-list-item-action-text>
       <v-list-item-title>View History</v-list-item-title>
@@ -178,6 +179,7 @@ import {getDescription} from "./nodeDescription.js";
       {type: "csv-to-json", icon: "mdi-file-delimited-outline", resettable: false, stoppable: false, configurable: true},
       {type: "geo-filter", icon: "mdi-vector-polygon", resettable: false, stoppable: false, configurable: true},
       {type: "switch", icon: "mdi-electric-switch", resettable: false, stoppable: false, configurable: true},
+      {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},

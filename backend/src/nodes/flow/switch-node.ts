@@ -16,11 +16,26 @@ export class SwitchNode extends BaseNode {
 
     execute(msg: Message) {
         console.log(msg.payload);
+        let numMatched = 0;
         this.expressions.forEach((expr: any) => {
             let prop = msg.payload[expr.property];
-            let matches = eval(`${prop}${expr.statement}${expr.value}`);
-            if (matches) this.on(expr.port, msg.payload, msg.additional);
+            let statement = expr.statement;
+            let value = expr.value;
+            if (prop && statement && value) {
+                let matches = eval(`${prop}${expr.statement}${expr.value}`);
+                if (matches) {
+                    this.on(expr.port, msg.payload, msg.additional);
+                    numMatched++;
+                }
+            }
         });
+
+        if (numMatched === 0) {
+            let otherwise = this.expressions.find((expr: any) => expr.statement === "otherwise");
+            if (otherwise) {
+                this.on(otherwise.port, msg.payload, msg.additional);
+            }
+        }
     }
 
     reset(): boolean {
