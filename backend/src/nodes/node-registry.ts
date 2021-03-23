@@ -21,6 +21,7 @@ import { HttpInResponseNode } from "./http/http-in-response-node"
 import { CsvToJsonNode } from "./type/csv-to-json-node"
 import { GeoFilterNode } from "./geo/geofilter-node"
 import { JavaScriptFunctionNode } from "./function/javascript-function-node"
+import { SwitchNode } from "./flow/switch-node"
 
 
 
@@ -68,6 +69,7 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("http-in-response", "http", HttpInResponseNode),
     new RegEntry("csv-to-json", "type", CsvToJsonNode),
     new RegEntry("geo-filter", "geo", GeoFilterNode),
+    new RegEntry("switch", "flow", SwitchNode),
 ]
 
 

@@ -41,14 +41,14 @@ export class HttpNode extends BaseNode {
             if (response.data) {
                 this.onSuccess(response.data, msg.additional);
             } else {
-                this.onFailure(null, msg.additional);
+                this.on("onFailure", null, msg.additional, true);
             }
         }).catch((err: AxiosError) => {
             let payload = {
                 code: err.code,
                 message: err.message
             }
-            this.onFailure(payload, msg.additional);
+            this.on("onFailure", payload, msg.additional, true);
         });
     }
 

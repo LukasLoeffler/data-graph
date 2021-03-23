@@ -11,6 +11,9 @@ export default class DataChangeNode extends Node {
 
         this.addOutputInterface("onChange");
         this.addOutputInterface("onNoChange");
+        this.addOutputInterface("onFailure");
+
+        this.addOption("settings", "DataChangeDialog", {property: undefined, allowUndefined: false});
 
         this.addOption("running", undefined, true);
         this.addOption("color", undefined, "#26828c");
