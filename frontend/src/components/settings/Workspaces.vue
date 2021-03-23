@@ -59,7 +59,7 @@ export default {
       })
     },
     routeToWorkspace(index) {
-      this.$router.push({path: `workspace/${index+1}`});
+      this.$router.push({path: `/workspace/${index+1}`});
     },
     createWorkspace() {
       let emptyConfig = {
