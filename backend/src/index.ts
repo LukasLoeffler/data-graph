@@ -207,6 +207,12 @@ app.delete("/mqtt-server/:id", (req, res) => {
     });
 });
 
+app.get("/node-templates/all", (req, res) => {
+    dbo.collection("node-templates").find({}).toArray(function (err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else res.send(result);
+    });
+})
 
 app.post("/node-template", (req, res) => {
     dbo.collection("node-templates").insertOne(req.body, function(err: any, result: any) {

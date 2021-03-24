@@ -85,6 +85,15 @@
       <v-list-item-title >Open Settings</v-list-item-title>
       </v-list-item-action-text>
     </v-list-item>
+  
+    <v-list-item dense @click="openHistory">
+      <v-list-item-icon>
+      <v-icon color="purple lighten-1">mdi-format-list-numbered</v-icon>
+      </v-list-item-icon>
+      <v-list-item-action-text>
+      <v-list-item-title>View History</v-list-item-title>
+      </v-list-item-action-text>
+    </v-list-item>
 
     <v-list-item dense v-for="(action, i) in actions" :key="i"  v-on:click="execute(action.callable)">
       <v-list-item-icon>
@@ -92,15 +101,6 @@
       </v-list-item-icon>
       <v-list-item-action-text>
       <v-list-item-title>{{action.text}}</v-list-item-title>
-      </v-list-item-action-text>
-    </v-list-item>
-
-    <v-list-item dense @click="openHistory">
-      <v-list-item-icon>
-      <v-icon color="purple lighten-1">mdi-history</v-icon>
-      </v-list-item-icon>
-      <v-list-item-action-text>
-      <v-list-item-title>View History</v-list-item-title>
       </v-list-item-action-text>
     </v-list-item>
     <v-divider></v-divider>
