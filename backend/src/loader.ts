@@ -201,9 +201,20 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
 
         let numberOfDeletedNodes = cleanNodeManager(nodeConfigs);
 
-        if (mode === LoadingMode.RUNNING) console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
-        if (mode === LoadingMode.STARTUP) console.log(`Initialized: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
+        if (mode === LoadingMode.RUNNING) {
+            console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
+            io.emit("SAVE", {
+                init: numberOfNodesInit,
+                changed: numberOfNodesChanged,
+                delete: numberOfDeletedNodes
+            });
+        }
+        if (mode === LoadingMode.STARTUP) {
+            console.log(`Initialized: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
+        }
         if (nodesChanged.length !== 0) console.log(`Nodes Changed: ${chalk.yellow(nodesChanged)}`)
+
+        
     });
 }
 

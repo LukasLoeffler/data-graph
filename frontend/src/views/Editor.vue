@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { Editor } from "@baklavajs/core";
+import { Editor, Node } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
@@ -168,6 +168,7 @@ export default {
     Console
   },
   created() {
+    
     this.configIndex = this.$route.params.index-1;
     this.init();
 
@@ -187,6 +188,8 @@ export default {
       this.$store.commit("saveNodeConfig", 1);
     });
 
+    this.websocketConnected =socketio.connected;
+
     socketio.on('connect', () => {
       this.websocketConnected = true;
       this.sendNotification("Server connected", "green", 1000);
@@ -195,6 +198,10 @@ export default {
     socketio.on('disconnect', () => {
       this.websocketConnected = false;
       this.sendNotification("Server not connected. Trying to reestablish connection", "red", 2000);
+    });
+
+    socketio.on('SAVE', () => {
+      this.snackbar = true;
     });
 
     this.initialLoad();
@@ -213,10 +220,7 @@ export default {
       let state = this.editor.save();
       let saveStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
       this.axios.put(saveStateUrl, state)
-      .then(() => {
-        //console.log("%c Config successfully saved", "color: green; font-weight: bold")
-        this.snackbar = true;
-      })
+      .then(() => {})
       .catch((err) => {
       })
     },
@@ -355,8 +359,7 @@ export default {
     this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
     this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
 
-    this.editor.registerNodeType("aggregator", AggregatorNode, "Aggregator")
-
+    // Function-Nodes
     this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
     this.editor.registerNodeType("javascript-function", JavaScriptFunctionNode, "Function")
 
@@ -365,12 +368,10 @@ export default {
     this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
     this.editor.registerNodeType("switch", SwitchNode, "Flow")
     this.editor.registerNodeType("delay", DelayNode, "Flow")
+    this.editor.registerNodeType("aggregator", AggregatorNode, "Flow")
 
 
     this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
-
-
-    
     }
   },
   watch: {
@@ -407,6 +408,24 @@ export default {
           let node = new ButtonNode();
           node.options = newNode.options;
           this.editor.addNode(node);
+        }
+      }
+    },
+    "$store.getters.templateId": {
+      handler(template) {
+        if (template) {
+          console.log(template.name);
+          let nodeType = this.editor.nodeTypes.get(template.type);
+          let node = new nodeType();
+          node.name = template.name;
+          
+          let settings = template.options.find(option => option[0] === "settings")[1];
+          node.setOptionValue("settings", settings);
+
+          this.editor.addNode(node);
+          node.position = template.position;
+          console.log(node);
+          this.$store.commit("createNodeFromTemplate", undefined);
         }
       }
     },
