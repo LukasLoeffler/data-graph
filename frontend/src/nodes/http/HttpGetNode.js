@@ -18,7 +18,7 @@ export default class HttpGetNode extends Node {
             notes: "Enter description of functionallity here",
         });
         this.addOption("ExecutionCount", "ExecutionCountOption");
-        this.addOption("color", undefined, "#ad173a");
+        this.addOption("color", undefined, "#8C9EFF");
         this.addOption("running", undefined, true);
     }
 }

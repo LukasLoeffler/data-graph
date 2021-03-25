@@ -18,7 +18,7 @@ export default class HttpPostPutNode extends Node {
             notes: "Enter description of functionallity here",
             expectedOutput: "JSON"
         });
-        this.addOption("color", undefined, "#ad173a");
+        this.addOption("color", undefined, "#8C9EFF");
         this.addOption("running", undefined, true);
     }
 
