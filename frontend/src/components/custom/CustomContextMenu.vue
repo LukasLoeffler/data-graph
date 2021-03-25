@@ -20,8 +20,7 @@
           <v-spacer></v-spacer>
           <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable></v-text-field>
           <v-btn class="ml-2" dark @click="maxed = !maxed">
-            <v-icon v-if="maxed">mdi-window-minimize</v-icon>
-            <v-icon v-else>mdi-window-maximize</v-icon>
+            <v-icon>{{maxed ? 'mdi-window-minimize' : 'mdi-window-maximize'}}</v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
