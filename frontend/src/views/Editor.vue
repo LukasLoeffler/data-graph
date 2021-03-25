@@ -367,12 +367,16 @@ export default {
           let node = new nodeType();
           node.name = template.name;
           
-          let settings = template.options.find(option => option[0] === "settings")[1];
-          node.setOptionValue("settings", settings);
+          try {
+            let settings = template.options.find(option => option[0] === "settings")[1];
+            node.setOptionValue("settings", settings);
 
-          this.editor.addNode(node);
-          node.position = template.position;
-          this.$store.commit("createNodeFromTemplate", undefined);
+            this.editor.addNode(node);
+            node.position = template.position;
+            this.$store.commit("createNodeFromTemplate", undefined);
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
     }
