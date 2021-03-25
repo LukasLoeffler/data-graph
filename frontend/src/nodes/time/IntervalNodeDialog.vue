@@ -8,10 +8,10 @@
           <v-form v-model="valid">
             <v-row>
               <v-col cols="6">
-                <v-text-field label="Name" :rules="[rules.required]" v-model="nodeCopy.name"></v-text-field>
+                <v-text-field label="Node Name" :rules="[rules.required]" v-model="nodeCopy.name"></v-text-field>
               </v-col>
-              <v-col>
-                <v-text-field v-model="valueCopy.cronExpression"></v-text-field>
+              <v-col cols="6">
+                <v-combobox :return-object="false" v-model="valueCopy.cronExpression" :items="intervalExamples" item-text="text" item-value="value" :rules="[rules.required]"></v-combobox>
               </v-col>
             </v-row>
           </v-form>
@@ -46,7 +46,21 @@ export default {
     },
     nodeCopy: null,
     valueCopy: null,
-    valid: null
+    valid: null,
+    intervalExamples: [
+      {text: "Every Second", value: "* * * * * *"},
+      {text: "Every 10 Seconds", value: "*/10 * * * * *"},
+      {text: "Every 20 Seconds", value: "*/20 * * * * *"},
+      {text: "Every 30 Seconds", value: "*/30 * * * * *"},
+      {text: "Every Minute", value: "* * * * *"},
+      {text: "Every 2 Minutes", value: "*/2 * * * *"},
+      {text: "Every 5 Minutes", value: "*/5 * * * *"},
+      {text: "Every 10 Minutes", value: "*/10 * * * *"},
+      {text: "Every 20 Minutes", value: "*/20 * * * *"},
+      {text: "Every 30 Minutes", value: "*/30 * * * *"},
+      {text: "Every Hour", value: "0 * * * *"},
+    ],
+    selectedExample: null
   }),
   props: ["option", "node", "value"],
   created() {
@@ -64,6 +78,9 @@ export default {
     abort() {
       this.dialog = false;
     },
+    useExample() {
+      this.valueCopy.cronExpression = this.selectedExample.value;
+    }
   },
 
   watch: {

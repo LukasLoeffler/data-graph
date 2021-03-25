@@ -20,8 +20,7 @@
           <v-spacer></v-spacer>
           <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable></v-text-field>
           <v-btn class="ml-2" dark @click="maxed = !maxed">
-            <v-icon v-if="maxed">mdi-window-minimize</v-icon>
-            <v-icon v-else>mdi-window-maximize</v-icon>
+            <v-icon>{{maxed ? 'mdi-window-minimize' : 'mdi-window-maximize'}}</v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
@@ -33,9 +32,9 @@
                   {{ node.type }}
                 </v-chip>
               </v-chip-group>
-              <v-divider></v-divider>
+              <v-divider v-if="templates.length !== 0"></v-divider>
               <v-chip-group active-class="primary--text" column v-model="selectedTemplate">
-                <v-chip v-for="(template, index) in templates" :key="index" :small="!maxed" @contextmenu.prevent.stop="addTemplate">
+                <v-chip v-for="(template, index) in templates" :key="index" :small="!maxed">
                   {{ template.name }}
                 </v-chip>
               </v-chip-group>
@@ -76,11 +75,7 @@ import { apiBaseUrl } from '@/main';
 export default {
   extends: Components.ContextMenu,
   created() {
-    let loadTemplateUrl = `${apiBaseUrl}/node-templates/all`;
-    this.axios.get(loadTemplateUrl)
-    .then((response) => {
-      this.templates = response.data;
-    });
+
   },
   data: () => {
     return {
@@ -114,7 +109,7 @@ export default {
       return [document.querySelector('.included')]
     },
     addNode() {
-      if (this.selected) this.onChildClick(`addNode:${this.nodeListFiltered[this.selected].type}`);
+      if (this.selected != null) this.onChildClick(`addNode:${this.nodeListFiltered[this.selected].type}`);
       else this.addTemplate();
     },
     addTemplate() {
@@ -124,6 +119,13 @@ export default {
 
       this.$store.commit("createNodeFromTemplate", template);
       this.onClickOutside(undefined);
+    },
+    fetchTemplates() {
+      let loadTemplateUrl = `${apiBaseUrl}/node-templates/all`;
+      this.axios.get(loadTemplateUrl)
+      .then((response) => {
+        this.templates = response.data;
+      });
     }
   },
   watch: {
@@ -131,6 +133,7 @@ export default {
       this.nodeList = [];
       this.addList = [];
       this.traverseSubmenues(this.items[0]);
+      this.fetchTemplates();
     },
     items() {
       this.nodeList = [];
@@ -163,7 +166,7 @@ export default {
       return (this.maxed ? 4 : 6)
     },
     selectedTitle() {
-      return this.nodeListFiltered[this.selected]?.type || this.templates[this.selectedTemplate]?.name;
+      return this.nodeListFiltered[this.selected]?.type || "Template: " + this.templates[this.selectedTemplate]?.name;
     },
     selectedDescr() {
       return this.nodeListFiltered[this.selected]?.description || this.templates[this.selectedTemplate]?.options;

@@ -57,53 +57,11 @@
     </v-list>
 
     <v-divider></v-divider>
-    <v-list-item dense @click="activateNode" v-if="isStoppable">
-      <v-list-item-icon>
-      <v-icon color="green" v-if="!running">mdi-play-outline</v-icon>
-      <v-icon color="red" v-else>mdi-pause</v-icon>
-      </v-list-item-icon>
-      <v-list-item-action-text>
-      <v-list-item-title v-if="!running">Start Node</v-list-item-title>
-      <v-list-item-title v-else>Stop Node</v-list-item-title>
-      </v-list-item-action-text>
-    </v-list-item>
-
-    <v-list-item dense @click="resetNode" v-if="isResettable">
-      <v-list-item-icon>
-      <v-icon color="orange">mdi-backup-restore</v-icon>
-      </v-list-item-icon>
-      <v-list-item-action-text>
-      <v-list-item-title >Reset Node</v-list-item-title>
-      </v-list-item-action-text>
-    </v-list-item>
-
-    <v-list-item dense @click="openSettings" v-if="isConfigurable">
-      <v-list-item-icon>
-      <v-icon color="teal">mdi-cog-outline</v-icon>
-      </v-list-item-icon>
-      <v-list-item-action-text>
-      <v-list-item-title >Open Settings</v-list-item-title>
-      </v-list-item-action-text>
-    </v-list-item>
-  
-    <v-list-item dense @click="openHistory">
-      <v-list-item-icon>
-      <v-icon color="purple lighten-1">mdi-format-list-numbered</v-icon>
-      </v-list-item-icon>
-      <v-list-item-action-text>
-      <v-list-item-title>View History</v-list-item-title>
-      </v-list-item-action-text>
-    </v-list-item>
-
-    <v-list-item dense v-for="(action, i) in actions" :key="i"  v-on:click="execute(action.callable)">
-      <v-list-item-icon>
-      <v-icon :color="action.color">{{action.icon}}</v-icon>
-      </v-list-item-icon>
-      <v-list-item-action-text>
-      <v-list-item-title>{{action.text}}</v-list-item-title>
-      </v-list-item-action-text>
-    </v-list-item>
-    <v-divider></v-divider>
+    <NodeContextMenuListItem :title="running ? 'Stop Node': 'Start Node'" :color="running ? 'red' : 'green'" :icon="running ? 'mdi-pause': 'mdi-play-outline'" @click="activateNode" v-if="isStoppable"/>
+    <NodeContextMenuListItem title="Open Settings" color="orange" icon="mdi-backup-restore" @click="resetNode" v-if="isResettable"/>
+    <NodeContextMenuListItem title="Open Settings" color="teal" icon="mdi-cog-outline" @click="openSettings" v-if="isConfigurable"/>
+    <NodeContextMenuListItem title="View History" color="purple lighten-1" icon="mdi-format-list-numbered" @click="openHistory"/>
+    <NodeContextMenuListItem v-for="(action, i) in actions" :key="i" :title="action.text" :color="action.color" :icon="action.icon" @click="execute(action.callable)"/>
 
     <v-divider></v-divider>
     <v-expansion-panels v-model="expanded" accordion>
@@ -129,10 +87,10 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn text @click="menu = false">
-      Cancel
+        Cancel
       </v-btn>
       <v-btn color="primary" text @click="save">
-      OK
+        OK
       </v-btn>
     </v-card-actions>
     </v-card>
@@ -143,8 +101,12 @@
 <script>
 import {apiBaseUrl} from "@/main.js";
 import {getDescription} from "./nodeDescription.js";
+import NodeContextMenuListItem from "./NodeContextMenuListItem"
 
   export default {
+  components: {
+    NodeContextMenuListItem
+  },
   data: () => ({
     fav: true,
     menu: false,
@@ -253,8 +215,6 @@ import {getDescription} from "./nodeDescription.js";
       template.position = {};
       template["position"]["x"] = 0;
       template["position"]["y"] = 0;
-
-      console.log(template);
 
       let createTemplateUrl = `${apiBaseUrl}/node-template`;
       this.axios.post(createTemplateUrl, template).then(() => {
