@@ -42,12 +42,15 @@ import CustomInterface from "../components/custom/CustomInterface";
 import CustomNode from "../components/custom/CustomNode";
 import CustomContextMenu from "../components/custom/CustomContextMenu"
 
+
+// ButtonNode
 import ButtonNode from "../nodes/ButtonNode";
 
 // Interval Node
 import IntervalNode from "../nodes/time/IntervalNode";
 import IntervalNodeDialog from "../nodes/time/IntervalNodeDialog"
 
+// Http Nodes
 import HttpGet from "../nodes/http/HttpGetNode";
 import HttpPostPut from "../nodes/http/HttpPostPutNode";
 import HttpInRequestNode from "../nodes/http/HttpInRequestNode"
@@ -61,15 +64,11 @@ import HttpInRequestDialog from "../nodes/http/HttpInRequestDialog"
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
 import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
-
-
 import Filter from "../nodes/object/FilterNode";
 import PathNode from "../nodes/object/PathNode";
 
-
 import FileSave from "../nodes/filesystem/FileSaveNode"
 import FileSaveDialog from "../nodes/filesystem/FileSaveDialog"
-
 
 // Geofilter
 import GeoFilterNode from "../nodes/geo/GeoFilterNode"
@@ -80,8 +79,6 @@ import MqttSubNode from "../nodes/mqtt/MqttSubNode";
 import MqttPubNode from "../nodes/mqtt/MqttPubNode";
 
 import Logging from "../nodes/LoggingNode";
-
-
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
 import AggregatorNodeDialog from "../nodes/aggregator/AggregatorNodeDialog";
@@ -95,10 +92,7 @@ import InfoNode from "../nodes/info/InfoNode";
 import InfoOption from "../options/InfoOption";
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
 
-
 import TriggerCountOption from "../options/TriggerCountOption";
-
-
 
 // Postgres
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
@@ -156,7 +150,6 @@ export default {
     Toolbar
   },
   created() {
-    
     this.configIndex = this.$route.params.index-1;
     this.init();
 
@@ -204,10 +197,7 @@ export default {
     save() {
       let state = this.editor.save();
       let saveStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
-      this.axios.put(saveStateUrl, state)
-      .then(() => {})
-      .catch((err) => {
-      })
+      this.axios.put(saveStateUrl, state);
     },
     createWorkspace() {
       let emptyConfig = {
@@ -222,19 +212,17 @@ export default {
       }
       let saveStateUrl = `${apiBaseUrl}/node-config/`;
       this.axios.post(saveStateUrl, emptyConfig).then(() => {
-        console.log("%c Config successfully saved", "color: green; font-weight: bold");
-        this.initialLoad(true);
+        console.log("%c Workspace successfully created.", "color: green; font-weight: bold");
+        this.initialLoad();
       })
     },
-    initialLoad(last = false) {
+    initialLoad() {
       let loadStateUrl = `${apiBaseUrl}/node-configs/all`;
       this.axios.get(loadStateUrl).then((response) => {
         this.nodeConfig = response.data;
-
         if (this.nodeConfig.length < this.$route.params.index) {
           this.$router.push('/manage/workspaces');
         }
-        
         this.loadConfig();
       })
     },
@@ -246,11 +234,7 @@ export default {
         let loadStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
         this.axios.get(loadStateUrl).then((response) => {
           // If loaded object from backend is empty the default graph is loaded
-          if (this.isEmpty(response.data)){
-            //this.$router.push('/settings');
-          } else {
-            this.editor.load(response.data);
-          }
+          if (!this.isEmpty(response.data)) this.editor.load(response.data);
         })
       }
     },
@@ -272,9 +256,6 @@ export default {
 
       const intfTypePlugin = new InterfaceTypePlugin();
       this.editor.use(intfTypePlugin);
-
-
-      // this.viewPlugin.enableMinimap = true;
 
       // Register options
       this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
@@ -301,7 +282,6 @@ export default {
       this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
       this.viewPlugin.registerOption("DelayDialog", DelayDialog);
 
-
       // Register nodes
       this.editor.registerNodeType("interval", IntervalNode, "Time")
 
@@ -312,7 +292,6 @@ export default {
       this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
       this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
       this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
-
 
       // Object
       this.editor.registerNodeType("filter", Filter, "Object")
@@ -346,7 +325,7 @@ export default {
       this.editor.registerNodeType("delay", DelayNode, "Flow")
       this.editor.registerNodeType("aggregator", AggregatorNode, "Flow")
 
-
+      // Data Type
       this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
     }
   },
@@ -365,7 +344,7 @@ export default {
     "$store.getters.saveNode": {
       handler(newValue) {
         if (newValue) {
-          setTimeout(() => this.$store.commit("saveNodeConfig", null) ,1);  
+          setTimeout(() => this.$store.commit("saveNodeConfig", null), 1);  
           this.save();
         }
       }
@@ -380,10 +359,9 @@ export default {
         }
       }
     },
-    "$store.getters.templateId": {
+    "$store.getters.template": {
       handler(template) {
         if (template) {
-          console.log(template.name);
           let nodeType = this.editor.nodeTypes.get(template.type);
           let node = new nodeType();
           node.name = template.name;
@@ -393,22 +371,17 @@ export default {
 
           this.editor.addNode(node);
           node.position = template.position;
-          console.log(node);
           this.$store.commit("createNodeFromTemplate", undefined);
         }
       }
-    },
+    }
   }
 }
 </script>
 
 <style scoped>
-#container {
-  width: 100%;
-  height: 100%;
-}
-
-#drawer {
-  z-index: 10;
-}
+  #container {
+    width: 100%;
+    height: 100%;
+  }
 </style>
