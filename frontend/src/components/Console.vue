@@ -6,7 +6,6 @@
       <v-list-item-subtitle class="title-hidden">-</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-
     <ConsoleEvent v-for="event in events" :key="event.time" :event="event"/>
   </v-navigation-drawer>
 </template>
@@ -28,18 +27,11 @@ export default {
   },
   created() {
     socketio.on('EVENT_LOG', (data) => {
-        //console.log(data);
-        this.events.splice(0, 0,data);
+        this.events.splice(0, 0, data);
         if (this.events.length > 10) {
           this.events.shift();
         }
     });
-  },
-  watch: {
   }
 }
 </script>
-
-<style>
-
-</style>

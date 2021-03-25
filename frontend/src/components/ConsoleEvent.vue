@@ -45,14 +45,13 @@ export default {
   methods: {
     copyToClipboard() {
       let text = JSON.stringify(this.event.payload, null, 4);
-      //navigator.clipboard.writeText(text);
+      navigator.clipboard.writeText(text);
     },
     hightlightNode() {
       this.$store.commit("setHighlightNode", this.event.targetNodeId);
       setTimeout(() => this.$store.commit("setHighlightNode", null), 1)
     }
   },
-  components: {},
   computed: {
     levelColor() {
       switch (this.event.level) {
@@ -65,7 +64,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

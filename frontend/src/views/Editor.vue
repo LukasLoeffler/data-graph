@@ -362,16 +362,21 @@ export default {
     "$store.getters.template": {
       handler(template) {
         if (template) {
+          console.log(template);
           let nodeType = this.editor.nodeTypes.get(template.type);
           let node = new nodeType();
           node.name = template.name;
           
-          let settings = template.options.find(option => option[0] === "settings")[1];
-          node.setOptionValue("settings", settings);
+          try {
+            let settings = template.options.find(option => option[0] === "settings")[1];
+            node.setOptionValue("settings", settings);
 
-          this.editor.addNode(node);
-          node.position = template.position;
-          this.$store.commit("createNodeFromTemplate", undefined);
+            this.editor.addNode(node);
+            node.position = template.position;
+            this.$store.commit("createNodeFromTemplate", undefined);
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
     }

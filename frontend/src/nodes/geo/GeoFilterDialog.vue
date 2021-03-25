@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" max-width="10000px" height="800px">
+    <v-dialog v-model="dialog" max-width="1000px" height="800px">
       <v-card>
         <v-card-title>
           <span class="headline">{{node.name}}</span>
@@ -17,7 +17,6 @@
               </v-stepper-step>
             </v-stepper-header>
             <v-stepper-items>
-
               <v-stepper-content step="1" class="pa-1">
                 <v-row class="mx-1">
                   <v-col>
@@ -35,10 +34,10 @@
 
               <v-stepper-content step="2" class="pa-1">
                 <v-row>
-                  <v-col cols="1">
-                    <v-btn color="red" text @click="features = []">Reset</v-btn>
-                  </v-col>
                   <v-col cols="2">
+                    <v-btn color="red" text @click="features = []" outlined>Reset</v-btn>
+                  </v-col>
+                  <v-col cols="3">
                     <v-select
                       :items="availableSelectionTypes"
                       label="Selection Mode" outlined dense hide-details
@@ -46,7 +45,7 @@
                     ></v-select>
                   </v-col>
                   <v-spacer></v-spacer>
-                  <v-col cols="2">
+                  <v-col cols="3">
                     <v-select
                       :items="availableBackgroundMaps"
                       label="Map Type" outlined dense hide-details
@@ -125,15 +124,15 @@ export default {
         filterMode: this.selectionMode
       }
       
-      this.node.setOptionValue("filter", filter);
+      this.node.setOptionValue("settings", filter);
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
     },
     init() {
-      this.sourceLat = this.node.getOptionValue("filter")?.sourceLat || "longitude";
-      this.sourceLon = this.node.getOptionValue("filter")?.sourceLon || "latitude";
-      this.features = this.node.getOptionValue("filter")?.geometry || [];
-      this.selectionMode = this.node.getOptionValue("filter")?.filterMode || true;
+      this.sourceLat = this.node.getOptionValue("settings")?.sourceLat || "longitude";
+      this.sourceLon = this.node.getOptionValue("settings")?.sourceLon || "latitude";
+      this.features = this.node.getOptionValue("settings")?.geometry || [];
+      this.selectionMode = this.node.getOptionValue("settings")?.filterMode || true;
 
 
       this.center = (this.features) ? this.calcCenter(this.features) : [0,0];
@@ -173,7 +172,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

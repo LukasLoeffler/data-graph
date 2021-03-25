@@ -11,7 +11,7 @@ export default class GeoFilterNode extends Node {
         this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
 
-        this.addOption("filter", "GeoFilterDialog");
+        this.addOption("settings", "GeoFilterDialog");
 
         this.addOption("color", undefined, "#E9C143FF");
         this.addOption("running", undefined, true);
