@@ -12,9 +12,7 @@
       </v-toolbar>
     </v-card>
     <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" :configIndex="configIndex"
-      @createWorkspace="createWorkspace" 
-      @changeworkspace="changeWorkspace" 
-      @drawerClosed="drawer = false"
+      @createWorkspace="createWorkspace" @changeworkspace="changeWorkspace" @drawerClosed="drawer = false"
     />
     <Console :console="console"/>
     <v-flex d-flex child-flex class="fill-height">
@@ -144,7 +142,6 @@ export default {
   data() {
     return {
       connection: null,
-      sidebar: false,
       editor: new Editor(),
       viewPlugin: new ViewPlugin(),
       optionPlugin: new OptionPlugin(),
@@ -153,7 +150,6 @@ export default {
       nodeConfig: null,
       selectedConfig: null,
       configIndex: null,
-      stateCopy: null,
       snackbar: false,
       websocketConnected: false,
       notifySnack: false,
@@ -213,9 +209,6 @@ export default {
       this.notifyTimeout = timeout;
       this.notifySnack = true;
     },
-    logEvent() {
-      console.log("Changed");
-    },
     save() {
       let state = this.editor.save();
       let saveStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
@@ -253,14 +246,6 @@ export default {
         this.loadConfig();
       })
     },
-    findWithAttr(array, attr, value) {
-      for(var i = 0; i < array.length; i += 1) {
-          if(array[i][attr] === value) {
-              return i;
-          }
-      }
-      return -1;
-    },
     loadConfig() {
       this.configIndex = this.$route.params.index-1;
       this.selectedConfig = this.nodeConfig[this.configIndex];
@@ -273,7 +258,6 @@ export default {
             //this.$router.push('/settings');
           } else {
             this.editor.load(response.data);
-            this.stateCopy = this.editor.save();
           }
         })
       }
@@ -286,105 +270,98 @@ export default {
       return Object.keys(obj).length === 0;
     },
     init() {
-    this.editor.use(this.viewPlugin);
-    this.editor.use(this.optionPlugin);
+      this.editor.use(this.viewPlugin);
+      this.editor.use(this.optionPlugin);
 
-    this.viewPlugin.components.connection = CustomConnection;
-    this.viewPlugin.components.nodeInterface = CustomInterface;
-    this.viewPlugin.components.contextMenu = CustomContextMenu;
-    this.viewPlugin.components.node = CustomNode;
+      this.viewPlugin.components.connection = CustomConnection;
+      this.viewPlugin.components.nodeInterface = CustomInterface;
+      this.viewPlugin.components.contextMenu = CustomContextMenu;
+      this.viewPlugin.components.node = CustomNode;
 
-    const intfTypePlugin = new InterfaceTypePlugin();
-    this.editor.use(intfTypePlugin);
-
-
-    // this.viewPlugin.enableMinimap = true;
-
-    // Register options
-    this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
-    this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
-    this.viewPlugin.registerOption("InfoOption", InfoOption);
-
-    // Register dialog options
-    this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
-    this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
-    this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
-    this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
-    this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
-    this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
-    this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
-    this.viewPlugin.registerOption("JavaScriptFunctionNodeDialog", JavaScriptFunctionNodeDialog)
-    this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
-    this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
-    this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
-    this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
-    this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
-    this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
-    this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
-    this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
-    this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
-    this.viewPlugin.registerOption("DelayDialog", DelayDialog);
+      const intfTypePlugin = new InterfaceTypePlugin();
+      this.editor.use(intfTypePlugin);
 
 
-    // Register nodes
-    this.editor.registerNodeType("interval", IntervalNode, "Time")
+      // this.viewPlugin.enableMinimap = true;
 
-    this.editor.registerNodeType("logging", Logging, "Logging")
-    this.editor.registerNodeType("info", InfoNode, "Logging")
+      // Register options
+      this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
+      this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
+      this.viewPlugin.registerOption("InfoOption", InfoOption);
 
-    this.editor.registerNodeType("http-get", HttpGet, "Http")
-    this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
-    this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
-    this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
-
-
-    // Object
-    this.editor.registerNodeType("filter", Filter, "Object")
-    this.editor.registerNodeType("object-path", PathNode, "Object")
-    this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
-    this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
-
-    // Geo
-    this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
-
-    // Filesystem
-    this.editor.registerNodeType("file-save", FileSave, "Filesystem")
-
-    // User input
-    this.editor.registerNodeType("button", ButtonNode, "Input")
-
-    this.editor.registerNodeType("postgres-save", PostgresSaveNode, "Database")
-
-    // MQTT
-    this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
-    this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
-
-    // Function-Nodes
-    this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
-    this.editor.registerNodeType("javascript-function", JavaScriptFunctionNode, "Function")
-
-    // Flow
-    this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
-    this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
-    this.editor.registerNodeType("switch", SwitchNode, "Flow")
-    this.editor.registerNodeType("delay", DelayNode, "Flow")
-    this.editor.registerNodeType("aggregator", AggregatorNode, "Flow")
+      // Register dialog options
+      this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
+      this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
+      this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
+      this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
+      this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
+      this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
+      this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
+      this.viewPlugin.registerOption("JavaScriptFunctionNodeDialog", JavaScriptFunctionNodeDialog)
+      this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
+      this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
+      this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
+      this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
+      this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
+      this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
+      this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
+      this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
+      this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
+      this.viewPlugin.registerOption("DelayDialog", DelayDialog);
 
 
-    this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
+      // Register nodes
+      this.editor.registerNodeType("interval", IntervalNode, "Time")
+
+      this.editor.registerNodeType("logging", Logging, "Logging")
+      this.editor.registerNodeType("info", InfoNode, "Logging")
+
+      this.editor.registerNodeType("http-get", HttpGet, "Http")
+      this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
+      this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
+      this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
+
+
+      // Object
+      this.editor.registerNodeType("filter", Filter, "Object")
+      this.editor.registerNodeType("object-path", PathNode, "Object")
+      this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
+      this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
+
+      // Geo
+      this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
+
+      // Filesystem
+      this.editor.registerNodeType("file-save", FileSave, "Filesystem")
+
+      // User input
+      this.editor.registerNodeType("button", ButtonNode, "Input")
+
+      this.editor.registerNodeType("postgres-save", PostgresSaveNode, "Database")
+
+      // MQTT
+      this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
+      this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
+
+      // Function-Nodes
+      this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
+      this.editor.registerNodeType("javascript-function", JavaScriptFunctionNode, "Function")
+
+      // Flow
+      this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
+      this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
+      this.editor.registerNodeType("switch", SwitchNode, "Flow")
+      this.editor.registerNodeType("delay", DelayNode, "Flow")
+      this.editor.registerNodeType("aggregator", AggregatorNode, "Flow")
+
+
+      this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
     }
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.loadConfig();
       this.configIndex = this.$route.params.index-1;
-    },
-    "viewPlugin.scaling": {
-      handler() {}
-    },
-    "viewPlugin.panning": {
-      handler() {},
-      deep: true
     },
     "$store.getters.deletedNode": {
       handler(newValue) {
