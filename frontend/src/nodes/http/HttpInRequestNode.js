@@ -8,7 +8,7 @@ export default class HttpInRequestNode extends Node {
     constructor() {
         super();
         this.addOutputInterface("onRequest")
-        this.addOption("color", undefined, "#ad173a");
+        this.addOption("color", undefined, "#607D8B");
         this.addOption("running", undefined, true);
         this.addOption("settings", "HttpInRequestDialog", {
             endpoint: "/endpoint",

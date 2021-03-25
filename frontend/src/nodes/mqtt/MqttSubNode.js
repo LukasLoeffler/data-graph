@@ -22,7 +22,7 @@ export default class MqttSubNode extends Node {
         });
         this.addOption("Topic", "InputOption", "topic")
         this.addOption("ExecutionCount", "ExecutionCountOption");
-        this.addOption("color", undefined, "#2db331");
+        this.addOption("color", undefined, "#FFC107");
         this.addOption("running", undefined, true);
         this.addOutputInterface("onSuccess");
     }
