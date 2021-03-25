@@ -33,7 +33,7 @@
                   {{ node.type }}
                 </v-chip>
               </v-chip-group>
-              <v-divider></v-divider>
+              <v-divider v-if="templates.length !== 0"></v-divider>
               <v-chip-group active-class="primary--text" column v-model="selectedTemplate">
                 <v-chip v-for="(template, index) in templates" :key="index" :small="!maxed">
                   {{ template.name }}
