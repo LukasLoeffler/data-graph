@@ -1,4 +1,4 @@
-# Graken
+# data-graph
 
 Application to showcase concepts and ideas for event-based data processing.
 It incorporates concepts of NodeRED and ApacheNiFi and focuses on user-interaction and user-feedback to improve the users understanding of the data flow.  
