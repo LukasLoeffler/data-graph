@@ -87,10 +87,10 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn text @click="menu = false">
-      Cancel
+        Cancel
       </v-btn>
       <v-btn color="primary" text @click="save">
-      OK
+        OK
       </v-btn>
     </v-card-actions>
     </v-card>
