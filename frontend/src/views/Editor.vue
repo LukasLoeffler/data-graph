@@ -180,12 +180,12 @@ export default {
 
     socketio.on('connect', () => {
       this.websocketConnected = true;
-      this.sendNotification("Server connected", "green", 1000);
+      this.showNotification("Server connected", "green", 1000);
     });
 
     socketio.on('disconnect', () => {
       this.websocketConnected = false;
-      this.sendNotification("Server not connected. Trying to reestablish connection", "red", 2000);
+      this.showNotification("Server not connected. Trying to reestablish connection", "red", 2000);
     });
 
     socketio.on('SAVE', () => {
@@ -195,7 +195,7 @@ export default {
     this.initialLoad();
   },
   methods: {
-    sendNotification(message, color, timeout) {
+    showNotification(message, color, timeout) {
       this.notifyMessage = message;
       this.notifyColor = color;
       this.notifyTimeout = timeout;
