@@ -1,16 +1,8 @@
 <template>
   <div id="container">
-    <v-card class="mx-2">
-      <v-toolbar id="tabber" dense color="primary" dark>
-        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
-        <div class="flex-grow-1"></div>
-        <ConnectionIndicator :status="websocketConnected"/>
-        <v-btn icon @click="console = !console">
-          <v-icon>mdi-console</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </v-card>
+    <Toolbar :websocketStatus="websocketConnected" :workspace="selectedConfig" 
+      @toggleDrawer="drawer = !drawer" @toggleConsole="console = !console"
+    />
     <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" :configIndex="configIndex"
       @createWorkspace="createWorkspace" @changeworkspace="changeWorkspace" @drawerClosed="drawer = false"
     />
@@ -38,7 +30,7 @@
 </template>
 
 <script>
-import { Editor, Node } from "@baklavajs/core";
+import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
@@ -134,9 +126,9 @@ import SwitchDialog from "../nodes/flow/SwitchDialog"
 import DelayNode from "../nodes/flow/DelayNode"
 import DelayDialog from "../nodes/flow/DelayDialog"
 
-import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
 import Console from '../components/Console.vue';
+import Toolbar from './Toolbar.vue';
 
 export default {
   data() {
@@ -159,9 +151,9 @@ export default {
     }
   },
   components: {
-    ConnectionIndicator,
     NavigationDrawer,
-    Console
+    Console,
+    Toolbar
   },
   created() {
     
@@ -416,21 +408,7 @@ export default {
   height: 100%;
 }
 
-#tabber {
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  top: 6px;
-}
-
 #drawer {
   z-index: 10;
-}
-
-.title-hidden {
-  color: #363636;
 }
 </style>
