@@ -1,20 +1,10 @@
 <template>
   <div id="container">
-    <v-card class="mx-2">
-      <v-toolbar id="tabber" dense color="primary" dark>
-        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title v-if="selectedConfig">{{selectedConfig.workspace}}</v-toolbar-title>
-        <div class="flex-grow-1"></div>
-        <ConnectionIndicator :status="websocketConnected"/>
-        <v-btn icon @click="console = !console">
-          <v-icon>mdi-console</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </v-card>
+    <Toolbar :websocketStatus="websocketConnected" :workspace="selectedConfig" 
+      @toggleDrawer="drawer = !drawer" @toggleConsole="console = !console"
+    />
     <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" :configIndex="configIndex"
-      @createWorkspace="createWorkspace" 
-      @changeworkspace="changeWorkspace" 
-      @drawerClosed="drawer = false"
+      @createWorkspace="createWorkspace" @changeworkspace="changeWorkspace" @drawerClosed="drawer = false"
     />
     <Console :console="console"/>
     <v-flex d-flex child-flex class="fill-height">
@@ -40,7 +30,7 @@
 </template>
 
 <script>
-import { Editor, Node } from "@baklavajs/core";
+import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
@@ -52,12 +42,15 @@ import CustomInterface from "../components/custom/CustomInterface";
 import CustomNode from "../components/custom/CustomNode";
 import CustomContextMenu from "../components/custom/CustomContextMenu"
 
+
+// ButtonNode
 import ButtonNode from "../nodes/ButtonNode";
 
 // Interval Node
 import IntervalNode from "../nodes/time/IntervalNode";
 import IntervalNodeDialog from "../nodes/time/IntervalNodeDialog"
 
+// Http Nodes
 import HttpGet from "../nodes/http/HttpGetNode";
 import HttpPostPut from "../nodes/http/HttpPostPutNode";
 import HttpInRequestNode from "../nodes/http/HttpInRequestNode"
@@ -71,15 +64,11 @@ import HttpInRequestDialog from "../nodes/http/HttpInRequestDialog"
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
 import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
-
-
 import Filter from "../nodes/object/FilterNode";
 import PathNode from "../nodes/object/PathNode";
 
-
 import FileSave from "../nodes/filesystem/FileSaveNode"
 import FileSaveDialog from "../nodes/filesystem/FileSaveDialog"
-
 
 // Geofilter
 import GeoFilterNode from "../nodes/geo/GeoFilterNode"
@@ -90,8 +79,6 @@ import MqttSubNode from "../nodes/mqtt/MqttSubNode";
 import MqttPubNode from "../nodes/mqtt/MqttPubNode";
 
 import Logging from "../nodes/LoggingNode";
-
-
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
 import AggregatorNodeDialog from "../nodes/aggregator/AggregatorNodeDialog";
@@ -105,10 +92,7 @@ import InfoNode from "../nodes/info/InfoNode";
 import InfoOption from "../options/InfoOption";
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
 
-
 import TriggerCountOption from "../options/TriggerCountOption";
-
-
 
 // Postgres
 import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
@@ -136,15 +120,14 @@ import SwitchDialog from "../nodes/flow/SwitchDialog"
 import DelayNode from "../nodes/flow/DelayNode"
 import DelayDialog from "../nodes/flow/DelayDialog"
 
-import ConnectionIndicator from '../components/ConnectionIndicator.vue';
 import NavigationDrawer from '../components/NavigationDrawer'
 import Console from '../components/Console.vue';
+import Toolbar from './Toolbar.vue';
 
 export default {
   data() {
     return {
       connection: null,
-      sidebar: false,
       editor: new Editor(),
       viewPlugin: new ViewPlugin(),
       optionPlugin: new OptionPlugin(),
@@ -153,7 +136,6 @@ export default {
       nodeConfig: null,
       selectedConfig: null,
       configIndex: null,
-      stateCopy: null,
       snackbar: false,
       websocketConnected: false,
       notifySnack: false,
@@ -163,12 +145,11 @@ export default {
     }
   },
   components: {
-    ConnectionIndicator,
     NavigationDrawer,
-    Console
+    Console,
+    Toolbar
   },
   created() {
-    
     this.configIndex = this.$route.params.index-1;
     this.init();
 
@@ -192,12 +173,12 @@ export default {
 
     socketio.on('connect', () => {
       this.websocketConnected = true;
-      this.sendNotification("Server connected", "green", 1000);
+      this.showNotification("Server connected", "green", 1000);
     });
 
     socketio.on('disconnect', () => {
       this.websocketConnected = false;
-      this.sendNotification("Server not connected. Trying to reestablish connection", "red", 2000);
+      this.showNotification("Server not connected. Trying to reestablish connection", "red", 2000);
     });
 
     socketio.on('SAVE', () => {
@@ -207,22 +188,16 @@ export default {
     this.initialLoad();
   },
   methods: {
-    sendNotification(message, color, timeout) {
+    showNotification(message, color, timeout) {
       this.notifyMessage = message;
       this.notifyColor = color;
       this.notifyTimeout = timeout;
       this.notifySnack = true;
     },
-    logEvent() {
-      console.log("Changed");
-    },
     save() {
       let state = this.editor.save();
       let saveStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
-      this.axios.put(saveStateUrl, state)
-      .then(() => {})
-      .catch((err) => {
-      })
+      this.axios.put(saveStateUrl, state);
     },
     createWorkspace() {
       let emptyConfig = {
@@ -237,29 +212,19 @@ export default {
       }
       let saveStateUrl = `${apiBaseUrl}/node-config/`;
       this.axios.post(saveStateUrl, emptyConfig).then(() => {
-        console.log("%c Config successfully saved", "color: green; font-weight: bold");
-        this.initialLoad(true);
+        console.log("%c Workspace successfully created.", "color: green; font-weight: bold");
+        this.initialLoad();
       })
     },
-    initialLoad(last = false) {
+    initialLoad() {
       let loadStateUrl = `${apiBaseUrl}/node-configs/all`;
       this.axios.get(loadStateUrl).then((response) => {
         this.nodeConfig = response.data;
-
         if (this.nodeConfig.length < this.$route.params.index) {
           this.$router.push('/manage/workspaces');
         }
-        
         this.loadConfig();
       })
-    },
-    findWithAttr(array, attr, value) {
-      for(var i = 0; i < array.length; i += 1) {
-          if(array[i][attr] === value) {
-              return i;
-          }
-      }
-      return -1;
     },
     loadConfig() {
       this.configIndex = this.$route.params.index-1;
@@ -269,12 +234,7 @@ export default {
         let loadStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
         this.axios.get(loadStateUrl).then((response) => {
           // If loaded object from backend is empty the default graph is loaded
-          if (this.isEmpty(response.data)){
-            //this.$router.push('/settings');
-          } else {
-            this.editor.load(response.data);
-            this.stateCopy = this.editor.save();
-          }
+          if (!this.isEmpty(response.data)) this.editor.load(response.data);
         })
       }
     },
@@ -286,105 +246,93 @@ export default {
       return Object.keys(obj).length === 0;
     },
     init() {
-    this.editor.use(this.viewPlugin);
-    this.editor.use(this.optionPlugin);
+      this.editor.use(this.viewPlugin);
+      this.editor.use(this.optionPlugin);
 
-    this.viewPlugin.components.connection = CustomConnection;
-    this.viewPlugin.components.nodeInterface = CustomInterface;
-    this.viewPlugin.components.contextMenu = CustomContextMenu;
-    this.viewPlugin.components.node = CustomNode;
+      this.viewPlugin.components.connection = CustomConnection;
+      this.viewPlugin.components.nodeInterface = CustomInterface;
+      this.viewPlugin.components.contextMenu = CustomContextMenu;
+      this.viewPlugin.components.node = CustomNode;
 
-    const intfTypePlugin = new InterfaceTypePlugin();
-    this.editor.use(intfTypePlugin);
+      const intfTypePlugin = new InterfaceTypePlugin();
+      this.editor.use(intfTypePlugin);
 
+      // Register options
+      this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
+      this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
+      this.viewPlugin.registerOption("InfoOption", InfoOption);
 
-    // this.viewPlugin.enableMinimap = true;
+      // Register dialog options
+      this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
+      this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
+      this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
+      this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
+      this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
+      this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
+      this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
+      this.viewPlugin.registerOption("JavaScriptFunctionNodeDialog", JavaScriptFunctionNodeDialog)
+      this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
+      this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
+      this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
+      this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
+      this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
+      this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
+      this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
+      this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
+      this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
+      this.viewPlugin.registerOption("DelayDialog", DelayDialog);
 
-    // Register options
-    this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
-    this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
-    this.viewPlugin.registerOption("InfoOption", InfoOption);
+      // Register nodes
+      this.editor.registerNodeType("interval", IntervalNode, "Time")
 
-    // Register dialog options
-    this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
-    this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
-    this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
-    this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
-    this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
-    this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
-    this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
-    this.viewPlugin.registerOption("JavaScriptFunctionNodeDialog", JavaScriptFunctionNodeDialog)
-    this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
-    this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
-    this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
-    this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
-    this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
-    this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
-    this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
-    this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
-    this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
-    this.viewPlugin.registerOption("DelayDialog", DelayDialog);
+      this.editor.registerNodeType("logging", Logging, "Logging")
+      this.editor.registerNodeType("info", InfoNode, "Logging")
 
+      this.editor.registerNodeType("http-get", HttpGet, "Http")
+      this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
+      this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
+      this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
 
-    // Register nodes
-    this.editor.registerNodeType("interval", IntervalNode, "Time")
+      // Object
+      this.editor.registerNodeType("filter", Filter, "Object")
+      this.editor.registerNodeType("object-path", PathNode, "Object")
+      this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
+      this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
 
-    this.editor.registerNodeType("logging", Logging, "Logging")
-    this.editor.registerNodeType("info", InfoNode, "Logging")
+      // Geo
+      this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
 
-    this.editor.registerNodeType("http-get", HttpGet, "Http")
-    this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
-    this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
-    this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
+      // Filesystem
+      this.editor.registerNodeType("file-save", FileSave, "Filesystem")
 
+      // User input
+      this.editor.registerNodeType("button", ButtonNode, "Input")
 
-    // Object
-    this.editor.registerNodeType("filter", Filter, "Object")
-    this.editor.registerNodeType("object-path", PathNode, "Object")
-    this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
-    this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
+      this.editor.registerNodeType("postgres-save", PostgresSaveNode, "Database")
 
-    // Geo
-    this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
+      // MQTT
+      this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
+      this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
 
-    // Filesystem
-    this.editor.registerNodeType("file-save", FileSave, "Filesystem")
+      // Function-Nodes
+      this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
+      this.editor.registerNodeType("javascript-function", JavaScriptFunctionNode, "Function")
 
-    // User input
-    this.editor.registerNodeType("button", ButtonNode, "Input")
+      // Flow
+      this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
+      this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
+      this.editor.registerNodeType("switch", SwitchNode, "Flow")
+      this.editor.registerNodeType("delay", DelayNode, "Flow")
+      this.editor.registerNodeType("aggregator", AggregatorNode, "Flow")
 
-    this.editor.registerNodeType("postgres-save", PostgresSaveNode, "Database")
-
-    // MQTT
-    this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
-    this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
-
-    // Function-Nodes
-    this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
-    this.editor.registerNodeType("javascript-function", JavaScriptFunctionNode, "Function")
-
-    // Flow
-    this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
-    this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
-    this.editor.registerNodeType("switch", SwitchNode, "Flow")
-    this.editor.registerNodeType("delay", DelayNode, "Flow")
-    this.editor.registerNodeType("aggregator", AggregatorNode, "Flow")
-
-
-    this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
+      // Data Type
+      this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
     }
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.loadConfig();
       this.configIndex = this.$route.params.index-1;
-    },
-    "viewPlugin.scaling": {
-      handler() {}
-    },
-    "viewPlugin.panning": {
-      handler() {},
-      deep: true
     },
     "$store.getters.deletedNode": {
       handler(newValue) {
@@ -396,7 +344,7 @@ export default {
     "$store.getters.saveNode": {
       handler(newValue) {
         if (newValue) {
-          setTimeout(() => this.$store.commit("saveNodeConfig", null) ,1);  
+          setTimeout(() => this.$store.commit("saveNodeConfig", null), 1);  
           this.save();
         }
       }
@@ -411,10 +359,9 @@ export default {
         }
       }
     },
-    "$store.getters.templateId": {
+    "$store.getters.template": {
       handler(template) {
         if (template) {
-          console.log(template.name);
           let nodeType = this.editor.nodeTypes.get(template.type);
           let node = new nodeType();
           node.name = template.name;
@@ -424,36 +371,17 @@ export default {
 
           this.editor.addNode(node);
           node.position = template.position;
-          console.log(node);
           this.$store.commit("createNodeFromTemplate", undefined);
         }
       }
-    },
+    }
   }
 }
 </script>
 
 <style scoped>
-#container {
-  width: 100%;
-  height: 100%;
-}
-
-#tabber {
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  top: 6px;
-}
-
-#drawer {
-  z-index: 10;
-}
-
-.title-hidden {
-  color: #363636;
-}
+  #container {
+    width: 100%;
+    height: 100%;
+  }
 </style>
