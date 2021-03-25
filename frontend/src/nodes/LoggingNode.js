@@ -16,7 +16,7 @@ export default class LoggingNode extends Node {
             items: [ "INFO", "WARN", "CRIT" ]
         });
 
-        this.addOption("color", undefined, "#3dd4f2");
+        this.addOption("color", undefined, "#03A9F4");
         this.addOption("running", undefined, true);
 
         this.events.update.addListener(this, (event) => {
