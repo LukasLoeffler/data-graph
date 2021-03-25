@@ -97,7 +97,7 @@ app.put("/node-config/:id", ( req, res ) => {
 
     if (JSON.stringify(newvalues) === JSON.stringify(lastSave)) {
         console.log(chalk.yellow("No changes detected. Not saving."))
-        res.status(400).send("No changes detected");
+        res.status(200).send("No changes detected");
     } else {
         
         dbo.collection("node-configs").updateOne(query, newvalues, options, function(err: any, obj: any) {
