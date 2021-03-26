@@ -8,22 +8,18 @@
           <v-checkbox
             v-model="valueCopy[0]"
             label="Counter"
-            value="count"
           ></v-checkbox>
           <v-checkbox
             v-model="valueCopy[1]"
             label="Time"
-            value="time"
           ></v-checkbox>
           <v-checkbox
             v-model="valueCopy[2]"
             label="Date"
-            value="date"
           ></v-checkbox>
           <v-checkbox
             v-model="valueCopy[3]"
             label="Bytes"
-            value="bytes"
           ></v-checkbox>
         </v-container>
         <v-divider></v-divider>
@@ -67,7 +63,6 @@ export default {
   methods: {
     save() {
       this.node.setOptionValue("settings", this.valueCopy);
-      this.node.name = this.nodeCopy.name;
 
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
@@ -81,6 +76,8 @@ export default {
     "$store.getters.optionNode": {
       handler(nodeId) {
         if (nodeId === this.node.id) {
+          this.nodeCopy = {...this.node};
+          this.valueCopy = {...this.value};
           this.dialog = true;
         }
       }
