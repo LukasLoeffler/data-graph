@@ -42,6 +42,7 @@ export class BaseNode {
     on(trigger: string, payload: any, additional: any = null, pulse: boolean = false) {
         let targets = this.outputConnections.filter((intf: any) => intf.from.name === trigger);
         if (pulse) this.sendErrorMessage(this.id);
+        if (trigger === "onFailure") ExecutionCounter.incrCountType(this.id, "failure");
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
             let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
