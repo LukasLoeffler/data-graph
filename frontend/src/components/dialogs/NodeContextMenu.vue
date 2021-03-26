@@ -58,7 +58,7 @@
 
     <v-divider></v-divider>
     <NodeContextMenuListItem :title="running ? 'Stop Node': 'Start Node'" :color="running ? 'red' : 'green'" :icon="running ? 'mdi-pause': 'mdi-play-outline'" @click="activateNode" v-if="isStoppable"/>
-    <NodeContextMenuListItem title="Open Settings" color="orange" icon="mdi-backup-restore" @click="resetNode" v-if="isResettable"/>
+    <NodeContextMenuListItem title="Reset Node" color="orange" icon="mdi-backup-restore" @click="resetNode" v-if="isResettable"/>
     <NodeContextMenuListItem title="Open Settings" color="teal" icon="mdi-cog-outline" @click="openSettings" v-if="isConfigurable"/>
     <NodeContextMenuListItem title="View History" color="purple lighten-1" icon="mdi-format-list-numbered" @click="openHistory"/>
     <NodeContextMenuListItem v-for="(action, i) in actions" :key="i" :title="action.text" :color="action.color" :icon="action.icon" @click="execute(action.callable)"/>
