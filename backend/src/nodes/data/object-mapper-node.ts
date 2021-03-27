@@ -31,16 +31,7 @@ export class ObjectMapperNode extends BaseNode {
     
     async execute(msgIn: Message) {
         storeLastValue(this.id, msgIn.payload);
-
-
-        let injectEmitterFunction = function(injections: any, sendConnectionExec: Function) {
-            return injections.forEach((element: any) => {
-                sendConnectionExec(element.from.id, element.to.id);
-            });
-        }
-        let injectEmitter = injectEmitterFunction(this.injections, this.sendConnectionExec);
-
-        let newObject = await mapObject(msgIn.payload, this.mapper, ExecMode.EXEC, this.injections, injectEmitter);
+        let newObject = await mapObject(msgIn.payload, this.mapper, ExecMode.EXEC);
         this.onSuccess(newObject, msgIn.additional);
     }
 
@@ -59,15 +50,7 @@ export class ObjectMapperNode extends BaseNode {
                 if (Array.isArray(result.last)) {
                     res.send(mapObject(result.last.slice(0, 10), mapping));
                 } else {
-
-                    let injectEmitter = function() {
-                        console.log("InjectEmitter");
-                        injections.forEach((element: any) => {
-                            sendConnectionExec(element.from.id, element.to.id);
-                        });
-                    }
-
-                    let output = await mapObject(result.last, mapping, undefined, injections, injectEmitter);
+                    let output = await mapObject(result.last, mapping, undefined);
                     res.send(output);
                 }
             }
@@ -85,7 +68,7 @@ function setCustomTime(mapper: any, newObject: object) {
     }
 }
 
-export async function mapObject(input_object: any, mapping: any, mode: ExecMode = ExecMode.TEST, injections: any = [], sendConnectionExec: Function = () => {}): Promise<Object> {
+export async function mapObject(input_object: any, mapping: any, mode: ExecMode = ExecMode.TEST): Promise<Object> {
     let newObject = {};
 
     for await (let mapper of mapping) {
@@ -107,16 +90,6 @@ export async function mapObject(input_object: any, mapping: any, mode: ExecMode 
         } else if (mapper.target.includes("unix")) {
             let date = new Date(get(input_object, mapper.source)* 1000);
             set(newObject, mapper.target, date);
-        }
-        else if (mapper.source.includes("inject")) {
-
-            if (mode === ExecMode.EXEC) {
-                sendConnectionExec();
-            }
-
-            let injectNodeId = injections.find((inject: any) => inject.to.name === mapper.source);
-            let value = await NodeManager.getNodeById(injectNodeId.from.nodeId).get();
-            set(newObject, mapper.target, value);
         } else {
             set(newObject, mapper.target, get(input_object, mapper.source)); 
         }
