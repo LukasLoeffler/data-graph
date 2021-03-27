@@ -208,7 +208,7 @@ export default {
         if (nodeId === this.node.id) {
           this.dialog = true;
           this.nodeCopy = {...this.node};
-          this.valueCopy = {...this.value};
+          this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
           this.fetchData();
         }
       }

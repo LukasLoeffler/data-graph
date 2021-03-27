@@ -89,7 +89,7 @@ export default {
   props: ["option", "node", "value"],
   created() {
     this.nodeCopy = {...this.node};
-    this.valueCopy = {...this.value};
+    this.valueCopy = this.node.getOptionValue("settings");
   },
   methods: {
     addHeader() {
@@ -118,7 +118,7 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.nodeCopy = {...this.node};
-          this.valueCopy = {...this.value};
+          this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
           this.dialog = true;
         }
       }

@@ -93,7 +93,7 @@ export default {
   inject: ['editor', "plugin"],
   created() {
     this.nodeCopy = {...this.node};
-    this.valueCopy = {...this.value};
+    this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
   },
   methods: {
     addHeader() {
