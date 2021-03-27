@@ -88,7 +88,6 @@ export default {
   created() {},
   methods: {
     save() {
-
       this.interfacesToRemove.forEach((intf) => {
         if (intf.isInput){
           try {
@@ -105,6 +104,11 @@ export default {
         }
       });
 
+      // Write nodeAliased into settings
+      this.valueCopy.nodeAliases = [];
+      this.inputInterfaces.forEach(intf => {
+        if ("alias" in intf) this.valueCopy.nodeAliases.push({intfName: intf.name, alias: intf.alias});
+      });
 
       this.node.setOptionValue("settings", this.valueCopy);
       this.node.name = this.nodeCopy.name;
@@ -153,14 +157,6 @@ export default {
         if (nodeId === this.node.id) {
           this.initInterfaceList();
           this.dialog = true;
-        }
-      }
-    },
-    "$dialog": {
-      handler(newValue) {
-        console.log("resetting");
-        if (!newValue) {
-          this.$store.commit("setOptionNode", null);
         }
       }
     },
