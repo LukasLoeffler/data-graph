@@ -28,7 +28,7 @@
           <v-row v-if="nodeListFiltered && nodeListFiltered.length !== 0">
             <v-col :cols="cols" class="pb-0" style="max-height: 300px; overflow: scroll">
               <v-chip-group active-class="primary--text" column v-model="selected">
-                <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed">
+                <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed" @keyup.enter="keyPressed">
                   {{ node.type }}
                 </v-chip>
               </v-chip-group>
@@ -123,6 +123,9 @@ export default {
       .then((response) => {
         this.templates = response.data;
       });
+    },
+    keyPressed() {
+      this.addNode();
     }
   },
   watch: {
