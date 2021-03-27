@@ -29,7 +29,7 @@
                     <v-icon class="page__grab-icon" style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
                   </td>
                   <td>
-                    <v-text-field v-model="mapper.source" outlined dense hide-details :disabled="mapper.source.includes('inject:')"></v-text-field>
+                    <v-text-field v-model="mapper.source" outlined dense hide-details></v-text-field>
                   </td>
                   <td>
                     <v-icon>mdi-ray-start-arrow</v-icon>
@@ -149,10 +149,6 @@ export default {
       this.$forceUpdate();
     },
     deleteMapping(index) {
-      if (this.valueCopy.mapping[index].source.includes("inject:")) {
-        this.node.removeInterface(this.valueCopy.mapping[index].source);
-        this.save(false);
-      }
       this.valueCopy.mapping.splice(index, 1);
       this.$forceUpdate();
     },
@@ -199,24 +195,6 @@ export default {
       var result = [];
       iter(object, []);
       return result;
-    },
-    addInput() {
-      let interfaces = [];
-      for (let [key, value] of this.nodeCopy.interfaces) {
-        interfaces.push(
-          {
-            name: key,
-            id: value.id,
-            isInput: value.isInput,
-          }
-        )
-      }
-
-      let lastIntf = interfaces.filter((intf) => intf.name.startsWith("inject:")).slice(-1)[0];
-      let lastIndex = (lastIntf) ? parseInt(lastIntf.name.split(":")[1]) : 0;
-      let newName = `inject:${lastIndex+1}`
-      this.node.addInputInterface(newName);
-      this.addMapping(newName, newName)
     },
     copyValue() {
       let text = JSON.stringify(this.codeFormatted, null, 4);
