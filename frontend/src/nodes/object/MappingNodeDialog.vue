@@ -5,10 +5,6 @@
         <v-card-title>
           <span class="headline">Node settings: {{nodeCopy.name}}</span>
           <v-spacer></v-spacer>
-          <NodeInfoDialog type="mapping"/>
-          <v-btn color="grey" class="mr-1" outlined>
-            <v-icon>mdi-cog-outline</v-icon>
-          </v-btn>
           <v-btn @click="addMapping('source', 'target')" color="green" class="mr-1" outlined @contextmenu.prevent="addInput">
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>
@@ -22,14 +18,6 @@
                   <td style="width: 20px">Move</td>
                   <td>Source Property</td>
                   <td style="width: 20px">
-                    <v-tooltip bottom color="orange">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn @click="mirrorObject" icon color="orange" class="mr-1" v-bind="attrs" v-on="on" :disabled="Object.keys(codeRaw).length === 0">
-                          <v-icon>mdi-arrow-up-bold-box-outline</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Extract object schema from latest input</span>
-                    </v-tooltip>
                   </td>
                   <td>Target Property</td>
                   <td style="width: 20px">Delete</td>
@@ -54,6 +42,22 @@
                   </td>
                 </tr>
               </draggable>
+              <tr>
+                <td></td>
+                <td>
+                  <v-tooltip left color="orange">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn @click="mirrorObject" icon color="orange" class="mr-1" v-bind="attrs" v-on="on" :disabled="Object.keys(codeRaw).length === 0">
+                        <v-icon>mdi-arrow-up-bold-box-outline</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Extract object schema from latest input</span>
+                  </v-tooltip>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
             </v-simple-table>
           </v-container>
           <v-expansion-panels  class="mt-3" dark v-model="open">
@@ -96,7 +100,7 @@
             Test
           </v-btn>
           <v-btn color="blue" text @click="save">
-            Save*
+            Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -108,7 +112,6 @@
 
 
 <script>
-import NodeInfoDialog from "@/components/dialogs/NodeInfoDialog"
 import Draggable from 'vuedraggable';
 import JsonViewer from 'vue-json-viewer'
 import {apiBaseUrl} from "@/main.js";
@@ -117,8 +120,7 @@ export default {
   props: ["option", "node", "value"],
   components: {
     Draggable,
-    JsonViewer,
-    NodeInfoDialog
+    JsonViewer
   },
   data: () => ({
     valueCopy: null,
