@@ -99,7 +99,6 @@
         this.select();
       },
       optionChange(option, data) {
-        //console.log(`Option ${option} changed to ${data}`);
         if (option === "color") this.myStyle.backgroundColor = data;
         this.data.setOptionValue(option, data);
         this.$store.commit("saveNodeConfig", this.data.id);

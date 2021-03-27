@@ -129,7 +129,7 @@ export default {
       this.inputInterfaces = [];
       this.interfacesToRemove = [];
       this.nodeCopy = {...this.node};
-      this.valueCopy = {...this.value};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
     },
     initInterfaceList() {
       this.init();

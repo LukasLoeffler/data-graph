@@ -5,10 +5,6 @@
         <v-card-title>
           <span class="headline">Node settings: {{nodeCopy.name}}</span>
           <v-spacer></v-spacer>
-          <NodeInfoDialog type="mapping"/>
-          <v-btn color="grey" class="mr-1" outlined>
-            <v-icon>mdi-cog-outline</v-icon>
-          </v-btn>
           <v-btn @click="addMapping('source', 'target')" color="green" class="mr-1" outlined @contextmenu.prevent="addInput">
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>
@@ -22,14 +18,6 @@
                   <td style="width: 20px">Move</td>
                   <td>Source Property</td>
                   <td style="width: 20px">
-                    <v-tooltip bottom color="orange">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn @click="mirrorObject" icon color="orange" class="mr-1" v-bind="attrs" v-on="on" :disabled="Object.keys(codeRaw).length === 0">
-                          <v-icon>mdi-arrow-up-bold-box-outline</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Extract object schema from latest input</span>
-                    </v-tooltip>
                   </td>
                   <td>Target Property</td>
                   <td style="width: 20px">Delete</td>
@@ -41,7 +29,7 @@
                     <v-icon class="page__grab-icon" style="cursor: grab">mdi-drag-horizontal-variant</v-icon>
                   </td>
                   <td>
-                    <v-text-field v-model="mapper.source" outlined dense hide-details :disabled="mapper.source.includes('inject:')"></v-text-field>
+                    <v-text-field v-model="mapper.source" outlined dense hide-details></v-text-field>
                   </td>
                   <td>
                     <v-icon>mdi-ray-start-arrow</v-icon>
@@ -54,6 +42,22 @@
                   </td>
                 </tr>
               </draggable>
+              <tr>
+                <td></td>
+                <td>
+                  <v-tooltip left color="orange">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn @click="mirrorObject" icon color="orange" class="mr-1" v-bind="attrs" v-on="on" :disabled="Object.keys(codeRaw).length === 0">
+                        <v-icon>mdi-arrow-up-bold-box-outline</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Extract object schema from latest input</span>
+                  </v-tooltip>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
             </v-simple-table>
           </v-container>
           <v-expansion-panels  class="mt-3" dark v-model="open">
@@ -96,7 +100,7 @@
             Test
           </v-btn>
           <v-btn color="blue" text @click="save">
-            Save*
+            Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -108,7 +112,6 @@
 
 
 <script>
-import NodeInfoDialog from "@/components/dialogs/NodeInfoDialog"
 import Draggable from 'vuedraggable';
 import JsonViewer from 'vue-json-viewer'
 import {apiBaseUrl} from "@/main.js";
@@ -117,8 +120,7 @@ export default {
   props: ["option", "node", "value"],
   components: {
     Draggable,
-    JsonViewer,
-    NodeInfoDialog
+    JsonViewer
   },
   data: () => ({
     valueCopy: null,
@@ -147,10 +149,6 @@ export default {
       this.$forceUpdate();
     },
     deleteMapping(index) {
-      if (this.valueCopy.mapping[index].source.includes("inject:")) {
-        this.node.removeInterface(this.valueCopy.mapping[index].source);
-        this.save(false);
-      }
       this.valueCopy.mapping.splice(index, 1);
       this.$forceUpdate();
     },
@@ -198,24 +196,6 @@ export default {
       iter(object, []);
       return result;
     },
-    addInput() {
-      let interfaces = [];
-      for (let [key, value] of this.nodeCopy.interfaces) {
-        interfaces.push(
-          {
-            name: key,
-            id: value.id,
-            isInput: value.isInput,
-          }
-        )
-      }
-
-      let lastIntf = interfaces.filter((intf) => intf.name.startsWith("inject:")).slice(-1)[0];
-      let lastIndex = (lastIntf) ? parseInt(lastIntf.name.split(":")[1]) : 0;
-      let newName = `inject:${lastIndex+1}`
-      this.node.addInputInterface(newName);
-      this.addMapping(newName, newName)
-    },
     copyValue() {
       let text = JSON.stringify(this.codeFormatted, null, 4);
       this.snackbar = true;
@@ -228,7 +208,7 @@ export default {
         if (nodeId === this.node.id) {
           this.dialog = true;
           this.nodeCopy = {...this.node};
-          this.valueCopy = {...this.value};
+          this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
           this.fetchData();
         }
       }
