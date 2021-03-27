@@ -149,9 +149,13 @@ export default {
           });
         });
       });
-      let centerLat = lats.reduce((a, b) => (a + b)) / lats.length;
-      let centerLon = lons.reduce((a, b) => (a + b)) / lons.length;
-      return [centerLat, centerLon]
+      try {
+        let centerLat = lats.reduce((a, b) => (a + b)) / lats.length;
+        let centerLon = lons.reduce((a, b) => (a + b)) / lons.length;
+        return [centerLat, centerLon];
+      } catch (error) {
+        return [0,0];
+      }
     }
   },
   watch: {

@@ -14,10 +14,6 @@ export default class AggregatorNode extends Node {
         this.addOutputInterface("onSuccess", "Message");
     }
 
-    addInput(name) {
-        this.addInputInterface(name);
-    }
-
     save() {
         const state = super.save();
         state.interfaces.forEach(([name, intfState]) => {

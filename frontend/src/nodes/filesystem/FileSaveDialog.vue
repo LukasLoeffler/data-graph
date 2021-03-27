@@ -83,17 +83,11 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.nodeCopy = {...this.node};
+          this.valueCopy = {...this.value};
         }
       }
-    },
-    "$dialog": {
-      handler(newValue) {
-        console.log("resetting");
-        if (!newValue) {
-          this.$store.commit("setOptionNode", null);
-        }
-      }
-    },
+    }
   }
 }
 </script>
