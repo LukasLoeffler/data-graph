@@ -181,8 +181,9 @@ export default {
       this.showNotification("Server not connected. Trying to reestablish connection", "red", 2000);
     });
 
-    socketio.on('SAVE', () => {
-      this.snackbar = true;
+    socketio.on('SAVE', (data) => {
+      let {init, changed, deleted} = data;
+      if (init || changed || deleted) this.snackbar = true; // Snackbar only when a node was changed/deleted/created
     });
 
     this.initialLoad();

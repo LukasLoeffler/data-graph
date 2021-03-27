@@ -206,7 +206,7 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
             io.emit("SAVE", {
                 init: numberOfNodesInit,
                 changed: numberOfNodesChanged,
-                delete: numberOfDeletedNodes
+                deleted: numberOfDeletedNodes
             });
         }
         if (mode === LoadingMode.STARTUP) {

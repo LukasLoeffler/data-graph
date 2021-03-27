@@ -18,7 +18,7 @@
         <v-card-title>
           <span class="headline">Add Node</span>
           <v-spacer></v-spacer>
-          <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable></v-text-field>
+          <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable autofocus ></v-text-field>
           <v-btn class="ml-2" dark @click="maxed = !maxed">
             <v-icon>{{maxed ? 'mdi-window-minimize' : 'mdi-window-maximize'}}</v-icon>
           </v-btn>
@@ -28,7 +28,7 @@
           <v-row v-if="nodeListFiltered && nodeListFiltered.length !== 0">
             <v-col :cols="cols" class="pb-0" style="max-height: 300px; overflow: scroll">
               <v-chip-group active-class="primary--text" column v-model="selected">
-                <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed">
+                <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed" @keyup.enter="keyPressed">
                   {{ node.type }}
                 </v-chip>
               </v-chip-group>
@@ -74,9 +74,6 @@ import { apiBaseUrl } from '@/main';
 
 export default {
   extends: Components.ContextMenu,
-  created() {
-
-  },
   data: () => {
     return {
       nodeList: null,
@@ -126,6 +123,9 @@ export default {
       .then((response) => {
         this.templates = response.data;
       });
+    },
+    keyPressed() {
+      this.addNode();
     }
   },
   watch: {
@@ -144,12 +144,12 @@ export default {
       if (newValue === null) this.search = "";
     },
     selected(newValue) {
-      if (newValue) {
+      if (newValue != null) {
         this.selectedTemplate = null;
       }
     },
     selectedTemplate(newValue) {
-      if (newValue) {
+      if (newValue != null) {
         this.selected = null;
       }
     }

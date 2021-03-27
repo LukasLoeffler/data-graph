@@ -117,15 +117,9 @@ export default {
     "$store.getters.optionNode": {
       handler(nodeId) {
         if (nodeId === this.node.id) {
+          this.nodeCopy = {...this.node};
+          this.valueCopy = {...this.value};
           this.dialog = true;
-        }
-      }
-    },
-    "$dialog": {
-      handler(newValue) {
-        console.log("resetting");
-        if (!newValue) {
-          this.$store.commit("setOptionNode", null);
         }
       }
     },

@@ -72,6 +72,7 @@ export default {
   methods: {
     save() {
       // Create port if not existing
+      console.log("save");
       this.valueCopy.expressions.forEach((expression) => {
         try {
           this.node.getInterface(expression.port)
@@ -86,6 +87,7 @@ export default {
         }
       }
 
+      console.log("save");
       this.node.setOptionValue("settings", this.valueCopy);
       this.node.name = this.nodeCopy.name;
       this.$store.commit("saveNodeConfig", this.node.id);
@@ -107,17 +109,11 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.nodeCopy = {...this.node};
+          this.valueCopy = {...this.value};
         }
       }
-    },
-    "$dialog": {
-      handler(newValue) {
-        console.log("resetting");
-        if (!newValue) {
-          this.$store.commit("setOptionNode", null);
-        }
-      }
-    },
+    }
   }
 }
 </script>

@@ -88,6 +88,8 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.nodeCopy = {...this.node};
+          this.valueCopy = {...this.value};
         }
       }
     },
