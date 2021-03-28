@@ -64,10 +64,13 @@ export default {
   },
   props: ["option", "node", "value"],
   created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    this.init();
   },
   methods: {
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    },
     addHeader() {
       let newHeader = {
         key: "",
@@ -115,6 +118,7 @@ export default {
           this.dialog = true;
           this.codeFormatted = null;
           this.fetchData();
+          this.init();
         }
       }
     }

@@ -88,8 +88,7 @@ export default {
   }),
   props: ["option", "node", "value"],
   created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = this.node.getOptionValue("settings");
+    this.init();
   },
   methods: {
     addHeader() {
@@ -111,14 +110,17 @@ export default {
     removeHeader(index) {
       this.valueCopy.headers.splice(index, 1);
     },
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    }
   },
 
   watch: {
     "$store.getters.optionNode": {
       handler(nodeId) {
         if (nodeId === this.node.id) {
-          this.nodeCopy = {...this.node};
-          this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+          this.init();
           this.dialog = true;
         }
       }

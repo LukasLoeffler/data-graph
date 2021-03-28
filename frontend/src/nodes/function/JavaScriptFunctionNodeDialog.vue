@@ -93,10 +93,13 @@ export default {
   },
   props: ["option", "node", "value"],
   created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    this.init();
   },
   methods: {
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    },
     addHeader() {
       this.newName = ""
       let newHeader = {
@@ -168,6 +171,7 @@ export default {
         if (nodeId === this.node.id) {
           this.dialog = true;
           this.outputInterfaces = [];
+          this.init();
           this.initInterfaceList();
         }
       }

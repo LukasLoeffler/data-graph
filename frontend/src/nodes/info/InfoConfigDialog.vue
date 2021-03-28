@@ -57,27 +57,28 @@ export default {
   props: ["option", "node", "value"],
   inject: ['editor', "plugin"],
   created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    this.init();
   },
   methods: {
     save() {
       this.node.setOptionValue("settings", this.valueCopy);
-
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
     },
     abort() {
       this.dialog = false;
     },
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    }
   },
 
   watch: {
     "$store.getters.optionNode": {
       handler(nodeId) {
         if (nodeId === this.node.id) {
-          this.nodeCopy = {...this.node};
-          this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+          this.init();
           this.dialog = true;
         }
       }

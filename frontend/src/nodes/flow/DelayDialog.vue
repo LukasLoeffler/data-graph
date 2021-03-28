@@ -57,8 +57,7 @@ export default {
   }),
   props: ["option", "node", "value"],
   created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    this.init();
   },
   methods: {
     save() {
@@ -75,6 +74,10 @@ export default {
     },
     removeExpression(index) {
       this.valueCopy.expressions.splice(index, 1);
+    },
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
     }
   },
 
@@ -83,6 +86,7 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.init();
         }
       }
     },
