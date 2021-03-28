@@ -92,8 +92,7 @@ export default {
   props: ["option", "node", "value"],
   inject: ['editor', "plugin"],
   created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    this.init();
   },
   methods: {
     addHeader() {
@@ -128,6 +127,10 @@ export default {
     abort() {
       this.dialog = false;
     },
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    }
   },
 
   watch: {
@@ -135,6 +138,7 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.init();
         }
       }
     },

@@ -28,7 +28,10 @@
           </v-row>
           <v-row v-for="(intf, index) in inputInterfaces" :key="index">
             <v-col dense class="pa-0 px-2">
-              <v-text-field v-model="intf.name" label="Port name" readonly></v-text-field>
+              <v-text-field v-model="intf.name" label="Port name (readonly)" readonly></v-text-field>
+            </v-col>
+            <v-col dense cols="5" class="pa-0">
+              <v-text-field v-model="intf.alias" label="Data Alias"></v-text-field>
             </v-col>
             <v-col dense cols="5" class="pa-0">
               <v-text-field v-model="intf.alias" label="Data Alias"></v-text-field>
@@ -155,6 +158,7 @@ export default {
     "$store.getters.optionNode": {
       handler(nodeId) {
         if (nodeId === this.node.id) {
+          this.init();
           this.initInterfaceList();
           this.dialog = true;
         }

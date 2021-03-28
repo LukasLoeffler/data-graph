@@ -200,6 +200,10 @@ export default {
       let text = JSON.stringify(this.codeFormatted, null, 4);
       this.snackbar = true;
       navigator.clipboard.writeText(text);
+    },
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
     }
   },
   watch: {
@@ -207,8 +211,7 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
-          this.nodeCopy = {...this.node};
-          this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+          this.init();
           this.fetchData();
         }
       }

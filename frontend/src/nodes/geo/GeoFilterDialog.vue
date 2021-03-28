@@ -133,10 +133,7 @@ export default {
       this.sourceLon = this.node.getOptionValue("settings")?.sourceLon || "latitude";
       this.features = this.node.getOptionValue("settings")?.geometry || [];
       this.selectionMode = this.node.getOptionValue("settings")?.filterMode || true;
-
-
       this.center = (this.features) ? this.calcCenter(this.features) : [0,0];
-      
     },
     calcCenter(features) {
       let lats = [];

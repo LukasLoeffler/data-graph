@@ -59,8 +59,7 @@ export default {
   }),
   props: ["option", "node", "value"],
   created() {
-    this.nodeCopy = {...this.node};
-    this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    this.init();
   },
   methods: {
     save() {
@@ -69,6 +68,10 @@ export default {
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
     },
+    init() {
+      this.nodeCopy = {...this.node};
+      this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    }
   },
   computed: {
     uri() {
@@ -80,6 +83,7 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.dialog = true;
+          this.init();
         }
       }
     },
