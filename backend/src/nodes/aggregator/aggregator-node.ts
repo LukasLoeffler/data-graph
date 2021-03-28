@@ -13,13 +13,16 @@ export class AggregatorNode extends BaseNode {
     data = new Map();
 
     additional: any;
-    aliases: Array<any>;
+    aliases: Array<Alias>;
+    timeouts: Array<Timeout>;
 
     constructor(name: string, id: string, options: any, outputInterfaces: Array<any>, inputConnections: Array<any>) {
         super(name, NODE_TYPE, id, options, outputInterfaces)
         this.inputConnections = inputConnections;
-        this.aliases = options.settings.nodeAliases;
+        this.aliases = options.settings.dataAliases;
+        this.timeouts = options.settings.timeouts;
         NodeManager.addNode(this);
+        this.sendAggregationCountMessage();
     }
 
     // Checking aliases if alias for node is present. If so alias is returned, else targetName is returned.
@@ -27,9 +30,26 @@ export class AggregatorNode extends BaseNode {
         let alias = this.aliases.find((alias: any) => alias.intfName === targetName);
         return (!!alias) ? alias.alias : targetName; 
     }
+
+    getTimeoutForTarget(targetName: string) {
+        let timeout = this.timeouts.find((timeout: Timeout) => timeout.intfName === targetName);
+        return (!!timeout) ? timeout.timeout : undefined;
+    }
     
     execute(msg: Message) {
         this.data.set(this.getAliasForTarget(msg.targetName), msg.payload); // Writing last message to map
+        let timeout = this.getTimeoutForTarget(msg.targetName);
+        
+        if (timeout) {
+            setTimeout(() => {
+                let alias = this.getAliasForTarget(msg.targetName);
+                this.data.delete(alias);
+                this.slots.delete(msg.targetId);
+                this.sendAggregationCountMessage();
+            }, timeout)
+        }
+
+
         this.slots.add(msg.targetId);
 
         // Necessary because of possible additional requests -> Prevention of null override
@@ -54,5 +74,25 @@ export class AggregatorNode extends BaseNode {
     sendAggregationCountMessage(): void {
         let message = Array.from(this.slots);
         io.emit("INTERFACE_STATE", message);
+    }
+}
+
+class Alias {
+    intfName: string;
+    alias: string;
+
+    constructor(intfName: string, alias: string) {
+        this.intfName = intfName;
+        this.alias = alias;
+    }
+}
+
+class Timeout {
+    intfName: string;
+    timeout: number;
+
+    constructor(intfName: string, timeout: number) {
+        this.intfName = intfName;
+        this.timeout = timeout;
     }
 }

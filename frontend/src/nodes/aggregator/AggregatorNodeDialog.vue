@@ -27,14 +27,14 @@
             </v-col>
           </v-row>
           <v-row v-for="(intf, index) in inputInterfaces" :key="index">
-            <v-col dense class="pa-0 px-2">
+            <v-col dense class="pa-0 px-2" cols="4">
               <v-text-field v-model="intf.name" label="Port name (readonly)" readonly></v-text-field>
             </v-col>
-            <v-col dense cols="5" class="pa-0">
+            <v-col dense cols="4" class="pa-0">
               <v-text-field v-model="intf.alias" label="Data Alias"></v-text-field>
             </v-col>
-            <v-col dense cols="5" class="pa-0">
-              <v-text-field v-model="intf.alias" label="Data Alias"></v-text-field>
+            <v-col dense cols="3" class="py-0">
+              <v-text-field v-model.number="intf.timeout" label="Timeout"></v-text-field>
             </v-col>
             <v-col cols="1" dense>
               <v-btn icon @click="removeInterface(intf, index)" color="red">
@@ -108,9 +108,15 @@ export default {
       });
 
       // Write nodeAliased into settings
-      this.valueCopy.nodeAliases = [];
+      this.valueCopy.dataAliases = [];
       this.inputInterfaces.forEach(intf => {
-        if ("alias" in intf) this.valueCopy.nodeAliases.push({intfName: intf.name, alias: intf.alias});
+        if ("alias" in intf) this.valueCopy.dataAliases.push({intfName: intf.name, alias: intf.alias});
+      });
+
+      // Write nodeAliased into settings
+      this.valueCopy.timeouts = [];
+      this.inputInterfaces.forEach(intf => {
+        if ("timeout" in intf) this.valueCopy.timeouts.push({intfName: intf.name, timeout: intf.timeout});
       });
 
       this.node.setOptionValue("settings", this.valueCopy);
@@ -133,9 +139,10 @@ export default {
       this.interfacesToRemove = [];
       this.nodeCopy = {...this.node};
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+
+      this.initInterfaceList();
     },
     initInterfaceList() {
-      this.init();
       for (let [key, value] of this.nodeCopy.interfaces) {
         this.inputInterfaces.push(
           {
@@ -147,11 +154,19 @@ export default {
       }
       this.inputInterfaces = this.inputInterfaces.filter(intf => intf.isInput);
 
-      let nodeAliases = this.node.getOptionValue("settings").nodeAliases;
-      nodeAliases.forEach(alias => {
+      // Init port aliases
+      let dataAliases = this.node.getOptionValue("settings").dataAliases;
+      dataAliases.forEach(alias => {
         let intf = this.inputInterfaces.find(intf => intf.name === alias.intfName);
         if (intf) intf["alias"] = alias.alias;
-      })
+      });
+
+      // Init port timeouts
+      let nodeTimeouts = this.node.getOptionValue("settings").timeouts;
+      nodeTimeouts.forEach(timeout => {
+        let intf = this.inputInterfaces.find(intf => intf.name === timeout.intfName);
+        if (intf) intf["timeout"] = timeout.timeout;
+      });
     }
   },
   watch: {
@@ -159,7 +174,6 @@ export default {
       handler(nodeId) {
         if (nodeId === this.node.id) {
           this.init();
-          this.initInterfaceList();
           this.dialog = true;
         }
       }
