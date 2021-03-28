@@ -66,7 +66,6 @@ export class AggregatorNode extends BaseNode {
             if (this.intoArray) {
                 output = [];
                 this.data.forEach((value: any, key: string) => {
-                    console.log(Array.isArray(value));
                     output = output.concat(value)
                 });
             } else {
