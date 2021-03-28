@@ -90,6 +90,8 @@ export async function mapObject(input_object: any, mapping: any, mode: ExecMode 
         } else if (mapper.target.includes("unix")) {
             let date = new Date(get(input_object, mapper.source)* 1000);
             set(newObject, mapper.target, date);
+        } else if (mapper.target === ".") {
+            newObject = get(input_object, mapper.source);
         } else {
             set(newObject, mapper.target, get(input_object, mapper.source)); 
         }
