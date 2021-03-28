@@ -15,12 +15,14 @@ export class AggregatorNode extends BaseNode {
     additional: any;
     aliases: Array<Alias>;
     timeouts: Array<Timeout>;
+    intoArray: boolean;
 
     constructor(name: string, id: string, options: any, outputInterfaces: Array<any>, inputConnections: Array<any>) {
         super(name, NODE_TYPE, id, options, outputInterfaces)
         this.inputConnections = inputConnections;
         this.aliases = options.settings.dataAliases;
         this.timeouts = options.settings.timeouts;
+        this.intoArray = options.settings.intoArray;
         NodeManager.addNode(this);
         this.sendAggregationCountMessage();
     }
@@ -60,11 +62,18 @@ export class AggregatorNode extends BaseNode {
             this.slots.clear();
             this.sendAggregationCountMessage();
             let output: any = {};
-
-            this.data.forEach((value: any, key: string) => {
-                output[key] = value;
-            });
-
+            
+            if (this.intoArray) {
+                output = [];
+                this.data.forEach((value: any, key: string) => {
+                    console.log(Array.isArray(value));
+                    output = output.concat(value)
+                });
+            } else {
+                this.data.forEach((value: any, key: string) => {
+                    output[key] = value;
+                });
+            }
             this.onSuccess(output, this.additional);
         } else {
             this.sendAggregationCountMessage();

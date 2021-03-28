@@ -11,6 +11,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pb-1">
+        <v-checkbox v-model="valueCopy.intoArray" label="Aggregate into array"></v-checkbox>
           <v-row>
             <v-col class="px-2">
               <v-text-field placeholder="New Interface" v-model="newName" solo hide-details>
@@ -31,7 +32,7 @@
               <v-text-field v-model="intf.name" label="Port name (readonly)" readonly></v-text-field>
             </v-col>
             <v-col dense cols="4" class="pa-0">
-              <v-text-field v-model="intf.alias" label="Data Alias"></v-text-field>
+              <v-text-field v-model="intf.alias" :label="valueCopy.intoArray ? 'Disabled in array mode' : 'Data Alias'" :disabled="valueCopy.intoArray"></v-text-field>
             </v-col>
             <v-col dense cols="3" class="py-0">
               <v-text-field v-model.number="intf.timeout" label="Timeout"></v-text-field>
