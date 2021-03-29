@@ -20,13 +20,13 @@ export class GeoFilterNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        let latFilterField = this.options.filter.sourceLat || undefined;
-        let lonFilterField = this.options.filter.sourceLon || undefined;
+        let latFilterField = this.options.settings.sourceLat || undefined;
+        let lonFilterField = this.options.settings.sourceLon || undefined;
         try {
             storeLastValue(this.id, msg.payload);
-            const coordArrays = this.options.filter.geometry.map((geom: any) => { return geom.geometry.coordinates });
+            const coordArrays = this.options.settings.geometry.map((geom: any) => { return geom.geometry.coordinates });
             let filterPolygon = multiPolygon(coordArrays);
-            let filterMode = this.options.filter.filterMode;
+            let filterMode = this.options.settings.filterMode;
         
             let output = msg.payload.filter((element: any) => {
                 let point = turfPoint([element[lonFilterField], element[latFilterField]])
@@ -38,15 +38,15 @@ export class GeoFilterNode extends BaseNode {
         } catch (error) {
             if (error.message === "Cannot read property 'map' of null") {
                 let message = `No filter polygon set in ${this.id}`
-                this.onFailure(message, msg.additional);
+                this.onFailure(message, msg.additional, true);
             } else if (error.message === "coordinates must contain numbers"){
                 let message = `Coordinate properties '${latFilterField}' and/or '${lonFilterField}' don't match the input. Node: ${this.id} (${this.name})`
-                this.onFailure(message, msg.additional);
+                this.onFailure(message, msg.additional, true);
             } else if (error.message === "Cannot read property 'geometry' of null") {
                 let message = `Node settings not set. Node: ${this.id}`
-                this.onFailure(message, msg.additional);
+                this.onFailure(message, msg.additional, true);
             } else {
-                this.onFailure(error.message, msg.additional);
+                this.onFailure(error.message, msg.additional, true);
             }
         }
     }

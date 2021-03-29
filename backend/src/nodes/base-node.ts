@@ -34,8 +34,9 @@ export class BaseNode {
         this.on("onSuccess", payload, additional)
     }
 
-    onFailure(payload: any, additional: any = null) {
+    onFailure(payload: any, additional: any = null, pulse: boolean = false) {
         ExecutionCounter.incrCountType(this.id, "failure");
+        if (pulse) this.sendErrorMessage(this.id);
         this.on("onFailure", payload, additional)
     }
 
