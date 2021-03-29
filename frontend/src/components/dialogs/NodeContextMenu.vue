@@ -10,6 +10,9 @@
       >
         {{nodeData.name}}
       </h3>
+      <h5 :id="nodeData.id" class="type" style="text-align: center;" 
+        @mousedown.self.prevent.stop="$emit('start-drag')" 
+        @mouseup.self.prevent.stop="$emit('stop-drag', $event)">{{nodeData.type}}</h5>
       <v-btn v-if="isStoppable" icon dense style="width: 30px; height: 30px" @click="activateNode" class="btn-ss">
       <v-tooltip bottom open-delay="300" :color="running ? 'green' : 'red'">
           <template v-slot:activator="{ on, attrs }">
@@ -304,6 +307,18 @@ import NodeContextMenuListItem from "./NodeContextMenuListItem"
   grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 1;
+  height: 90%; 
+  width:100%;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.type {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 2;
   height: 90%; 
   width:100%;
   display:flex;
