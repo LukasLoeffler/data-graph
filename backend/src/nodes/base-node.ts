@@ -45,7 +45,7 @@ export class BaseNode {
         if (trigger === "onFailure") ExecutionCounter.incrCountType(this.id, "failure");
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
-            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, target.to.nodeId, payload, additional);
+            let message = new Message(target.from.id, target.to.id, target.from.name, target.to.name, this.id, target.from.nodeId, payload, additional);
             NodeManager.getNodeById(target.to.nodeId).execute(message);
         });
     }
