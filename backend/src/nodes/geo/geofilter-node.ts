@@ -20,7 +20,6 @@ export class GeoFilterNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        console.log(this.options);
         let latFilterField = this.options.settings.sourceLat || undefined;
         let lonFilterField = this.options.settings.sourceLon || undefined;
         try {
