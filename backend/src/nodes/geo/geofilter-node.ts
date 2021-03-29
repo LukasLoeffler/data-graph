@@ -20,13 +20,14 @@ export class GeoFilterNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        let latFilterField = this.options.filter.sourceLat || undefined;
-        let lonFilterField = this.options.filter.sourceLon || undefined;
+        console.log(this.options);
+        let latFilterField = this.options.settings.sourceLat || undefined;
+        let lonFilterField = this.options.settings.sourceLon || undefined;
         try {
             storeLastValue(this.id, msg.payload);
-            const coordArrays = this.options.filter.geometry.map((geom: any) => { return geom.geometry.coordinates });
+            const coordArrays = this.options.settings.geometry.map((geom: any) => { return geom.geometry.coordinates });
             let filterPolygon = multiPolygon(coordArrays);
-            let filterMode = this.options.filter.filterMode;
+            let filterMode = this.options.settings.filterMode;
         
             let output = msg.payload.filter((element: any) => {
                 let point = turfPoint([element[lonFilterField], element[latFilterField]])
