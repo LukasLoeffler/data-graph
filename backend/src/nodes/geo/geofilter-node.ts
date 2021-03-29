@@ -38,15 +38,15 @@ export class GeoFilterNode extends BaseNode {
         } catch (error) {
             if (error.message === "Cannot read property 'map' of null") {
                 let message = `No filter polygon set in ${this.id}`
-                this.onFailure(message, msg.additional);
+                this.onFailure(message, msg.additional, true);
             } else if (error.message === "coordinates must contain numbers"){
                 let message = `Coordinate properties '${latFilterField}' and/or '${lonFilterField}' don't match the input. Node: ${this.id} (${this.name})`
-                this.onFailure(message, msg.additional);
+                this.onFailure(message, msg.additional, true);
             } else if (error.message === "Cannot read property 'geometry' of null") {
                 let message = `Node settings not set. Node: ${this.id}`
-                this.onFailure(message, msg.additional);
+                this.onFailure(message, msg.additional, true);
             } else {
-                this.onFailure(error.message, msg.additional);
+                this.onFailure(error.message, msg.additional, true);
             }
         }
     }
