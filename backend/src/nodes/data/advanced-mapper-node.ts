@@ -23,7 +23,7 @@ export class AdvancedMapperNode extends BaseNode {
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = [], inputConnctions: Array<any>) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.mapper = options.settings?.mapping;
-        console.log(this.mapper);
+        //console.log(this.mapper);
         NodeManager.addNode(this);
     }
 
@@ -48,6 +48,9 @@ export async function mapObject(input_object: any, mapping: any, mode: ExecMode 
             if (injection.type === "time") {
                 if (injection.value) source = getTimeAsString(injection.value);
                 else source = new Date();
+            }
+            if (injection.type === "data") {
+                if (injection.value) source = JSON.parse(injection.value);
             }
         }
 
