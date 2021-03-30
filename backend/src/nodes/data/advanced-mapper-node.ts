@@ -4,13 +4,7 @@ import { format as dateformat } from 'date-fns'
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
-import { getDb, storeLastValue } from "../../manager/mongo-manager";
-
-
-enum ExecMode {
-    TEST = "TEST",
-    EXEC = "EXEC"
-}
+import { storeLastValue } from "../../manager/mongo-manager";
 
 
 const NODE_TYPE = "ADVANCED-MAPPER"
@@ -20,18 +14,30 @@ export class AdvancedMapperNode extends BaseNode {
     lastValue: any = {};
     injections: any;
 
-    constructor(name: string, id: string, options: any, outputConnections: Array<any> = [], inputConnctions: Array<any>) {
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.mapping = options.settings?.mapping;
-        //console.log(this.mapper);
         NodeManager.addNode(this);
     }
 
-    
     async execute(msgIn: Message) {
         storeLastValue(this.id, msgIn.payload);
         let newObject = await this.mapInput(msgIn.payload);
         this.onSuccess(newObject, msgIn.additional);
+    }
+
+    /**
+     * Takes inputData and tries to apply the mapping onto it returning the mapped object.
+     * Checks whether input is array or object. If input is array each element is mapped.
+     * @param inputData Data to map
+     * @returns Mapped result.
+     */
+    async mapInput(inputData: any): Promise<any> {
+        let output = undefined;
+
+        if (Array.isArray(inputData)) output = inputData.map((elem: any) => this.mapObject(elem));
+        else output = this.mapObject(inputData)
+        return output;
     }
 
     mapObject(input_object: any) {
@@ -55,7 +61,8 @@ export class AdvancedMapperNode extends BaseNode {
             if (mapper.action === "move") {
                 source = (mapper.source !== ".") ? get(input_object, mapper.source) : input_object;
             }
-
+            
+            // Formatting is not implemented yet
             if (mapper.action === "format") {
                 source = get(input_object, mapper.source);
                 //source = parseFloat(source);
@@ -77,18 +84,6 @@ export class AdvancedMapperNode extends BaseNode {
         return newObject;
     }
 
-    async mapInput(inputData: any): Promise<any> {
-        let output = undefined;
-
-        if (Array.isArray(inputData)) {
-            output = inputData.map((elem: any) => {
-                return this.mapObject(elem);
-            });
-        } else {
-            output = this.mapObject(inputData)
-        }
-        return output;
-    }
 
     getTimeAsString(format: string) {
         return dateformat(new Date(), format);
