@@ -4,7 +4,7 @@
     <template v-slot:activator="{ on, attrs }">
     <div @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container" :class="classTitle">
       <h3 
-        :id="nodeData.id" class="name" style="text-align: center;" 
+        :id="nodeData.id" class="name" style="text-align: center;" contenteditable
         @mousedown.self.prevent.stop="$emit('start-drag')" 
         @mouseup.self.prevent.stop="$emit('stop-drag', $event)"
       >
@@ -36,8 +36,11 @@
       <v-list-item-avatar :color="color" size="56">
         <v-icon>{{typeIcon}}</v-icon>
       </v-list-item-avatar>
-      <v-list-item-content class="text-left align-self-start" style="max-width: 200px;">
-        <v-list-item-title >Name: {{nodeData.name}}</v-list-item-title>
+      <v-list-item-content style="text-align: left; ">
+        <v-list-item-title>
+          Name: {{nodeData.name}} 
+          <EditName class="float-right" :name="nodeData.name" @changeName="changeName"/>
+        </v-list-item-title>
         <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
         <v-list-item-subtitle>Id: {{nodeData.id}}</v-list-item-subtitle>
       </v-list-item-content>
@@ -105,10 +108,12 @@
 import {apiBaseUrl} from "@/main.js";
 import {getDescription} from "./nodeDescription.js";
 import NodeContextMenuListItem from "./NodeContextMenuListItem"
+import EditName from "./EditName"
 
   export default {
   components: {
-    NodeContextMenuListItem
+    NodeContextMenuListItem,
+    EditName
   },
   data: () => ({
     fav: true,
@@ -177,8 +182,13 @@ import NodeContextMenuListItem from "./NodeContextMenuListItem"
       if(action === "resetNode") this.resetNode();
     },
     save() {
-    this.$emit("optionChange", "color", this.color);
+      this.$emit("optionChange", "color", this.color);
       this.menu = false;
+    },
+    changeName(data) {
+      this.nodeData.name = data;
+      this.$store.commit("saveNodeConfig", this.nodeData.id);
+      this.dialog = false;
     },
     deleteNode() {
       this.$store.commit("deleteNode", this.nodeData);
