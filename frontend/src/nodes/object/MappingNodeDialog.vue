@@ -93,7 +93,7 @@
         <v-divider></v-divider>
         <v-card-actions class="pl-6">
           <v-spacer></v-spacer>
-          <v-btn color="red" text @click="dialog = false">
+          <v-btn color="red" text @click="close">
             Close
           </v-btn>
           <v-btn color="green" text @click="test" :disabled="codeRaw.length === 0">
@@ -204,6 +204,9 @@ export default {
     init() {
       this.nodeCopy = {...this.node};
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+    },
+    close() {
+      this.dialog = false;
     }
   },
   watch: {
@@ -214,6 +217,11 @@ export default {
           this.init();
           this.fetchData();
         }
+      }
+    },
+    dialog(visible) {
+      if (!visible) {
+        this.open = undefined;
       }
     }
   },

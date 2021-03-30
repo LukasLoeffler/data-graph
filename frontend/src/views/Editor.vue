@@ -66,6 +66,8 @@ import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
 import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
 import Filter from "../nodes/object/FilterNode";
 import PathNode from "../nodes/object/PathNode";
+import AdvancedMapperNode from "../nodes/object/AdvancedMapperNode"
+import AdvancedMapperDialog from '../nodes/object/AdvancedMapperDialog';
 
 import FileSave from "../nodes/filesystem/FileSaveNode"
 import FileSaveDialog from "../nodes/filesystem/FileSaveDialog"
@@ -123,6 +125,7 @@ import DelayDialog from "../nodes/flow/DelayDialog"
 import NavigationDrawer from '../components/NavigationDrawer'
 import Console from '../components/Console.vue';
 import Toolbar from './Toolbar.vue';
+
 
 export default {
   data() {
@@ -282,6 +285,7 @@ export default {
       this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
       this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
       this.viewPlugin.registerOption("DelayDialog", DelayDialog);
+      this.viewPlugin.registerOption("AdvancedMapperDialog", AdvancedMapperDialog);
 
       // Register nodes
       this.editor.registerNodeType("interval", IntervalNode, "Time")
@@ -299,6 +303,7 @@ export default {
       this.editor.registerNodeType("object-path", PathNode, "Object")
       this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
       this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
+      this.editor.registerNodeType("advanced-mapper", AdvancedMapperNode, "Object")
 
       // Geo
       this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
@@ -363,7 +368,6 @@ export default {
     "$store.getters.template": {
       handler(template) {
         if (template) {
-          console.log(template);
           let nodeType = this.editor.nodeTypes.get(template.type);
           let node = new nodeType();
           node.name = template.name;
