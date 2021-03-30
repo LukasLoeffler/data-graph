@@ -18,7 +18,7 @@
         <v-card-title>
           <span class="headline">Add Node</span>
           <v-spacer></v-spacer>
-          <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable autofocus ></v-text-field>
+          <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable autofocus @keypress.enter="keyPressed"></v-text-field>
           <v-btn class="ml-2" dark @click="maxed = !maxed">
             <v-icon>{{maxed ? 'mdi-window-minimize' : 'mdi-window-maximize'}}</v-icon>
           </v-btn>
@@ -27,12 +27,14 @@
         <v-card-text class="pb-0">
           <v-row v-if="nodeListFiltered && nodeListFiltered.length !== 0">
             <v-col :cols="cols" class="pb-0" style="max-height: 300px; overflow: scroll">
+              <h4 style="text-align: left;">Nodes</h4>
               <v-chip-group active-class="primary--text" column v-model="selected">
                 <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed" @keyup.enter="keyPressed">
                   {{ node.type }}
                 </v-chip>
               </v-chip-group>
               <v-divider v-if="templates.length !== 0"></v-divider>
+              <h4 v-if="templates.length !== 0" style="text-align: left;">Templates</h4>
               <v-chip-group active-class="primary--text" column v-model="selectedTemplate">
                 <v-chip v-for="(template, index) in templates" :key="index" :small="!maxed">
                   {{ template.name }}
@@ -43,6 +45,7 @@
               <h2 class="mb-3">{{selectedTitle}}</h2>
               <p v-html="selectedDescr" style="font-size: 16px"></p>
               <v-spacer></v-spacer>
+              <h4 v-if="selectedTags.length !== 0" style="text-align: left;">Tags</h4>
               <v-chip
                 label small :key="tag" v-for="tag in selectedTags" class="mr-1 mb-1"
                 style="cursor: default" @click="search = tag" :class="{tagselected: tag === search}"
