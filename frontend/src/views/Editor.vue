@@ -300,7 +300,7 @@ export default {
 
       // Object
       this.editor.registerNodeType("filter", Filter, "Object")
-      this.editor.registerNodeType("object-path", PathNode, "Object")
+      //this.editor.registerNodeType("object-path", PathNode, "Object")
       this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
       this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
       this.editor.registerNodeType("advanced-mapper", AdvancedMapperNode, "Object")
