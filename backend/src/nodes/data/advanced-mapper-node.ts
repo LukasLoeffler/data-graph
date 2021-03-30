@@ -81,11 +81,9 @@ export class AdvancedMapperNode extends BaseNode {
         let output = undefined;
 
         if (Array.isArray(inputData)) {
-            console.log("Array")
             output = inputData.map((elem: any) => {
                 return this.mapObject(elem);
             });
-            console.log(output)
         } else {
             output =this.mapObject(inputData)
         }
