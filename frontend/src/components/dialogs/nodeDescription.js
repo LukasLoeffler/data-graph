@@ -163,7 +163,13 @@ let descriptions = [
         `,
         tags: ["data", "change"]
     },
-    
+    {
+        type: "geo-filter",
+        text: `
+            Filters an array of objects by their geographic location.
+        `,
+        tags: ["filter", "geo", "coordinates", "coord", "geography", "lat", "lon"]
+    },
 ]
 
 

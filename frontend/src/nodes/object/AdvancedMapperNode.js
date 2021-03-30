@@ -11,7 +11,7 @@ export default class AdvancedMapperNode extends Node {
         this.addOutputInterface("onSuccess")
 
         this.addOption("settings", "AdvancedMapperDialog", {mapping: []});
-        this.addOption("color", undefined, "#a32bb3");
+        this.addOption("color", undefined, "#FF6F00");
         this.addOption("running", undefined, true);
     }
 
