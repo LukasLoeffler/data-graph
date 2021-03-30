@@ -85,7 +85,7 @@ export class AdvancedMapperNode extends BaseNode {
                 return this.mapObject(elem);
             });
         } else {
-            output =this.mapObject(inputData)
+            output = this.mapObject(inputData)
         }
         return output;
     }
