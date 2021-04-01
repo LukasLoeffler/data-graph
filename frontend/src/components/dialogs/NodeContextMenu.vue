@@ -344,6 +344,6 @@ import TextEditable from "./TextEditable"
 <style lang="scss">
 .node>.__title {
   padding-top: 2px;
-  padding-bottom: 1px;
+  padding-bottom: 0;
 }
 </style>
