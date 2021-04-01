@@ -42,7 +42,7 @@ export class NodeManager {
     static reset() {
         if (nodes.length > 0) console.log(chalk.redBright("RESETTING CONFIG"))
         // Calling stop function for each node
-        nodes.forEach((node: BaseNode) => {
+        nodes.forEach((node: any) => {
             node.stop();
         });
         nodes = [];
