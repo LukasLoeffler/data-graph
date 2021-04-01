@@ -13,6 +13,7 @@
       <v-tab-item><Workspaces/></v-tab-item>
       <v-tab-item><EventLog/></v-tab-item>
       <v-tab-item><NodeHistory/></v-tab-item>
+      <v-tab-item><Artifacts/></v-tab-item>
     </v-tabs-items>
   </v-card>
 </template>
@@ -21,18 +22,20 @@
 import EventLog from '../components/settings/EventLog.vue'
 import NodeHistory from '../components/settings/NodeHistory.vue'
 import Workspaces from '../components/settings/Workspaces.vue'
+import Artifacts from '../components/settings/Artifacts.vue'
 
 export default {
   components: {
     Workspaces,
     EventLog,
-    NodeHistory
+    NodeHistory,
+    Artifacts
   },
   data () {
     return {
       tab: null,
       items: [
-        'WORKSPACES', 'EVENTLOG', 'NODEHISTORY',
+        'WORKSPACES', 'EVENTLOG', 'NODEHISTORY', "ARTIFACTS",
       ],
       nav: ""
     }
