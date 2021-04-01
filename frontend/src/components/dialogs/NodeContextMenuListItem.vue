@@ -1,5 +1,5 @@
 <template>
-  <v-list-item dense @click="click()">
+  <v-list-item dense @click="click">
     <v-list-item-icon>
     <v-icon :color="color">{{icon}}</v-icon>
     </v-list-item-icon>
@@ -11,10 +11,10 @@
 
 <script>
 export default {
-  props: ["color", "icon", "title"],
+  props: ["color", "icon", "title", "attrs"],
   methods: {
-    click() {
-      this.$emit("click");
+    click(evt) {
+      this.$emit("click", evt);
     }
   }
 }

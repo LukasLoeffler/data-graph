@@ -2,7 +2,7 @@
   <div class="text-center">
   <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="150" offset-x>
     <template v-slot:activator="{ on, attrs }">
-    <div @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container" :class="classTitle">
+    <div @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container pa-0" :class="classTitle" style="padding-top: 1px;">
       <h3 
         :id="nodeData.id" class="name" style="text-align: center;" contenteditable
         @mousedown.self.prevent.stop="$emit('start-drag')" 
@@ -31,33 +31,32 @@
     </template>
 
     <v-card width="350px" style="max-height: 400px;" class="scroll-card">
-    <v-list>
+    <v-list class="pa-0">
       <v-list-item>
-      <v-list-item-avatar :color="color" size="56">
-        <v-icon>{{typeIcon}}</v-icon>
-      </v-list-item-avatar>
-      <v-list-item-content style="text-align: left; ">
-        <v-list-item-title>
-          <TextEditable :text="nodeData.name" @changeText="changeName"/>
-        </v-list-item-title>
-        <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
-        <v-list-item-subtitle>Id: {{nodeData.id}}</v-list-item-subtitle>
-      </v-list-item-content>
-      <v-list-item-action v-if="isStoppable">
-        <v-tooltip bottom :color="running ? 'green' : 'red'">
-        <template v-slot:activator="{ on, attrs }">
-          <div v-on="on">
-            <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
-            <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
-            <v-icon color="red" v-else>mdi-pause</v-icon>
-            </v-btn>
-          </div>
-        </template>
-        <span v-if="running">Running</span>
-        <span v-else>Stopped</span>
-      </v-tooltip>
-  
-      </v-list-item-action>
+        <v-list-item-avatar :color="color" size="56" class="rounded">
+          <v-icon>{{typeIcon}}</v-icon>
+        </v-list-item-avatar>
+        <v-list-item-content style="text-align: left;">
+          <v-list-item-title>
+            <TextEditable :text="nodeData.name" @changeText="changeName"/>
+          </v-list-item-title>
+          <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
+          <v-list-item-subtitle>Id: {{nodeData.id}}</v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action v-if="isStoppable">
+          <v-tooltip bottom :color="running ? 'green' : 'red'">
+            <template v-slot:activator="{ on, attrs }">
+              <div v-on="on">
+                <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
+                <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
+                <v-icon color="red" v-else>mdi-pause</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span v-if="running">Running</span>
+            <span v-else>Stopped</span>
+        </v-tooltip>
+        </v-list-item-action>
       </v-list-item>
     </v-list>
 
@@ -66,20 +65,10 @@
     <NodeContextMenuListItem title="Reset Node" color="orange" icon="mdi-backup-restore" @click="resetNode" v-if="isResettable"/>
     <NodeContextMenuListItem title="Open Settings" color="teal" icon="mdi-cog-outline" @click="openSettings" v-if="isConfigurable"/>
     <NodeContextMenuListItem title="View History" color="purple lighten-1" icon="mdi-format-list-numbered" @click="openHistory" v-if="hasHistory"/>
+    <NodeContextMenuColorPicker :color="color" @colorChange="changeColor"/>
     <NodeContextMenuListItem v-for="(action, i) in actions" :key="i" :title="action.text" :color="action.color" :icon="action.icon" @click="execute(action.callable)"/>
-
     <v-divider></v-divider>
     <v-expansion-panels v-model="expanded" accordion>
-      <v-expansion-panel>
-      <v-expansion-panel-header>
-        Edit Color
-      </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        <v-col class="d-flex justify-center">
-        <v-color-picker v-model="color" hide-mode-switch hide-inputs></v-color-picker>
-        </v-col>
-      </v-expansion-panel-content>
-      </v-expansion-panel>
       <v-expansion-panel>
       <v-expansion-panel-header>
         Node Info
@@ -89,15 +78,6 @@
       </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn text @click="menu = false">
-        Cancel
-      </v-btn>
-      <v-btn color="primary" text @click="save">
-        OK
-      </v-btn>
-    </v-card-actions>
     </v-card>
   </v-menu>
   </div>
@@ -107,11 +87,13 @@
 import {apiBaseUrl} from "@/main.js";
 import {getDescription} from "./nodeDescription.js";
 import NodeContextMenuListItem from "./NodeContextMenuListItem"
+import NodeContextMenuColorPicker from "./NodeContextMenuColorPicker"
 import TextEditable from "./TextEditable"
 
   export default {
   components: {
     NodeContextMenuListItem,
+    NodeContextMenuColorPicker,
     TextEditable
   },
   data: () => ({
@@ -169,6 +151,10 @@ import TextEditable from "./TextEditable"
     this.description = getDescription(this.nodeData.type);
   },
   methods: {
+    changeColor(event) {
+      this.color = event;
+      this.$emit("optionChange", "color", this.color);
+    },
     prevent(evt) {
       console.log("prevent");
       evt.preventDefault();
@@ -253,7 +239,7 @@ import TextEditable from "./TextEditable"
         this.colorCopy = this.nodeData.getOptionValue("color");
         this.expanded = [];
       }
-    }
+    },
   },
   computed: {
     typeIcon() {
@@ -352,5 +338,12 @@ import TextEditable from "./TextEditable"
 
 .grabbable {
   cursor: grab;
+}
+</style>
+
+<style lang="scss">
+.node>.__title {
+  padding-top: 2px;
+  padding-bottom: 1px;
 }
 </style>
