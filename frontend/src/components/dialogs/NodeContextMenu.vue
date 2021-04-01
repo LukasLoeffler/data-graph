@@ -38,8 +38,7 @@
       </v-list-item-avatar>
       <v-list-item-content style="text-align: left; ">
         <v-list-item-title>
-          Name: {{nodeData.name}} 
-          <EditName class="float-right" :name="nodeData.name" @changeName="changeName"/>
+          <TextEditable :text="nodeData.name" @changeText="changeName"/>
         </v-list-item-title>
         <v-list-item-subtitle>Type: {{nodeData.type}}</v-list-item-subtitle>
         <v-list-item-subtitle>Id: {{nodeData.id}}</v-list-item-subtitle>
@@ -66,7 +65,7 @@
     <NodeContextMenuListItem :title="running ? 'Stop Node': 'Start Node'" :color="running ? 'red' : 'green'" :icon="running ? 'mdi-pause': 'mdi-play-outline'" @click="activateNode" v-if="isStoppable"/>
     <NodeContextMenuListItem title="Reset Node" color="orange" icon="mdi-backup-restore" @click="resetNode" v-if="isResettable"/>
     <NodeContextMenuListItem title="Open Settings" color="teal" icon="mdi-cog-outline" @click="openSettings" v-if="isConfigurable"/>
-    <NodeContextMenuListItem title="View History" color="purple lighten-1" icon="mdi-format-list-numbered" @click="openHistory"/>
+    <NodeContextMenuListItem title="View History" color="purple lighten-1" icon="mdi-format-list-numbered" @click="openHistory" v-if="hasHistory"/>
     <NodeContextMenuListItem v-for="(action, i) in actions" :key="i" :title="action.text" :color="action.color" :icon="action.icon" @click="execute(action.callable)"/>
 
     <v-divider></v-divider>
@@ -108,12 +107,12 @@
 import {apiBaseUrl} from "@/main.js";
 import {getDescription} from "./nodeDescription.js";
 import NodeContextMenuListItem from "./NodeContextMenuListItem"
-import EditName from "./EditName"
+import TextEditable from "./TextEditable"
 
   export default {
   components: {
     NodeContextMenuListItem,
-    EditName
+    TextEditable
   },
   data: () => ({
     fav: true,
@@ -124,33 +123,33 @@ import EditName from "./EditName"
     running: true,
     description: "",
     nodeTypes: [
-      {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false},
-      {type: "info", icon: "mdi-information-outline", resettable: true, stoppable: false, configurable: true},
-      {type: "button", icon: "mdi-gesture-tap-button", resettable: true, stoppable: false, configurable: false},
-      {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: true},
-      {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true, configurable: false},
-      {type: "http-get", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true},
-      {type: "http-post-put", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true},
-      {type: "array-mapping", icon: "mdi-code-array", resettable: false, stoppable: false, configurable: true},
-      {type: "object-mapping", icon: "mdi-code-braces", resettable: false, stoppable: false, configurable: true},
-      {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false},
-      {type: "object-path", icon: "mdi-map-marker-path", resettable: false, stoppable: false, configurable: false},
-      {type: "file-save", icon: "mdi-content-save-outline", resettable: false, stoppable: false, configurable: true},
-      {type: "postgres-save", icon: "mdi-elephant", resettable: false, stoppable: false, configurable: true},
-      {type: "mqtt-sub", icon: "mdi-alpha-m", resettable: false, stoppable: true, configurable: false},
-      {type: "mqtt-pub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: false},
-      {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: true},
-      {type: "python-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true},
-      {type: "javascript-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true},
-      {type: "trigger-after", icon: "mdi-counter", resettable: true, stoppable: false, configurable: true},
-      {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: true},
-      {type: "http-in-request", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
-      {type: "http-in-response", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true},
-      {type: "csv-to-json", icon: "mdi-file-delimited-outline", resettable: false, stoppable: false, configurable: true},
-      {type: "geo-filter", icon: "mdi-vector-polygon", resettable: false, stoppable: false, configurable: true},
-      {type: "switch", icon: "mdi-electric-switch", resettable: false, stoppable: false, configurable: true},
-      {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true},
-      {type: "advanced-mapper", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: true},
+      {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false, hasHistory: true},
+      {type: "info", icon: "mdi-information-outline", resettable: true, stoppable: false, configurable: true, hasHistory: true},
+      {type: "button", icon: "mdi-gesture-tap-button", resettable: true, stoppable: false, configurable: false, hasHistory: false},
+      {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: true, hasHistory: true},
+      {type: "cron", icon: "mdi-clock-time-five-outline", resettable: true, stoppable: true, configurable: false, hasHistory: true},
+      {type: "http-get", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "http-post-put", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "array-mapping", icon: "mdi-code-array", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "object-mapping", icon: "mdi-code-braces", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false, hasHistory: true},
+      {type: "object-path", icon: "mdi-map-marker-path", resettable: false, stoppable: false, configurable: false, hasHistory: true},
+      {type: "file-save", icon: "mdi-content-save-outline", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "postgres-save", icon: "mdi-elephant", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "mqtt-sub", icon: "mdi-alpha-m", resettable: false, stoppable: true, configurable: false, hasHistory: true},
+      {type: "mqtt-pub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: false, hasHistory: true},
+      {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "python-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "javascript-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "trigger-after", icon: "mdi-counter", resettable: true, stoppable: false, configurable: true, hasHistory: true},
+      {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: true, hasHistory: true},
+      {type: "http-in-request", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "http-in-response", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "csv-to-json", icon: "mdi-file-delimited-outline", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "geo-filter", icon: "mdi-vector-polygon", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "switch", icon: "mdi-electric-switch", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "advanced-mapper", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: true, hasHistory: true},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
@@ -277,6 +276,9 @@ import EditName from "./EditName"
     },
     isConfigurable() {
       return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).configurable;
+    },
+    hasHistory() {
+      return this.nodeTypes.find((nodeType) => nodeType.type === this.nodeData.type).hasHistory;
     },
     /**
      * Returns different width for title, depending if the node is stoppable or not.
