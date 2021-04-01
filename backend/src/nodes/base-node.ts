@@ -15,7 +15,7 @@ export class BaseNode {
     running: boolean;
     options: any;
 
-    
+
     constructor(name: string, type: string, id: string = "", options: any, outputConnections: Array<any>) {
         this.name = name;
         this.type = type;
@@ -25,20 +25,19 @@ export class BaseNode {
         this.running = true;
     }
 
-    public toString = () : string => {
-        return `${this.type} (id: ${this.id}, name: ${this.name})`;
-    }
 
     onSuccess(payload: any, additional: any = null) {
         ExecutionCounter.incrCountType(this.id, "success");
         this.on("onSuccess", payload, additional)
     }
 
+
     onFailure(payload: any, additional: any = null, pulse: boolean = false) {
         ExecutionCounter.incrCountType(this.id, "failure");
         if (pulse) this.sendErrorMessage(this.id);
         this.on("onFailure", payload, additional)
     }
+
 
     on(trigger: string, payload: any, additional: any = null, pulse: boolean = false) {
         let targets = this.outputConnections.filter((intf: any) => intf.from.name === trigger);
@@ -51,18 +50,12 @@ export class BaseNode {
         });
     }
 
-    start() {
-        console.log(chalk.red("Start method not implemented for node type:", this.type));
-    }
-
-    stop() {
-        //console.log(chalk.red("Stop method not implemented for node type:", this.type));
-    }
 
     reset(): boolean {
         console.log(chalk.red("Reset method not implemented for node type:", this.type));
         return false;
     }
+
 
     sendConnectionExec(fromNodeId: string, toNodeId: string): void {
         let message = {
@@ -75,7 +68,7 @@ export class BaseNode {
         io.emit('CONNECTION_EXEC', message);
     }
 
-    
+
     sendErrorMessage(nodeId: string, errorMessage: string = ""): void {
         let message = {
             type: "NODE_EXEC_ERROR",
