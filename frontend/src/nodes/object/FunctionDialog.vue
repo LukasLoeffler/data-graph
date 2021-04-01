@@ -18,7 +18,9 @@
         <v-divider></v-divider>
         <v-card-text class="pa-2">
           <v-text-field outlined dense v-model="functionCopy.name" label="Function Name" hide-details></v-text-field>
-          <prism-editor v-model="functionCopy.function" :highlight="highlighter" :tabSize="4" line-numbers style="max-height: 500px" class="mt-2"></prism-editor>  
+          <v-card class="px-1 mt-1" dark>
+            <prism-editor v-model="functionCopy.function" :highlight="highlighter" :tabSize="4" line-numbers style="max-height: 500px" class="mt-2"></prism-editor>
+          </v-card>
         </v-card-text>
 
         <v-divider></v-divider>
