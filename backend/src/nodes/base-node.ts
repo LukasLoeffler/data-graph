@@ -51,6 +51,11 @@ export class BaseNode {
     }
 
 
+    stop() {
+        //Base method without code
+    }
+
+
     reset(): boolean {
         console.log(chalk.red("Reset method not implemented for node type:", this.type));
         return false;
