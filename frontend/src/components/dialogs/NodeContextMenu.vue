@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-  <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="150" offset-x>
+  <v-menu v-model="menu" :close-on-content-click="false" offset-x>
     <template v-slot:activator="{ on, attrs }">
     <div @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container pa-0" :class="classTitle" style="padding-top: 1px;">
       <h3 
