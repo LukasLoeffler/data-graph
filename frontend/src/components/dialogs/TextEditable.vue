@@ -34,16 +34,8 @@
         this.editMode = false;
       },
       clickOutside() {
-        console.log("Click Outside");
         this.editMode = false;
       }
     },
-    watch: {
-      editMode(newValue){
-        if (newValue) {
-          //TODO
-        }
-      }
-    }
   }
 </script>
