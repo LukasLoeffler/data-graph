@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center">
+  <div class="text-center" :key="componentKey">
     <v-menu
       v-model="value"
       :position-x="x"
@@ -19,7 +19,7 @@
           <span class="headline">Add Node</span>
           <v-spacer></v-spacer>
           <v-text-field outlined label="Search Node Type" dense hide-details v-model="search" clearable autofocus @keypress.enter="keyPressed"></v-text-field>
-          <v-btn class="ml-2" dark @click="maxed = !maxed">
+          <v-btn class="ml-2" dark @click="toggleSize">
             <v-icon>{{maxed ? 'mdi-window-minimize' : 'mdi-window-maximize'}}</v-icon>
           </v-btn>
         </v-card-title>
@@ -86,7 +86,8 @@ export default {
       search: "",
       maxed: false,
       addList: [],
-      templates: []
+      templates: [],
+      componentKey: 0,
     }
   },
   methods: {
@@ -129,6 +130,13 @@ export default {
     },
     keyPressed() {
       this.addNode();
+    },
+    toggleSize() {
+      this.maxed = !this.maxed;
+      this.forceRerender();
+    },
+    forceRerender() {
+      this.componentKey += 1;
     }
   },
   watch: {
