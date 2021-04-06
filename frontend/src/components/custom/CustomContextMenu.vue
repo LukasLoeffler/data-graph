@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center" v-if="renderComponent">
+  <div class="text-center" :key="componentKey">
     <v-menu
       v-model="value"
       :position-x="x"
@@ -87,7 +87,7 @@ export default {
       maxed: false,
       addList: [],
       templates: [],
-      renderComponent: true
+      componentKey: 0,
     }
   },
   methods: {
@@ -136,13 +136,7 @@ export default {
       this.forceRerender();
     },
     forceRerender() {
-      // Remove my-component from the DOM
-      this.renderComponent = false;
-
-      this.$nextTick(() => {
-        // Add the component back in
-        this.renderComponent = true;
-      });
+      this.componentKey += 1;
     }
   },
   watch: {
