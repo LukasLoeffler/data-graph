@@ -2,9 +2,9 @@
   <div class="text-center">
   <v-menu v-model="menu" :close-on-content-click="false" offset-x>
     <template v-slot:activator="{ on, attrs }">
-    <div @contextmenu.prevent="on.click" v-bind="attrs" class="grid-container pa-0" :class="classTitle" style="padding-top: 1px;">
+    <div @contextmenu.prevent.stop="on.click" v-bind="attrs" class="grid-container pa-0" :class="classTitle" style="padding-top: 1px;">
       <h3 
-        :id="nodeData.id" class="name" style="text-align: center;" contenteditable
+        :id="nodeData.id" class="name" style="text-align: center;"
         @mousedown.self.prevent.stop="$emit('start-drag')" 
         @mouseup.self.prevent.stop="$emit('stop-drag', $event)"
       >

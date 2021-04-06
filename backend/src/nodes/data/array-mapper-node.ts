@@ -1,4 +1,3 @@
-import { measure } from "../../decorators";
 import { getDb, storeLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
