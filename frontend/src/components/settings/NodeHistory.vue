@@ -1,31 +1,35 @@
 <template>
   <v-card>
-    <v-row>
-      <v-col cols="4" class="ml-2">
-        <v-text-field outlined dense v-model="search" hide-details="" clearable></v-text-field>
-      </v-col>
-    </v-row>
     <v-data-table
+      ref="card"
       :headers="headers"
       :items="historyEntries"
       :single-expand="singleExpand"
       :expanded.sync="expanded"
+      :items-per-page="15"
       item-key="_id"
       show-expand
       class="elevation-1"
-      ref="historyTable"
-      :style="tableHeight"
+      :height="calcTableHeight"
       :search="search"
     >
       <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>
-          Node History Entries
-          <v-btn icon color="grey" @click="refreshItems">
-            <v-icon>mdi-refresh</v-icon>
-          </v-btn>
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
+        <v-toolbar flat ref="toolbar">
+          <v-row align="center">
+            <v-col cols="6">
+              <v-toolbar-title style="text-align: left;">
+                Node History Entries
+                </v-toolbar-title>
+              </v-col>
+            <v-col cols="5">
+              <v-text-field outlined dense v-model="search" hide-details="" clearable></v-text-field>
+            </v-col>
+            <v-col cols="1">
+              <v-btn icon color="grey" @click="refreshItems">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-toolbar>
       </template>
       <template v-slot:item.type="{ item }">
@@ -78,10 +82,17 @@ export default {
       expanded: [],
       singleExpand: false,
       historyEntries: [],
-      search: null
+      search: null,
+      tableTop: this.$refs.card?.$el.getBoundingClientRect().top,
+      toolbarHeight: this.$refs.toolbar?.$el.getBoundingClientRect().top,
     }
   },
+  updated() {
+    this.tableTop =  this.$refs.card?.$el.getBoundingClientRect().top;
+    this.toolbarHeight = this.$refs.toolbar?.$el.getBoundingClientRect().top;
+  },
   created() {
+    window.addEventListener("resize", this.recalcTableHeight);
     let nodeId = this.$route.params.nodeId;
     if (nodeId) this.search = nodeId;
     this.loadData();
@@ -94,6 +105,7 @@ export default {
       let nodeHistoryUrl = `${apiBaseUrl}/node-history/all`;
       this.axios.get(nodeHistoryUrl).then((response) => {
         this.historyEntries = response.data;
+        this.recalcTableHeight();
       });
     },
     getColor (mode) {
@@ -101,18 +113,23 @@ export default {
       else if (mode === "MODIFIED") return 'orange'
       else return 'green'
     },
-    tableHeight() {
-      let tablePos = this.$refs.historyTable.$el;
-
-      console.log(tablePos);
-      return null;
-    },
     refreshItems() {
       this.loadData();
+    },
+    recalcTableHeight(e) {
+      this._computedWatchers.calcTableHeight.run();
+      this.$forceUpdate();
     }
   },
   computed: {
-
+    calcTableHeight() {
+      let windowHeight = window.innerHeight;
+      let tableStart = this.tableTop || 100;
+      let toolbarHeight = this.toolbarHeight || 150;
+      console.log(toolbarHeight);
+      let tableHeight = windowHeight-tableStart-140;
+      return tableHeight;
+    }
   }
 }
 </script>

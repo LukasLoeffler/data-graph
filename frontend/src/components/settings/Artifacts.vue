@@ -1,10 +1,13 @@
 <template>
-  <v-card>
+  <v-card ref="card">
       <v-data-table
         :headers="headers"
         :items="artifacts"
-        :items-per-page="5"
+        :items-per-page="-1"
         class="elevation-1"
+        :height="calcTableHeight"
+        hide-default-footer
+        fixed-header
       >
         <template v-slot:item.actions="{ item }">
           <v-icon
@@ -35,14 +38,20 @@ export default {
           value: "filename"
         },
         { text: 'Actions', value: 'actions', sortable: false },
-      ]
+      ],
+      tableTop: this.$refs.card?.$el.getBoundingClientRect().top
     }
   },
   created() {
     let artifactUrl = `${apiBaseUrl}/artifacts/list`;
+    window.addEventListener("resize", this.recalcTableHeight);
     this.axios.get(artifactUrl).then((response) => {
       this.artifacts = response.data.map(item => ({filename: item }));
+      this.tableTop =  this.$refs.card?.$el.getBoundingClientRect().top;
     });
+  },
+  updated() {
+    this.tableTop =  this.$refs.card?.$el.getBoundingClientRect().top;
   },
   methods: {
     download(item) {
@@ -57,6 +66,17 @@ export default {
         link.click()
         URL.revokeObjectURL(link.href)
       }).catch(console.error)
+    },
+    recalcTableHeight(e) {
+      this._computedWatchers.calcTableHeight.run();
+      this.$forceUpdate();
+    }
+  },
+  computed: {
+    calcTableHeight() {
+      let windowHeight = window.innerHeight;
+      let tableStart = this.tableTop || 100;
+      return windowHeight-tableStart-7;
     }
   }
 }
