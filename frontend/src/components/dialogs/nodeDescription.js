@@ -170,6 +170,13 @@ let descriptions = [
         `,
         tags: ["filter", "geo", "coordinates", "coord", "geography", "lat", "lon"]
     },
+    {
+        type: "switch",
+        text: `
+            Conditionally routes data by user defined statements.
+        `,
+        tags: ["flow", "switch", "if", "gate", ]
+    },
 ]
 
 
