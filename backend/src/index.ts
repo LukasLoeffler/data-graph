@@ -8,6 +8,8 @@ import chalk from "chalk";
 import * as mongodb from 'mongodb';
 import { urlencoded, json, raw } from 'body-parser';
 import cors from 'cors';
+import path from "path";
+const fs = require('fs');
 
 const app = express();
 app.use(cors())
@@ -287,4 +289,17 @@ app.get("/node-history/:nodeId", (req, res) => {
         if (err) res.status(500).send(err);
         else res.send(result);
     });
+})
+
+app.get("/artifacts/list", (req, res) => {
+    let folder = "./output"
+    fs.readdir(folder, (err: any, files: any) => {
+        console.log(files)
+        res.send(files);
+    });
+})
+
+app.get("/artifact/:filename", (req, res) => {
+    let filename = `${req.params.filename}`;
+    res.sendFile(filename, { root: path.join(__dirname, '../output') });
 })

@@ -6,7 +6,7 @@
     </v-btn>
   </div>
   <div v-else v-click-outside="clickOutside">
-    <v-text-field v-model="textCopy" dense hide-details="" autofocus>
+    <v-text-field v-model="textCopy" dense hide-details="" autofocus @keyup.enter="save" autocomplete="off">
       <template v-slot:append>
         <v-btn icon x-small color="primary" @click="save">
           <v-icon>mdi-check</v-icon>
