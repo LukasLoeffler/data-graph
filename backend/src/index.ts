@@ -294,7 +294,6 @@ app.get("/node-history/:nodeId", (req, res) => {
 app.get("/artifacts/list", (req, res) => {
     let folder = "./output"
     fs.readdir(folder, (err: any, files: any) => {
-        console.log(files)
         res.send(files);
     });
 })
