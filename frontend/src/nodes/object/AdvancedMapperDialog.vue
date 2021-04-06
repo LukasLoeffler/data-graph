@@ -5,6 +5,7 @@
         <v-card-title>
           <span class="headline">Node settings: {{nodeCopy.name}}</span>
           <v-spacer></v-spacer>
+          <LastValueDialog :nodeId="node.id"/>
           <v-btn @click="addMapping('source', 'target')" color="green" class="mr-1" outlined @contextmenu.prevent="addInput">
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>
@@ -73,6 +74,7 @@
 
 <script>
 import Draggable from 'vuedraggable';
+import LastValueDialog from '../../components/dialogs/LastValueDialog';
 import FunctionDialog from './FunctionDialog.vue';
 import InjectDialog from './InjectDialog.vue';
 
@@ -81,6 +83,7 @@ export default {
     Draggable,
     InjectDialog,
     FunctionDialog,
+    LastValueDialog,
   },
   data: () => ({
     dialog: false,
