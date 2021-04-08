@@ -22,8 +22,13 @@ export class AdvancedMapperNode extends BaseNode {
 
     async execute(msgIn: Message) {
         storeLastValue(this.id, msgIn.payload);
-        let newObject = await this.mapInput(msgIn.payload);
-        this.onSuccess(newObject, msgIn.additional);
+        try {
+            let newObject = await this.mapInput(msgIn.payload);
+            this.onSuccess(newObject, msgIn.additional);
+        } catch (error) {
+            this.onFailure(error.message, msgIn.additional, true);
+        }
+
     }
 
     /**
@@ -70,9 +75,14 @@ export class AdvancedMapperNode extends BaseNode {
             }
 
             if (mapper.action === "function") {
-                let payload = input_object;
-                let func = new Function('payload', mapper.function.function)
-                source = func(payload);
+                try {
+                    let payload = input_object;
+                    let func = new Function('payload', mapper.function.function)
+                    source = func(payload);
+                } catch (error) {
+                    let errorMessage = `Function mapper exception in function '${mapper?.function?.name}' --> ${error.message}`;
+                    throw new Error(errorMessage);
+                }
             }
 
             set(newObject, mapper.target, source);

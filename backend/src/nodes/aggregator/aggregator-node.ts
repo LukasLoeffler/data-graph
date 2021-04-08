@@ -28,9 +28,9 @@ export class AggregatorNode extends BaseNode {
     }
 
     // Checking aliases if alias for node is present. If so alias is returned, else targetName is returned.
-    getAliasForTarget(targetName: string) {
-        let alias = this.aliases.find((alias: any) => alias.intfName === targetName);
-        return (!!alias) ? alias.alias : targetName; 
+    getAliasForTarget(targetIntfName: string) {
+        let alias = this.aliases.find((alias: any) => alias.intfName === targetIntfName);
+        return (alias && alias.alias !== "") ? alias.alias : targetIntfName;
     }
 
     getTimeoutForTarget(targetName: string) {

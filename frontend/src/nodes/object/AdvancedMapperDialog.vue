@@ -5,7 +5,7 @@
         <v-card-title>
           <span class="headline">Node settings: {{nodeCopy.name}}</span>
           <v-spacer></v-spacer>
-          <LastValueDialog :nodeId="node.id"/>
+          <LastValueDialog :nodeId="node.id" :nodeName="node.name"/>
           <v-btn @click="addMapping('source', 'target')" color="green" class="mr-1" outlined @contextmenu.prevent="addInput">
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>

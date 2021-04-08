@@ -7,7 +7,7 @@
     <v-dialog v-model="dialog" scrollable width="800px">
       <v-card>
         <v-card-title>
-          LastValue: {{nodeId}}
+          LastValue: {{nodeName}}
         </v-card-title>
 
         <v-card-text style="max-height: 350px">
@@ -37,7 +37,8 @@ import JsonViewer from 'vue-json-viewer'
 
 export default {
   props: {
-    nodeId: String
+    nodeId: String,
+    nodeName: String
   },
   components: {
     JsonViewer
