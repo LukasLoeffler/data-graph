@@ -21,6 +21,7 @@ export class AggregatorNode extends BaseNode {
         super(name, NODE_TYPE, id, options, outputInterfaces)
         this.inputConnections = inputConnections;
         this.aliases = options.settings.dataAliases;
+        console.log(this.aliases);
         this.timeouts = options.settings.timeouts;
         this.intoArray = options.settings.intoArray;
         NodeManager.addNode(this);
@@ -28,9 +29,10 @@ export class AggregatorNode extends BaseNode {
     }
 
     // Checking aliases if alias for node is present. If so alias is returned, else targetName is returned.
-    getAliasForTarget(targetName: string) {
-        let alias = this.aliases.find((alias: any) => alias.intfName === targetName);
-        return (!!alias) ? alias.alias : targetName; 
+    getAliasForTarget(targetIntfName: string) {
+        let alias = this.aliases.find((alias: any) => alias.intfName === targetIntfName);
+        let output = (alias && alias.alias !== "") ? alias.alias : targetIntfName;
+        return output;
     }
 
     getTimeoutForTarget(targetName: string) {
