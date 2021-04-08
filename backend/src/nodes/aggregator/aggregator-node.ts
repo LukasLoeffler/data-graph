@@ -21,7 +21,6 @@ export class AggregatorNode extends BaseNode {
         super(name, NODE_TYPE, id, options, outputInterfaces)
         this.inputConnections = inputConnections;
         this.aliases = options.settings.dataAliases;
-        console.log(this.aliases);
         this.timeouts = options.settings.timeouts;
         this.intoArray = options.settings.intoArray;
         NodeManager.addNode(this);
