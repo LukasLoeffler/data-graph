@@ -9,6 +9,7 @@ export default class AdvancedMapperNode extends Node {
         super();
         this.addInputInterface("payload")
         this.addOutputInterface("onSuccess")
+        this.addOutputInterface("onFailure")
 
         this.addOption("settings", "AdvancedMapperDialog", {mapping: []});
         this.addOption("color", undefined, "#FF6F00");
