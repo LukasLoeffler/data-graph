@@ -30,7 +30,7 @@ export class FileSaveNode extends BaseNode {
         if (this.fileType === "json") {
             fs.writeFile(file, JSON.stringify(payload,  null, 4),  (err: any) => {
                 if (err) {
-                    this.onFailure(err, msg.additional);
+                    this.onFailure(err, msg.additional, true);
                 } else {
                     this.onSuccess(payload, msg.additional);
                 }
@@ -40,7 +40,7 @@ export class FileSaveNode extends BaseNode {
         } else {
             fs.writeFile(file, payload,  (err: any) => {
                 if (err) {
-                    this.onFailure(err, msg.additional);
+                    this.onFailure(err, msg.additional, true);
                 } else {
                     this.onSuccess(payload, msg.additional);
                 }
@@ -57,7 +57,7 @@ export class FileSaveNode extends BaseNode {
                 if (err) {
                     fs.writeFile(filePath, payload,  (err: any) => {
                         if (err) {
-                            this.onFailure(err, msg.additional);
+                            this.onFailure(err, msg.additional, true);
                         } else {
                             this.onSuccess(payload, msg.additional);
                         }
@@ -71,6 +71,7 @@ export class FileSaveNode extends BaseNode {
 
             });
         } catch (error) {
+            this.onFailure(error.message, msg.additional, true);
             console.log(error);
         }
     }
