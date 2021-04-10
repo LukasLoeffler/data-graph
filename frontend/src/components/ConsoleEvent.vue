@@ -50,6 +50,7 @@ export default {
       navigator.clipboard.writeText(text);
     },
     hightlightNode() {
+      // Highlights the targetNode (logging node) and the originNode (the node that triggered logging node)
       EventBus.$emit('HIGHLIGHT_NODE', this.event.targetNodeId);
       EventBus.$emit('HIGHLIGHT_NODE', this.event.originNodeId);
     }
@@ -60,7 +61,7 @@ export default {
         case "INFO": return "blue"
         case "WARN": return "orange"
         case "CRIT": return "red"
-        default: return "teal"
+        default: return "blue"
       }
     }
   }
