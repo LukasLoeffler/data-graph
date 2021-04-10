@@ -67,11 +67,15 @@
         },
         errorOccured: false,
         highlighted: false,
-        hightLightTimeout: null
+        hightLightTimeout: null,
+        pulse: false,
+        pulseColor: "cyan",
       }
     },
     created() {
       let timeOut = null;
+      let timeOutPulse = null;
+
       socketio.on('NODE_EXEC_ERROR', (data) => {
         if (data.data.nodeId === this.data.id) {
             this.errorOccured = true; // Activate animation
@@ -80,6 +84,17 @@
               this.errorOccured = false; // Deactivate animation if method is not called within interval.
             }, ERROR_PULSE_LENGTH)
           }
+      });
+
+      socketio.on('NODE_PULSE', (data) => {
+        if (data.nodeId === this.data.id) {
+          this.pulseColor = data.color;
+          this.pulse = true; // Activate animation
+          clearTimeout( timeOutPulse ); // Reset timeout if called
+          timeOutPulse = setTimeout(() => {
+            this.pulse = false; // Deactivate animation if method is not called within interval.
+          }, ERROR_PULSE_LENGTH)
+        }
       });
     },
     methods: {
@@ -130,7 +145,8 @@
       classes() {
         return {
           "pulse": this.errorOccured,
-          "highlight": this.highlighted
+          "highlight": this.highlighted,
+          "colorpulse": this.pulse
         };
       },
       classTitle() {
@@ -145,6 +161,7 @@
           top: `${this.data.position.y}px`,
           left: `${this.data.position.x}px`,
           width: `${this.data.width}px`,
+          '--pulseColor': this.pulseColor,
         };
       },
     },
@@ -183,6 +200,10 @@
   animation: pursate 2s ease-out infinite;
 }
 
+.colorpulse {
+  animation: colorpulse 2s ease-out infinite;
+}
+
 .grabbed {
   cursor: grabbing;
 }
@@ -201,5 +222,11 @@
   0%   { box-shadow: 0 0 0; }
   50%  { box-shadow: 0 0 40px orange; }
   100% { box-shadow: 0 0 0; }
+}
+
+@-webkit-keyframes colorpulse {
+  0%   { box-shadow: 0 0 0 var(--pulseColor);}
+  50%  { box-shadow: 0 0 40px var(--pulseColor);}
+  100% { box-shadow: 0 0 0 var(--pulseColor); }
 }
 </style>

@@ -8,7 +8,7 @@ export default class TriggerAfterNode extends Node {
     constructor() {
         super();
         this.addInputInterface("Reset");
-        this.addInputInterface("Counter");
+        this.addInputInterface("Trigger");
         this.addOutputInterface("onTrigger");
         this.addOption("running", undefined, true);
         this.addOption("color", undefined, "#26828c");

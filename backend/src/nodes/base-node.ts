@@ -61,6 +61,14 @@ export class BaseNode {
         return false;
     }
 
+    pulse(color: string) {
+        let message = {
+            nodeId: this.id,
+            color: color,
+        }
+        io.emit("NODE_PULSE", message);
+    }
+
 
     sendConnectionExec(fromNodeId: string, toNodeId: string): void {
         let message = {
