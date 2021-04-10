@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import EventBus from '@/event-bus';
+
 export default {
   data: () => {
     return {
@@ -48,8 +50,9 @@ export default {
       navigator.clipboard.writeText(text);
     },
     hightlightNode() {
-      this.$store.commit("setHighlightNode", this.event.targetNodeId);
-      setTimeout(() => this.$store.commit("setHighlightNode", null), 1)
+      // Highlights the targetNode (logging node) and the originNode (the node that triggered logging node)
+      EventBus.$emit('HIGHLIGHT_NODE', this.event.targetNodeId);
+      EventBus.$emit('HIGHLIGHT_NODE', this.event.originNodeId);
     }
   },
   computed: {
@@ -58,7 +61,7 @@ export default {
         case "INFO": return "blue"
         case "WARN": return "orange"
         case "CRIT": return "red"
-        default: return "teal"
+        default: return "blue"
       }
     }
   }
