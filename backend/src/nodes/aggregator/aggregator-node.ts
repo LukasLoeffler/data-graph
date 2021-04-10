@@ -35,20 +35,15 @@ export class AggregatorNode extends BaseNode {
 
     getTimeoutForTarget(targetName: string) {
         let timeout = this.timeouts.find((timeout: Timeout) => timeout.intfName === targetName);
-        return (!!timeout) ? timeout.timeout : undefined;
+        return (!!timeout) ? timeout : undefined;
     }
     
     execute(msg: Message) {
         this.data.set(this.getAliasForTarget(msg.targetName), msg.payload); // Writing last message to map
         let timeout = this.getTimeoutForTarget(msg.targetName);
-        
+
         if (timeout) {
-            setTimeout(() => {
-                let alias = this.getAliasForTarget(msg.targetName);
-                this.data.delete(alias);
-                this.slots.delete(msg.targetId);
-                this.sendAggregationCountMessage();
-            }, timeout)
+            //TODO implement timeout correctly
         }
 
 
