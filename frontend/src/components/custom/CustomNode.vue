@@ -38,6 +38,7 @@
   import NodeContextMenu from '@/components/dialogs/NodeContextMenu'
   import CustomInterface from './CustomInterface'
   import { socketio } from '@/main';
+  import EventBus from '@/event-bus';
 
   const ERROR_PULSE_LENGTH = 2000;
 
@@ -70,6 +71,12 @@
 
       socketio.on('NODE_PULSE', (data) => {
         if (data.nodeId === this.data.id) {
+          this.triggerPulse(this.data.getOptionValue("color"));
+        }
+      });
+
+      EventBus.$on("HIGHLIGHT_NODE", (nodeId) => {
+        if (nodeId === this.data.id) {
           this.triggerPulse(this.data.getOptionValue("color"));
         }
       });
