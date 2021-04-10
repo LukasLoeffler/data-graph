@@ -22,6 +22,11 @@
                   v-model="valueCopy.bufferData" label="Buffer data into array?"
                 ></v-checkbox>
               </v-col>
+              <v-col cols="6">
+                <v-checkbox
+                  v-model="valueCopy.pulse" label="Pulse on trigger?"
+                ></v-checkbox>
+              </v-col>
             </v-row>
           </v-form>
         </v-card-text>

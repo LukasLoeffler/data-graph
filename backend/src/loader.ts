@@ -179,10 +179,12 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
                     // If a node with the given ID exists, options will be checked for changes
                     let nodeSettingsChanged = JSON.stringify(existingNode.options?.settings) !== JSON.stringify(options?.settings);
                     let outputChanged = JSON.stringify(existingNode.outputConnections) !== JSON.stringify(outputConnections);
+                    let nameChanged = existingNode.name !== node.name;
+
                     // Input only relevant for existing nodes with inputConnections !== undefined
                     let inputChanged = existingNode.inputConnections !== undefined && JSON.stringify(existingNode.inputConnections) !== JSON.stringify(inputConnections);
 
-                    if (existingNode && (nodeSettingsChanged || outputChanged || inputChanged)) {
+                    if (existingNode && (nodeSettingsChanged || outputChanged || inputChanged || nameChanged)) {
                         NodeManager.resetNode(node.id);
                         console.log(`Reloading node config: ${chalk.cyan(node.name)}`)
 
