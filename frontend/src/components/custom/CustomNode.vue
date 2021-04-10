@@ -32,15 +32,6 @@
   </div>
 </template>
 
-<style scoped>
-  .interface-row {
-    display: flex;
-  }
-
-  .interface-row div {
-    flex: 1;
-  }
-</style>
 
 <script>
   import { Components } from '@baklavajs/plugin-renderer-vue'
@@ -191,6 +182,13 @@
 </script>
 
 <style scoped>
+.interface-row {
+  display: flex;
+}
+
+.interface-row div {
+  flex: 1;
+}
 
 .pulse {
   animation: pulsate 2s ease-out infinite;
