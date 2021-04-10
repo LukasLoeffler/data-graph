@@ -35,7 +35,7 @@
               <v-text-field v-model="intf.alias" :label="valueCopy.intoArray ? 'Disabled in array mode' : 'Data Alias'" :disabled="valueCopy.intoArray"></v-text-field>
             </v-col>
             <v-col dense cols="3" class="py-0">
-              <v-text-field v-model.number="intf.timeout" label="Timeout"></v-text-field>
+              <v-text-field v-model.number="intf.timeout" label="Timeout (ms)"></v-text-field>
             </v-col>
             <v-col cols="1" dense>
               <v-btn icon @click="removeInterface(intf, index)" color="red">
