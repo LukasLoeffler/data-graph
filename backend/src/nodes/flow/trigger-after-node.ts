@@ -15,11 +15,13 @@ export class TriggerAfterNode extends BaseNode {
     puffer: Array<any>;
     counter: number;
     pulseOnTrigger: boolean;
+    bufferData: boolean;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
         this.threshhold = options.settings.threshhold;
         this.pulseOnTrigger = options.settings.pulse;
+        this.bufferData = options.settings.bufferData;
         this.puffer = [];
         this.counter = -1;
         this.init();
@@ -36,7 +38,7 @@ export class TriggerAfterNode extends BaseNode {
 
             this.puffer.push(msg.payload);
             if (this.counter >= this.threshhold-1) {
-                this.on("onTrigger", this.puffer);
+                this.bufferData ? this.on("onTrigger", this.puffer) : this.on("onTrigger", new Date());
                 ExecutionCounter.resetCount(this.id);
                 if (this.pulseOnTrigger) this.pulse("cyan");
                 this.counter = 0;

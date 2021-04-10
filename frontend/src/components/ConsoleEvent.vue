@@ -57,7 +57,7 @@ export default {
       switch (this.event.level) {
         case "INFO": return "blue"
         case "WARN": return "orange"
-        case "DANGER": return "red"
+        case "CRIT": return "red"
         default: return "teal"
       }
     }

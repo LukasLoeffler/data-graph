@@ -219,9 +219,9 @@
 }
 
 @-webkit-keyframes pursate {
-  0%   { box-shadow: 0 0 0; }
+  0%   { box-shadow: 0 0 0 orange;}
   50%  { box-shadow: 0 0 40px orange; }
-  100% { box-shadow: 0 0 0; }
+  100% { box-shadow: 0 0 0 orange; }
 }
 
 @-webkit-keyframes colorpulse {
