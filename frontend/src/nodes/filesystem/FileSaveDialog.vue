@@ -29,6 +29,12 @@
                   :rules="[rules.required]" hide-details>
                 </v-text-field>
               </v-col>
+              <v-col cols="6" v-if="valueCopy.filetype === 'csv'">
+                <v-checkbox 
+                  label="Append" required v-model="valueCopy.append"
+                  :rules="[rules.required]" hide-details>
+                </v-checkbox>
+              </v-col>
             </v-row>
           </v-form>
         </v-card-text>
