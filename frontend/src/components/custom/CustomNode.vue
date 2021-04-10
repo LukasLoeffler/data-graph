@@ -56,35 +56,21 @@
         myStyle: {
           backgroundColor: this.data.getOptionValue("color")
         },
-        errorOccured: false,
-        highlighted: false,
-        hightLightTimeout: null,
         pulse: false,
         pulseColor: "cyan",
+        pulseTimer: null
       }
     },
     created() {
-      let timeOut = null;
-      let timeOutPulse = null;
-
       socketio.on('NODE_EXEC_ERROR', (data) => {
         if (data.data.nodeId === this.data.id) {
-            this.errorOccured = true; // Activate animation
-            clearTimeout( timeOut ); // Reset timeout if called
-            timeOut = setTimeout(() => {
-              this.errorOccured = false; // Deactivate animation if method is not called within interval.
-            }, ERROR_PULSE_LENGTH)
+            this.triggerPulse("crimson");
           }
       });
 
       socketio.on('NODE_PULSE', (data) => {
         if (data.nodeId === this.data.id) {
-          this.pulseColor = data.color;
-          this.pulse = true; // Activate animation
-          clearTimeout( timeOutPulse ); // Reset timeout if called
-          timeOutPulse = setTimeout(() => {
-            this.pulse = false; // Deactivate animation if method is not called within interval.
-          }, ERROR_PULSE_LENGTH)
+          this.triggerPulse(this.data.getOptionValue("color"));
         }
       });
     },
@@ -98,7 +84,7 @@
           this.showMenu = true
         })
       },
-      startDrag(event) {
+      startDrag() {
         this.dragging = true;
         document.addEventListener("mousemove", this.handleMove);
         document.addEventListener("mouseup", this.mouseUp);
@@ -116,6 +102,14 @@
           this.$store.commit("saveNodeConfig", this.data.id);
         }
       },
+      triggerPulse(pulseColor) {
+        this.pulseColor = pulseColor;
+        this.pulse = true; // Activate animation
+        clearTimeout( this.pulseTimer ); // Reset timeout if called
+        this.pulseTimer = setTimeout(() => {
+          this.pulse = false; // Deactivate animation if method is not called within interval.
+        }, ERROR_PULSE_LENGTH)
+      }
     },
     computed: {
       rows() {
@@ -136,7 +130,6 @@
       classes() {
         return {
           "pulse": this.errorOccured,
-          "highlight": this.highlighted,
           "colorpulse": this.pulse
         };
       },
@@ -169,11 +162,7 @@
       "$store.getters.hightlightNode": {
         handler(nodeId) {
           if (nodeId && nodeId === this.data.id) {
-            this.highlighted = true; // Activate animation
-            clearTimeout( this.hightLightTimeout ); // Reset timeout if called
-            this.hightLightTimeout = setTimeout(() => {
-              this.highlighted = false; // Deactivate animation if method is not called within interval.
-            }, ERROR_PULSE_LENGTH)
+            this.triggerPulse(this.data.getOptionValue("color"));
           }
         }
       }
@@ -190,14 +179,6 @@
   flex: 1;
 }
 
-.pulse {
-  animation: pulsate 2s ease-out infinite;
-}
-
-.highlight {
-  animation: pursate 2s ease-out infinite;
-}
-
 .colorpulse {
   animation: colorpulse 2s ease-out infinite;
 }
@@ -208,18 +189,6 @@
 
 .grabbable {
   cursor: grab;
-}
-
-@-webkit-keyframes pulsate {
-  0%   { box-shadow: 0 0 0 red; }
-  50%  { box-shadow: 0 0 40px red; }
-  100% { box-shadow: 0 0 0 red; }
-}
-
-@-webkit-keyframes pursate {
-  0%   { box-shadow: 0 0 0 orange;}
-  50%  { box-shadow: 0 0 40px orange; }
-  100% { box-shadow: 0 0 0 orange; }
 }
 
 @-webkit-keyframes colorpulse {
