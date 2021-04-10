@@ -11,7 +11,7 @@ Features:
  
 ![example](docs/img/5cons.gif)
 
-![context-menu](docs/img/chrome_E71RDSP2mw.png)
+![context-menu](docs/img/contextmenu.png)
 
 
 
