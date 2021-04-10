@@ -18,8 +18,8 @@
           <template v-slot:activator="{ on, attrs }">
             <div v-on="on">
             <v-btn icon v-bind="attrs" v-on="on" style="pointer-events: none;">
-              <v-icon color="green" v-if="running">mdi-play-outline</v-icon>
-              <v-icon color="red" v-else>mdi-pause</v-icon>
+              <v-icon color="white" v-if="!running">mdi-play-outline</v-icon>
+              <v-icon color="white" v-else>mdi-pause</v-icon>
             </v-btn>
             </div>
           </template>

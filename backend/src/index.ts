@@ -98,7 +98,7 @@ app.put("/node-config/:id", ( req, res ) => {
     const options = { upsert: true };
 
     if (JSON.stringify(newvalues) === JSON.stringify(lastSave)) {
-        console.log(chalk.yellow("No changes detected. Not saving."))
+        //console.log(chalk.yellow("No changes detected. Not saving."))
         res.status(200).send("No changes detected");
     } else {
         
