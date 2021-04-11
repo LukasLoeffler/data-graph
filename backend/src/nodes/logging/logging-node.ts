@@ -9,9 +9,9 @@ const chalk = require('chalk');
 const NODE_TYPE = "LOGGING"
 
 enum Loglevel {
-    INFO = "INFO",
-    WARN = "WARN",
-    CRIT = "CRIT",
+    INFO,
+    WARN,
+    CRIT,
 }
 
 class Settings {
@@ -25,8 +25,6 @@ class Settings {
         this.server = server;
     }
 }
-
-
 
 export class LoggingNode extends BaseNode {
 
