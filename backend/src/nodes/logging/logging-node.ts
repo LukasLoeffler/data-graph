@@ -8,30 +8,50 @@ const chalk = require('chalk');
 
 const NODE_TYPE = "LOGGING"
 
+enum Loglevel {
+    INFO = "INFO",
+    WARN = "WARN",
+    CRIT = "CRIT",
+}
+
+class Settings {
+    loglevel: Loglevel;
+    client: boolean;
+    server: boolean;
+
+    constructor(loglevel: Loglevel, client: boolean, server: boolean) {
+        this.loglevel = loglevel;
+        this.client = client;
+        this.server = server;
+    }
+}
+
+
 
 export class LoggingNode extends BaseNode {
 
-    level: string;
+    settings: Settings
     
     constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
         super(name, NODE_TYPE, id, options, outputConnections)
-        this.level = options.settings || "NO_LEVEL_SET";
+        this.settings = options.settings;
         NodeManager.addNode(this);
     }
 
     execute(msg: Message) {
-        this.sendData(msg);
+        if(this.settings.client) this.sendData(msg);
         let levelOut = "";
-        if (this.level === "INFO") levelOut = chalk.bold(chalk.blue(this.level));
-        if (this.level === "WARN") levelOut = chalk.bold(chalk.yellow(this.level));
-        if (this.level === "CRIT") levelOut = chalk.bold(chalk.red(this.level));
-        if (this.level === "NO_LEVEL_SET") levelOut = chalk.bold(chalk.bgRed(this.level));
-
-        this.on("onInput", msg.payload, msg.additional);
-        if (Buffer.isBuffer(msg.payload)) {
-            console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${msg.payload.toString()}`);
-        } else {
-            console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${util.inspect(msg.payload, {showHidden: false, depth: null})}`);
+        if (this.settings.loglevel === Loglevel.INFO) levelOut = chalk.bold(chalk.blue(Loglevel.INFO));
+        if (this.settings.loglevel === Loglevel.WARN) levelOut = chalk.bold(chalk.yellow(Loglevel.WARN));
+        if (this.settings.loglevel === Loglevel.CRIT) levelOut = chalk.bold(chalk.red(Loglevel.CRIT));
+        
+        if (this.settings.server) {
+            this.on("onInput", msg.payload, msg.additional);
+            if (Buffer.isBuffer(msg.payload)) {
+                console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${msg.payload.toString()}`);
+            } else {
+                console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${util.inspect(msg.payload, {showHidden: false, depth: null})}`);
+            }
         }
     }
 
@@ -45,7 +65,7 @@ export class LoggingNode extends BaseNode {
             originNodeId: msg.sourceNodeId,
             targetNodeId: this.id,
             time: new Date(),
-            level: this.level,
+            level: this.settings.loglevel,
             payload: msg.payload
         }
         io.emit('EVENT_LOG', payload);

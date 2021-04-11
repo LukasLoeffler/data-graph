@@ -105,7 +105,7 @@ import TextEditable from "./TextEditable"
     running: true,
     description: "",
     nodeTypes: [
-      {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: false, hasHistory: true},
+      {type: "logging", icon: "mdi-math-log", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "info", icon: "mdi-information-outline", resettable: true, stoppable: false, configurable: true, hasHistory: true},
       {type: "button", icon: "mdi-gesture-tap-button", resettable: true, stoppable: false, configurable: false, hasHistory: false},
       {type: "interval", icon: "mdi-clock-time-five-outline", resettable: false, stoppable: true, configurable: true, hasHistory: true},
