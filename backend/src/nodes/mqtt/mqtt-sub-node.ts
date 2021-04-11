@@ -1,6 +1,3 @@
-import { connect } from "mqtt";
-import { ExecutionCounter } from "../../exec-info";
-import { Message } from "../../message";
 import { MqttBaseNode } from "./mqtt-base-node";
 
 
