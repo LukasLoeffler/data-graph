@@ -1,3 +1,4 @@
+import { connect } from "mqtt";
 import { ExecutionCounter } from "../../exec-info";
 import { Message } from "../../message";
 import { MqttBaseNode } from "./mqtt-base-node";
@@ -14,15 +15,15 @@ export class MqttSubNode extends MqttBaseNode {
     }
 
     subscribe() {
-        this.client.subscribe(this.topic, (err: any) => {
-            if(err) {
+        let subscribeTopics = this.topics.replace(/ /g, '').split(",");
+        this.client.subscribe(subscribeTopics, (err: any) => {
+            if (err) {
                 console.log("SubNodeSubscribe:", err);
-                this.createClient();
             }
         })
 
-        this.client.on("message",  (topic: any, message: string) => {
-            if (this.running) {
+        this.client.on("message", (topic: any, message: string) => {
+            if (this.running && this.topics.includes(topic)) {
                 try {
                     this.onSuccess(JSON.parse(message));
                 } catch (error) {
@@ -39,7 +40,7 @@ export class MqttSubNode extends MqttBaseNode {
     }
 
     stop() {
-        this.client.unsubscribe(this.topic, (err: any) => {
+        this.client.unsubscribe(this.topics, (err: any) => {
             if(err) console.log("SubNode:", err);
         })
         this.running = false;

@@ -65,7 +65,6 @@ import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
 import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
 import Filter from "../nodes/object/FilterNode";
-import PathNode from "../nodes/object/PathNode";
 import AdvancedMapperNode from "../nodes/object/AdvancedMapperNode"
 import AdvancedMapperDialog from '../nodes/object/AdvancedMapperDialog';
 
@@ -79,6 +78,7 @@ import GeoFilterDialog from "../nodes/geo/GeoFilterDialog"
 
 import MqttSubNode from "../nodes/mqtt/MqttSubNode";
 import MqttPubNode from "../nodes/mqtt/MqttPubNode";
+import MqttDialog from "../nodes/mqtt/MqttDialog";
 
 import Logging from "../nodes/LoggingNode";
 
@@ -286,6 +286,8 @@ export default {
       this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
       this.viewPlugin.registerOption("DelayDialog", DelayDialog);
       this.viewPlugin.registerOption("AdvancedMapperDialog", AdvancedMapperDialog);
+      this.viewPlugin.registerOption("MqttDialog", MqttDialog);
+      
 
       // Register nodes
       this.editor.registerNodeType("interval", IntervalNode, "Time")
@@ -375,6 +377,9 @@ export default {
           try {
             let settings = template.options.find(option => option[0] === "settings")[1];
             node.setOptionValue("settings", settings);
+
+            let color = template.options.find(option => option[0] === "color")[1];
+            node.setOptionValue("color", color);
 
             this.editor.addNode(node);
             node.position = template.position;
