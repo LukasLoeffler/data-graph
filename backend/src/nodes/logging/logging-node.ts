@@ -27,7 +27,6 @@ class Settings {
 }
 
 export class LoggingNode extends BaseNode {
-
     settings: Settings
     
     constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
@@ -38,10 +37,14 @@ export class LoggingNode extends BaseNode {
 
     createLevelOut() {
         switch (this.settings.loglevel) {
-            case Loglevel.INFO: return chalk.bold(chalk.blue(Loglevel.INFO));
-            case Loglevel.WARN: return chalk.bold(chalk.yellow(Loglevel.WARN));
-            case Loglevel.CRIT: return chalk.bold(chalk.red(Loglevel.CRIT));
-            default: return chalk.bold(chalk.blue(Loglevel.INFO));
+            case Loglevel.INFO: 
+                return chalk.bold(chalk.blue(Loglevel.INFO));
+            case Loglevel.WARN: 
+                return chalk.bold(chalk.yellow(Loglevel.WARN));
+            case Loglevel.CRIT: 
+                return chalk.bold(chalk.red(Loglevel.CRIT));
+            default: 
+                return chalk.bold(chalk.blue(Loglevel.INFO));
         }
     }
 
@@ -57,10 +60,6 @@ export class LoggingNode extends BaseNode {
                 console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${util.inspect(msg.payload, {showHidden: false, depth: null})}`);
             }
         }
-    }
-
-    async get() {
-        return new Date().toISOString();
     }
 
     sendData(msg: Message) {
