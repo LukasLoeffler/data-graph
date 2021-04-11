@@ -1,5 +1,5 @@
 import { Node } from "@baklavajs/core";
-import { store } from '../main';
+import { store } from '../../main';
 
 
 export default class LoggingNode extends Node {
@@ -12,9 +12,7 @@ export default class LoggingNode extends Node {
         super();
         this.addInputInterface("event")
         this.addOutputInterface("onInput")
-        this.addOption("settings", "SelectOption", "INFO", undefined, {
-            items: [ "INFO", "WARN", "CRIT" ]
-        });
+        this.addOption("settings", "LoggingDialog", {loglevel: "INFO", client: true, server: true}, undefined);
 
         this.addOption("color", undefined, "#03A9F4");
         this.addOption("running", undefined, true);

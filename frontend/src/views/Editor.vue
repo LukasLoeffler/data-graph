@@ -80,7 +80,9 @@ import MqttSubNode from "../nodes/mqtt/MqttSubNode";
 import MqttPubNode from "../nodes/mqtt/MqttPubNode";
 import MqttDialog from "../nodes/mqtt/MqttDialog";
 
-import Logging from "../nodes/LoggingNode";
+import Logging from "../nodes/logging/LoggingNode";
+import LoggingDialog from "../nodes/logging/LoggingDialog";
+
 
 import AggregatorNode from "../nodes/aggregator/AggregatorNode";
 import AggregatorNodeDialog from "../nodes/aggregator/AggregatorNodeDialog";
@@ -287,6 +289,7 @@ export default {
       this.viewPlugin.registerOption("DelayDialog", DelayDialog);
       this.viewPlugin.registerOption("AdvancedMapperDialog", AdvancedMapperDialog);
       this.viewPlugin.registerOption("MqttDialog", MqttDialog);
+      this.viewPlugin.registerOption("LoggingDialog", LoggingDialog);
       
 
       // Register nodes
