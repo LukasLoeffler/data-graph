@@ -180,7 +180,13 @@ export default {
       return this.nodeListFiltered[this.selected]?.type || "Template: " + this.templates[this.selectedTemplate]?.name;
     },
     selectedDescr() {
-      return this.nodeListFiltered[this.selected]?.description || this.templates[this.selectedTemplate]?.options;
+      let nodeDescription = this.nodeListFiltered[this.selected]?.description;
+      if (nodeDescription) return nodeDescription; // Guard-clause for node case
+
+      let templateSettings = this.templates[this.selectedTemplate]?.options.find(option => option[0] === "settings");
+      if (templateSettings && templateSettings[1]?.notes) return templateSettings[1]?.notes;
+
+      return "No description provided"
     },
     selectedTags() {
       return this.nodeListFiltered[this.selected]?.tags || [];
