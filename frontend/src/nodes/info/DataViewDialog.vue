@@ -11,7 +11,10 @@
           LastValue
         </v-card-title>
         <v-card-text style="max-height: 350px">
-          <json-viewer v-if="lastData && dialog" :value="lastData" :expand-depth=4 expanded preview-mode theme="custom-theme" style="text-align:left; overflow: scroll; border-radius: 3px; height: 500px"></json-viewer>
+          <json-viewer v-if="lastData && dialog && isJsonParsable" :value="lastData" :expand-depth=4 expanded preview-mode theme="custom-theme" style="text-align:left; overflow: scroll; border-radius: 3px; height: 500px"></json-viewer>
+          <p v-else-if="isArrayBuffer" style="text-align: left">{{isArrayBuffer}}</p>
+          <p v-else-if="lastData" style="text-align: left">{{lastData}}</p>
+          <p v-else>No Data present</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -50,8 +53,29 @@ export default {
     socketio.on('DATA_VIEW', (data) => {
       if (data.id === this.node.id) {
         this.lastData = data.payload;
+        this._computedWatchers.isArrayBuffer.run();
       }
     });
   },
+  computed: {
+    isJsonParsable() {
+      try {
+        JSON.parse(this.lastData);
+      } catch (e) {
+          return false;
+      }
+      return true;
+    },
+    isArrayBuffer() {
+        if (!this.lastData) return undefined;
+        try {
+          let decoder = new TextDecoder("utf-8");
+          let decoded = decoder.decode(this.lastData);
+          return decoded;
+        } catch (error) {
+          return undefined;
+        }
+    },
+  }
 }
 </script>

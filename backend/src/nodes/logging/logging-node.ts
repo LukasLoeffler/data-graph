@@ -50,6 +50,7 @@ export class LoggingNode extends BaseNode {
 
     execute(msg: Message) {
         if(this.settings.client) this.sendData(msg);
+        this.on("onInput", msg.payload, msg.additional);
         let levelOut = this.createLevelOut();
         
         if (this.settings.server) {
