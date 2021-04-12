@@ -53,13 +53,14 @@ export default {
       if (data.id === this.node.id) {
         this.lastData = data.payload;
         this._computedWatchers.isArrayBuffer.run();
+        this._computedWatchers.isJsonParsable.run();
       }
     });
   },
   computed: {
     isJsonParsable() {
       try {
-        JSON.parse(this.lastData);
+        JSON.parse(JSON.stringify(this.lastData));
       } catch (e) {
           return false;
       }

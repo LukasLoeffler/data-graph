@@ -7,7 +7,7 @@ import { ObjectPathNode } from "./data/json-path-node";
 import { ObjectMapperNode } from "./data/object-mapper-node";
 import { ArrayMapperNode } from "./data/array-mapper-node";
 import { AdvancedMapperNode } from "./data/advanced-mapper-node";
-import { FilterNode } from "./data/filter-node";
+import { FilterArrayNode } from "./data/filter-node";
 import { ButtonNode } from "./button/button-node";
 import { MqttPubNode } from "./mqtt/mqtt-pub-node";
 import { MqttSubNode } from "./mqtt/mqtt-sub-node";
@@ -57,7 +57,7 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("object-mapping", "object", ObjectMapperNode),
     new RegEntry("object-path", "object", ObjectPathNode),
     new RegEntry("array-mapping", "object", ArrayMapperNode),
-    new RegEntry("filter", "object", FilterNode),
+    new RegEntry("filter-array", "object", FilterArrayNode),
     new RegEntry("button", "input", ButtonNode),
     new RegEntry("mqtt-pub", "mqtt", MqttPubNode),
     new RegEntry("mqtt-sub", "mqtt", MqttSubNode),

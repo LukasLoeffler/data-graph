@@ -114,7 +114,7 @@ import TextEditable from "./TextEditable"
       {type: "http-post-put", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "array-mapping", icon: "mdi-code-array", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "object-mapping", icon: "mdi-code-braces", resettable: false, stoppable: false, configurable: true, hasHistory: true},
-      {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false, hasHistory: true},
+      {type: "filter-array", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false, hasHistory: true},
       {type: "object-path", icon: "mdi-map-marker-path", resettable: false, stoppable: false, configurable: false, hasHistory: true},
       {type: "file-save", icon: "mdi-content-save-outline", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "postgres-save", icon: "mdi-elephant", resettable: false, stoppable: false, configurable: true, hasHistory: true},

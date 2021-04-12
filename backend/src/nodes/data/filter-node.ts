@@ -2,17 +2,15 @@ import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
 import { Message } from "../../message";
 
-const NODE_TYPE = "FILTER"
+const NODE_TYPE = "FILTER-ARRAY"
 
 
-
-export class FilterNode extends BaseNode {
+export class FilterArrayNode extends BaseNode {
     filter: string;
 
-    constructor(name: string, id: string, options: string, outputConnections: Array<any> = []) {
+    constructor(name: string, id: string, options: any, outputConnections: Array<any> = []) {
         super(name, NODE_TYPE, id, options, outputConnections);
-        this.filter = options;
-        console.log(options);
+        this.filter = options.settings;
         NodeManager.addNode(this);
     }
 
@@ -21,8 +19,7 @@ export class FilterNode extends BaseNode {
             let output = msg.payload.filter((element: any) => eval(this.filter));
             this.onSuccess(output, msg.additional);
         } catch (error) {
-            console.log("FilterNodeError:", error);
-            this.onFailure(error, msg.additional);
+            this.onFailure(error.message, msg.additional);
         }
     }
 }
