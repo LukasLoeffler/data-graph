@@ -1,15 +1,15 @@
 <template>
   <div class="opt-container">
     <v-btn
-      :disabled="$store.getters.dataChanged" class="btn-execute"
+      :disabled="$store.getters.dataChanged" class="btn-execute" outlined
       @click="onClick"
-      color="blue darken-3" small>
+      color="blue lighten-2" small>
       {{option.title}}
     </v-btn>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-chip v-on="on" class="btn-counter ml-1 justify-center" 
-          style="height: 28px" color="green" label small @contextmenu.prevent="resetCounter"
+        <v-chip v-on="on" class="btn-counter ml-1 justify-center" outlined
+          style="height: 28px" color="green lighten-2" label small @contextmenu.prevent="resetCounter"
         >{{executionCount}}</v-chip>
       </template>
       <span>Number of executions</span>

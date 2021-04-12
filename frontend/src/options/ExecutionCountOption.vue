@@ -2,19 +2,19 @@
   <div class="mt-0 chip-container">
     <v-tooltip bottom open-delay="300" v-if="value && value.includes('trigger')">
       <template v-slot:activator="{ on, attrs }">
-        <v-chip label small color="primary" class="mr-1 chip-trigger justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{triggerCount}}</v-chip>
+        <v-chip label small color="blue lighten-2" outlined class="mr-1 chip-trigger justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{triggerCount}}</v-chip>
       </template>
       <span>Number of activations</span>
     </v-tooltip>
     <v-tooltip bottom open-delay="300"  v-if="value && value.includes('success')">
       <template v-slot:activator="{ on, attrs }">
-        <v-chip label small color="green" class="mr-1 chip-success justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{successCount}}</v-chip>
+        <v-chip label small color="green lighten-2" outlined class="mr-1 chip-success justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{successCount}}</v-chip>
       </template>
       <span>Number of successful activations</span>
     </v-tooltip>
     <v-tooltip bottom open-delay="300"  v-if="value && value.includes('failure')">
       <template v-slot:activator="{ on, attrs }">
-        <v-chip label small color="red" class="mr-1 chip-error justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{failureCount}}</v-chip>
+        <v-chip label small color="red lighten-2" outlined class="mr-1 chip-error justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{failureCount}}</v-chip>
       </template>
       <span>Number of unsuccessful activations</span>
     </v-tooltip>
