@@ -66,7 +66,7 @@
       socketio.on('NODE_EXEC_ERROR', (message) => {
         if (message.data.nodeId === this.data.id) {
             this.triggerPulse("crimson");
-            console.error(`Node ${this.data.name}: ${message.data.message}`);
+            //console.error(`Node ${this.data.name}: ${message.data.message}`);
           }
       });
 
