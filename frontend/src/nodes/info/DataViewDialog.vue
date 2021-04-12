@@ -60,7 +60,8 @@ export default {
   computed: {
     isJsonParsable() {
       try {
-        JSON.parse(JSON.stringify(this.lastData));
+        let output = JSON.parse(JSON.stringify(this.lastData));
+        if (output && Object.keys(output).length === 0 && output.constructor === Object) return false;
       } catch (e) {
           return false;
       }
