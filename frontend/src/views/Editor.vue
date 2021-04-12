@@ -124,6 +124,9 @@ import SwitchDialog from "../nodes/flow/SwitchDialog"
 import DelayNode from "../nodes/flow/DelayNode"
 import DelayDialog from "../nodes/flow/DelayDialog"
 
+import DataViewNode from "../nodes/info/DataViewNode"
+import DataViewDialog from "../nodes/info/DataViewDialog"
+
 import NavigationDrawer from '../components/NavigationDrawer'
 import Console from '../components/Console.vue';
 import Toolbar from './Toolbar.vue';
@@ -290,6 +293,7 @@ export default {
       this.viewPlugin.registerOption("AdvancedMapperDialog", AdvancedMapperDialog);
       this.viewPlugin.registerOption("MqttDialog", MqttDialog);
       this.viewPlugin.registerOption("LoggingDialog", LoggingDialog);
+      this.viewPlugin.registerOption("DataViewDialog", DataViewDialog);
       
 
       // Register nodes
@@ -297,6 +301,7 @@ export default {
 
       this.editor.registerNodeType("logging", Logging, "Logging")
       this.editor.registerNodeType("info", InfoNode, "Logging")
+      this.editor.registerNodeType("data-view", DataViewNode, "Logging")
 
       this.editor.registerNodeType("http-get", HttpGet, "Http")
       this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
