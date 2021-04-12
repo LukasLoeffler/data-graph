@@ -10,7 +10,7 @@ export default class DataViewNode extends Node {
         this.addOption("settings", "DataViewDialog");
         this.addOption("color", undefined, "#26828c");
         this.addInputInterface("Event");
-        this.addOutputInterface("onSuccess");
+        this.addOutputInterface("onTrigger");
         this.addOption("running", undefined, true);
     }
 }
