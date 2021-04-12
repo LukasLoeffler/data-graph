@@ -1,15 +1,16 @@
 import { Node } from "@baklavajs/core";
 import { store } from '../../main';
 
-export default class FilterNode extends Node {
-    type = "filter";
-    name = "Filter";
+export default class FilterArrayNode extends Node {
+    type = "filter-array";
+    name = "Filter Array";
 
 
     constructor() {
         super();
         this.addInputInterface("payload");
         this.addOutputInterface("onSuccess");
+        this.addOutputInterface("onFailure");
 
         this.addOption("settings", "InputOption");
         this.addOption("color", undefined, "#E9C143FF");

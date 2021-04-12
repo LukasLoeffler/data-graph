@@ -64,7 +64,7 @@ import HttpInRequestDialog from "../nodes/http/HttpInRequestDialog"
 import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
 import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
 import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
-import Filter from "../nodes/object/FilterNode";
+import FilterArray from "../nodes/object/FilterArrayNode";
 import AdvancedMapperNode from "../nodes/object/AdvancedMapperNode"
 import AdvancedMapperDialog from '../nodes/object/AdvancedMapperDialog';
 
@@ -309,7 +309,7 @@ export default {
       this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
 
       // Object
-      this.editor.registerNodeType("filter", Filter, "Object")
+      this.editor.registerNodeType("filter-array", FilterArray, "Object")
       //this.editor.registerNodeType("object-path", PathNode, "Object")
       this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
       this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")

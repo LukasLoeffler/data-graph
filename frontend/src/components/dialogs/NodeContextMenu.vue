@@ -64,7 +64,7 @@
     <NodeContextMenuListItem :title="running ? 'Stop Node': 'Start Node'" :color="running ? 'red' : 'green'" :icon="running ? 'mdi-pause': 'mdi-play-outline'" @click="activateNode" v-if="isStoppable"/>
     <NodeContextMenuListItem title="Reset Node" color="orange" icon="mdi-backup-restore" @click="resetNode" v-if="isResettable"/>
     <NodeContextMenuListItem title="Open Settings" color="teal" icon="mdi-cog-outline" @click="openSettings" v-if="isConfigurable"/>
-    <NodeContextMenuListItem title="Setting History" color="purple lighten-1" icon="mdi-format-list-numbered" @click="openHistory" v-if="hasHistory"/>
+    <NodeContextMenuListItem title="Settings History" color="purple lighten-1" icon="mdi-format-list-numbered" @click="openHistory" v-if="hasHistory"/>
     <NodeContextMenuColorPicker :color="color" @colorChange="changeColor"/>
     <NodeContextMenuListItem v-for="(action, i) in actions" :key="i" :title="action.text" :color="action.color" :icon="action.icon" @click="execute(action.callable)"/>
     <v-divider></v-divider>
@@ -114,7 +114,7 @@ import TextEditable from "./TextEditable"
       {type: "http-post-put", icon: "mdi-wan", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "array-mapping", icon: "mdi-code-array", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "object-mapping", icon: "mdi-code-braces", resettable: false, stoppable: false, configurable: true, hasHistory: true},
-      {type: "filter", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false, hasHistory: true},
+      {type: "filter-array", icon: "mdi-filter-outline", resettable: false, stoppable: false, configurable: false, hasHistory: true},
       {type: "object-path", icon: "mdi-map-marker-path", resettable: false, stoppable: false, configurable: false, hasHistory: true},
       {type: "file-save", icon: "mdi-content-save-outline", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "postgres-save", icon: "mdi-elephant", resettable: false, stoppable: false, configurable: true, hasHistory: true},

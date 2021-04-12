@@ -2,7 +2,6 @@
   <div>
     <v-btn color="blue lighten-2" class="mr-1" outlined @click.stop="dialog = true" :loading="loading" small>
       View Data
-      <v-icon class="ml-4">mdi-iframe-braces-outline</v-icon>
     </v-btn>
 
     <v-dialog v-model="dialog" scrollable width="800px">
@@ -54,13 +53,15 @@ export default {
       if (data.id === this.node.id) {
         this.lastData = data.payload;
         this._computedWatchers.isArrayBuffer.run();
+        this._computedWatchers.isJsonParsable.run();
       }
     });
   },
   computed: {
     isJsonParsable() {
       try {
-        JSON.parse(this.lastData);
+        let output = JSON.parse(JSON.stringify(this.lastData));
+        if (output && Object.keys(output).length === 0 && output.constructor === Object) return false;
       } catch (e) {
           return false;
       }

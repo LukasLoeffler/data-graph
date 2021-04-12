@@ -177,6 +177,13 @@ let descriptions = [
         `,
         tags: ["flow", "switch", "if", "gate", ]
     },
+    {
+        type: "filter-array",
+        text: `
+            Filters array by condition
+        `,
+        tags: ["filter", "condition", "array"]
+    },
 ]
 
 

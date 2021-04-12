@@ -77,6 +77,7 @@ import { apiBaseUrl } from '@/main';
 
 export default {
   extends: Components.ContextMenu,
+  inject: ["plugin"],
   data: () => {
     return {
       nodeList: null,
@@ -115,8 +116,9 @@ export default {
     },
     addTemplate() {
       let template = this.templates[this.selectedTemplate];
-      template.position.x = this.x;
-      template.position.y = this.y;
+
+      template.position.x = this.x / this.plugin.scaling - this.plugin.panning.x;
+      template.position.y = this.y / this.plugin.scaling - this.plugin.panning.y;
 
       this.$store.commit("createNodeFromTemplate", template);
       this.onClickOutside(undefined);

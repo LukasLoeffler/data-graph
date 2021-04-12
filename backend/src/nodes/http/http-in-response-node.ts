@@ -18,9 +18,13 @@ export class HttpInResponseNode extends BaseNode {
 
     execute(msg: Message) {
         try {
-            msg.additional.res.status(this.statusCode).send(msg.payload);
+            if (msg.additional?.res) {
+                msg.additional.res.status(this.statusCode).send(msg.payload);
+            } else {
+                this.sendErrorMessage(this.id, "No response object passed in additional"); // Trigger red pulse
+            }
         } catch(err) {
-            this.sendErrorMessage(this.id, err.code); // Trigger red pulse
+            this.sendErrorMessage(this.id, err.message); // Trigger red pulse
         }
     }
 }
