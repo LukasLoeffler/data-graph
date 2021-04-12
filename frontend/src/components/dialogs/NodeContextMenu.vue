@@ -132,6 +132,7 @@ import TextEditable from "./TextEditable"
       {type: "switch", icon: "mdi-electric-switch", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "advanced-mapper", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "data-view", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: false, hasHistory: false},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
