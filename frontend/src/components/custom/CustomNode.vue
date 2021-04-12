@@ -63,9 +63,10 @@
       }
     },
     created() {
-      socketio.on('NODE_EXEC_ERROR', (data) => {
-        if (data.data.nodeId === this.data.id) {
+      socketio.on('NODE_EXEC_ERROR', (message) => {
+        if (message.data.nodeId === this.data.id) {
             this.triggerPulse("crimson");
+            console.error(`Node ${this.data.name}: ${message.data.message}`);
           }
       });
 
