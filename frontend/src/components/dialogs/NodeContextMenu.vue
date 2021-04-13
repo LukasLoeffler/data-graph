@@ -122,7 +122,7 @@ import TextEditable from "./TextEditable"
       {type: "mqtt-pub", icon: "mdi-alpha-m", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "aggregator", icon: "mdi-arrow-decision-outline", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "python-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true, hasHistory: true},
-      {type: "javascript-function", icon: "mdi-language-python", resettable: false, stoppable: false, configurable: true, hasHistory: true},
+      {type: "javascript-function", icon: "mdi-language-javascript", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "trigger-after", icon: "mdi-counter", resettable: true, stoppable: false, configurable: true, hasHistory: true},
       {type: "data-change", icon: "mdi-delta", resettable: true, stoppable: false, configurable: true, hasHistory: true},
       {type: "http-in-request", icon: "mdi-delta", resettable: false, stoppable: false, configurable: true, hasHistory: true},
