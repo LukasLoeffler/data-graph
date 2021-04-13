@@ -9,11 +9,11 @@
       </template>
 
       <v-list style="text-align: left">
-        <v-list-item
-          v-for="(value, name) in typeCount"
-          :key="name" dense
-        >
-          <v-list-item-title>{{ name }}:{{ value }}</v-list-item-title>
+        <v-list-item link
+          v-for="(value, name) in typeCount" :key="name" dense>
+          <v-list-item-content @click="highlightNodes(name)">
+            <v-list-item-title>{{name}}:{{value}}</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -21,19 +21,29 @@
 </template>
 
 <script>
-  export default {
-    props: ["nodes"],
-    data: () => ({}),
-    computed: {
-        typeCount() {
-          let typeCount = {};
+import EventBus from '@/event-bus';
 
-          this.nodes.forEach(node => {
-            if (typeCount[node.type] == null) typeCount[node.type] = 1;
-            else typeCount[node.type]++;
-          });
-          return typeCount;
-        }
+export default {
+  props: ["nodes"],
+  data: () => ({}),
+  computed: {
+    typeCount() {
+      let typeCount = {};
+      this.nodes.forEach(node => {
+        if (typeCount[node.type] == null) typeCount[node.type] = 1;
+        else typeCount[node.type]++;
+      });
+      return typeCount;
+    }
+  },
+  methods: {
+    highlightNodes(type) {
+      this.nodes
+        .filter((node) => node.type === type)
+        .forEach((node) => {
+          EventBus.$emit('HIGHLIGHT_NODE', node.id);
+        })
     }
   }
+}
 </script>
