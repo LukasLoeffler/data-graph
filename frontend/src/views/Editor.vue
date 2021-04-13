@@ -191,7 +191,11 @@ export default {
 
     socketio.on('SAVE', (data) => {
       let {init, changed, deleted} = data;
-      if (init || changed || deleted) this.snackbar = true; // Snackbar only when a node was changed/deleted/created
+      if (init || changed || deleted) {
+        // Snackbar only when a node was changed/deleted/created
+        this.snackbar = true;
+        this.loadConfig();
+      }
     });
 
     this.initialLoad();
@@ -239,13 +243,14 @@ export default {
       this.configIndex = this.$route.params.index-1;
       this.selectedConfig = this.nodeConfig[this.configIndex];
 
-      if (this.selectedConfig) {
-        let loadStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
-        this.axios.get(loadStateUrl).then((response) => {
-          // If loaded object from backend is empty the default graph is loaded
-          if (!this.isEmpty(response.data)) this.editor.load(response.data);
-        })
-      }
+      let loadStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
+      this.axios.get(loadStateUrl).then((response) => {
+        // If loaded object from backend is empty the default graph is loaded
+        if (!this.isEmpty(response.data)) {
+          this.editor.load(response.data);
+          this.selectedConfig = response.data;
+        }
+      });
     },
     changeWorkspace(index) {
       index++;

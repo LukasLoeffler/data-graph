@@ -3,7 +3,8 @@
     <v-toolbar id="toolbar" dense color="primary" dark >
       <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
       <v-toolbar-title>{{workspaceName}}</v-toolbar-title>
-      <div class="flex-grow-1"></div>
+      <v-spacer></v-spacer>
+      <toolbar-node-type-count v-if="this.workspace" :nodes="this.workspace.nodes"></toolbar-node-type-count>
       <ConnectionIndicator :status="websocketStatus"/>
       <v-btn icon @click="toggleConsole">
         <v-icon>mdi-console</v-icon>
@@ -14,6 +15,7 @@
 
 <script>
 import ConnectionIndicator from '../components/ConnectionIndicator.vue';
+import ToolbarNodeTypeCount from '../components/ToolbarNodeTypeCount.vue';
 
 export default {
   props: {
@@ -21,7 +23,8 @@ export default {
     websocketStatus: Boolean
   },
   components: {
-    ConnectionIndicator
+    ConnectionIndicator,
+    ToolbarNodeTypeCount
   },
   methods: {
     toggleDrawer() {
@@ -34,6 +37,9 @@ export default {
   computed: {
     workspaceName() {
       return this.workspace?.workspace || "Name not defined";
+    },
+    workspaceNodeCount() {
+      return this.workspace?.nodes.length || "Id not defined";
     }
   },
 }
