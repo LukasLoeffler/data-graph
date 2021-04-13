@@ -22,6 +22,7 @@
         <v-card-title>
         <span class="headline">Edit {{nodeConfig.workspace}}</span>
         </v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
         <v-form v-model="valid">
           <v-container>
@@ -47,10 +48,9 @@
       </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-        <v-btn color="green" outlined left class="ml-7" :disabled="!valid" @click="saveWorkspace()">Save</v-btn>
-        <v-btn color="red" outlined left>Delete</v-btn>
         <v-spacer></v-spacer>
         <v-btn color="blue" text @click="dialog = false">Close</v-btn>
+        <v-btn color="green" text :disabled="!valid" @click="saveWorkspace()">Save</v-btn>
         </v-card-actions>
       </v-card>
       </v-dialog>
