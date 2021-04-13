@@ -1,15 +1,16 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" max-width="600px">
-      <!--
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn dark v-bind="attrs" v-on="on" color="grey darken-1" small style="width: 180px">Open Settings</v-btn>
-      </template>
-      -->
-      <v-card>
+    <v-dialog v-model="dialog" max-width="600px" :hide-overlay="transparent">
+      <v-card :color="transparency" outlined>
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @mouseenter="transparent = true" @mouseleave="transparent = false">
+            <v-icon v-if="!transparent">mdi-eye-off</v-icon>
+            <v-icon v-else color="red">mdi-eye</v-icon>
+          </v-btn>
         </v-card-title>
+        <v-divider></v-divider>
         <v-card-text class="pb-1">
           <v-container>
             <v-form v-model="valid">
@@ -84,7 +85,8 @@ export default {
       protocol: value => (value.includes("http://") || value.includes("https://")) || 'Protocol is false or missing entirely.',
       timeout: value => value > 0 && value < 300000|| 'Number between 0 and 300.000 required.'
     },
-    valid: false
+    valid: false,
+    transparent: false
   }),
   props: ["option", "node", "value"],
   created() {
@@ -115,7 +117,11 @@ export default {
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
     }
   },
-
+  computed: {
+    transparency() {
+      return (this.transparent) ? "transparent" : null;
+    }
+  },
   watch: {
     "$store.getters.optionNode": {
       handler(nodeId) {
