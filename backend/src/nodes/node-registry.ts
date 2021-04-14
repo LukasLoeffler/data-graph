@@ -25,6 +25,7 @@ import { JavaScriptFunctionNode } from "./function/javascript-function-node";
 import { SwitchNode } from "./flow/switch-node";
 import { DelayNode } from "./flow/delay-node";
 import { DataViewNode } from "./info/data-view-node";
+import { MapNode } from "./geo/map-node";
 
 
 
@@ -76,6 +77,7 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("delay", "flow", DelayNode),
     new RegEntry("advanced-mapper", "object", AdvancedMapperNode),
     new RegEntry("data-view", "info", DataViewNode),
+    new RegEntry("geo-map", "geo", MapNode),
 ]
 
 
