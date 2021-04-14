@@ -133,7 +133,15 @@ export default {
     open: undefined,
     snackbar: false
   }),
-  created() {},
+  created() {
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        this.init();
+        this.fetchData();
+      }
+    });
+  },
   methods: {
     fetchData() {
       let lastValueUrl = `${apiBaseUrl}/last-value/${this.node.id}`;
@@ -211,15 +219,6 @@ export default {
     }
   },
   watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.init();
-          this.fetchData();
-        }
-      }
-    },
     dialog(visible) {
       if (!visible) {
         this.open = undefined;

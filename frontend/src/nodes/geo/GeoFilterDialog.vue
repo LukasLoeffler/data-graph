@@ -117,6 +117,15 @@ export default {
       selectionMode: true
     }
   },
+  created() {
+    this.init();
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
+      }
+    });
+  },
   methods: {
     save(){
       let filter = {
@@ -158,14 +167,6 @@ export default {
     }
   },
   watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
-        }
-      }
-    },
     e1() {
       setTimeout(() => {window.dispatchEvent(new Event('resize'))}, 100);
     },

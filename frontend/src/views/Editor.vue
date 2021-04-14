@@ -1,6 +1,6 @@
 <template>
   <div id="container">
-    <Toolbar :websocketStatus="websocketConnected" :workspace="state" 
+    <Toolbar :websocketStatus="websocketConnected" :workspace="state" :wsName="selectedConfig" 
       @toggleDrawer="drawer = !drawer" @toggleConsole="console = !console"
     />
     <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" :configIndex="configIndex"

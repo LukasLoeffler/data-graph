@@ -20,11 +20,15 @@ import ToolbarNodeTypeCount from '../components/ToolbarNodeTypeCount.vue';
 export default {
   props: {
     workspace: Object,
+    wsName: Object,
     websocketStatus: Boolean
   },
   components: {
     ConnectionIndicator,
     ToolbarNodeTypeCount
+  },
+  created() {
+    console.log(this.workspace);
   },
   methods: {
     toggleDrawer() {
@@ -36,7 +40,7 @@ export default {
   },
   computed: {
     workspaceName() {
-      return this.workspace?.workspace || "Name not defined";
+      return this.wsName?.workspace || "Name not defined";
     },
     workspaceNodeCount() {
       return this.workspace?.nodes.length || "Id not defined";

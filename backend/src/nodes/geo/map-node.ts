@@ -13,6 +13,10 @@ export class MapNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        io.emit('EVENT_LOG', msg.payload);
+        let message = {
+            nodeId: this.id,
+            payload: msg.payload
+        }
+        io.emit('GEO_MAP',message);
     }
 }
