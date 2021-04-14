@@ -39,6 +39,7 @@
 
 <script>
 import JsonViewer from 'vue-json-viewer'
+import EventBus from '@/event-bus';
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
 // import highlighting library (you can use any library you want just return html string)
@@ -65,6 +66,14 @@ export default {
   props: ["option", "node", "value"],
   created() {
     this.init();
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        this.codeFormatted = null;
+        this.fetchData();
+        this.init();
+      }
+    });
   },
   methods: {
     init() {
@@ -110,19 +119,6 @@ export default {
       })
     }
   },
-
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.codeFormatted = null;
-          this.fetchData();
-          this.init();
-        }
-      }
-    }
-  }
 }
 </script>
 

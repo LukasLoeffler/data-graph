@@ -74,6 +74,8 @@
 
 
 <script>
+import EventBus from "@/event-bus"
+
 export default {
   data: () => ({
     dialog: false,
@@ -91,6 +93,12 @@ export default {
   props: ["option", "node", "value"],
   created() {
     this.init();
+      EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+        if (nodeId === this.node.id) {
+          this.dialog = true;
+          this.init();
+        }
+      });
   },
   methods: {
     addHeader() {
@@ -122,15 +130,5 @@ export default {
       return (this.transparent) ? "transparent" : null;
     }
   },
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.init();
-          this.dialog = true;
-        }
-      }
-    },
-  }
 }
 </script>

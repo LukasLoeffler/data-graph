@@ -1,6 +1,6 @@
 <template>
   <div id="container">
-    <Toolbar :websocketStatus="websocketConnected" :workspace="selectedConfig" 
+    <Toolbar :websocketStatus="websocketConnected" :workspace="state" :wsName="selectedConfig" 
       @toggleDrawer="drawer = !drawer" @toggleConsole="console = !console"
     />
     <NavigationDrawer :drawer="drawer" :nodeConfig="nodeConfig" :configIndex="configIndex"
@@ -74,6 +74,9 @@ import FileSaveDialog from "../nodes/filesystem/FileSaveDialog"
 // Geofilter
 import GeoFilterNode from "../nodes/geo/GeoFilterNode"
 import GeoFilterDialog from "../nodes/geo/GeoFilterDialog"
+
+import MapNode from "../nodes/geo/MapNode"
+import MapOption from "../nodes/geo/MapOption"
 
 
 import MqttSubNode from "../nodes/mqtt/MqttSubNode";
@@ -150,6 +153,7 @@ export default {
       notifyMessage: "",
       notifyColor: "white",
       notifyTimeout: 1000,
+      state: null
     }
   },
   components: {
@@ -194,7 +198,6 @@ export default {
       if (init || changed || deleted) {
         // Snackbar only when a node was changed/deleted/created
         this.snackbar = true;
-        this.loadConfig();
       }
     });
 
@@ -209,6 +212,7 @@ export default {
     },
     save() {
       let state = this.editor.save();
+      this.state = state;
       let saveStateUrl = `${apiBaseUrl}/node-config/${this.selectedConfig._id}`;
       this.axios.put(saveStateUrl, state);
     },
@@ -299,6 +303,7 @@ export default {
       this.viewPlugin.registerOption("MqttDialog", MqttDialog);
       this.viewPlugin.registerOption("LoggingDialog", LoggingDialog);
       this.viewPlugin.registerOption("DataViewDialog", DataViewDialog);
+      this.viewPlugin.registerOption("MapOption", MapOption);
       
 
       // Register nodes
@@ -322,6 +327,8 @@ export default {
 
       // Geo
       this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
+      this.editor.registerNodeType("geo-map", MapNode, "Geo")
+
 
       // Filesystem
       this.editor.registerNodeType("file-save", FileSave, "Filesystem")

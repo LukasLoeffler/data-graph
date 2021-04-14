@@ -45,6 +45,7 @@
 
 <script>
 import {apiBaseUrl} from "@/main.js";
+import EventBus from '@/event-bus';
 
 export default {
   data: () => ({
@@ -60,6 +61,12 @@ export default {
   props: ["option", "node", "value"],
   created() {
     this.init();
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        this.init();
+      }
+    });
   },
   methods: {
     save() {
@@ -78,15 +85,5 @@ export default {
       return `${apiBaseUrl}/http-in${this.valueCopy.endpoint}`
     }
   },
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.init();
-        }
-      }
-    },
-  }
 }
 </script>

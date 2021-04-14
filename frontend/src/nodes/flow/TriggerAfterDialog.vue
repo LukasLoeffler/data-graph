@@ -51,6 +51,8 @@
 
 
 <script>
+import EventBus from "@/event-bus";
+
 export default {
   data: () => ({
     dialog: false,
@@ -64,7 +66,13 @@ export default {
   }),
   props: ["option", "node", "value"],
   created() {
-this.init();
+    this.init();
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        this.init();
+      }
+    });
   },
   methods: {
     save() {
@@ -78,16 +86,5 @@ this.init();
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
     }
   },
-
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.init();
-        }
-      }
-    },
-  }
 }
 </script>
