@@ -45,6 +45,7 @@
 import PostgresConnectionEditor from './PostgresConnectionEditor.vue';
 import PostgresMappingEditor from './PostgresMappingEditor.vue';
 import {apiBaseUrl} from "../../main.js";
+import EventBus from '@/event-bus';
 
 export default {
   components: { 
@@ -61,6 +62,12 @@ export default {
   props: ["option", "node", "value"],
   created() {
     this.init();
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        this.init();
+      }
+    });
   },
   methods: {
     save() {
@@ -93,16 +100,6 @@ export default {
     init() {
       this.nodeCopy = {...this.node};
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
-    }
-  },
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.init();
-        }
-      }
     }
   }
 }

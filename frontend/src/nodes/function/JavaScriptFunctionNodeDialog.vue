@@ -66,6 +66,7 @@
 
 <script>
 import { PrismEditor } from 'vue-prism-editor';
+import EventBus from '@/event-bus';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
 // import highlighting library (you can use any library you want just return html string)
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -99,6 +100,14 @@ export default {
     init() {
       this.nodeCopy = {...this.node};
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
+      EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+        if (nodeId === this.node.id) {
+          this.dialog = true;
+          this.outputInterfaces = [];
+          this.init();
+          this.initInterfaceList();
+        }
+      });
     },
     addHeader() {
       this.newName = ""
@@ -163,18 +172,6 @@ export default {
       let variantB = `'${interfaceName}'`;  // Check for single quote intfName
 
       return this.valueCopy.code.includes(variantA) || this.valueCopy.code.includes(variantB);
-    }
-  },
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.outputInterfaces = [];
-          this.init();
-          this.initInterfaceList();
-        }
-      }
     }
   },
   computed: {

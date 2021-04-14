@@ -76,6 +76,8 @@
 
 
 <script>
+import EventBus from "@/event-bus"
+
 export default {
   name: "HttpPostPutDialog",
   data: () => ({
@@ -93,6 +95,12 @@ export default {
   inject: ['editor', "plugin"],
   created() {
     this.init();
+      EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+        if (nodeId === this.node.id) {
+          this.dialog = true;
+          this.init();
+        }
+      });
   },
   methods: {
     addHeader() {
@@ -132,16 +140,5 @@ export default {
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
     }
   },
-
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.init();
-        }
-      }
-    },
-  }
 }
 </script>

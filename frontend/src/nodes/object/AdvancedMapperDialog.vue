@@ -73,6 +73,7 @@
 
 
 <script>
+import EventBus from '@/event-bus';
 import Draggable from 'vuedraggable';
 import LastValueDialog from '../../components/dialogs/LastValueDialog';
 import FunctionDialog from './FunctionDialog.vue';
@@ -102,6 +103,12 @@ export default {
   props: ["option", "node", "value"],
   created() {
     this.init();
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        this.init();
+      }
+    });
   },
   methods: {
     save() {
@@ -139,16 +146,5 @@ export default {
       this.$forceUpdate();
     }
   },
-
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.dialog = true;
-          this.init();
-        }
-      }
-    },
-  }
 }
 </script>

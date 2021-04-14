@@ -88,6 +88,8 @@
 </template>
 
 <script>
+import EventBus from '@/event-bus';
+
 export default {
   props: ["option", "node", "value"],
   data: () => {

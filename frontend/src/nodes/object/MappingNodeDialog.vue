@@ -115,6 +115,7 @@
 import Draggable from 'vuedraggable';
 import JsonViewer from 'vue-json-viewer'
 import {apiBaseUrl} from "@/main.js";
+import EventBus from '@/event-bus';
 
 export default {
   props: ["option", "node", "value"],

@@ -89,6 +89,7 @@ import {getDescription} from "./nodeDescription.js";
 import NodeContextMenuListItem from "./NodeContextMenuListItem"
 import NodeContextMenuColorPicker from "./NodeContextMenuColorPicker"
 import TextEditable from "./TextEditable"
+import EventBus from '@/event-bus';
 
   export default {
   components: {
@@ -133,6 +134,7 @@ import TextEditable from "./TextEditable"
       {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "advanced-mapper", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "data-view", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: false, hasHistory: false},
+      {type: "geo-map", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: false, hasHistory: false},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
@@ -194,9 +196,8 @@ import TextEditable from "./TextEditable"
       });
     },
     openSettings() {
-      this.$store.commit("setOptionNode", this.nodeData.id);
+      EventBus.$emit('OPEN_SETTINGS', this.nodeData.id);
       this.menu = false;
-      setTimeout(() =>{this.$store.commit("setOptionNode", null)}, 1); // Hacky way to implement an event bus
     },
     createTemplate() {
 

@@ -70,6 +70,8 @@
 
 
 <script>
+import EventBus from '@/event-bus';
+
 export default {
   data: () => ({
     dialog: false,
@@ -89,7 +91,14 @@ export default {
     infoMode: false
   }),
   props: ["option", "node", "value"],
-  created() {},
+  created() {
+    EventBus.$on("OPEN_SETTINGS", (nodeId) => {
+      if (nodeId === this.node.id) {
+        this.dialog = true;
+        this.init();
+      }
+    });
+  },
   methods: {
     save() {
       this.interfacesToRemove.forEach((intf) => {
@@ -169,16 +178,6 @@ export default {
         if (intf) intf["timeout"] = timeout.timeout;
       });
     }
-  },
-  watch: {
-    "$store.getters.optionNode": {
-      handler(nodeId) {
-        if (nodeId === this.node.id) {
-          this.init();
-          this.dialog = true;
-        }
-      }
-    },
   },
   computed: {
     newNameInvalid() {

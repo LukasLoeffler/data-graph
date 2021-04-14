@@ -41,9 +41,7 @@ export default {
       expanded: undefined
     }
   },
-  props: {
-    event: Object,
-  },
+  props: ["event"],
   methods: {
     copyToClipboard() {
       let text = JSON.stringify(this.event.payload, null, 4);
