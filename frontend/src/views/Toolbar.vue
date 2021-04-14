@@ -27,9 +27,6 @@ export default {
     ConnectionIndicator,
     ToolbarNodeTypeCount
   },
-  created() {
-    console.log(this.workspace);
-  },
   methods: {
     toggleDrawer() {
       this.$emit("toggleDrawer")
