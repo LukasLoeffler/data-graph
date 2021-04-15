@@ -14,9 +14,10 @@
     </template>
     <v-card height="250px" width="400px">
       <v-row>
-        <v-col>
-          <v-text-field label="Datapoint" v-model="valueCopy.property" hide-details dense outlined class="ml-1"></v-text-field>
+        <v-col cols="6">
+          <v-text-field label="Property Field" v-model="valueCopy.property" hide-details dense outlined class="ml-1"></v-text-field>
         </v-col>
+        <v-spacer></v-spacer>
         <v-col>
           <v-btn text color="red" @click="lineData = []">RESET</v-btn>
         </v-col>
