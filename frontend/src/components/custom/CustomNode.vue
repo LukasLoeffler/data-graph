@@ -1,17 +1,27 @@
 <template>
-  <div :id="data.id" class="node" :class="classes" :style="styles" @wheel.stop="" @contextmenu.prevent.capture="">
+  <div 
+    :id="data.id" 
+    class="node" :class="classes" :style="styles" 
+    @wheel.stop="" 
+    @contextmenu.prevent.capture=""
+  >
     <div
       :class="classTitle"
       :style="myStyle"
       @mousedown.self.prevent.stop="startDrag"
       @contextmenu.prevent.capture=""
     >
-      <NodeContextMenu :menu="showMenu" :nodeData="data" :dragging="dragging" @optionChange="optionChange" @start-drag="startDrag" @stop-drag="mouseUp"/>  
+      <NodeContextMenu 
+        :menu="showMenu" 
+        :nodeData="data" 
+        :dragging="dragging" 
+        @optionChange="optionChange" 
+        @start-drag="startDrag" 
+        @stop-drag="mouseUp"
+      />  
     </div>
 
     <div class="__content">
-
-      <!-- Rows -->
       <div v-for="(row, i) in rows" :key="i" class="interface-row">
         <CustomInterface v-if="!!row.input" :name="row.input[0]" :data="row.input[1]"/>
         <CustomInterface v-if="!!row.output" :name="row.output[0]" :data="row.output[1]"/>
