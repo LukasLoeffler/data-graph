@@ -134,7 +134,8 @@ import EventBus from '@/event-bus';
       {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "advanced-mapper", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "data-view", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: false, hasHistory: false},
-      {type: "geo-map", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: false, hasHistory: false},
+      {type: "geo-map", icon: "mdi-map", resettable: false, stoppable: false, configurable: false, hasHistory: false},
+      {type: "chart", icon: "mdi-chart-line", resettable: false, stoppable: false, configurable: false, hasHistory: false},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
