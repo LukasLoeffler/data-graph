@@ -99,6 +99,9 @@ import InfoNode from "../nodes/info/InfoNode";
 import InfoOption from "../options/InfoOption";
 import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
 
+import ChartNode from "../nodes/info/ChartNode"
+import ChartOption from "../nodes/info/ChartOption"
+
 import TriggerCountOption from "../options/TriggerCountOption";
 
 // Postgres
@@ -304,6 +307,7 @@ export default {
       this.viewPlugin.registerOption("LoggingDialog", LoggingDialog);
       this.viewPlugin.registerOption("DataViewDialog", DataViewDialog);
       this.viewPlugin.registerOption("MapOption", MapOption);
+      this.viewPlugin.registerOption("ChartOption", ChartOption);
       
 
       // Register nodes
@@ -329,6 +333,7 @@ export default {
       this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
       this.editor.registerNodeType("geo-map", MapNode, "Geo")
 
+      this.editor.registerNodeType("chart", ChartNode, "Info")
 
       // Filesystem
       this.editor.registerNodeType("file-save", FileSave, "Filesystem")

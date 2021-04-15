@@ -10,8 +10,8 @@ export default class GeoMapNode extends Node {
         this.addInputInterface("data");
 
         this.addOption("settings", "MapOption", {
-            zoom: 8,
-            center: [0, 0],
+            zoom: 12,
+            center: [8.403902, 49.009392],
             sourceLat: "lat",
             sourceLon: "lng"
         });

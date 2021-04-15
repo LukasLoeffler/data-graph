@@ -58,11 +58,11 @@ connectToServer( function( err: any, client: any ) {
 });
 
 
-app.get("/node-config/:id", ( req, res ) => {
+app.get("/node-config/:id", (req: express.Request, res: express.Response) => {
     let query = { 
         _id: new mongodb.ObjectID(req.params.id)
     };
-    dbo.collection("node-configs").findOne(query, function(err: any, result: any) {
+    dbo.collection("node-configs").findOne(query, function (err: any, result: any) {
         if (err) res.status(404).send(err);
         else {
             res.send(result);
@@ -70,14 +70,14 @@ app.get("/node-config/:id", ( req, res ) => {
     });
 });
 
-app.get("/node-configs/all", (req, res) => {
+app.get("/node-configs/all", (req: express.Request, res: express.Response) => {
     dbo.collection("node-configs").find({}).toArray(function(err: any, result: any) {
         if (err) res.status(500).send(err);
         else res.send(result);
     });
 });
 
-app.delete("/node-config/:id", (req, res) => {
+app.delete("/node-config/:id", (req: express.Request, res: express.Response) => {
     let query = { 
         _id: new mongodb.ObjectID(req.params.id)
     };
@@ -89,7 +89,7 @@ app.delete("/node-config/:id", (req, res) => {
     });
 });
 
-app.put("/node-config/:id", ( req, res ) => {
+app.put("/node-config/:id", (req: express.Request, res: express.Response) => {
     let query = { 
         _id: new mongodb.ObjectID(req.params.id)
     };
@@ -116,7 +116,7 @@ app.put("/node-config/:id", ( req, res ) => {
     lastSave = newvalues;
 });
 
-app.post("/node-config/", ( req, res ) => {
+app.post("/node-config/", (req: express.Request, res: express.Response) => {
     dbo.collection("node-configs").insertOne(req.body, function(err: any, obj: any) {
         if (err) res.status(500).send("Configuation not saved");
         else {
@@ -127,7 +127,7 @@ app.post("/node-config/", ( req, res ) => {
 });
 
 
-app.get("/last-value/:nodeId", (req, res) => {
+app.get("/last-value/:nodeId", (req: express.Request, res: express.Response) => {
 
     let query = { 
         _id: req.params.nodeId
@@ -142,44 +142,44 @@ app.get("/last-value/:nodeId", (req, res) => {
     });
 })
 
-app.post("/test/:nodeId", async (req, res) => {
+app.post("/test/:nodeId", async (req: express.Request, res: express.Response) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
     node.test(req.body.mapping, res);
 })
 
-app.get("/start/:nodeId", (req, res) => {
+app.get("/start/:nodeId", (req: express.Request, res: express.Response) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
     let running = node.start();
     res.send({"running": running});
 });
 
-app.get("/stop/:nodeId", (req, res) => {
+app.get("/stop/:nodeId", (req: express.Request, res: express.Response) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
     let running = node.stop();
     res.send({"running": running});
 });
 
-app.get("/reset/:nodeId", (req, res) => {
+app.get("/reset/:nodeId", (req: express.Request, res: express.Response) => {
     let node = NodeManager.getNodeById(req.params.nodeId);
     console.log("Resetting Node:", node.name);
     let running = node.reset();
     res.send({"reset": "success"});
 });
 
-app.get("/reset-exec-count/:nodeId", (req, res) => {
+app.get("/reset-exec-count/:nodeId", (req: express.Request, res: express.Response) => {
     ExecutionCounter.resetCount(req.params.nodeId);
     res.send({"reset": "success"});
 });
 
 
-app.get("/mqtt-server/all", (req, res) => {
+app.get("/mqtt-server/all", (req: express.Request, res: express.Response) => {
     dbo.collection("mqtt-servers").find({}).toArray(function(err: any, result: any) {
         if (err) res.status(500).send(err);
         else res.send(result);
     });
 });
 
-app.get("/mqtt-server/:id", (req, res) => {
+app.get("/mqtt-server/:id", (req: express.Request, res: express.Response) => {
     var query = { 
         id: parseInt(req.params.id)
     };
@@ -190,14 +190,14 @@ app.get("/mqtt-server/:id", (req, res) => {
     });
 });
 
-app.post("/mqtt-server", (req, res) => {
+app.post("/mqtt-server", (req: express.Request, res: express.Response) => {
     dbo.collection("mqtt-servers").insertOne(req.body, function(err: any, result: any) {
         if (err) res.status(400).send(err);
         else res.send(result);
     });
 });
 
-app.delete("/mqtt-server/:id", (req, res) => {
+app.delete("/mqtt-server/:id", (req: express.Request, res: express.Response) => {
     let query = { 
         id: req.params.id
     };
@@ -209,14 +209,14 @@ app.delete("/mqtt-server/:id", (req, res) => {
     });
 });
 
-app.get("/node-templates/all", (req, res) => {
+app.get("/node-templates/all", (req: express.Request, res: express.Response) => {
     dbo.collection("node-templates").find({}).toArray(function (err: any, result: any) {
         if (err) res.status(500).send(err);
         else res.send(result);
     });
 })
 
-app.post("/node-template", (req, res) => {
+app.post("/node-template", (req: express.Request, res: express.Response) => {
     dbo.collection("node-templates").insertOne(req.body, function(err: any, result: any) {
         if (err) res.status(400).send(err);
         else res.send(result);
@@ -225,7 +225,7 @@ app.post("/node-template", (req, res) => {
 
 
 
-app.get('/http-in/*', function(req, res) {
+app.get('/http-in/*', function(req: express.Request, res: express.Response) {
     let url = req.originalUrl.replace("/http-in", "");
 
     let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url && ( node.listenMethod === "GET" || node.listenMethod === "*") );
@@ -233,7 +233,7 @@ app.get('/http-in/*', function(req, res) {
     else res.status(400).send({message: "no matching endpoint active"});
 });
 
-app.post('/http-in/*', function(req, res) {
+app.post('/http-in/*', function(req: express.Request, res: express.Response) {
     let url = req.originalUrl.replace("/http-in", "");
 
     let node = NodeManager.getNodesByType("HTTP_IN_REQUEST").find((node: any) => node.listenUrl === url && ( node.listenMethod === "POST" || node.listenMethod === "*") );
@@ -242,7 +242,7 @@ app.post('/http-in/*', function(req, res) {
 });
 
 
-app.post('/check-pg-connection', async function(req, res) {
+app.post('/check-pg-connection', async function(req: express.Request, res: express.Response) {
 
     let client = new Client(req.body);
     await client.connect(async (err: any) =>  {
@@ -272,14 +272,14 @@ async function getPgTableSchema(tableName: string, client: any) {
     });
 }
 
-app.get("/node-history/all", (req, res) => {
+app.get("/node-history/all", (req: express.Request, res: express.Response) => {
     dbo.collection("node-history").find({}).sort({ date: -1 }).toArray(function (err: any, result: any) {
         if (err) res.status(500).send(err);
         else res.send(result);
     });
 })
 
-app.get("/node-history/:nodeId", (req, res) => {
+app.get("/node-history/:nodeId", (req: express.Request, res: express.Response) => {
 
     let query = {
         nodeId: req.params.nodeId
@@ -291,14 +291,14 @@ app.get("/node-history/:nodeId", (req, res) => {
     });
 })
 
-app.get("/artifacts/list", (req, res) => {
+app.get("/artifacts/list", (req: express.Request, res: express.Response) => {
     let folder = "./output"
     fs.readdir(folder, (err: any, files: any) => {
         res.send(files);
     });
 })
 
-app.get("/artifact/:filename", (req, res) => {
+app.get("/artifact/:filename", (req: express.Request, res: express.Response) => {
     let filename = `${req.params.filename}`;
     res.sendFile(filename, { root: path.join(__dirname, '../output') });
 })

@@ -3,12 +3,13 @@
   <v-menu
     bottom
     offset-y
+    open-on-hover
     :close-on-content-click="false"
     v-model="dialog"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn color="blue" dark v-bind="attrs" v-on="on" outlined small>
-        Show Map
+        Hover to Show Map
       </v-btn>
     </template>
     <v-card width="500px">
@@ -21,7 +22,7 @@
         </v-col>
       </v-row>
       <vl-map style="height: 400px" data-projection="EPSG:4326">
-        <vl-view :zoom.sync="zoom" :center.sync="center"></vl-view>
+        <vl-view :zoom.sync="valueCopy.zoom" :center.sync="valueCopy.center"></vl-view>
           <vl-layer-tile :z-index="0">
             <vl-source-xyz :url="selectedMap"></vl-source-xyz>
           </vl-layer-tile>
@@ -37,24 +38,15 @@
 
 <script>
 import { socketio } from '@/main';
-import EventBus from '@/event-bus';
 
 export default {
   name: "InfoConfigDialog",
   data: () => ({
     dialog: false,
-    rules: {
-      required: value => !!value || 'Required.',
-    },
     nodeCopy: null,
     valueCopy: null,
-    valid: null,
-    e1: 1,
-    zoom: 8,
-    center: [0, 0],
     features: null,
     selectedMap: "https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
-    selectionMode: true
   }),
   props: ["option", "node", "value"],
   inject: ['editor', "plugin"],
@@ -68,9 +60,6 @@ export default {
   },
   methods: {
     save() {
-      this.valueCopy.center = this.center;
-      this.valueCopy.zoom = this.zoom;
-
       this.node.setOptionValue("settings", this.valueCopy);
       this.$store.commit("saveNodeConfig", this.node.id);
       this.dialog = false;
@@ -81,8 +70,6 @@ export default {
     init() {
       this.nodeCopy = {...this.node};
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
-      this.center = this.valueCopy?.center || [0, 0];
-      this.zoom = this.valueCopy?.zoom || 8;
     },
   },
   watch: {

@@ -133,8 +133,9 @@ import EventBus from '@/event-bus';
       {type: "switch", icon: "mdi-electric-switch", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "delay", icon: "mdi-timer-sand", resettable: false, stoppable: false, configurable: true, hasHistory: true},
       {type: "advanced-mapper", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: true, hasHistory: true},
-      {type: "data-view", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: false, hasHistory: false},
-      {type: "geo-map", icon: "mdi-transfer", resettable: false, stoppable: false, configurable: false, hasHistory: false},
+      {type: "data-view", icon: "mdi-code-json", resettable: false, stoppable: false, configurable: false, hasHistory: false},
+      {type: "geo-map", icon: "mdi-map", resettable: false, stoppable: false, configurable: false, hasHistory: false},
+      {type: "chart", icon: "mdi-chart-line", resettable: false, stoppable: false, configurable: false, hasHistory: false},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},
