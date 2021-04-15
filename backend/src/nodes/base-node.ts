@@ -32,7 +32,7 @@ export class BaseNode {
     }
 
 
-    onFailure(payload: any, additional: any = null, pulse: boolean = false) {
+    onFailure(payload: any, additional: any = null, pulse: boolean = true) {
         ExecutionCounter.incrCountType(this.id, "failure");
         this.on("onFailure", payload, additional, pulse)
     }
