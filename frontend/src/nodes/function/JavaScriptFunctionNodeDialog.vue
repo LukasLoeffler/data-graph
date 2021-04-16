@@ -4,6 +4,8 @@
       <v-card>
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
+          <v-spacer></v-spacer>
+          <LastValueDialog :nodeId="node.id" :nodeName="node.name"/>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
@@ -66,6 +68,7 @@
 
 <script>
 import { PrismEditor } from 'vue-prism-editor';
+import LastValueDialog from '../../components/dialogs/LastValueDialog';
 import EventBus from '@/event-bus';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles somewhere
 // import highlighting library (you can use any library you want just return html string)
@@ -90,7 +93,8 @@ export default {
     newName: null,
   }),
   components: {
-    PrismEditor
+    PrismEditor,
+    LastValueDialog,
   },
   props: ["option", "node", "value"],
   created() {
