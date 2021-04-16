@@ -20,13 +20,13 @@ export class AdvancedMapperNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
-    async execute(msgIn: Message) {
-        storeLastValue(this.id, msgIn.payload);
+    async execute(msg: Message) {
+        storeLastValue(this.id, { ...msg.payload });
         try {
-            let newObject = await this.mapInput(msgIn.payload);
-            this.onSuccess(newObject, msgIn.additional);
+            let newObject = await this.mapInput(msg.payload);
+            this.onSuccess(newObject, msg.additional);
         } catch (error) {
-            this.onFailure(error.message, msgIn.additional, true);
+            this.onFailure(error.message, msg.additional, true);
         }
 
     }
