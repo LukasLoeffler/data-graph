@@ -1,6 +1,7 @@
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
 import { Message } from "../../message";
+import { format } from "date-fns";
 const fs = require('fs');
 const converter = require('json-2-csv');
 
@@ -23,57 +24,90 @@ export class FileSaveNode extends BaseNode {
         NodeManager.addNode(this);
     }
 
+    buildFileName(payload: any) {
+        let outputFilename = this.fileName;
+        if(this.fileName.includes("${}")) console.log(this.fileName);
+        let matches = this.fileName.match(/[^{\}]+(?=})/g);
+
+        matches?.forEach(match => {
+            outputFilename = outputFilename.replace('${'+match+'}', this.evaluateExpression(match, payload))
+        });
+        return outputFilename;
+    }
+
+    /**
+     * If expression can be extracted from payload. Its expected to be a valid field to extracted.
+     * If expression does not result in a truthy value, the expression is applied as datetime formatting for the
+     * current timestamp.
+     * If nothing matches the expression, the method throws an error.
+     * @param expression The expression to be evaluated, either as payload property or time formatting expression.
+     * @param payload Payload to check expression for
+     * @returns Either the value of the extracted payload property or formatted time string
+     */
+    evaluateExpression(expression: string, payload: any): string {
+        if (payload[expression]) {
+            let expressionValue = payload[expression];
+            if (typeof expressionValue !== "string") throw new Error("Extracted expression value must be string");
+            return expressionValue;
+        };
+        return format(new Date(), expression)
+    }
+
     execute(msg: Message) {
-        let payload = msg.payload;
-        let datetime = new Date().toISOString().replace(/:/g, "-")
-        let file = `${this.filePath}/${this.fileName}-${datetime}.${this.fileType}`
+        try {
+            let payload = msg.payload;
+            let file = `${this.filePath}/${this.buildFileName(payload)}`
 
-        if (this.append) file = `${this.filePath}/${this.fileName}.${this.fileType}`;
-
-        // FileType JSON: saving json
-        if (this.fileType === "json") {
-            fs.writeFile(file, JSON.stringify(payload,  null, 4),  (err: any) => {
-                if (err) {
-                    this.onFailure(err, msg.additional, true);
-                } else {
-                    this.onSuccess(payload, msg.additional);
-                }
-            });
-        } else if (this.fileType === "csv") {
-            this.writeToCsv(payload, file, msg);
-        } else {
-            fs.writeFile(file, payload,  (err: any) => {
-                if (err) {
-                    this.onFailure(err, msg.additional, true);
-                } else {
-                    this.onSuccess(payload, msg.additional);
-                }
-            });
+            if (this.fileType === "json") this.saveAsJson(file, msg)
+            else if (this.fileType === "csv") this.saveAsCsv(file, msg);
+            else {
+                fs.writeFile(file, payload, (err: any) => {
+                    if (err) {
+                        this.onFailure(err, msg.additional, true);
+                    } else {
+                        this.onSuccess(payload, msg.additional);
+                    }
+                });
+            }
+        } catch (error) {
+            this.onFailure(error.message, msg.additional, true);
         }
     }
 
+    saveAsOther(filePath: string, msg: Message) {
 
-    writeToCsv(payload: any, filePath: string, msg: Message) {
+    }
+
+    saveAsJson(filePath: string, msg: Message) {
+        fs.writeFile(filePath, JSON.stringify(msg.payload, null, 4), (err: any) => {
+            if (err) {
+                this.onFailure(err, msg.additional, true);
+            } else {
+                this.onSuccess(msg.payload, msg.additional);
+            }
+        });
+    }
+
+    async saveAsCsv(filePath: string, msg: Message) {
         try {
             let fileExists = fs.existsSync(filePath);
 
-            converter.json2csv(payload, { prependHeader: !fileExists}, (err: any, csv: any) => {
-                if (err) throw new Error(err);
-                else {
-                    if (fs.existsSync(filePath)) {
-                        fs.appendFile(filePath, "\n"+csv, (err: any) => {
-                            if (err) throw new Error(err);
-                            else this.onSuccess(payload, msg.additional);
-                        })
-                    } else {
-                        fs.writeFileSync(filePath, csv);
-                        this.onSuccess(csv, msg.additional);
-                    }
+            let prependHeader = !fileExists || !this.append;
+            await converter.json2csv(msg.payload, { prependHeader: prependHeader }, (err: any, csv: any) => {
+                if (fs.existsSync(filePath) && this.append) {
+                    fs.appendFile(filePath, "\n" + csv, (err: any) => {
+                        if (err) throw new Error(err);
+                        else this.onSuccess(msg.payload, msg.additional);
+                    });
+                } else {
+                    fs.writeFile(filePath, csv, (err: any) => {
+                        if (err) throw new Error(err);
+                        else this.onSuccess(msg.payload, msg.additional);
+                    });
                 }
             });
         } catch (error) {
             this.onFailure(error.message, msg.additional, true);
-            console.log(error);
         }
     }
 }

@@ -5,34 +5,34 @@
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
         </v-card-title>
+        <v-divider></v-divider>
         <v-card-text class="pb-1">
           <v-form v-model="valid">
             <v-row>
               <v-col cols="6">
-                <v-text-field label="Name" v-model="nodeCopy.name" :rules="[rules.required]" hide-details></v-text-field>
+                <v-text-field label="Name" v-model="nodeCopy.name" :rules="[rules.required]"  hint="Node name" persistent-hint></v-text-field>
               </v-col>
               <v-col cols="6">
                 <v-text-field 
                   label="Path" required v-model="valueCopy.path"
-                  :rules="[rules.required]" hide-details>
+                  :rules="[rules.required]"  hint="Output folder path" persistent-hint>
                 </v-text-field>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="5">
                 <v-select 
                   label="Filetype" required v-model="valueCopy.filetype" :items="fileTypes"
-                  :rules="[rules.required]" hide-details>
+                  :rules="[rules.required]" hint="Filetype handles conversion" persistent-hint>
                 </v-select>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="7">
                 <v-text-field 
                   label="Filename" required v-model="valueCopy.filename"
-                  :rules="[rules.required]" hide-details>
+                  :rules="[rules.required]" hint="Filename must match OS file naming convention" persistent-hint>
                 </v-text-field>
               </v-col>
               <v-col cols="6" v-if="valueCopy.filetype === 'csv'">
                 <v-checkbox 
-                  label="Append" required v-model="valueCopy.append"
-                  :rules="[rules.required]" hide-details>
+                  label="Append to file (only csv)" v-model="valueCopy.append" hide-details>
                 </v-checkbox>
               </v-col>
             </v-row>
@@ -70,7 +70,7 @@ export default {
       required: value => !!value || 'Required.',
     },
     valid: false,
-    fileTypes: ["json", "csv"]
+    fileTypes: ["json", "csv", "other"]
   }),
   props: ["option", "node", "value"],
   created() {
