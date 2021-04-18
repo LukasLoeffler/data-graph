@@ -22,6 +22,7 @@ export class PostgresSaveNode extends BaseNode {
         super(name, NODE_TYPE, id, options, outputConnections)
         this.client = new Client(options.settings.connection);
         // Combination out of columns and sources are the mapping
+
         this.columns = options.settings.mapping.map((map: any) => { return map.column});
         this.sources = options.settings.mapping.map((map: any) => { return map.source});
         this.placeholder = this.buildPlaceholder(this.columns.length);
@@ -54,8 +55,8 @@ export class PostgresSaveNode extends BaseNode {
     execute(msg: Message) {
         storeLastValue(this.id, {...msg.payload });
         let values = this.sources.map((source: any) => { return msg.payload[source]});
-
-        let sql = `INSERT INTO ${this.options.connection.table} (${this.columns}) VALUES (${this.placeholder})`;
+        console.log(this.options.settings);
+        let sql = `INSERT INTO ${this.options.settings.connection.table} (${this.columns}) VALUES (${this.placeholder})`;
 
         this.client
             .query(sql, values)
