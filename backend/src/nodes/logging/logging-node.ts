@@ -54,7 +54,6 @@ export class LoggingNode extends BaseNode {
         let levelOut = this.createLevelOut();
         
         if (this.settings.server) {
-            this.on("onInput", msg.payload, msg.additional);
             if (Buffer.isBuffer(msg.payload)) {
                 console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${msg.payload.toString()}`);
             } else {
