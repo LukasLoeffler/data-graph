@@ -21,7 +21,7 @@ export class AdvancedMapperNode extends BaseNode {
     }
 
     async execute(msg: Message) {
-        storeLastValue(this.id, { ...msg.payload });
+        storeLastValue(this.id, JSON.parse(JSON.stringify(msg.payload)));
         try {
             let newObject = await this.mapInput(msg.payload);
             this.onSuccess(newObject, msg.additional);
@@ -70,8 +70,8 @@ export class AdvancedMapperNode extends BaseNode {
             // Formatting is not implemented yet
             if (mapper.action === "format") {
                 source = get(input_object, mapper.source);
-                //source = parseFloat(source);
-                source = parseInt(source);
+                source = parseFloat(source);
+                //source = parseInt(source);
             }
 
             if (mapper.action === "function") {

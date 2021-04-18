@@ -17,7 +17,7 @@ export class ArrayMapperNode extends BaseNode {
     }
 
     async execute(msg: Message) {
-        storeLastValue(this.id, { ...msg.payload });
+        storeLastValue(this.id, JSON.parse(JSON.stringify(msg.payload)));
         let newObject = await mapObjectArray(msg.payload, this.mapper);
         this.onSuccess(newObject, msg.additional);
     }
