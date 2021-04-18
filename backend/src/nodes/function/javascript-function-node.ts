@@ -1,3 +1,4 @@
+import { storeLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
@@ -16,6 +17,7 @@ export class JavaScriptFunctionNode extends BaseNode {
 
 
     execute(msg: Message) {
+        storeLastValue(this.id, {...msg.payload});
         try {
             // That payload and additional can be used without this in eval statement
             let payload = msg.payload; 

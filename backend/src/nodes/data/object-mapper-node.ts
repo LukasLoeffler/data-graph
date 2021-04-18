@@ -29,10 +29,10 @@ export class ObjectMapperNode extends BaseNode {
     }
 
     
-    async execute(msgIn: Message) {
-        storeLastValue(this.id, msgIn.payload);
-        let newObject = await mapObject(msgIn.payload, this.mapper, ExecMode.EXEC);
-        this.onSuccess(newObject, msgIn.additional);
+    async execute(msg: Message) {
+        storeLastValue(this.id, { ...msg.payload });
+        let newObject = await mapObject(msg.payload, this.mapper, ExecMode.EXEC);
+        this.onSuccess(newObject, msg.additional);
     }
 
     test(mapping: any, res: any) {

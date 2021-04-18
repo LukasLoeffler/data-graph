@@ -52,7 +52,7 @@ export class PostgresSaveNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        storeLastValue(this.id, msg.payload);
+        storeLastValue(this.id, {...msg.payload });
         let values = this.sources.map((source: any) => { return msg.payload[source]});
 
         let sql = `INSERT INTO ${this.options.connection.table} (${this.columns}) VALUES (${this.placeholder})`;

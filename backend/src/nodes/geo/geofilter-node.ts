@@ -23,7 +23,7 @@ export class GeoFilterNode extends BaseNode {
         let latFilterField = this.options.settings.sourceLat || undefined;
         let lonFilterField = this.options.settings.sourceLon || undefined;
         try {
-            storeLastValue(this.id, msg.payload);
+            storeLastValue(this.id, {...msg.payload});
             const coordArrays = this.options.settings.geometry.map((geom: any) => { return geom.geometry.coordinates });
             let filterPolygon = multiPolygon(coordArrays);
             let filterMode = this.options.settings.filterMode;

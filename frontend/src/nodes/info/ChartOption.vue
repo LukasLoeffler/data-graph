@@ -22,8 +22,7 @@
           <v-btn text color="red" @click="lineData = []">RESET</v-btn>
         </v-col>
       </v-row>
-      <v-sparkline v-if="dialog"
-          auto-draw
+      <v-sparkline
           :value="lineData"
           color="red"
           height="150"
