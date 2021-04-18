@@ -8,7 +8,6 @@ export default class FileSaveNode extends Node {
     constructor() {
         super();
         this.addInputInterface("Payload", undefined, undefined, {type: "JSON"});
-        this.addOutputInterface("onSuccess");
         this.addOutputInterface("onFailure");
         this.addOption("settings", "FileSaveDialog", { path: './output', filetype: "JSON", filename: "filename- ${yyyy-MM-dd-HH-mm-ss}.json"});
         this.addOption("color", undefined, "#7eb342");

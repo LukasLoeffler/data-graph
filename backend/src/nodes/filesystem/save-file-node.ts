@@ -62,11 +62,7 @@ export class FileSaveNode extends BaseNode {
             else if (this.fileType === "csv") this.saveAsCsv(file, msg);
             else {
                 fs.writeFile(file, payload, (err: any) => {
-                    if (err) {
-                        this.onFailure(err, msg.additional, true);
-                    } else {
-                        this.onSuccess(payload, msg.additional);
-                    }
+                    if (err) this.onFailure(err, msg.additional, true);
                 });
             }
         } catch (error) {
@@ -74,35 +70,25 @@ export class FileSaveNode extends BaseNode {
         }
     }
 
-    saveAsOther(filePath: string, msg: Message) {
-
-    }
-
     saveAsJson(filePath: string, msg: Message) {
         fs.writeFile(filePath, JSON.stringify(msg.payload, null, 4), (err: any) => {
-            if (err) {
-                this.onFailure(err, msg.additional, true);
-            } else {
-                this.onSuccess(msg.payload, msg.additional);
-            }
+            if (err) this.onFailure(err, msg.additional, true);
         });
     }
 
-    async saveAsCsv(filePath: string, msg: Message) {
+    saveAsCsv(filePath: string, msg: Message) {
         try {
             let fileExists = fs.existsSync(filePath);
 
             let prependHeader = !fileExists || !this.append;
-            await converter.json2csv(msg.payload, { prependHeader: prependHeader }, (err: any, csv: any) => {
+            converter.json2csv(msg.payload, { prependHeader: prependHeader }, (err: any, csv: any) => {
                 if (fs.existsSync(filePath) && this.append) {
                     fs.appendFile(filePath, "\n" + csv, (err: any) => {
-                        if (err) throw new Error(err);
-                        else this.onSuccess(msg.payload, msg.additional);
+                        if (err) this.onFailure(err, msg.additional, true);
                     });
                 } else {
                     fs.writeFile(filePath, csv, (err: any) => {
-                        if (err) throw new Error(err);
-                        else this.onSuccess(msg.payload, msg.additional);
+                        if (err) this.onFailure(err, msg.additional, true);
                     });
                 }
             });
