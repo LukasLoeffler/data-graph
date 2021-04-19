@@ -99,21 +99,22 @@ export class FileSaveNode extends BaseNode {
         }
     }
 
-    saveAsExcel(filePath: string, msg: Message) {
+    async saveAsExcel(filePath: string, msg: Message) {
         let workbook = new ExcelJS.Workbook();
-
-        workbook.xlsx.readFile(filePath)
-        .then(function () {
+        try {
+            await workbook.xlsx.readFile(filePath);
             let worksheet = workbook.worksheets[0];
             worksheet.addRow(Object.values(msg.payload));
-            workbook.xlsx.writeFile(filePath);
-        })
-        .catch((error: any) =>  {
-            const workbook = new ExcelJS.Workbook();
-            const sheet = workbook.addWorksheet('My Sheet');
-            let worksheet = workbook.worksheets[0];
-            worksheet.addRow(Object.values(msg.payload));
-            workbook.xlsx.writeFile(filePath);
-        });
+            await workbook.xlsx.writeFile(filePath);
+        } catch (error) {
+            try {
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('My Sheet');
+                worksheet.addRow(Object.values(msg.payload));
+                await workbook.xlsx.writeFile(filePath);
+            } catch (error) {
+                this.onFailure(error.message, msg.additional, true);
+            }
+        }
     }
 }
