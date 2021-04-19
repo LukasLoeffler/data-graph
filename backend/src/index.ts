@@ -172,42 +172,6 @@ app.get("/reset-exec-count/:nodeId", (req: express.Request, res: express.Respons
 });
 
 
-app.get("/mqtt-server/all", (req: express.Request, res: express.Response) => {
-    dbo.collection("mqtt-servers").find({}).toArray(function(err: any, result: any) {
-        if (err) res.status(500).send(err);
-        else res.send(result);
-    });
-});
-
-app.get("/mqtt-server/:id", (req: express.Request, res: express.Response) => {
-    var query = { 
-        id: parseInt(req.params.id)
-    };
-    console.log("Fetching mqttServers by id", query);
-    dbo.collection("mqtt-servers").find(query).toArray(function(err: any, result: any) {
-        if (err) res.status(404).send(err);
-        else res.send(result);
-    });
-});
-
-app.post("/mqtt-server", (req: express.Request, res: express.Response) => {
-    dbo.collection("mqtt-servers").insertOne(req.body, function(err: any, result: any) {
-        if (err) res.status(400).send(err);
-        else res.send(result);
-    });
-});
-
-app.delete("/mqtt-server/:id", (req: express.Request, res: express.Response) => {
-    let query = { 
-        id: req.params.id
-    };
-    dbo.collection("mqtt-servers").deleteOne(query, function(err: any, obj: any) {
-        if (err) res.status(404).send(err);
-        else res.send({
-            "num_deleted": obj.result.n
-        });
-    });
-});
 
 app.get("/node-templates/all", (req: express.Request, res: express.Response) => {
     dbo.collection("node-templates").find({}).toArray(function (err: any, result: any) {

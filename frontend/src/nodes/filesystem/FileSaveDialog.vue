@@ -70,7 +70,7 @@ export default {
       required: value => !!value || 'Required.',
     },
     valid: false,
-    fileTypes: ["json", "csv", "other"]
+    fileTypes: ["json", "csv", "xslx","other"]
   }),
   props: ["option", "node", "value"],
   created() {

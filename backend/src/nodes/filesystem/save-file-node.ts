@@ -2,6 +2,7 @@ import { BaseNode } from "../base-node";
 import { NodeManager } from "../../nodes/node-manager";
 import { Message } from "../../message";
 import { format } from "date-fns";
+var ExcelJS = require('exceljs');
 const fs = require('fs');
 const converter = require('json-2-csv');
 
@@ -60,6 +61,7 @@ export class FileSaveNode extends BaseNode {
 
             if (this.fileType === "json") this.saveAsJson(file, msg)
             else if (this.fileType === "csv") this.saveAsCsv(file, msg);
+            else if (this.fileType === "xslx") this.saveAsExcel(file, msg);
             else {
                 fs.writeFile(file, payload, (err: any) => {
                     if (err) this.onFailure(err, msg.additional, true);
@@ -95,5 +97,23 @@ export class FileSaveNode extends BaseNode {
         } catch (error) {
             this.onFailure(error.message, msg.additional, true);
         }
+    }
+
+    saveAsExcel(filePath: string, msg: Message) {
+        let workbook = new ExcelJS.Workbook();
+
+        workbook.xlsx.readFile(filePath)
+        .then(function () {
+            let worksheet = workbook.worksheets[0];
+            worksheet.addRow(Object.values(msg.payload));
+            workbook.xlsx.writeFile(filePath);
+        })
+        .catch((error: any) =>  {
+            const workbook = new ExcelJS.Workbook();
+            const sheet = workbook.addWorksheet('My Sheet');
+            let worksheet = workbook.worksheets[0];
+            worksheet.addRow(Object.values(msg.payload));
+            workbook.xlsx.writeFile(filePath);
+        });
     }
 }

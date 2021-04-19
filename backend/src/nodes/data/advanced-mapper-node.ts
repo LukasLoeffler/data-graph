@@ -21,11 +21,13 @@ export class AdvancedMapperNode extends BaseNode {
     }
 
     async execute(msg: Message) {
-        storeLastValue(this.id, JSON.parse(JSON.stringify(msg.payload)));
+        let dataCopy = JSON.parse(JSON.stringify(msg.payload));
+        storeLastValue(this.id, msg.payload);
         try {
-            let newObject = await this.mapInput(msg.payload);
+            let newObject = await this.mapInput(dataCopy);
             this.onSuccess(newObject, msg.additional);
         } catch (error) {
+            console.log(error);
             this.onFailure(error.message, msg.additional, true);
         }
 
