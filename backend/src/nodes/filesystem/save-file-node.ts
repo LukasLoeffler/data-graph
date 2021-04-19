@@ -109,8 +109,7 @@ export class FileSaveNode extends BaseNode {
         } catch (error) {
             try {
                 const workbook = new ExcelJS.Workbook();
-                const sheet = workbook.addWorksheet('My Sheet');
-                let worksheet = workbook.worksheets[0];
+                const worksheet = workbook.addWorksheet('My Sheet');
                 worksheet.addRow(Object.values(msg.payload));
                 await workbook.xlsx.writeFile(filePath);
             } catch (error) {
