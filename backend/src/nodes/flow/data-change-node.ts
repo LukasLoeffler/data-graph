@@ -11,7 +11,7 @@ const NODE_TYPE = "DATA_CHANGE"
 
 export class DataChangeNode extends BaseNode {
 
-    previousPayload: any;
+    previousPayload: any = null;
     property: any = undefined;
     allowUndefined: boolean;
 
@@ -35,8 +35,8 @@ export class DataChangeNode extends BaseNode {
                 if (JSON.stringify(dataToCheck) === JSON.stringify(this.previousPayload)) {
                     this.on("onNoChange", msg.payload, msg.additional);
                 } else {
-                    msg.payload.old = this.previousPayload;
-                    msg.payload.new = dataToCheck;
+                    msg.payload.$old = this.previousPayload;
+                    msg.payload.$new = dataToCheck;
                     this.on("onChange", msg.payload, msg.additional);
                 }
             }
@@ -47,7 +47,7 @@ export class DataChangeNode extends BaseNode {
     }
 
     reset(): boolean {
-        this.previousPayload = undefined;
+        this.previousPayload = null;
         return true;
     }
 }
