@@ -27,6 +27,8 @@ import { DelayNode } from "./flow/delay-node";
 import { DataViewNode } from "./info/data-view-node";
 import { MapNode } from "./geo/map-node";
 import { ChartNode } from "./info/chart-node";
+import { TextTemplateNode } from "./text/text-template-node";
+import { SendMailNode } from "./notify/send-mail-node";
 
 
 
@@ -80,6 +82,8 @@ let nodeRegistry: Array<RegEntry> = [
     new RegEntry("data-view", "info", DataViewNode),
     new RegEntry("geo-map", "geo", MapNode),
     new RegEntry("chart", "info", ChartNode),
+    new RegEntry("text-template", "text", TextTemplateNode),
+    new RegEntry("send-mail", "notify", SendMailNode),
 ]
 
 

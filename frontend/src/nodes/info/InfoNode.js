@@ -8,7 +8,7 @@ export default class InfoNode extends Node {
     constructor() {
         super();
         this.addOption("InfoOption", "InfoOption");
-        this.addOption("settings", "InfoConfigDialog", ["count", "time"]);
+        this.addOption("settings", "InfoConfigDialog", {count: true, time: true, date: false, bytes: false});
         this.addOption("color", undefined, "#26828c");
         this.addInputInterface("Event");
         this.addOutputInterface("onSuccess");

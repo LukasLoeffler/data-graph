@@ -2,26 +2,28 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" max-width="600px">
       <v-card>
-        <v-card-title>{{nodeCopy.name}}</v-card-title>
+        <v-card-title>
+          <span class="headline">{{nodeCopy.name}}</span>
+        </v-card-title>
         <v-divider></v-divider>
-        <v-container fluid class="ml-2">
-          <v-checkbox
-            v-model="valueCopy.count"
-            label="Counter"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="valueCopy.time"
-            label="Time"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="valueCopy.date"
-            label="Date"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="valueCopy.bytes"
-            label="Bytes"
-          ></v-checkbox>
-        </v-container>
+        <v-card-text class="pb-1">
+          <v-form v-model="valid">
+            <v-row>
+              <v-col cols="6">
+                <v-text-field label="Name" :rules="[rules.required]" v-model="nodeCopy.name" outlined dense hide-details></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-checkbox label="Allow Undefined" v-model="valueCopy.allowUndefined" hide-details class="mt-1"></v-checkbox>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  outlined hide-details label="Template"
+                  :rules="[rules.required]" v-model="valueCopy.template"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
         <v-divider></v-divider>
         <v-textarea
           outlined label="Notes" class="px-5 py-2" rows="3" hide-details v-model="valueCopy.notes"
@@ -29,10 +31,10 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="abort">
+          <v-btn color="blue darken-1" text @click="dialog = false">
             Close
           </v-btn>
-          <v-btn color="blue darken-1" text @click="save">
+          <v-btn color="blue darken-1" :disabled="!valid" text @click="save">
             Save
           </v-btn>
         </v-card-actions>
@@ -46,18 +48,18 @@
 import EventBus from '@/event-bus';
 
 export default {
-  name: "InfoConfigDialog",
   data: () => ({
     dialog: false,
-    rules: {
-      required: value => !!value || 'Required.',
-    },
     nodeCopy: null,
     valueCopy: null,
-    valid: null
+    rules: {
+      required: value => !!value || 'Required.',
+      positive: value => value > 0 || 'Positive number required.',
+    },
+    valid: false,
+    type: null
   }),
   props: ["option", "node", "value"],
-  inject: ['editor', "plugin"],
   created() {
     this.init();
     EventBus.$on("OPEN_SETTINGS", (nodeId) => {
@@ -70,16 +72,14 @@ export default {
   methods: {
     save() {
       this.node.setOptionValue("settings", this.valueCopy);
+      this.node.name = this.nodeCopy.name;
       this.$store.commit("saveNodeConfig", this.node.id);
-      this.dialog = false;
-    },
-    abort() {
       this.dialog = false;
     },
     init() {
       this.nodeCopy = {...this.node};
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
-    }
+    },
   },
 }
 </script>

@@ -37,7 +37,8 @@ export class MqttSubNode extends MqttBaseNode {
     }
 
     stop() {
-        this.client.unsubscribe(this.topics, (err: any) => {
+        let subscribeTopics = this.topics.replace(/ /g, '').split(",");
+        this.client.unsubscribe(subscribeTopics, (err: any) => {
             if(err) console.log("SubNode:", err);
         })
         this.running = false;
