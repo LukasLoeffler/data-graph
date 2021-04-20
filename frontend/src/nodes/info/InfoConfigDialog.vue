@@ -6,19 +6,19 @@
         <v-divider></v-divider>
         <v-container fluid class="ml-2">
           <v-checkbox
-            v-model="valueCopy[0]"
+            v-model="valueCopy.count"
             label="Counter"
           ></v-checkbox>
           <v-checkbox
-            v-model="valueCopy[1]"
+            v-model="valueCopy.time"
             label="Time"
           ></v-checkbox>
           <v-checkbox
-            v-model="valueCopy[2]"
+            v-model="valueCopy.date"
             label="Date"
           ></v-checkbox>
           <v-checkbox
-            v-model="valueCopy[3]"
+            v-model="valueCopy.bytes"
             label="Bytes"
           ></v-checkbox>
         </v-container>

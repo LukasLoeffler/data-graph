@@ -57,13 +57,7 @@ export default {
   },
   computed: {
     options() {
-      let options = {
-        count: this.node.options.get("settings").value[0],
-        bytes: this.node.options.get("settings").value[3],
-        time: this.node.options.get("settings").value[1],
-        date: this.node.options.get("settings").value[2],
-      }
-      return options;
+      return this.node.options.get("settings").value;
     },
   },
   watch: {
