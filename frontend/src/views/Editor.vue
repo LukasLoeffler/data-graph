@@ -138,6 +138,10 @@ import Console from '../components/Console.vue';
 import Toolbar from './Toolbar.vue';
 
 
+import TextTemplateDialog from '../nodes/text/TextTemplateDialog';
+import TextTemplateNode from '../nodes/text/TextTemplateNode';
+
+
 export default {
   data() {
     return {
@@ -308,6 +312,7 @@ export default {
       this.viewPlugin.registerOption("DataViewDialog", DataViewDialog);
       this.viewPlugin.registerOption("MapOption", MapOption);
       this.viewPlugin.registerOption("ChartOption", ChartOption);
+      this.viewPlugin.registerOption("TextTemplateDialog", TextTemplateDialog);
       
 
       // Register nodes
@@ -360,6 +365,8 @@ export default {
 
       // Data Type
       this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
+
+      this.editor.registerNodeType("text-template", TextTemplateNode, "Text")
     }
   },
   watch: {
