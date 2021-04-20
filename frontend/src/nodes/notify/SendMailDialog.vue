@@ -17,7 +17,7 @@
                 <v-text-field label="User" :rules="[rules.required]" v-model="valueCopy.auth.user" hide-details></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-text-field label="Password" :rules="[rules.required]" v-model="valueCopy.auth.pass" hide-details></v-text-field>
+                <v-text-field label="Password" :rules="[rules.required]" v-model="valueCopy.auth.pass" hide-details type="password"></v-text-field>
               </v-col>
               <v-col cols="6">
                 <v-text-field label="Reciever" :rules="[rules.required]" v-model="valueCopy.to" hide-details></v-text-field>
