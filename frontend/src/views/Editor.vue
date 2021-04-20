@@ -137,9 +137,11 @@ import NavigationDrawer from '../components/NavigationDrawer'
 import Console from '../components/Console.vue';
 import Toolbar from './Toolbar.vue';
 
-
 import TextTemplateDialog from '../nodes/text/TextTemplateDialog';
 import TextTemplateNode from '../nodes/text/TextTemplateNode';
+
+import SendMailNode from '../nodes/notify/SendMailNode'
+import SendMailDialog from '../nodes/notify/SendMailDialog'
 
 
 export default {
@@ -313,6 +315,7 @@ export default {
       this.viewPlugin.registerOption("MapOption", MapOption);
       this.viewPlugin.registerOption("ChartOption", ChartOption);
       this.viewPlugin.registerOption("TextTemplateDialog", TextTemplateDialog);
+      this.viewPlugin.registerOption("SendMailDialog", SendMailDialog);
       
 
       // Register nodes
@@ -367,6 +370,7 @@ export default {
       this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
 
       this.editor.registerNodeType("text-template", TextTemplateNode, "Text")
+      this.editor.registerNodeType("send-mail", SendMailNode, "Notify")
     }
   },
   watch: {
