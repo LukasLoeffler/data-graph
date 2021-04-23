@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-0 chip-container">
+  <div class="mt-0 chip-container" v-if="visible">
     <v-tooltip bottom open-delay="300" v-if="value && value.includes('trigger')">
       <template v-slot:activator="{ on, attrs }">
         <v-chip label small color="blue lighten-2" outlined class="mr-1 chip-trigger justify-center" @contextmenu.prevent="resetCounter" v-bind="attrs" v-on="on">{{triggerCount}}</v-chip>
@@ -31,6 +31,7 @@ export default {
       triggerCount: 0,
       successCount: 0,
       failureCount: 0,
+      visible: true
     }
   },
   created() {
@@ -48,6 +49,15 @@ export default {
       this.axios.get(url).then(() => {
         console.log("%cSuccessfully reset counter for", "color: green; font-weight: bold", this.node.name)
       });
+    }
+  },
+  watch: {
+    "$store.getters.saveNode": {
+      handler(nodeId) {
+        if (nodeId && nodeId === this.node.id) {
+          this.visible = this.node.getOptionValue("settings").showCount;
+        }
+      }
     }
   }
 }
