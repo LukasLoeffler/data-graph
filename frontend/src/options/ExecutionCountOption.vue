@@ -31,7 +31,6 @@ export default {
       triggerCount: 0,
       successCount: 0,
       failureCount: 0,
-      visible: true
     }
   },
   created() {
@@ -51,11 +50,17 @@ export default {
       });
     }
   },
+  computed: {
+    visible() {
+      return this.node.getOptionValue("settings").showCount || false;
+    }
+  },
   watch: {
     "$store.getters.saveNode": {
       handler(nodeId) {
         if (nodeId && nodeId === this.node.id) {
-          this.visible = this.node.getOptionValue("settings").showCount;
+          this._computedWatchers.visible.run();
+          this.$forceUpdate();
         }
       }
     }
