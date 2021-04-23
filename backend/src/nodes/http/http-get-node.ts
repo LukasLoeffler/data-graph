@@ -1,5 +1,5 @@
 import { BaseNode } from "../base-node";
-import { NodeManager } from "../../nodes/node-manager";
+import { NodeManager } from "../node-manager";
 import { Message } from "../../message";
 import { AxiosResponse, AxiosError } from 'axios'
 import { ExecutionCounter } from "../../exec-info";
@@ -22,6 +22,7 @@ export class HttpNode extends BaseNode {
     headers: Array<Record<string, any>>;
     timeout: number;
     options: any;
+    pulseOnError: boolean;
 
     constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
         super(name, NODE_TYPE, id, options, outputConnections);
@@ -29,6 +30,7 @@ export class HttpNode extends BaseNode {
         this.options = options;
         this.httpMethod = options.settings.requestType;
         this.timeout = options.settings.timeout;
+        this.pulseOnError = options.settings.pulseOnError;
         this.headers = headerUtils.headerArrayToObject(options.settings.headers);
         NodeManager.addNode(this);
     }
@@ -40,14 +42,14 @@ export class HttpNode extends BaseNode {
             if (response.data) {
                 this.onSuccess(response.data, msg.additional);
             } else {
-                this.on("onFailure", null, msg.additional, true);
+                this.on("onFailure", null, msg.additional, this.pulseOnError, response);
             }
         }).catch((err: AxiosError) => {
             let payload = {
                 code: err.code,
                 message: err.message
             }
-            this.on("onFailure", payload, msg.additional, true);
+            this.on("onFailure", payload, msg.additional, this.pulseOnError, err.message);
         });
     }
 }
