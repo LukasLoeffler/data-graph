@@ -1,13 +1,10 @@
-import { io } from "../..";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
-const util = require('util')
-const chalk = require('chalk');
 const nodemailer = require('nodemailer');
 
 
-const NODE_TYPE = "SEND_MAIL"
+const NODE_TYPE = "send_mail"
 
 
 export class SendMailNode extends BaseNode {

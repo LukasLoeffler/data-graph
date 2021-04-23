@@ -16,6 +16,8 @@ export default class HttpGetNode extends Node {
             headers: [],
             timeout: 2500,
             notes: "Enter description of functionallity here",
+            pulseOnError: true,
+            showCount: true
         });
         this.addOption("ExecutionCount", "ExecutionCountOption", ["trigger", "success", "failure"]);
         this.addOption("color", undefined, "#8C9EFF");

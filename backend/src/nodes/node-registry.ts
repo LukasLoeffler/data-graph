@@ -1,6 +1,6 @@
 import { CronNode } from "./timer/cron-node";
 import { LoggingNode } from "./logging/logging-node";
-import { HttpNode } from "./http/http-node";
+import { HttpNode } from "./http/http-get-node";
 import { HttpPostPutNode } from "./http/http-post-put-node";
 import { FileSaveNode } from "./filesystem/save-file-node";
 import { ObjectPathNode } from "./data/json-path-node";
@@ -34,58 +34,48 @@ import { SendMailNode } from "./notify/send-mail-node";
 
 export class RegEntry {
     name: string;
-    category: string;
     clss: any;
 
-    constructor(name: string, category: string, clss: any) {
+    constructor(name: string, clss: any) {
         this.name = name;
-        this.category = category;
         this.clss = clss;
-    }
-
-    repr() {
-        return {
-            name: this.name,
-            category: this.category,
-        }
     }
 }
 
-let nodeRegistry: Array<RegEntry> = [
-    new RegEntry("cron", "time", CronNode),
-    new RegEntry("interval", "time", CronNode),
-    new RegEntry("logging", "logging", LoggingNode),
-    new RegEntry("http-get", "http", HttpNode),
-    new RegEntry("http-post-put", "http", HttpPostPutNode),
-    new RegEntry("file-save", "fileSystem", FileSaveNode),
-    new RegEntry("object-mapping", "object", ObjectMapperNode),
-    new RegEntry("object-path", "object", ObjectPathNode),
-    new RegEntry("array-mapping", "object", ArrayMapperNode),
-    new RegEntry("filter-array", "object", FilterArrayNode),
-    new RegEntry("button", "input", ButtonNode),
-    new RegEntry("mqtt-pub", "mqtt", MqttPubNode),
-    new RegEntry("mqtt-sub", "mqtt", MqttSubNode),
-    new RegEntry("aggregator", "aggregator", AggregatorNode),
-    new RegEntry("postgres-save", "database", PostgresSaveNode),
-    new RegEntry("info", "info", InfoNode),
-    new RegEntry("python-function", "function", PythonFunctionNode),
-    new RegEntry("javascript-function", "function", JavaScriptFunctionNode),
-    new RegEntry("trigger-after", "flow", TriggerAfterNode),
-    new RegEntry("data-change", "flow", DataChangeNode),
-    new RegEntry("http-in-request", "http", HttpInRequestNode),
-    new RegEntry("http-in-response", "http", HttpInResponseNode),
-    new RegEntry("csv-to-json", "type", CsvToJsonNode),
-    new RegEntry("geo-filter", "geo", GeoFilterNode),
-    new RegEntry("switch", "flow", SwitchNode),
-    new RegEntry("delay", "flow", DelayNode),
-    new RegEntry("advanced-mapper", "object", AdvancedMapperNode),
-    new RegEntry("data-view", "info", DataViewNode),
-    new RegEntry("geo-map", "geo", MapNode),
-    new RegEntry("chart", "info", ChartNode),
-    new RegEntry("text-template", "text", TextTemplateNode),
-    new RegEntry("send-mail", "notify", SendMailNode),
+export let nodeRegistry: Array<RegEntry> = [
+    new RegEntry("cron", CronNode),
+    new RegEntry("interval", CronNode),
+    new RegEntry("logging", LoggingNode),
+    new RegEntry("http-get", HttpNode),
+    new RegEntry("http-post-put", HttpPostPutNode),
+    new RegEntry("file-save", FileSaveNode),
+    new RegEntry("object-mapping", ObjectMapperNode),
+    new RegEntry("object-path", ObjectPathNode),
+    new RegEntry("array-mapping", ArrayMapperNode),
+    new RegEntry("filter-array", FilterArrayNode),
+    new RegEntry("button", ButtonNode),
+    new RegEntry("mqtt-pub", MqttPubNode),
+    new RegEntry("mqtt-sub", MqttSubNode),
+    new RegEntry("aggregator", AggregatorNode),
+    new RegEntry("postgres-save", PostgresSaveNode),
+    new RegEntry("info", InfoNode),
+    new RegEntry("python-function", PythonFunctionNode),
+    new RegEntry("javascript-function", JavaScriptFunctionNode),
+    new RegEntry("trigger-after", TriggerAfterNode),
+    new RegEntry("data-change", DataChangeNode),
+    new RegEntry("http-in-request", HttpInRequestNode),
+    new RegEntry("http-in-response", HttpInResponseNode),
+    new RegEntry("csv-to-json", CsvToJsonNode),
+    new RegEntry("geo-filter", GeoFilterNode),
+    new RegEntry("switch", SwitchNode),
+    new RegEntry("delay", DelayNode),
+    new RegEntry("advanced-mapper", AdvancedMapperNode),
+    new RegEntry("data-view", DataViewNode),
+    new RegEntry("geo-map", MapNode),
+    new RegEntry("chart", ChartNode),
+    new RegEntry("text-template", TextTemplateNode),
+    new RegEntry("send-mail", SendMailNode),
 ]
-
 
 export class NodeRegistry {
     static getNodeClassByName(name: string) {
@@ -94,15 +84,6 @@ export class NodeRegistry {
             throw new Error(`Class '${name}' not registered.`)
         }
         return cls;
-    }
-
-    /**
-     * Get all available nodes
-     */
-    static getAvailableNodes() {
-        return nodeRegistry.map(regEntry => {
-            return regEntry.repr()
-        });
     }
 
     static registerNode(entry: RegEntry) {

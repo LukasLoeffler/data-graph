@@ -3,13 +3,13 @@ import { NodeManager } from "./nodes/node-manager";
 import { connectToServer, getDb } from "./manager/mongo-manager";
 import { ExecutionCounter } from "./exec-info";
 import { Client } from 'pg';
-import express from "express";
-import chalk from "chalk";
-import * as mongodb from 'mongodb';
 import { urlencoded, json, raw } from 'body-parser';
+import express from "express";
+import * as mongodb from 'mongodb';
+import * as fs from 'fs';
 import cors from 'cors';
 import path from "path";
-const fs = require('fs');
+
 
 const app = express();
 app.use(cors())
@@ -31,6 +31,7 @@ let dbo: any;
 
 let lastSave = {};  // Object to cache last node config to check if changes occured.
 
+export let connectedClients: number = 0;
 export let io: any = null;
 
 
@@ -46,9 +47,18 @@ connectToServer( function( err: any, client: any ) {
     
     io = require('socket.io')(server, {cors: { origins: '*:*'}});
     io.on('connection', function(socket: any) {
-        console.log("New Websocket Connection:", socket.id);
+        ++connectedClients;
+
+        console.log("New Websocket Connection. Numbed of connected clients:", connectedClients);
+
+        
 
         ExecutionCounter.initialEmitAllCounts();
+
+        socket.on('disconnect', function () {
+            --connectedClients;
+            console.log("New Websocket Connection. Numbed of connected clients:", connectedClients);
+        });
 
         socket.on('BTN_CLICK', function(data: any) {
             let node = NodeManager.getNodeById(data);

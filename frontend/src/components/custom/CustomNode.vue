@@ -76,7 +76,7 @@
       socketio.on('NODE_EXEC_ERROR', (message) => {
         if (message.data.nodeId === this.data.id) {
             this.triggerPulse("crimson");
-            //console.error(`Node ${this.data.name}: ${message.data.message}`);
+            //this.sendNotification(`Node ${this.data.name}: ${message.data.message}`);
           }
       });
 
@@ -93,6 +93,14 @@
       });
     },
     methods: {
+      sendNotification(message) {
+          if (Notification.permission === "granted") new Notification(message);
+          else if (Notification.permission !== "granted") {
+            Notification.requestPermission().then((permission) => {
+              if (permission === "granted") new Notification("Hi there!");
+            });
+          }
+      },
       openAltContextMenu(e) {
         e.preventDefault()
         this.showMenu = false
