@@ -262,6 +262,7 @@ export default {
         if (!this.isEmpty(response.data)) {
           this.editor.load(response.data);
           this.selectedConfig = response.data;
+          document.title = this.selectedConfig.workspace;
         }
       });
     },

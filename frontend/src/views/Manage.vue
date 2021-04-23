@@ -46,6 +46,7 @@ export default {
   watch: {
     tab(newTab, oldTab) {
       let tabName = this.items[newTab].toLowerCase();
+      document.title = tabName.charAt(0).toUpperCase() + tabName.substring(1);
       if (newTab != null && oldTab != null) this.$router.replace({path: `${tabName}`});
     }
   },
