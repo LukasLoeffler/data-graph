@@ -32,15 +32,15 @@ export class BaseNode {
     }
 
 
-    onFailure(payload: any, additional: any = null, pulse: boolean = true) {
+    onFailure(payload: any, additional: any = null, pulse: boolean = true, errorMessage: string = "") {
         ExecutionCounter.incrCountType(this.id, "failure");
         this.on("onFailure", payload, additional, pulse)
     }
 
 
-    on(trigger: string, payload: any, additional: any = null, pulse: boolean = false) {
+    on(trigger: string, payload: any, additional: any = null, pulse: boolean = false, errorMessage: string = "") {
         let targets = this.outputConnections.filter((intf: any) => intf.from.name === trigger);
-        if (pulse) this.sendErrorMessage(this.id);
+        if (pulse) this.sendErrorMessage(this.id, errorMessage);
         if (trigger === "onFailure") ExecutionCounter.incrCountType(this.id, "failure");
         targets.forEach(target => {
             this.sendConnectionExec(target.from.id, target.to.id);
