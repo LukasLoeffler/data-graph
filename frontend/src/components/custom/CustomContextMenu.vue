@@ -29,7 +29,7 @@
             <v-col :cols="cols" class="pb-0" style="max-height: 300px; overflow: scroll">
               <h4 style="text-align: left;">Nodes</h4>
               <v-chip-group active-class="primary--text" column v-model="selected">
-                <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed" @keyup.enter="keyPressed">
+                <v-chip v-for="(node, index) in nodeListFiltered" :key="index" :small="!maxed" @keyup.enter="keyPressedItem(node, index)" >
                   {{ node.type }}
                 </v-chip>
               </v-chip-group>
@@ -130,8 +130,13 @@ export default {
         this.templates = response.data;
       });
     },
-    keyPressed() {
+    keyPressed(event) {
+      console.log(event);
       this.addNode();
+    },
+    keyPressedItem(node, index) {
+      if (this.selected === index) this.addNode();
+      else this.selected = index;
     },
     toggleSize() {
       this.maxed = !this.maxed;

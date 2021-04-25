@@ -7,7 +7,7 @@
       @createWorkspace="createWorkspace" @changeworkspace="changeWorkspace" @drawerClosed="drawer = false"
     />
     <Console :console="console"/>
-    <HintOverlay v-if="state.nodes.length === 0"/>
+    <HintOverlay v-if="hintVisible"/>
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
@@ -377,6 +377,12 @@ export default {
 
       this.editor.registerNodeType("text-template", TextTemplateNode, "Text")
       this.editor.registerNodeType("send-mail", SendMailNode, "Notify")
+    }
+  },
+  computed: {
+    hintVisible() {
+      if (this.state == null || this.state.nodes.length === 0) return true
+      else return false;
     }
   },
   watch: {
