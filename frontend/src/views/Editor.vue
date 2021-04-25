@@ -7,6 +7,7 @@
       @createWorkspace="createWorkspace" @changeworkspace="changeWorkspace" @drawerClosed="drawer = false"
     />
     <Console :console="console"/>
+    <HintOverlay v-if="state.nodes.length === 0"/>
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
@@ -35,6 +36,9 @@ import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 import { apiBaseUrl, socketio } from '@/main';
+
+
+import HintOverlay from "../components/HintOverlay"
 
 // Custom Baklava Components
 import CustomConnection from "../components/custom/CustomConnection";
@@ -168,7 +172,8 @@ export default {
   components: {
     NavigationDrawer,
     Console,
-    Toolbar
+    Toolbar,
+    HintOverlay
   },
   created() {
     this.configIndex = this.$route.params.index-1;
