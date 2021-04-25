@@ -8,6 +8,7 @@
     />
     <Console :console="console"/>
     <HintOverlay v-if="hintVisible"/>
+    <ConnectionLostOverlay v-if="!websocketConnected"/>
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
@@ -39,6 +40,7 @@ import { apiBaseUrl, socketio } from '@/main';
 
 
 import HintOverlay from "../components/HintOverlay"
+import ConnectionLostOverlay from "../components/ConnectionLostOverlay"
 
 // Custom Baklava Components
 import CustomConnection from "../components/custom/CustomConnection";
@@ -173,7 +175,8 @@ export default {
     NavigationDrawer,
     Console,
     Toolbar,
-    HintOverlay
+    HintOverlay,
+    ConnectionLostOverlay
   },
   created() {
     this.configIndex = this.$route.params.index-1;
@@ -381,6 +384,7 @@ export default {
   },
   computed: {
     hintVisible() {
+      if (!this.websocketConnected) return false;
       if (this.state == null || this.state.nodes.length === 0) return true
       else return false;
     }
