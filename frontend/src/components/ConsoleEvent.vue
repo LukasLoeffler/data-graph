@@ -4,7 +4,7 @@
         <v-expansion-panel-header :color="event.color">
           <v-row>
             <v-col cols="6">
-              <h5 class="mt-1">{{event.data.timeFormatted}}</h5>
+              <h4 class="mt-1">{{event.data.timeFormatted}}</h4>
             </v-col>
             <v-col cols="1">
               <v-tooltip bottom>

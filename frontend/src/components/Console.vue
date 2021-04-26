@@ -64,17 +64,10 @@ export default {
           icon: this.getIconForLogLevel(data.level)
         })
 
-        if (this.events > 5) {
+        if (this.events.length > 15) {
           this.events.pop()
         }
     });
   }
 }
 </script>
-
-
-<style lang="scss" scoped>
-  @import '~vuetify/src/components/VTimeline/_variables.scss';
-
-  $timeline-divider-width: 50px !important;
-</style>>
