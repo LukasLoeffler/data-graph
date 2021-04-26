@@ -47,13 +47,13 @@ export default {
   props: ["event"],
   methods: {
     copyToClipboard() {
-      let text = JSON.stringify(this.event.payload, null, 4);
+      let text = JSON.stringify(this.event.data.payload, null, 4);
       navigator.clipboard.writeText(text);
     },
     hightlightNode() {
       // Highlights the targetNode (logging node) and the originNode (the node that triggered logging node)
-      EventBus.$emit('HIGHLIGHT_NODE', this.event.targetNodeId);
-      EventBus.$emit('HIGHLIGHT_NODE', this.event.originNodeId);
+      EventBus.$emit('HIGHLIGHT_NODE', this.event.data.targetNodeId);
+      EventBus.$emit('HIGHLIGHT_NODE', this.event.data.originNodeId);
     }
   },
   computed: {
