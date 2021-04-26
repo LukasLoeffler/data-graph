@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { io } from "../..";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
@@ -68,6 +69,7 @@ export class LoggingNode extends BaseNode {
             originNodeId: msg.sourceNodeId,
             targetNodeId: this.id,
             time: new Date(),
+            timeFormatted: format(new Date(), "HH:mm:ss"),
             level: this.settings.loglevel,
             payload: msg.payload
         }

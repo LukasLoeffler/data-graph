@@ -14,10 +14,10 @@
           <v-form v-model="valid">
             <v-row>
               <v-col cols="6">
-                <v-text-field label="Name" :rules="[rules.required]" v-model="nodeCopy.name"></v-text-field>
+                <v-text-field label="Name" :rules="[rules.required]" v-model="nodeCopy.name" hide-details></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-select label="Loglevel" :rules="[rules.required]" v-model="valueCopy.loglevel" :items="loglevel">
+                <v-select label="Loglevel" :rules="[rules.required]" v-model="valueCopy.loglevel" :items="loglevel" hide-details>
                   <template v-slot:selection="{ item }">
                     <v-chip label small :color="levelColor">
                       <span>{{ item }}</span>
@@ -26,15 +26,15 @@
                 </v-select>
               </v-col>
               <v-col cols="6">
-                <v-checkbox label="Server Console" v-model="valueCopy.server"></v-checkbox>
+                <v-checkbox label="Server Console" v-model="valueCopy.server" hide-details class="mt-0"></v-checkbox>
               </v-col>
               <v-col cols="6">
-                <v-checkbox label="Client Console" v-model="valueCopy.client"></v-checkbox>
+                <v-checkbox label="Client Console" v-model="valueCopy.client" hide-details class="mt-0"></v-checkbox>
               </v-col>
             </v-row>
             <v-alert border="bottom" colored-border type="info" elevation="2" style="text-align: left" 
               transition="scale-transition" :value="infoMode" class="mt-2">
-                Checkboxes indicate whether logging node should log into the server console and / or into the client console (upper right corner).
+                Checkboxes indicate whether logs should appear in server console and / or into the client console (upper right corner).
             </v-alert>
           </v-form>
         </v-card-text>
