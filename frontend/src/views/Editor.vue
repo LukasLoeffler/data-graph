@@ -8,6 +8,7 @@
     />
     <Console :console="console"/>
     <HintOverlay v-if="hintVisible"/>
+    <ConnectionLostOverlay v-if="!websocketConnected"/>
     <v-flex d-flex child-flex class="fill-height">
       <v-row class="p-0 m-0">
         <v-col class="p-0 m-0">
@@ -39,6 +40,7 @@ import { apiBaseUrl, socketio } from '@/main';
 
 
 import HintOverlay from "../components/HintOverlay"
+import ConnectionLostOverlay from "../components/ConnectionLostOverlay"
 
 // Custom Baklava Components
 import CustomConnection from "../components/custom/CustomConnection";
@@ -147,6 +149,9 @@ import TextTemplateNode from '../nodes/text/TextTemplateNode';
 import SendMailNode from '../nodes/notify/SendMailNode'
 import SendMailDialog from '../nodes/notify/SendMailDialog'
 
+import HtmlEvalNode from '../nodes/html/HtmlEvalNode'
+import HtmlEvalDialog from '../nodes/html/HtmlEvalDialog'
+
 
 export default {
   data() {
@@ -173,7 +178,8 @@ export default {
     NavigationDrawer,
     Console,
     Toolbar,
-    HintOverlay
+    HintOverlay,
+    ConnectionLostOverlay
   },
   created() {
     this.configIndex = this.$route.params.index-1;
@@ -322,6 +328,7 @@ export default {
       this.viewPlugin.registerOption("ChartOption", ChartOption);
       this.viewPlugin.registerOption("TextTemplateDialog", TextTemplateDialog);
       this.viewPlugin.registerOption("SendMailDialog", SendMailDialog);
+      this.viewPlugin.registerOption("HtmlEvalDialog", HtmlEvalDialog);
       
 
       // Register nodes
@@ -377,10 +384,14 @@ export default {
 
       this.editor.registerNodeType("text-template", TextTemplateNode, "Text")
       this.editor.registerNodeType("send-mail", SendMailNode, "Notify")
+
+
+      this.editor.registerNodeType("html-eval", HtmlEvalNode, "Html")
     }
   },
   computed: {
     hintVisible() {
+      if (!this.websocketConnected) return false;
       if (this.state == null || this.state.nodes.length === 0) return true
       else return false;
     }

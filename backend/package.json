@@ -18,6 +18,7 @@
     "@turf/turf": "^6.3.0",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
+    "cheerio": "^1.0.0-rc.6",
     "cors": "^2.8.5",
     "csvtojson": "^2.0.10",
     "date-fns": "^2.16.1",
