@@ -5,38 +5,19 @@
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
         </v-card-title>
-        <v-divider></v-divider>
         <v-card-text class="pb-1">
-          <v-form v-model="valid">
-            <v-row>
-              <v-col cols="6">
-                <v-text-field label="Name" v-model="nodeCopy.name" :rules="[rules.required]"  hint="Node name" persistent-hint></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field 
-                  label="Path" required v-model="valueCopy.path"
-                  :rules="[rules.required]"  hint="Output folder path" persistent-hint>
-                </v-text-field>
-              </v-col>
-              <v-col cols="5">
-                <v-select 
-                  label="Filetype" required v-model="valueCopy.filetype" :items="fileTypes"
-                  :rules="[rules.required]" hint="Filetype handles conversion" persistent-hint>
-                </v-select>
-              </v-col>
-              <v-col cols="7">
-                <v-text-field 
-                  label="Filename" required v-model="valueCopy.filename"
-                  :rules="[rules.required]" hint="Filename must match OS file naming convention" persistent-hint>
-                </v-text-field>
-              </v-col>
-              <v-col cols="6" v-if="valueCopy.filetype === 'csv'">
-                <v-checkbox 
-                  label="Append to file (only csv)" v-model="valueCopy.append" hide-details>
-                </v-checkbox>
-              </v-col>
-            </v-row>
-          </v-form>
+          <v-container>
+            <v-form v-model="valid">
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field label="Name" :rules="[rules.required]" v-model="nodeCopy.name"></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field label="Expression" :rules="[rules.required]" v-model="valueCopy.expression"></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
         </v-card-text>
         <v-divider></v-divider>
         <v-textarea
@@ -68,9 +49,10 @@ export default {
     valueCopy: null,
     rules: {
       required: value => !!value || 'Required.',
+      positive: value => value > 0 || 'Positive number required.',
     },
     valid: false,
-    fileTypes: ["json", "csv", "xlsx","other"]
+    type: null
   }),
   props: ["option", "node", "value"],
   created() {
@@ -92,7 +74,7 @@ export default {
     init() {
       this.nodeCopy = {...this.node};
       this.valueCopy = JSON.parse(JSON.stringify(this.node.getOptionValue("settings")));
-    }
+    },
   },
 }
 </script>

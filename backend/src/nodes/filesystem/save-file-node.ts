@@ -61,7 +61,7 @@ export class FileSaveNode extends BaseNode {
 
             if (this.fileType === "json") this.saveAsJson(file, msg)
             else if (this.fileType === "csv") this.saveAsCsv(file, msg);
-            else if (this.fileType === "xslx") this.saveAsExcel(file, msg);
+            else if (this.fileType === "xlsx") this.saveAsExcel(file, msg);
             else {
                 fs.writeFile(file, payload, (err: any) => {
                     if (err) this.onFailure(err, msg.additional, true);

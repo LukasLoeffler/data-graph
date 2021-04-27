@@ -149,6 +149,9 @@ import TextTemplateNode from '../nodes/text/TextTemplateNode';
 import SendMailNode from '../nodes/notify/SendMailNode'
 import SendMailDialog from '../nodes/notify/SendMailDialog'
 
+import HtmlEvalNode from '../nodes/html/HtmlEvalNode'
+import HtmlEvalDialog from '../nodes/html/HtmlEvalDialog'
+
 
 export default {
   data() {
@@ -325,6 +328,7 @@ export default {
       this.viewPlugin.registerOption("ChartOption", ChartOption);
       this.viewPlugin.registerOption("TextTemplateDialog", TextTemplateDialog);
       this.viewPlugin.registerOption("SendMailDialog", SendMailDialog);
+      this.viewPlugin.registerOption("HtmlEvalDialog", HtmlEvalDialog);
       
 
       // Register nodes
@@ -380,6 +384,9 @@ export default {
 
       this.editor.registerNodeType("text-template", TextTemplateNode, "Text")
       this.editor.registerNodeType("send-mail", SendMailNode, "Notify")
+
+
+      this.editor.registerNodeType("html-eval", HtmlEvalNode, "Html")
     }
   },
   computed: {
