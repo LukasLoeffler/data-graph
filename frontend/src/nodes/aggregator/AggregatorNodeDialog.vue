@@ -123,7 +123,7 @@ export default {
         if ("alias" in intf) this.valueCopy.dataAliases.push({intfName: intf.name, alias: intf.alias});
       });
 
-      // Write nodeAliased into settings
+      // Write nodeTimeouts into settings
       this.valueCopy.timeouts = [];
       this.inputInterfaces.forEach(intf => {
         if ("timeout" in intf) this.valueCopy.timeouts.push({intfName: intf.name, timeout: intf.timeout});
