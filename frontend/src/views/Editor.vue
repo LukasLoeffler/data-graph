@@ -152,6 +152,10 @@ import SendMailDialog from '../nodes/notify/SendMailDialog'
 import HtmlEvalNode from '../nodes/html/HtmlEvalNode'
 import HtmlEvalDialog from '../nodes/html/HtmlEvalDialog'
 
+import PingNode from '../nodes/ping/PingNode';
+import PingDialog from '../nodes/ping/PingDialog';
+
+
 
 export default {
   data() {
@@ -329,6 +333,7 @@ export default {
       this.viewPlugin.registerOption("TextTemplateDialog", TextTemplateDialog);
       this.viewPlugin.registerOption("SendMailDialog", SendMailDialog);
       this.viewPlugin.registerOption("HtmlEvalDialog", HtmlEvalDialog);
+      this.viewPlugin.registerOption("PingDialog", PingDialog);
       
 
       // Register nodes
@@ -387,6 +392,7 @@ export default {
 
 
       this.editor.registerNodeType("html-eval", HtmlEvalNode, "Html")
+      this.editor.registerNodeType("ping", PingNode, "Ping")
     }
   },
   computed: {
