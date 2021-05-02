@@ -15,6 +15,6 @@ export default class MqttSubNode extends Node {
         this.addOption("ExecutionCount", "ExecutionCountOption", ["success", "failure"]);
         this.addOption("color", undefined, "#FFC107");
         this.addOption("running", undefined, true);
-        this.addOutputInterface("onSuccess");
+        this.addOutputInterface("onMessage");
     }
 }
