@@ -1,5 +1,6 @@
 import { ms } from "date-fns/locale";
 import { ExecutionCounter } from "../../exec-info";
+import { getLastValue, storeLastValue, deleteLastValue } from "../../manager/mongo-manager";
 import { Message } from "../../message";
 import { RedisClient } from "../../redis";
 import { BaseNode } from "../base-node";
@@ -20,14 +21,18 @@ export class DataChangeNode extends BaseNode {
         this.property = options.settings.property || undefined;
         this.allowUndefined = options.settings.allowUndefined || false;
         NodeManager.addNode(this);
+        this.init();
+    }
+
+    async init() {
+        let previousPayloadPromise = await getLastValue(this.id);
+        this.previousPayload = previousPayloadPromise?.last || undefined;
     }
 
     execute(msg: Message) {
         try {
             // If property is set, get property, else use payload
             let dataToCheck = (this.property) ? msg.payload[this.property] : msg.payload;
-
-            console.log(dataToCheck);
 
             // If data is undefined or null and null/undefined values are disallowed the onFailurePort is activated
             if (dataToCheck == null && !this.allowUndefined) {
@@ -37,12 +42,13 @@ export class DataChangeNode extends BaseNode {
                 if (JSON.stringify(dataToCheck) === JSON.stringify(this.previousPayload)) {
                     this.on("onNoChange", msg.payload, msg.additional);
                 } else {
-                    msg.payload.$old = this.previousPayload;
-                    msg.payload.$new = dataToCheck;
+                    msg.payload._old = this.previousPayload;
+                    msg.payload._new = dataToCheck;
                     this.on("onChange", msg.payload, msg.additional);
                 }
             }
             this.previousPayload = dataToCheck;
+            storeLastValue(this.id, dataToCheck);
         } catch (error) {
             this.on("onFailure", error, msg.additional, true);
         }
@@ -50,6 +56,7 @@ export class DataChangeNode extends BaseNode {
 
     reset(): boolean {
         this.previousPayload = null;
+        deleteLastValue(this.id);
         return true;
     }
 }
