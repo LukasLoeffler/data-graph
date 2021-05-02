@@ -38,7 +38,7 @@ export class TriggerAfterNode extends BaseNode {
 
             this.puffer.push(msg.payload);
             if (this.counter >= this.threshhold-1) {
-                this.bufferData ? this.on("onTrigger", this.puffer) : this.on("onTrigger", new Date());
+                this.bufferData ? this.on("onTrigger", this.puffer) : this.on("onTrigger", this.createTriggerAfterMessage());
                 ExecutionCounter.resetCount(this.id);
                 if (this.pulseOnTrigger) this.pulse("cyan");
                 this.counter = 0;
@@ -60,5 +60,13 @@ export class TriggerAfterNode extends BaseNode {
         this.counter = 0;
         this.puffer = [];
         return true;
+    }
+
+    createTriggerAfterMessage() {
+        return {
+            payload: undefined,
+            message: `Triggered after ${this.threshhold} times at ${new Date()}`,
+            timestamp: new Date()
+        }
     }
 }

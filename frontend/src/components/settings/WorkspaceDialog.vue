@@ -127,7 +127,7 @@ export default {
       let blob = new Blob([data], {type: 'application/json'})
       let e = document.createEvent('MouseEvents'),
       a = document.createElement('a');
-      a.download = `${this.localNodeConfig._id}.json`;
+      a.download = `${this.localNodeConfig.workspace}.json`;
       a.href = window.URL.createObjectURL(blob);
       a.dataset.downloadurl = ['application/json', a.download, a.href].join(':');
       e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);

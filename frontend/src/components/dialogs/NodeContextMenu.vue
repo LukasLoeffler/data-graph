@@ -138,7 +138,8 @@ import EventBus from '@/event-bus';
       {type: "chart", icon: "mdi-chart-line", resettable: false, stoppable: false, configurable: false, hasHistory: false},
       {type: "text-template", icon: "mdi-script-text", resettable: false, stoppable: false, configurable: true, hasHistory: false},
       {type: "send-mail", icon: "mdi-email", resettable: false, stoppable: false, configurable: true, hasHistory: false},
-      {type: "html-eval", icon: "mdi-email", resettable: false, stoppable: false, configurable: true, hasHistory: false},
+      {type: "html-eval", icon: "mdi-language-html5", resettable: false, stoppable: false, configurable: true, hasHistory: false},
+      {type: "ping", icon: "mdi-language-html5", resettable: false, stoppable: false, configurable: true, hasHistory: false},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},

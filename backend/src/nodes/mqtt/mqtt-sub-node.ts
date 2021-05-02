@@ -22,9 +22,9 @@ export class MqttSubNode extends MqttBaseNode {
         this.client.on("message", (topic: any, message: string) => {
             if (this.running && this.topics.includes(topic)) {
                 try {
-                    this.onSuccess(JSON.parse(message));
+                    this.on("onMessage", JSON.parse(message));
                 } catch (error) {
-                    this.onSuccess(message);
+                    this.onSuccess("onMessage", message);
                 }
             }
         });

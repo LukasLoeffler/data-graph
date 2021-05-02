@@ -37,8 +37,12 @@ import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import { InterfaceTypePlugin } from "@baklavajs/plugin-interface-types";
 import { apiBaseUrl, socketio } from '@/main';
+import { registerOptions, registerNodes } from "@/register"
 
 
+import NavigationDrawer from '@/components/NavigationDrawer'
+import Console from '@/components/Console.vue';
+import Toolbar from './Toolbar.vue';
 import HintOverlay from "../components/HintOverlay"
 import ConnectionLostOverlay from "../components/ConnectionLostOverlay"
 
@@ -47,110 +51,6 @@ import CustomConnection from "../components/custom/CustomConnection";
 import CustomInterface from "../components/custom/CustomInterface";
 import CustomNode from "../components/custom/CustomNode";
 import CustomContextMenu from "../components/custom/CustomContextMenu"
-
-
-// ButtonNode
-import ButtonNode from "../nodes/ButtonNode";
-
-// Interval Node
-import IntervalNode from "../nodes/time/IntervalNode";
-import IntervalNodeDialog from "../nodes/time/IntervalNodeDialog"
-
-// Http Nodes
-import HttpGet from "../nodes/http/HttpGetNode";
-import HttpPostPut from "../nodes/http/HttpPostPutNode";
-import HttpInRequestNode from "../nodes/http/HttpInRequestNode"
-import HttpInResponseNode from "../nodes/http/HttpInResponseNode"
-import HttpGetNodeDialog from "../nodes/http/HttpGetNodeDialog";
-import HttpPostPutDialog from "../nodes/http/HttpPostPutDialog";
-import HttpInResponseDialog from "../nodes/http/HttpInResponseDialog"
-import HttpInRequestDialog from "../nodes/http/HttpInRequestDialog"
-
-// Mapping node
-import ArrayMappingNode from "../nodes/object/ArrayMappingNode";
-import ObjectMappingNode from "../nodes/object/ObjectMappingNode";
-import MappingNodeDialog from "../nodes/object/MappingNodeDialog";
-import FilterArray from "../nodes/object/FilterArrayNode";
-import AdvancedMapperNode from "../nodes/object/AdvancedMapperNode"
-import AdvancedMapperDialog from '../nodes/object/AdvancedMapperDialog';
-
-import FileSave from "../nodes/filesystem/FileSaveNode"
-import FileSaveDialog from "../nodes/filesystem/FileSaveDialog"
-
-// Geofilter
-import GeoFilterNode from "../nodes/geo/GeoFilterNode"
-import GeoFilterDialog from "../nodes/geo/GeoFilterDialog"
-
-import MapNode from "../nodes/geo/MapNode"
-import MapOption from "../nodes/geo/MapOption"
-
-
-import MqttSubNode from "../nodes/mqtt/MqttSubNode";
-import MqttPubNode from "../nodes/mqtt/MqttPubNode";
-import MqttDialog from "../nodes/mqtt/MqttDialog";
-
-import Logging from "../nodes/logging/LoggingNode";
-import LoggingDialog from "../nodes/logging/LoggingDialog";
-
-
-import AggregatorNode from "../nodes/aggregator/AggregatorNode";
-import AggregatorNodeDialog from "../nodes/aggregator/AggregatorNodeDialog";
-
-import CsvToJsonNode from "../nodes/type/CsvToJsonNode"
-
-import EventButtonOption from "../options/EventButtonOption";
-import ExecutionCountOption from "../options/ExecutionCountOption";
-
-import InfoNode from "../nodes/info/InfoNode";
-import InfoOption from "../options/InfoOption";
-import InfoConfigDialog from "../nodes/info/InfoConfigDialog";
-
-import ChartNode from "../nodes/info/ChartNode"
-import ChartOption from "../nodes/info/ChartOption"
-
-import TriggerCountOption from "../options/TriggerCountOption";
-
-// Postgres
-import PostgresSaveNode from "../nodes/database/PostgresSaveNode";
-import PostgresInsertDialog from "../nodes/database/PostgresInsertDialog";
-
-// FunctionNode
-import PythonFunctionNode from "../nodes/function/PythonFunctionNode";
-import PythonFunctionNodeDialog from "../nodes/function/PythonFunctionNodeDialog";
-import JavaScriptFunctionNode from "../nodes/function/JavaScriptFunctionNode";
-import JavaScriptFunctionNodeDialog from "../nodes/function/JavaScriptFunctionNodeDialog";
-
-// Trigger After
-import TriggerAfterNode from "../nodes/flow/TriggerAfterNode"
-import TriggerAfterDialog from "../nodes/flow/TriggerAfterDialog";
-
-// Data Change
-import DataChangeNode from "../nodes/flow/DataChangeNode"
-import DataChangeDialog from "../nodes/flow/DataChangeDialog"
-
-// Switch
-import SwitchNode from "../nodes/flow/SwitchNode"
-import SwitchDialog from "../nodes/flow/SwitchDialog"
-
-// Delay
-import DelayNode from "../nodes/flow/DelayNode"
-import DelayDialog from "../nodes/flow/DelayDialog"
-
-import DataViewNode from "../nodes/info/DataViewNode"
-import DataViewDialog from "../nodes/info/DataViewDialog"
-
-import NavigationDrawer from '../components/NavigationDrawer'
-import Console from '../components/Console.vue';
-import Toolbar from './Toolbar.vue';
-
-import TextTemplateDialog from '../nodes/text/TextTemplateDialog';
-import TextTemplateNode from '../nodes/text/TextTemplateNode';
-
-import SendMailNode from '../nodes/notify/SendMailNode'
-import SendMailDialog from '../nodes/notify/SendMailDialog'
-
-import HtmlEvalNode from '../nodes/html/HtmlEvalNode'
-import HtmlEvalDialog from '../nodes/html/HtmlEvalDialog'
 
 
 export default {
@@ -296,97 +196,9 @@ export default {
       const intfTypePlugin = new InterfaceTypePlugin();
       this.editor.use(intfTypePlugin);
 
-      // Register options
-      this.viewPlugin.registerOption("EventButtonOption", EventButtonOption);
-      this.viewPlugin.registerOption("ExecutionCountOption", ExecutionCountOption);
-      this.viewPlugin.registerOption("InfoOption", InfoOption);
-
-      // Register dialog options
-      this.viewPlugin.registerOption("TriggerCountOption", TriggerCountOption);
-      this.viewPlugin.registerOption("HttpGetNodeDialog", HttpGetNodeDialog);
-      this.viewPlugin.registerOption("HttpPostPutDialog", HttpPostPutDialog);
-      this.viewPlugin.registerOption("MappingNodeDialog", MappingNodeDialog);
-      this.viewPlugin.registerOption("PostgresInsertDialog", PostgresInsertDialog)
-      this.viewPlugin.registerOption("InfoConfigDialog", InfoConfigDialog)
-      this.viewPlugin.registerOption("PythonFunctionNodeDialog", PythonFunctionNodeDialog)
-      this.viewPlugin.registerOption("JavaScriptFunctionNodeDialog", JavaScriptFunctionNodeDialog)
-      this.viewPlugin.registerOption("TriggerAfterDialog", TriggerAfterDialog);
-      this.viewPlugin.registerOption("AggregatorNodeDialog", AggregatorNodeDialog);
-      this.viewPlugin.registerOption("HttpInResponseDialog", HttpInResponseDialog);
-      this.viewPlugin.registerOption("HttpInRequestDialog", HttpInRequestDialog);
-      this.viewPlugin.registerOption("GeoFilterDialog", GeoFilterDialog);
-      this.viewPlugin.registerOption("IntervalNodeDialog", IntervalNodeDialog)
-      this.viewPlugin.registerOption("FileSaveDialog", FileSaveDialog)
-      this.viewPlugin.registerOption("DataChangeDialog", DataChangeDialog);
-      this.viewPlugin.registerOption("SwitchDialog", SwitchDialog);
-      this.viewPlugin.registerOption("DelayDialog", DelayDialog);
-      this.viewPlugin.registerOption("AdvancedMapperDialog", AdvancedMapperDialog);
-      this.viewPlugin.registerOption("MqttDialog", MqttDialog);
-      this.viewPlugin.registerOption("LoggingDialog", LoggingDialog);
-      this.viewPlugin.registerOption("DataViewDialog", DataViewDialog);
-      this.viewPlugin.registerOption("MapOption", MapOption);
-      this.viewPlugin.registerOption("ChartOption", ChartOption);
-      this.viewPlugin.registerOption("TextTemplateDialog", TextTemplateDialog);
-      this.viewPlugin.registerOption("SendMailDialog", SendMailDialog);
-      this.viewPlugin.registerOption("HtmlEvalDialog", HtmlEvalDialog);
-      
-
-      // Register nodes
-      this.editor.registerNodeType("interval", IntervalNode, "Time")
-
-      this.editor.registerNodeType("logging", Logging, "Logging")
-      this.editor.registerNodeType("info", InfoNode, "Logging")
-      this.editor.registerNodeType("data-view", DataViewNode, "Logging")
-
-      this.editor.registerNodeType("http-get", HttpGet, "Http")
-      this.editor.registerNodeType("http-post-put", HttpPostPut, "Http")
-      this.editor.registerNodeType("http-in-request", HttpInRequestNode, "Http")
-      this.editor.registerNodeType("http-in-response", HttpInResponseNode, "Http")
-
-      // Object
-      this.editor.registerNodeType("filter-array", FilterArray, "Object")
-      //this.editor.registerNodeType("object-path", PathNode, "Object")
-      this.editor.registerNodeType("array-mapping", ArrayMappingNode, "Object")
-      this.editor.registerNodeType("object-mapping", ObjectMappingNode, "Object")
-      this.editor.registerNodeType("advanced-mapper", AdvancedMapperNode, "Object")
-
-      // Geo
-      this.editor.registerNodeType("geo-filter", GeoFilterNode, "Geo")
-      this.editor.registerNodeType("geo-map", MapNode, "Geo")
-
-      this.editor.registerNodeType("chart", ChartNode, "Info")
-
-      // Filesystem
-      this.editor.registerNodeType("file-save", FileSave, "Filesystem")
-
-      // User input
-      this.editor.registerNodeType("button", ButtonNode, "Input")
-
-      this.editor.registerNodeType("postgres-save", PostgresSaveNode, "Database")
-
-      // MQTT
-      this.editor.registerNodeType("mqtt-sub", MqttSubNode, "MQTT")
-      this.editor.registerNodeType("mqtt-pub", MqttPubNode, "MQTT")
-
-      // Function-Nodes
-      this.editor.registerNodeType("python-function", PythonFunctionNode, "Function")
-      this.editor.registerNodeType("javascript-function", JavaScriptFunctionNode, "Function")
-
-      // Flow
-      this.editor.registerNodeType("trigger-after", TriggerAfterNode, "Flow")
-      this.editor.registerNodeType("data-change", DataChangeNode, "Flow")
-      this.editor.registerNodeType("switch", SwitchNode, "Flow")
-      this.editor.registerNodeType("delay", DelayNode, "Flow")
-      this.editor.registerNodeType("aggregator", AggregatorNode, "Flow")
-
-      // Data Type
-      this.editor.registerNodeType("csv-to-json", CsvToJsonNode, "Type")
-
-      this.editor.registerNodeType("text-template", TextTemplateNode, "Text")
-      this.editor.registerNodeType("send-mail", SendMailNode, "Notify")
-
-
-      this.editor.registerNodeType("html-eval", HtmlEvalNode, "Html")
+      // Register options and nodes
+      registerOptions(this.viewPlugin);
+      registerNodes(this.editor);
     }
   },
   computed: {
@@ -413,16 +225,6 @@ export default {
         if (newValue) {
           setTimeout(() => this.$store.commit("saveNodeConfig", null), 1);  
           this.save();
-        }
-      }
-    },
-    "$store.getters.copyNode": {
-      handler(newNode) {
-        if (newNode) {
-          newNode.id = this.editor.generateId("node_");
-          let node = new ButtonNode();
-          node.options = newNode.options;
-          this.editor.addNode(node);
         }
       }
     },

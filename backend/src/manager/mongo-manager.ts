@@ -41,7 +41,7 @@ function getDb () {
     return _db;
 }
 
-export { connectToServer, getDb, storeLastValue };
+export { connectToServer, getDb, storeLastValue, getLastValue, deleteLastValue };
 
 
 
@@ -56,5 +56,25 @@ function storeLastValue(nodeId: string, payload: any) {
 
     _db.collection("last-values").updateOne(query, newvalues, options, function(err: any, obj: any) {
         if (err) console.log(err);
+    });
+}
+
+
+async function getLastValue(nodeId: string) {
+    let query = {
+        _id: nodeId
+    };
+    try {
+        return await _db.collection("last-values").findOne(query);
+    } catch (error) {
+        return undefined;
+    }
+}
+
+async function deleteLastValue(nodeId: string) {
+    let query = {
+        _id: nodeId
+    };
+    _db.collection("customers").deleteOne(query, function (err: any, obj: any) {
     });
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="mt-0">
     <v-progress-linear
-      v-model="percentage"
+      :value="percentage"
       color="lime lighten-2"
       height="20" rounded
       @click.stop.capture=""
@@ -21,14 +21,12 @@ export default {
   data: () => {
     return {
       triggerCount: 0,
-      percentage: 0
     }
   },
   created() {
     socketio.on('EXEC_COUNT', (data) => {
       if (data.nodeId === this.node.id) {
         this.triggerCount = data.triggerCount || 0;
-        this.percentage = data.triggerCount / this.threshhold * 100;
       }
     });
   },
@@ -44,12 +42,16 @@ export default {
     threshhold() {
       return this.node.getOptionValue("settings").threshhold;
     },
+    percentage() {
+      return this.triggerCount / this.node.getOptionValue("settings").threshhold * 100;
+    }
   },
   watch: {
     "$store.getters.saveNode": {
       handler(nodeId) {
         if (nodeId && nodeId === this.node.id) {
           this._computedWatchers.threshhold.run();
+          this._computedWatchers.percentage.run();
           this.$forceUpdate();
         }
       }
