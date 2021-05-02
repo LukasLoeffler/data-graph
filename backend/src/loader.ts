@@ -205,7 +205,7 @@ export function loadConfig(dbo: any, mode: LoadingMode) {
 
         if (mode === LoadingMode.RUNNING) {
             console.log(`Created: ${chalk.green(numberOfNodesInit)} / Changed: ${chalk.yellow(numberOfNodesChanged)} / Deleted: ${chalk.red(numberOfDeletedNodes)} / Total: ${chalk.blue(numberofNodesTotal)}`);
-            io.emit("SAVE", {
+            io.emit("CONFIG_SAVED", {
                 init: numberOfNodesInit,
                 changed: numberOfNodesChanged,
                 deleted: numberOfDeletedNodes

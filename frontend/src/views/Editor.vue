@@ -72,7 +72,7 @@ export default {
     this.init();
 
     this.editor.events.beforeAddNode.addListener(this, () => {
-      this.$store.commit("saveNodeConfig", 1);
+      //this.$store.commit("saveNodeConfig", 1);
     });
 
     this.editor.events.beforeAddConnection.addListener(this, () => {
@@ -99,7 +99,7 @@ export default {
       this.showNotification("Server not connected. Trying to reestablish connection", "red", 2000);
     });
 
-    socketio.on('SAVE', (data) => {
+    socketio.on('CONFIG_SAVED', (data) => {
       let {init, changed, deleted} = data;
       if (init || changed || deleted) {
         // Snackbar only when a node was changed/deleted/created
