@@ -71,19 +71,19 @@ export default {
     this.configIndex = this.$route.params.index-1;
     this.init();
 
-    this.editor.events.beforeAddNode.addListener(this, () => {
-      //this.$store.commit("saveNodeConfig", 1);
-    });
-
-    this.editor.events.beforeAddConnection.addListener(this, () => {
+    this.editor.events.addNode.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeRemoveNode.addListener(this, () => {
+    this.editor.events.addConnection.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeRemoveConnection.addListener(this, () => {
+    this.editor.events.removeNode.addListener(this, () => {
+      this.$store.commit("saveNodeConfig", 1);
+    });
+
+    this.editor.events.removeConnection.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
