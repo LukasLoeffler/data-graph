@@ -12,8 +12,9 @@
     <v-flex d-flex child-flex class="fill-height">
       <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
     </v-flex>
-    <v-snackbar v-model="notifySnack" :timeout="notifyTimeout" :color="notifyColor" right transition="slide-x-reverse-transition">
-      {{notifyMessage}}
+    <v-snackbar v-model="notification.visible" :timeout="notification.timeout" :color="notification.color" right 
+      transition="slide-x-reverse-transition">
+      {{notification.message}}
     </v-snackbar>
   </div>
 </template>
@@ -53,10 +54,12 @@ export default {
       selectedConfig: null,
       configIndex: null,
       websocketConnected: false,
-      notifySnack: false,
-      notifyMessage: "",
-      notifyColor: "white",
-      notifyTimeout: 1000,
+      notification: {
+        visible: false,
+        message: "",
+        timeout: 1000,
+        color: "white",
+      },
       state: null
     }
   },
@@ -111,10 +114,10 @@ export default {
   },
   methods: {
     showNotification(message, color, timeout) {
-      this.notifyMessage = message;
-      this.notifyColor = color;
-      this.notifyTimeout = timeout;
-      this.notifySnack = true;
+      this.notification.message = message;
+      this.notification.color = color;
+      this.notification.timeout = timeout;
+      this.notification.visible = true;
     },
     save() {
       let state = this.editor.save();
