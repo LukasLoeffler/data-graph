@@ -28,7 +28,7 @@
             </v-col>
           </v-row>
         </v-expansion-panel-header>
-        <v-expansion-panel-content style="white-space: pre-wrap; text-align:left;">
+        <v-expansion-panel-content style="text-align:left;">
           {{this.event.data.payload}}
         </v-expansion-panel-content>
       </v-expansion-panel>
