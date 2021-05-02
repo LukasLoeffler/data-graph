@@ -30,9 +30,9 @@
                   :rules="[rules.required]" hint="Filename must match OS file naming convention" persistent-hint>
                 </v-text-field>
               </v-col>
-              <v-col cols="6" v-if="valueCopy.filetype === 'csv'">
+              <v-col cols="6" v-if="valueCopy.filetype === 'csv'" class="mt-0">
                 <v-checkbox 
-                  label="Append to file (only csv)" v-model="valueCopy.append" hide-details>
+                  label="Append to file (only csv)" v-model="valueCopy.append" hide-details class="mt-0">
                 </v-checkbox>
               </v-col>
             </v-row>

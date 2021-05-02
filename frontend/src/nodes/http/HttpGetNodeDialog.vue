@@ -27,11 +27,11 @@
                 <v-col cols="12">
                   <v-text-field label="Url" required v-model="valueCopy.url" :rules="[rules.required, rules.protocol]"></v-text-field>
                 </v-col>
-                <v-col cols="6">
-                  <v-checkbox label="Pulse on error" required v-model="valueCopy.pulseOnError" hide-details></v-checkbox>
+                <v-col cols="6" class="pa-0">
+                  <v-checkbox label="Pulse on error" required v-model="valueCopy.pulseOnError" hide-details class="pa-0"></v-checkbox>
                 </v-col>
-                <v-col cols="6">
-                  <v-checkbox label="Show execution count" required v-model="valueCopy.showCount"></v-checkbox>
+                <v-col cols="6" class="pa-0">
+                  <v-checkbox label="Show execution count" required v-model="valueCopy.showCount" hide-details="" class="pa-0"></v-checkbox>
                 </v-col>
               </v-row>
             </v-form>

@@ -20,7 +20,7 @@
               </v-col>
               <v-col cols="6">
                 <v-text-field
-                  outlined label="Timeout" dense persistent-hint
+                  outlined label="Timeout (ms)" dense persistent-hint
                   :rules="[rules.required, rules.positive]" v-model.number="valueCopy.timeout"
                 ></v-text-field>
               </v-col>
