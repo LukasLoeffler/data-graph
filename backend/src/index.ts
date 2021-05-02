@@ -276,3 +276,29 @@ app.get("/artifact/:filename", (req: express.Request, res: express.Response) => 
     let filename = `${req.params.filename}`;
     res.sendFile(filename, { root: path.join(__dirname, '../output') });
 })
+
+
+
+app.get("/node-history/:nodeId/:param", (req: express.Request, res: express.Response) => {
+
+    let query = {
+        nodeId: req.params.nodeId
+    };
+
+    dbo.collection("node-history").find(query).toArray(function (err: any, result: any) {
+        if (err) res.status(500).send(err);
+        else {
+            let output: any = [];
+            let previous: any = undefined;
+            result.forEach((historyEntry: any) => {
+                let data = {
+                    date: historyEntry.date,
+                    value: historyEntry.optionsNew[req.params.param]
+                };
+                if (data.value != null && previous != data.value) output.push(data);
+                previous = data.value;
+            })
+            res.send(output);
+        }
+    });
+})
