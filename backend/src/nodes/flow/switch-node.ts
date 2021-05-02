@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
@@ -18,11 +19,13 @@ export class SwitchNode extends BaseNode {
         console.log(msg.payload);
         let numMatched = 0;
         this.expressions.forEach((expr: any) => {
-            let prop = msg.payload[expr.property];
+            const prop = `"${_.get(msg.payload, expr.property)}"`;
             let statement = expr.statement;
             let value = expr.value;
+
             if (prop && statement && value) {
-                let matches = eval(`${prop}${expr.statement}${expr.value}`);
+                const statement = `${prop}${expr.statement}${expr.value}`;
+                let matches = eval(statement);
                 if (matches) {
                     this.on(expr.port, msg.payload, msg.additional);
                     numMatched++;
