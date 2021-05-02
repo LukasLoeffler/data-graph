@@ -10,21 +10,8 @@
     <HintOverlay v-if="hintVisible"/>
     <ConnectionLostOverlay v-if="!websocketConnected"/>
     <v-flex d-flex child-flex class="fill-height">
-      <v-row class="p-0 m-0">
-        <v-col class="p-0 m-0">
-          <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
-        </v-col>
-      </v-row>
+      <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
     </v-flex>
-    <v-snackbar v-model="snackbar" timeout="1000" color="teal lighten-2" right transition="slide-x-reverse-transition">
-      Config successfully saved!
-      <template v-slot:action="{ attrs }">
-        <v-btn  text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-
     <v-snackbar v-model="notifySnack" :timeout="notifyTimeout" :color="notifyColor" right transition="slide-x-reverse-transition">
       {{notifyMessage}}
     </v-snackbar>
@@ -65,7 +52,6 @@ export default {
       nodeConfig: null,
       selectedConfig: null,
       configIndex: null,
-      snackbar: false,
       websocketConnected: false,
       notifySnack: false,
       notifyMessage: "",
@@ -101,7 +87,7 @@ export default {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.websocketConnected =socketio.connected;
+    this.websocketConnected = socketio.connected;
 
     socketio.on('connect', () => {
       this.websocketConnected = true;
@@ -117,7 +103,7 @@ export default {
       let {init, changed, deleted} = data;
       if (init || changed || deleted) {
         // Snackbar only when a node was changed/deleted/created
-        this.snackbar = true;
+        this.showNotification("Config successfully saved!", "teal lighten-2", 1000);
       }
     });
 
