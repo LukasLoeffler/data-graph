@@ -34,9 +34,10 @@
                     <v-select v-model="mapper.action" :items="actionItems" outlined dense hide-details></v-select>
                   </td>
                   <td>
-                    <v-text-field v-model="mapper.source" outlined dense hide-details v-if="mapper.action !== 'inject' &&mapper.action !== 'function'"></v-text-field>
+                    <v-text-field v-model="mapper.source" outlined dense hide-details v-if="mapper.action === 'move'"></v-text-field>
                     <InjectDialog v-if="mapper.action === 'inject'" :injection="mapper.injection" @createInjection="createInjection(mapper, $event)"/>
                     <FunctionDialog v-if="mapper.action === 'function'" :function="mapper.function" @createFunction="createFunction(mapper, $event)"/>
+                    <ParseDialog v-if="mapper.action === 'format'" :formatting="mapper.formatting" @createFormatting="createFormatting(mapper, $event)"/>
                   </td>
                   <td>
                     <v-icon >mdi-ray-start-arrow</v-icon>
@@ -78,6 +79,7 @@ import Draggable from 'vuedraggable';
 import LastValueDialog from '../../components/dialogs/LastValueDialog';
 import FunctionDialog from './FunctionDialog.vue';
 import InjectDialog from './InjectDialog.vue';
+import ParseDialog from './ParseDialog.vue';
 
 export default {
   components: {
@@ -85,6 +87,7 @@ export default {
     InjectDialog,
     FunctionDialog,
     LastValueDialog,
+    ParseDialog,
   },
   data: () => ({
     dialog: false,
@@ -143,6 +146,10 @@ export default {
     },
     createFunction(mapper, data) {
       mapper.function = data;
+      this.$forceUpdate();
+    },
+    createFormatting(mapper, data) {
+      mapper.formatting = data;
       this.$forceUpdate();
     }
   },

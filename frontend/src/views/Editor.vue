@@ -10,23 +10,11 @@
     <HintOverlay v-if="hintVisible"/>
     <ConnectionLostOverlay v-if="!websocketConnected"/>
     <v-flex d-flex child-flex class="fill-height">
-      <v-row class="p-0 m-0">
-        <v-col class="p-0 m-0">
-          <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
-        </v-col>
-      </v-row>
+      <baklava-editor id="editor" :plugin="viewPlugin"></baklava-editor>
     </v-flex>
-    <v-snackbar v-model="snackbar" timeout="1000" color="teal lighten-2" right transition="slide-x-reverse-transition">
-      Config successfully saved!
-      <template v-slot:action="{ attrs }">
-        <v-btn  text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-
-    <v-snackbar v-model="notifySnack" :timeout="notifyTimeout" :color="notifyColor" right transition="slide-x-reverse-transition">
-      {{notifyMessage}}
+    <v-snackbar v-model="notification.visible" :timeout="notification.timeout" :color="notification.color" right 
+      transition="slide-x-reverse-transition">
+      {{notification.message}}
     </v-snackbar>
   </div>
 </template>
@@ -65,12 +53,13 @@ export default {
       nodeConfig: null,
       selectedConfig: null,
       configIndex: null,
-      snackbar: false,
       websocketConnected: false,
-      notifySnack: false,
-      notifyMessage: "",
-      notifyColor: "white",
-      notifyTimeout: 1000,
+      notification: {
+        visible: false,
+        message: "",
+        timeout: 1000,
+        color: "white",
+      },
       state: null
     }
   },
@@ -85,23 +74,23 @@ export default {
     this.configIndex = this.$route.params.index-1;
     this.init();
 
-    this.editor.events.beforeAddNode.addListener(this, () => {
+    this.editor.events.addNode.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeAddConnection.addListener(this, () => {
+    this.editor.events.addConnection.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeRemoveNode.addListener(this, () => {
+    this.editor.events.removeNode.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.editor.events.beforeRemoveConnection.addListener(this, () => {
+    this.editor.events.removeConnection.addListener(this, () => {
       this.$store.commit("saveNodeConfig", 1);
     });
 
-    this.websocketConnected =socketio.connected;
+    this.websocketConnected = socketio.connected;
 
     socketio.on('connect', () => {
       this.websocketConnected = true;
@@ -113,11 +102,11 @@ export default {
       this.showNotification("Server not connected. Trying to reestablish connection", "red", 2000);
     });
 
-    socketio.on('SAVE', (data) => {
+    socketio.on('CONFIG_SAVED', (data) => {
       let {init, changed, deleted} = data;
       if (init || changed || deleted) {
         // Snackbar only when a node was changed/deleted/created
-        this.snackbar = true;
+        this.showNotification("Config successfully saved!", "teal lighten-2", 1000);
       }
     });
 
@@ -125,10 +114,10 @@ export default {
   },
   methods: {
     showNotification(message, color, timeout) {
-      this.notifyMessage = message;
-      this.notifyColor = color;
-      this.notifyTimeout = timeout;
-      this.notifySnack = true;
+      this.notification.message = message;
+      this.notification.color = color;
+      this.notification.timeout = timeout;
+      this.notification.visible = true;
     },
     save() {
       let state = this.editor.save();
