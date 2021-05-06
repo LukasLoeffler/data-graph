@@ -62,6 +62,9 @@ import CsvToJsonNode from "@/nodes/type/CsvToJsonNode"
 import InfoNode from "@/nodes/info/InfoNode";
 
 
+import YeelightNode from "@/nodes/smarthome/YeelightNode"
+import YeelightDialog from "@/nodes/smarthome/YeelightDialog"
+
 
 import ChartNode from "@/nodes/info/ChartNode"
 
@@ -140,6 +143,7 @@ export function registerOptions(viewPlugin) {
     viewPlugin.registerOption("SendMailDialog", SendMailDialog);
     viewPlugin.registerOption("HtmlEvalDialog", HtmlEvalDialog);
     viewPlugin.registerOption("PingDialog", PingDialog);
+    viewPlugin.registerOption("YeelightDialog", YeelightDialog);
 }
 
 
@@ -200,4 +204,7 @@ export function registerNodes(editorInstance) {
 
     editorInstance.registerNodeType("html-eval", HtmlEvalNode, "Html")
     editorInstance.registerNodeType("ping", PingNode, "Ping")
+
+    editorInstance.registerNodeType("yeelight", YeelightNode, "Smarthome")
+
 }

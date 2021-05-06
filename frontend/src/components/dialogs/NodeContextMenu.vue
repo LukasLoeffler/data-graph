@@ -140,6 +140,7 @@ import EventBus from '@/event-bus';
       {type: "send-mail", icon: "mdi-email", resettable: false, stoppable: false, configurable: true, hasHistory: false},
       {type: "html-eval", icon: "mdi-language-html5", resettable: false, stoppable: false, configurable: true, hasHistory: false},
       {type: "ping", icon: "mdi-language-html5", resettable: false, stoppable: false, configurable: true, hasHistory: false},
+      {type: "yeelight", icon: " mdi-lightbulb-on-outline", resettable: false, stoppable: false, configurable: true, hasHistory: false},
     ],
     actions: [
       {text: "Create Template", color: "blue", callable: "createTemplate", icon: "mdi-card-bulleted-outline"},

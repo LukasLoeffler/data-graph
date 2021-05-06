@@ -31,6 +31,7 @@ import { TextTemplateNode } from "./text/text-template-node";
 import { SendMailNode } from "./notify/send-mail-node";
 import { HtmlEvalNode } from "./html/html-eval-node";
 import { PingNode } from "./ping/ping-node";
+import { YeelightNode } from "./smarthome/yeelight";
 
 
 
@@ -79,6 +80,7 @@ export let nodeRegistry: Array<RegEntry> = [
     new RegEntry("send-mail", SendMailNode),
     new RegEntry("html-eval", HtmlEvalNode),
     new RegEntry("ping", PingNode),
+    new RegEntry("yeelight", YeelightNode),
 ]
 
 export class NodeRegistry {
