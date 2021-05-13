@@ -51,24 +51,3 @@ Running local instances of redis and mongo-db on default ports:
 * Mongo: 27017
 
 For startup of both backend and frontend npm scripts are provided in respective packacke.json
-
-## Create a Node
-
-Nodes have to be created in the frontend and in the backend.
-
-### Backend
-
-1. Create folder for node category (optional: use existing folder)
-2. Create file in KepapCase {nodename}-node.ts
-3. Implement constructor set all required fields and call ```NodeManager.addNode(this);```  at the end of the constructor to register the instance
-5. Implement the execute function. The execute function is expected to take a ```Message``` as parameter
-6. Create an entry in the node-registry for the new node to register the node class
-
-### Frontend
-
-1. Analog to #1 of backend
-2. Create file in PascalCase {NodeName}Node.js
-3. Define input and output interfaces
-4. Set the node type to the matching value of the node-registry
-5. Define options. Default options such as color and running are required
-6. Register the node in Editor.vue
