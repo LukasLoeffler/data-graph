@@ -1,6 +1,6 @@
 <template>
   <svg>
-    <path :d="d" :class="classes"/>
+    <path :d="d" :class="classes" @mouseover.alt="removeConnection" style="pointer-events: fill; stroke-width: 2.5px"/>
   </svg>
 </template>
 
@@ -15,10 +15,10 @@ export default {
     return {
       d: "",
       count: 0,
-      connectionActive: false
+      connectionActive: false,
     }
   },
-  inject: ["plugin"],
+  inject: ["plugin", "editor"],
   async mounted() {
     await this.$nextTick();
     this.updateCoords();
@@ -89,13 +89,16 @@ export default {
         interface: interfaceDOM,
         port: (portDOM && portDOM.length > 0) ? portDOM[0]: null
       };
+    },
+    removeConnection() {
+      this.editor.plugin.editor.removeConnection(this.connection);
     }
   },
   computed: {
     classes() {
       return {
         "connection": true,
-        "active": this.connectionActive
+        "active": this.connectionActive,
       };
     }
   },
@@ -123,7 +126,7 @@ export default {
 <style scoped>
 .active {
   stroke-dasharray: 15;
-  stroke-width: 5px;
+  stroke-width: 3px;
   animation: dash 5s linear infinite;
 }
 
