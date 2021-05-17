@@ -1,7 +1,7 @@
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
 import { Message } from "../../message";
-import { AxiosResponse, AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { ExecutionCounter } from "../../exec-info";
 
 const axios = require('axios');
@@ -45,11 +45,23 @@ export class HttpNode extends BaseNode {
                 this.on("onFailure", null, msg.additional, this.pulseOnError, response);
             }
         }).catch((err: AxiosError) => {
-            let payload = {
+            this.handleError(err, msg);
+        });
+    }
+
+    handleError(err: AxiosError, msg: Message) {
+        let payload = null;
+        if (err.message === "Cannot read property 'replace' of null") {
+            payload = {
+                code: err.code,
+                message: "No url supplied"
+            }
+        } else {
+            payload = {
                 code: err.code,
                 message: err.message
             }
-            this.on("onFailure", payload, msg.additional, this.pulseOnError, err.message);
-        });
+        }
+        this.on("onFailure", payload, msg.additional, this.pulseOnError, err.message);
     }
 }
