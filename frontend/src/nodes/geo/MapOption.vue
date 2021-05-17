@@ -3,13 +3,12 @@
   <v-menu
     bottom
     offset-y
-    open-on-hover
     :close-on-content-click="false"
     v-model="dialog"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn color="blue" dark v-bind="attrs" v-on="on" outlined small>
-        Hover to Show Map
+        View map
       </v-btn>
     </template>
     <v-card width="500px">
@@ -54,7 +53,12 @@ export default {
     this.init();
     socketio.on('GEO_MAP', (message) => {
       if (message.nodeId === this.node.id) {
-        this.features = message.payload.map((elem) => [elem[this.valueCopy.sourceLon], elem[this.valueCopy.sourceLat]]);
+        if (Array.isArray(message.payload)) {
+          this.features = message.payload.map((elem) => [elem[this.valueCopy.sourceLon], elem[this.valueCopy.sourceLat]]);
+        } else {
+          this.valueCopy.center = [message.payload[this.valueCopy.sourceLon], message.payload[this.valueCopy.sourceLat]];
+          this.features = [[message.payload[this.valueCopy.sourceLon], message.payload[this.valueCopy.sourceLat]]]
+        }
       }
     });
   },
