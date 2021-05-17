@@ -33,6 +33,7 @@ export class DataChangeNode extends BaseNode {
         try {
             // If property is set, get property, else use payload
             let dataToCheck = (this.property) ? msg.payload[this.property] : msg.payload;
+            let dataToCheckCopy = JSON.parse(JSON.stringify(dataToCheck));
 
             // If data is undefined or null and null/undefined values are disallowed the onFailurePort is activated
             if (dataToCheck == null && !this.allowUndefined) {
@@ -43,14 +44,16 @@ export class DataChangeNode extends BaseNode {
                     this.on("onNoChange", msg.payload, msg.additional);
                 } else {
                     msg.payload._old = this.previousPayload;
-                    msg.payload._new = dataToCheck;
+                    msg.payload._new = {...dataToCheck};
+
                     this.on("onChange", msg.payload, msg.additional);
                 }
             }
-            this.previousPayload = dataToCheck;
-            storeLastValue(this.id, dataToCheck);
+
+            this.previousPayload = dataToCheckCopy;
+            storeLastValue(this.id, dataToCheckCopy);
         } catch (error) {
-            this.on("onFailure", error, msg.additional, true);
+            this.on("onFailure", error.message, msg.additional, true);
         }
     }
 
