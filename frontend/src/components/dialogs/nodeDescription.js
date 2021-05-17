@@ -1,6 +1,13 @@
 
 let descriptions = [
     {
+        type: "object-mapping",
+        text: `
+            Takes an JS/JSON Object as input. The input can be graphically transformed
+        `,
+        tags: ["json", "mapping", "object"]
+    },
+    {
         type: "logging",
         text: `
             Takes the input and logs the input to the console of the backend.
