@@ -12,8 +12,8 @@ export default class LoggingNode extends Node {
         super();
         this.addInputInterface("event")
         this.addOutputInterface("onInput")
-        this.addOption("settings", "LoggingDialog", {loglevel: "INFO", client: true, server: true}, undefined);
-
+        this.addOption("settings", "LoggingDialog", { loglevel: "INFO", client: true, server: true, showCount: true}, undefined);
+        this.addOption("ExecutionCount", "ExecutionCountOption", ["trigger"]);
         this.addOption("color", undefined, "#03A9F4");
         this.addOption("running", undefined, true);
 

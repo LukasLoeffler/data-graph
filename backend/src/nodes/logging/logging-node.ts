@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { io } from "../..";
+import { ExecutionCounter } from "../../exec-info";
 import { Message } from "../../message";
 import { BaseNode } from "../base-node";
 import { NodeManager } from "../node-manager";
@@ -51,6 +52,7 @@ export class LoggingNode extends BaseNode {
     }
 
     execute(msg: Message) {
+        ExecutionCounter.incrCountType(this.id, "trigger");
         if(this.settings.logToClient) this.sendData(msg);
         this.on("onInput", msg.payload, msg.additional);
         let levelOut = this.createLevelOut();
