@@ -74,7 +74,11 @@ export class AdvancedMapperNode extends BaseNode {
                 
                 source = get(input_object, mapper.formatting.source);
 
-                if (mapper.formatting.type === "parse_float") source = parseFloat(source);
+                if (mapper.formatting.source === "payload" || mapper.formatting.source === ".") {
+                    source = input_object;
+                }
+
+                if (mapper.formatting.type === "parse_float") source = parseFloat(source.replace(',', '.'));
                 if (mapper.formatting.type === "parse_int") source = parseInt(source);
                 if (mapper.formatting.type === "to_string") source = String(source);
                 if (mapper.formatting.type === "bool_to_string") source = String(source);
@@ -82,6 +86,7 @@ export class AdvancedMapperNode extends BaseNode {
                 if (mapper.formatting.type === "bool_to_number") source = Number(source);
                 if (mapper.formatting.type === "date_to_number") source = Number(source);
                 if (mapper.formatting.type === "unix_to_date") source = new Date(source * 1000);
+                if (mapper.formatting.type === "rm_whitespace") source = source.replace(/\s/g, '');
             }
 
             if (mapper.action === "function") {
