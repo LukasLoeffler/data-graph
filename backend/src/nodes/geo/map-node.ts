@@ -17,6 +17,6 @@ export class MapNode extends BaseNode {
             nodeId: this.id,
             payload: msg.payload
         }
-        io.emit('GEO_MAP',message);
+        io.emit('GEO_MAP', message);
     }
 }

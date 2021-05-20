@@ -17,7 +17,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-           <v-text-field v-model="formattingCopy.name" label="Injection Name" outlined hide-details dense class="mt-2"></v-text-field>
+           <v-text-field v-model="formattingCopy.name" label="Name" outlined hide-details dense class="mt-2"></v-text-field>
             <v-text-field v-model="formattingCopy.source" label="Source Property" outlined hide-details dense class="mt-2"></v-text-field>
           <v-select v-model="formattingCopy.type" label="Formatting method" outlined hide-details dense class="mt-2" :items="formattingMethods"></v-select>
         </v-card-text>
@@ -49,6 +49,7 @@ export default {
         {text: "Boolean To Number", value: "bool_to_number"},
         {text: "Date To Number", value: "date_to_number"},
         {text: "Unix To Date", value: "unix_to_date"},
+        {text: "Remove whitespace", value: "rm_whitespace"},
       ]
     }
   },

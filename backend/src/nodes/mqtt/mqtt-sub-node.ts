@@ -1,3 +1,4 @@
+import { ExecutionCounter } from "../../exec-info";
 import { MqttBaseNode } from "./mqtt-base-node";
 
 
@@ -22,6 +23,7 @@ export class MqttSubNode extends MqttBaseNode {
         this.client.on("message", (topic: any, message: string) => {
             if (this.running && this.topics.includes(topic)) {
                 try {
+                    ExecutionCounter.incrCountType(this.id, "trigger");
                     this.on("onMessage", JSON.parse(message));
                 } catch (error) {
                     this.onSuccess("onMessage", message);

@@ -16,28 +16,29 @@ enum Loglevel {
 }
 
 class Settings {
-    loglevel: Loglevel;
-    client: boolean;
-    server: boolean;
+    logLevel: Loglevel;
+    logToClient: boolean;
+    logToServer: boolean;
 
     constructor(loglevel: Loglevel, client: boolean, server: boolean) {
-        this.loglevel = loglevel;
-        this.client = client;
-        this.server = server;
+        this.logLevel = loglevel;
+        this.logToClient = client;
+        this.logToServer = server;
     }
 }
 
 export class LoggingNode extends BaseNode {
-    settings: Settings
+    settings: Settings;
     
     constructor(name: string, id: string, options: any, outputConnections: Array<string>) {
         super(name, NODE_TYPE, id, options, outputConnections)
-        this.settings = options.settings;
+        let { loglevel, client, server } = options.settings;
+        this.settings = new Settings(loglevel, client, server);
         NodeManager.addNode(this);
     }
 
     createLevelOut() {
-        switch (this.settings.loglevel) {
+        switch (this.settings.logLevel) {
             case Loglevel.INFO: 
                 return chalk.bold(chalk.blue(Loglevel.INFO));
             case Loglevel.WARN: 
@@ -50,11 +51,11 @@ export class LoggingNode extends BaseNode {
     }
 
     execute(msg: Message) {
-        if(this.settings.client) this.sendData(msg);
+        if(this.settings.logToClient) this.sendData(msg);
         this.on("onInput", msg.payload, msg.additional);
         let levelOut = this.createLevelOut();
         
-        if (this.settings.server) {
+        if (this.settings.logToServer) {
             if (Buffer.isBuffer(msg.payload)) {
                 console.log(`${new Date().toISOString()} - ${levelOut} - ${this.name} - ${msg.payload.toString()}`);
             } else {
@@ -70,7 +71,7 @@ export class LoggingNode extends BaseNode {
             targetNodeId: this.id,
             time: new Date(),
             timeFormatted: format(new Date(), "HH:mm:ss"),
-            level: this.settings.loglevel,
+            level: this.settings.logLevel,
             payload: msg.payload
         }
         io.emit('EVENT_LOG', payload);

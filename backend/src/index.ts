@@ -44,22 +44,22 @@ connectToServer( function( err: any, client: any ) {
         console.log( `Server started at http://localhost:${ PORT }` );
     });
 
-    
     io = require('socket.io')(server, {cors: { origins: '*:*'}});
     io.on('connection', function(socket: any) {
+        // Increase counter on new connection
         ++connectedClients;
+        console.log("New Websocket Connection. Number of connected clients:", connectedClients);
 
-        console.log("New Websocket Connection. Numbed of connected clients:", connectedClients);
-
-        
-
+        // Initially emit all node-execution counts if new device connects
         ExecutionCounter.initialEmitAllCounts();
 
+        // Decrease the connection count on disconnect
         socket.on('disconnect', function () {
             --connectedClients;
-            console.log("New Websocket Connection. Numbed of connected clients:", connectedClients);
+            console.log("Websocket Connection lost. Number of connected clients:", connectedClients);
         });
 
+        // Execute node by ID on BTN_CLICK event
         socket.on('BTN_CLICK', function(data: any) {
             let node = NodeManager.getNodeById(data);
             node.execute();

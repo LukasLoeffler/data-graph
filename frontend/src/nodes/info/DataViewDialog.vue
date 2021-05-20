@@ -10,7 +10,7 @@
           LastValue
         </v-card-title>
         <v-card-text style="max-height: 350px">
-          <json-viewer v-if="lastData && dialog && isJsonParsable" :value="lastData" :expand-depth=4 expanded preview-mode theme="custom-theme" style="text-align:left; overflow: scroll; border-radius: 3px; height: 500px"></json-viewer>
+          <json-viewer v-if="lastData && dialog && isJsonParsable" :value="lastData" :expand-depth=4 expanded preview-mode theme="custom-theme" style="text-align:left; overflow: scroll; border-radius: 3px;"></json-viewer>
           <p v-else-if="isArrayBuffer" style="text-align: left">{{isArrayBuffer}}</p>
           <p v-else-if="lastData" style="text-align: left">{{lastData}}</p>
           <p v-else>No Data present</p>
@@ -45,7 +45,7 @@ export default {
       dialog: false,
       description: "",
       lastData: null,
-      loading: false
+      loading: false,
     }
   },
   created() {
