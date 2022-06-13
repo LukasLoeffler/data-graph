@@ -5,10 +5,6 @@
         <v-card-title>
           <span class="headline">{{nodeCopy.name}}</span>
           <v-spacer></v-spacer>
-          <v-btn icon @mouseenter="transparent = true" @mouseleave="transparent = false">
-            <v-icon v-if="!transparent">mdi-eye-off</v-icon>
-            <v-icon v-else color="red">mdi-eye</v-icon>
-          </v-btn>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pb-1">
